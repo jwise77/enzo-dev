@@ -138,7 +138,10 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
     if (TotalNumberOfStars > 0) {
 
       recvBuffer = new StarBuffer[TotalNumberOfStars];
-      sendBuffer = LocalStars->StarListToBuffer(LocalNumberOfStars);
+      if (LocalNumberOfStars > 0)
+	sendBuffer = LocalStars->StarListToBuffer(LocalNumberOfStars);
+      else
+	sendBuffer = NULL;
 
       /* Share all data with all processors */
 
@@ -171,7 +174,8 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
       } // ENDFOR stars
 
       delete [] recvBuffer;
-      delete [] sendBuffer;
+      if (LocalNumberOfStars > 0)
+	delete [] sendBuffer;
 
     } /* ENDIF TotalNumberOfStars > 0 */
 
