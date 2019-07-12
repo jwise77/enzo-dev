@@ -9,8 +9,9 @@ commands:
           echo 'export ENZOTEST_DIR=$HOME/enzo_test' >> $BASH_ENV
           echo 'export ANSWER_NAME="push_suite"' >> $BASH_ENV
           echo 'export HYPRE=hypre-2.11.2' >> $BASH_ENV
+          # get tags from the main repository (for the current gold standard)
+          git fetch --tags https://github.com/enzo-project/enzo-dev
           # tag the tip so we can go back to it
-          git fetch --tags origin
           git tag tip
 
   install-dependencies:
@@ -136,7 +137,7 @@ jobs:
 
       - restore_cache:
           name: "Restore test answers."
-          key: test-answers-v12
+          key: test-answers-v12a
 
       - build-and-test:
           tag: gold-standard-v12
@@ -145,7 +146,7 @@ jobs:
 
       - save_cache:
           name: "Save test answers cache."
-          key: test-answers-v12
+          key: test-answers-v12a
           paths:
             - ~/enzo_test/push_suite
 
