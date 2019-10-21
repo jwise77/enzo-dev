@@ -239,6 +239,9 @@ int MHDOrszagTangInit(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 int MHDLoopInit(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
                           TopGridData &MetaData, ExternalBoundary &Exterior);
 
+int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
+             TopGridData &MetaData, float *Initialdt);
+
 void PrintMemoryUsage(char *str);
 
 int GetUnits(float *DensityUnits, float *LengthUnits,
@@ -746,6 +749,10 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
     ret = CurrentProblemType->InitializeSimulation(fptr, Outfptr, TopGrid, MetaData);
   }
 #endif
+
+  // 550 ) Triggered star formation. Pop III star explodes near spherical cloud.
+  if (ProblemType == 550)
+    ret = TriggeredStarFormationInitialize(fptr, Outfptr, TopGrid, MetaData);
 
   // Insert new problem intializer here...
 

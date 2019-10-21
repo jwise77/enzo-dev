@@ -2411,6 +2411,12 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
 					float MinimumMetallicity,
 					float MaximumMetallicity);
 
+  /* Pop III star particle explodes near spherical cloud problem initialization */
+  int TriggeredStarFormationInitializeGrid(float StarParticleStarMass, 
+             float *Initialdt,
+             FLOAT StarParticleStarVelocity[],
+             FLOAT StarParticleStarPosition[]);
+
   /* Solve free-fall analytical solution. */
   int SolveOneZoneFreefall();
 

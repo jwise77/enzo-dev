@@ -654,6 +654,7 @@ OBJS_CONFIG_LIB = \
         Grid_TransferSubgridActiveParticles.o \
         Grid_TransferSubgridParticles.o \
         Grid_TransferSubgridStars.o \
+        Grid_TriggeredStarFormationInitializeGrid.o \
         Grid_TurbulenceSimulationInitialize.o \
         Grid_UpdateParticlePosition.o \
         Grid_UpdateParticleVelocity.o \
@@ -938,6 +939,7 @@ OBJS_CONFIG_LIB = \
 	TestStarParticleInitialize.o \
         TracerParticleCreation.o \
 	TransposeRegionOverlap.o \
+    TriggeredStarFormationInitialize.o \
         tscint1d.o \
         tscint2d.o \
         tscint3d.o \
