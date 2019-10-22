@@ -34,20 +34,12 @@
 #include "TopGridData.h"
 
 
-void WriteListOfFloats(FILE *fptr, int N, float floats[]);
-void WriteListOfFloats(FILE *fptr, int N, FLOAT floats[]);
-void AddLevel(LevelHierarchyEntry *Array[], HierarchyEntry *Grid, int level);
-RadiationSourceEntry* DeleteRadiationSource(RadiationSourceEntry *RS);
-int ReadPhotonSources(FILE *fptr, FLOAT CurrentTime);
-int RebuildHierarchy(TopGridData *MetaData,
-         LevelHierarchyEntry *LevelArray[], int level);
-
-static float TriggeredStarFormationInitialFractionHII   = 1.2e-5;
-static float TriggeredStarFormationInitialFractionHeII  = 1.0e-14;
-static float TriggeredStarFormationInitialFractionHeIII = 1.0e-17;
-static float TriggeredStarFormationInitialFractionHM    = 2.0e-9;
-static float TriggeredStarFormationInitialFractionH2I   = 2.0e-20;
-static float TriggeredStarFormationInitialFractionH2II  = 3.0e-14;
+static float TSFInitialFractionHII   = 1.2e-5;
+static float TSFInitialFractionHeII  = 1.0e-14;
+static float TSFInitialFractionHeIII = 1.0e-17;
+static float TSFInitialFractionHM    = 2.0e-9;
+static float TSFInitialFractionH2I   = 2.0e-20;
+static float TSFInitialFractionH2II  = 3.0e-14;
 
 int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
        HierarchyEntry &TopGrid, TopGridData &MetaData)
@@ -268,24 +260,24 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
     ret += sscanf(line, "TSFSphereCoreRadius       = %"FSYM, &TSFSphereCoreRadius);
     ret += sscanf(line, "TSFSphereDensity          = %"FSYM, &TSFSphereDensity);
     ret += sscanf(line, "TSFSphereTemperature      = %"FSYM, &TSFSphereTemperature);
-    ret += sscanf(line, "TSFFracKeplerianRot     = %"FSYM, &TSFFracKeplerianRot);
-    ret += sscanf(line, "TSFSphereTurbulence     = %"FSYM, &TSFSphereTurbulence);
-    ret += sscanf(line, "TSFSphereCutOff         = %"FSYM, &TSFSphereCutOff);
-    ret += sscanf(line, "TSFSphereAng1           = %"FSYM, &TSFSphereAng1);
-    ret += sscanf(line, "TSFSphereAng2           = %"FSYM, &TSFSphereAng2);
-    ret += sscanf(line, "TSFSphereNumShells      = %"ISYM, &TSFSphereNumShells);
-    ret += sscanf(line, "TSFSphereHIIFraction    = %"FSYM, &TSFSphereHIIFraction);
-    ret += sscanf(line, "TSFSphereHeIIFraction   = %"FSYM, &TSFSphereHeIIFraction);
-    ret += sscanf(line, "TSFSphereHeIIIFraction  = %"FSYM, &TSFSphereHeIIIFraction);
-    ret += sscanf(line, "TSFSphereH2IFraction    = %"FSYM, &TSFSphereH2IFraction);
-    ret += sscanf(line, "PhotonTimeStep          = %"FSYM, &dtPhoton);
-    ret += sscanf(line, "TSFOmegaBaryonNow       = %"FSYM, &TSFOmegaBaryonNow);
-    ret += sscanf(line, "TSFInitialFractionHII   = %"FSYM, &TSFInitialFractionHII);
-    ret += sscanf(line, "TSFInitialFractionHeII  = %"FSYM, &TSFInitialFractionHeII);
-    ret += sscanf(line, "TSFInitialFractionHeIII = %"FSYM, &TSFInitialFractionHeIII);
-    ret += sscanf(line, "TSFInitialFractionHM    = %"FSYM, &TSFInitialFractionHM);
-    ret += sscanf(line, "TSFInitialFractionH2I   = %"FSYM, &TSFInitialFractionH2I);
-    ret += sscanf(line, "TSFInitialFractionH2II  = %"FSYM, &TSFInitialFractionH2II);
+    ret += sscanf(line, "TSFFracKeplerianRot       = %"FSYM, &TSFFracKeplerianRot);
+    ret += sscanf(line, "TSFSphereTurbulence       = %"FSYM, &TSFSphereTurbulence);
+    ret += sscanf(line, "TSFSphereCutOff           = %"FSYM, &TSFSphereCutOff);
+    ret += sscanf(line, "TSFSphereAng1             = %"FSYM, &TSFSphereAng1);
+    ret += sscanf(line, "TSFSphereAng2             = %"FSYM, &TSFSphereAng2);
+    ret += sscanf(line, "TSFSphereNumShells        = %"ISYM, &TSFSphereNumShells);
+    ret += sscanf(line, "TSFSphereHIIFraction      = %"FSYM, &TSFSphereHIIFraction);
+    ret += sscanf(line, "TSFSphereHeIIFraction     = %"FSYM, &TSFSphereHeIIFraction);
+    ret += sscanf(line, "TSFSphereHeIIIFraction    = %"FSYM, &TSFSphereHeIIIFraction);
+    ret += sscanf(line, "TSFSphereH2IFraction      = %"FSYM, &TSFSphereH2IFraction);
+    ret += sscanf(line, "PhotonTimeStep            = %"FSYM, &dtPhoton);
+    ret += sscanf(line, "TSFOmegaBaryonNow         = %"FSYM, &TSFOmegaBaryonNow);
+    ret += sscanf(line, "TSFInitialFractionHII     = %"FSYM, &TSFInitialFractionHII);
+    ret += sscanf(line, "TSFInitialFractionHeII    = %"FSYM, &TSFInitialFractionHeII);
+    ret += sscanf(line, "TSFInitialFractionHeIII   = %"FSYM, &TSFInitialFractionHeIII);
+    ret += sscanf(line, "TSFInitialFractionHM      = %"FSYM, &TSFInitialFractionHM);
+    ret += sscanf(line, "TSFInitialFractionH2I     = %"FSYM, &TSFInitialFractionH2I);
+    ret += sscanf(line, "TSFInitialFractionH2II    = %"FSYM, &TSFInitialFractionH2II);
     ret += sscanf(line, "TSFSpherePosition         = %"PSYM" %"PSYM" %"PSYM, 
       &TSFSpherePosition[0],
       &TSFSpherePosition[1],
