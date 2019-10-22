@@ -82,14 +82,13 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
   int   dim, ret, level, i, source;
   dummy[0] = 0;
 
-  char *TSFDensityFilename = NULL,
-    *TSFHIIFractionFilename = NULL,
-    *TSFHeIIFractionFilename = NULL,
-    *TSFHeIIIFractionFilename = NULL,
-    *TSFTemperatureFilename = NULL;
-  int TSFUseParticles    = FALSE; /*** LOOK AT WHAT THIS DOES ***/
-  int TSFUseColour       = FALSE; 
-  int TestProblemUseMetallicityField;
+  char *TSFDensityFilename       = NULL,
+       *TSFHIIFractionFilename   = NULL,
+       *TSFHeIIFractionFilename  = NULL,
+       *TSFHeIIIFractionFilename = NULL,
+       *TSFTemperatureFilename   = NULL;
+  int   TSFUseColour       = FALSE; 
+  int   TestProblemUseMetallicityField;
   float TestProblemInitialMetallicityFraction;
  
 
@@ -98,14 +97,15 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
   float TSFUniformDensity;
   float TSFUniformEnergy;
   float TSFUniformVelocity[MAX_DIMENSION];
-  float TSFUniformBField[3];
+  float TSFUniformBField[MAX_DIMENSION];
 
 
   /* star params */
 
-  float TSFStarParticleStarVelocity[3];
-  FLOAT TSFStarPosition[3];
+  float TSFStarParticleStarVelocity[MAX_DIMENSION];
+  FLOAT TSFStarPosition[MAX_DIMENSION];
   float TSFStarMass;
+  int   TSFSupernovaType;
 
   /* spherical cloud params */
 
@@ -129,7 +129,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
         TSFSphereHeIIFraction,
         TSFSphereHeIIIFraction,
         TSFSphereH2IFraction;
-  FLOAT TSFSpherePosition[3];
+  FLOAT TSFSpherePosition[MAX_DIMENSION];
 
   float TSFOmegaBaryonNow=0.05; // *** NOT NEEDED *** 
 
@@ -177,7 +177,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
   TSFStarPosition[0] = 0.5;
   TSFStarPosition[1] = 0.5;
   TSFStarPosition[2] = 0.0;
-  TSFStarMass    = 100.0;
+  TSFStarMass    = 100.0; // Msun
+  TSFSupernovaType = 0;  
 
   TestProblemUseMetallicityField = 1;
   TestProblemInitialMetallicityFraction = 1e-11; // Zero metallicity
@@ -224,7 +225,6 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
 
     /* read cloud parameters */
 
-    ret += sscanf(line, "TSFUseParticles = %"ISYM,  &TSFUseParticles);
     ret += sscanf(line, "TSFUseColour    = %"ISYM,  &TSFUseColour);
     ret += sscanf(line, "TSFInitialTemperature = %"FSYM,  &TSFInitialTemperature);
     if (sscanf(line, "TSFDensityFilename = %s", dummy) == 1) {
@@ -306,21 +306,20 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
 
   /* set up star and spherical cloud */
 
-  if (TopGrid.GridData->TSFInitializeGrid(
+  if (TopGrid.GridData->TriggeredStarFormationInitializeGrid(
       TSFSphereRadius, TSFSphereCoreRadius, TSFSphereDensity,
       TSFSphereTemperature, TSFSpherePosition, TSFSphereVelocity,
       TSFFracKeplerianRot, TSFSphereTurbulence, TSFSphereCutOff,
       TSFSphereAng1, TSFSphereAng2, TSFSphereNumShells,
       TSFSphereType, TSFSphereConstantPressure, TSFSphereSmoothSurface,
       TSFSphereSmoothRadius, TSFSphereHIIFraction, TSFSphereHeIIFraction,
-      TSFSphereHeIIIFraction, TSFSphereH2IFraction, TSFUseParticles,
+      TSFSphereHeIIIFraction, TSFSphereH2IFraction,
       TSFUseColour, TSFInitialTemperature, 0,
       TSFInitialFractionHII, TSFInitialFractionHeII, TSFInitialFractionHeIII,
       TSFInitialFractionHM, TSFInitialFractionH2I, TSFInitialFractionH2II,
       TSFDensityFilename, TSFHIIFractionFilename, TSFHeIIFractionFilename,
       TSFHeIIIFractionFilename, TSFTemperatureFilename, 
-      TSFStarMass, TSFStarVelocity, TSFStarPosition,
-      Initialdt)
+      TSFStarMass, TSFStarVelocity, TSFStarPosition, TSFSupernovaType)
         ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n"));
 
   
@@ -380,47 +379,43 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
   /* Write parameters to parameter output file */
 
   if (MyProcessorNumber == ROOT_PROCESSOR) {
-    fprintf(Outfptr, "PhotonTestUseParticles       = %"ISYM"\n",
-      PhotonTestUseParticles);
-    fprintf(Outfptr, "PhotonTestUseColour          = %"ISYM"\n",
-      PhotonTestUseColour);
-    fprintf(Outfptr, "PhotonTestInitialTemperature = %"FSYM"\n",
-      PhotonTestInitialTemperature);
-
-      fprintf(Outfptr, "PhotonTestSphereType             = %"ISYM"\n",             PhotonTestSphereType);
-      fprintf(Outfptr, "PhotonTestSphereConstantPressure = %"ISYM"\n", PhotonTestSphereConstantPressure);
-      fprintf(Outfptr, "PhotonTestSphereSmoothSurface    = %"ISYM"\n",    PhotonTestSphereSmoothSurface);
-      fprintf(Outfptr, "PhotonTestSphereSmoothRadius     = %"GOUTSYM"\n",  PhotonTestSphereSmoothRadius);
-      fprintf(Outfptr, "PhotonTestSphereRadius           = %"GOUTSYM"\n",        PhotonTestSphereRadius);
-      fprintf(Outfptr, "PhotonTestSphereCoreRadius       = %"GOUTSYM"\n",    PhotonTestSphereCoreRadius);
-      fprintf(Outfptr, "PhotonTestSphereDensity          = %"FSYM"\n",          PhotonTestSphereDensity);
-      fprintf(Outfptr, "PhotonTestSphereTemperature      = %"FSYM"\n",      PhotonTestSphereTemperature);
-      fprintf(Outfptr, "PhotonTestSpherePosition         = ");
-      WriteListOfFloats(Outfptr, MetaData.TopGridRank, PhotonTestSpherePosition);
-      fprintf(Outfptr, "PhotonTestSphereVelocity         = ");
-      WriteListOfFloats(Outfptr, MetaData.TopGridRank, PhotonTestSphereVelocity);
-      fprintf(Outfptr, "PhotonTestSphereHIIFraction      = %"GOUTSYM"\n",   PhotonTestSphereHIIFraction);
-      fprintf(Outfptr, "PhotonTestSphereHeIIFraction     = %"GOUTSYM"\n",  PhotonTestSphereHeIIFraction);
-      fprintf(Outfptr, "PhotonTestSphereHeIIIFraction    = %"GOUTSYM"\n", PhotonTestSphereHeIIIFraction);
-      fprintf(Outfptr, "PhotonTestSphereH2IFraction      = %"GOUTSYM"\n",   PhotonTestSphereH2IFraction);
-      fprintf(Outfptr, "PhotonTestFracKeplerianRot       = %"GOUTSYM"\n",    PhotonTestFracKeplerianRot);
-      fprintf(Outfptr, "PhotonTestSphereTurbulence       = %"GOUTSYM"\n",    PhotonTestSphereTurbulence);
-      fprintf(Outfptr, "PhotonTestSphereCutOff           = %"GOUTSYM"\n",        PhotonTestSphereCutOff);
-      fprintf(Outfptr, "PhotonTestSphereAng1             = %"GOUTSYM"\n",          PhotonTestSphereAng1);
-      fprintf(Outfptr, "PhotonTestSphereAng2             = %"GOUTSYM"\n",          PhotonTestSphereAng2);
-      fprintf(Outfptr, "PhotonTestSphereNumShells        = %"ISYM"\n\n",      PhotonTestSphereNumShells);
-
-    fprintf(Outfptr, "TSFUniformDensity = %"FSYM"\n",
-      TSFUniformDensity);
-    fprintf(Outfptr, "TSFUniformEnergy = %"FSYM"\n",
-      TSFUniformEnergy);
-    fprintf(Outfptr, "MetallicityField_Fraction = %"FSYM"\n",
-            TestProblemData.MetallicityField_Fraction);
-
-    fprintf(Outfptr, "PhotonTestUniformVelocity          = %"FSYM" %"FSYM" %"FSYM"\n");
-    WriteListOfFloats(Outfptr, MetaData.TopGridRank, PhotonTestUniformVelocity);
-    
+    fprintf(Outfptr, "TSFUseColour          = %"ISYM"\n", TSFUseColour);
+    fprintf(Outfptr, "TSFInitialTemperature = %"FSYM"\n", TSFInitialTemperature);
+    fprintf(Outfptr, "TSFSphereType             = %"ISYM"\n",             TSFSphereType);
+    fprintf(Outfptr, "TSFSphereConstantPressure = %"ISYM"\n", TSFSphereConstantPressure);
+    fprintf(Outfptr, "TSFSphereSmoothSurface    = %"ISYM"\n",    TSFSphereSmoothSurface);
+    fprintf(Outfptr, "TSFSphereSmoothRadius     = %"GOUTSYM"\n",  TSFSphereSmoothRadius);
+    fprintf(Outfptr, "TSFSphereRadius           = %"GOUTSYM"\n",        TSFSphereRadius);
+    fprintf(Outfptr, "TSFSphereCoreRadius       = %"GOUTSYM"\n",    TSFSphereCoreRadius);
+    fprintf(Outfptr, "TSFSphereDensity          = %"FSYM"\n",          TSFSphereDensity);
+    fprintf(Outfptr, "TSFSphereTemperature      = %"FSYM"\n",      TSFSphereTemperature);
+    fprintf(Outfptr, "TSFSpherePosition         = ");
+    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSFSpherePosition);
+    fprintf(Outfptr, "TSFSphereVelocity         = ");
+    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSFSphereVelocity);
+    fprintf(Outfptr, "TSFSphereHIIFraction      = %"GOUTSYM"\n",   TSFSphereHIIFraction);
+    fprintf(Outfptr, "TSFSphereHeIIFraction     = %"GOUTSYM"\n",  TSFSphereHeIIFraction);
+    fprintf(Outfptr, "TSFSphereHeIIIFraction    = %"GOUTSYM"\n", TSFSphereHeIIIFraction);
+    fprintf(Outfptr, "TSFSphereH2IFraction      = %"GOUTSYM"\n",   TSFSphereH2IFraction);
+    fprintf(Outfptr, "TSFFracKeplerianRot       = %"GOUTSYM"\n",    TSFFracKeplerianRot);
+    fprintf(Outfptr, "TSFSphereTurbulence       = %"GOUTSYM"\n",    TSFSphereTurbulence);
+    fprintf(Outfptr, "TSFSphereCutOff           = %"GOUTSYM"\n",        TSFSphereCutOff);
+    fprintf(Outfptr, "TSFSphereAng1             = %"GOUTSYM"\n",          TSFSphereAng1);
+    fprintf(Outfptr, "TSFSphereAng2             = %"GOUTSYM"\n",          TSFSphereAng2);
+    fprintf(Outfptr, "TSFSphereNumShells        = %"ISYM"\n\n",      TSFSphereNumShells);
+    fprintf(Outfptr, "TSFUniformDensity                = %"FSYM"\n",                TSFUniformDensity);
+    fprintf(Outfptr, "TSFUniformEnergy                 = %"FSYM"\n",                TSFUniformEnergy);
+    fprintf(Outfptr, "MetallicityField_Fraction        = %"FSYM"\n", TestProblemData.MetallicityField_Fraction);
+    fprintf(Outfptr, "TSFUniformVelocity        = %"FSYM" %"FSYM" %"FSYM"\n");
+    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSFUniformVelocity); 
   }
+
+  delete[] TSFDensityFilename;
+  delete[] TSFHIIFractionFilename;
+  delete[] TSFHeIIFractionFilename;
+  delete[] TSFHeIIIFractionFilename;
+  delete[] TSFTemperatureFilename;
+  delete [] dummy;  
 
   return SUCCESS;
 }
