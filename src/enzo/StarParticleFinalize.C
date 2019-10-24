@@ -93,7 +93,9 @@ int StarParticleFinalize(HierarchyEntry *Grids[], TopGridData *MetaData,
   /* Apply any stellar feedback onto the grids and add any gas to the
      accretion rates of the star particles */
 
+  printf("\n\n%s\n\n", "Calling AddFeedback");
   StarParticleAddFeedback(MetaData, LevelArray, level, AllStars, AddedFeedback);
+  printf("\n\n%s\n\n", "Finished AddFeedback");
 
   /* Update star particles for any accretion */
 

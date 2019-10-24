@@ -49,10 +49,13 @@ int StarParticleInitialize(HierarchyEntry *Grids[], TopGridData *MetaData,
      these are to be used in CommunicationUpdateStarParticleCount 
      in StarParticleFinalize */  
 
+  printf("\n\nNumberOfParticles %d\n", MetaData->NumberOfParticles);
   MetaData->NumberOfParticles = FindTotalNumberOfParticles(LevelArray);
   NumberOfOtherParticles = MetaData->NumberOfParticles - NumberOfStarParticles;
   RecordTotalStarParticleCount(Grids, NumberOfGrids, 
 			       TotalStarParticleCountPrevious);
+  printf("\n\nNumberOfOtherParticles %d\n", NumberOfOtherParticles);
+  printf("\n\nNumberOfStarParticles %d\n", NumberOfStarParticles);
 
   /* Initialize the IMF lookup table if requested and not defined */
 

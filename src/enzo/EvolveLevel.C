@@ -442,6 +442,7 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     Star *AllStars = NULL;
     StarParticleInitialize(Grids, MetaData, NumberOfGrids, LevelArray,
 			   level, AllStars, TotalStarParticleCountPrevious);
+    printf("\n\nAll stars %d\n\n", AllStars);
 
     /* Calculate ClusterSMBHColdGasMass */
 

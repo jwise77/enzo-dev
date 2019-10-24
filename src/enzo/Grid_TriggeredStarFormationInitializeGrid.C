@@ -272,7 +272,8 @@ int grid::TriggeredStarFormationInitializeGrid(
 
   for (i = 0; i < NumberOfParticles; i++) {
     ParticleNumber[i] = i;
-    ParticleType[i] = PARTICLE_TYPE_SINGLE_STAR;
+    ParticleType[i] = PopIII;
+    //ParticleType[i] = UNIGRID_STAR;
   }
 
   /* Set star particle position, velocity, mass, creation time, and lifetime. */ 
@@ -283,9 +284,10 @@ int grid::TriggeredStarFormationInitializeGrid(
     ParticleVelocity[dim][0] = StarVelocity[dim] * 1e5*TimeUnits/LengthUnits;
   }
   ParticleMass[0] = StarParticleMass;
-  float CodeTimeToExplosion = TimeToExplosion * 1000*yr_s / TimeUnits;     // convert kyr to codetime 
-  ParticleAttribute[0][0] = Time - CodeTimeToExplosion + 1e-7;             // creation time 
-  ParticleAttribute[1][0] = popIII_lifetime(StarMass) * yr_s / TimeUnits;  // lifetime [code_time]
+  float CodeTimeToExplosion = TimeToExplosion * Myr_s / TimeUnits;     // convert kyr to codetime 
+  ParticleAttribute[0][0] = Time + 1e-7;             // creation time 
+  //ParticleAttribute[1][0] = popIII_lifetime(StarMass) * yr_s / TimeUnits;  // lifetime [code_time]
+  ParticleAttribute[1][0] = CodeTimeToExplosion + 1;
   ParticleAttribute[2][0] = 0.0;  // Metal fraction
   ParticleAttribute[3][0] = 0.0;  // metalfSNIa
 

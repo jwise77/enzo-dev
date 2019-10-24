@@ -79,12 +79,16 @@ void Star::CalculateFeedbackParameters(float &Radius,
   EjectaMetalDensity = 0.0;
   StarLevelCellWidth = RootCellWidth / powf(float(RefineBy), float(this->level));
 
+  printf("\n\nFeedbackFlag = %d, SUPERNOVA = %d\n\n", this->FeedbackFlag, SUPERNOVA);
+
   switch (this->FeedbackFlag) {
   case SUPERNOVA:  // Single thermal bubble of SN feedback
     Radius = PopIIISupernovaRadius * pc_cm / LengthUnits;
     Radius = max(Radius, 3.5*StarLevelCellWidth);
     EjectaVolume = 4.0/3.0 * pi * pow(Radius*LengthUnits, 3);
     EjectaDensity = Mass * SolarMass / EjectaVolume / DensityUnits;
+
+    printf("\n\nEjectaDensity = %f\n\n", EjectaDensity);
 
     // pair-instability SNe
     if (this->Mass >= PISNLowerMass && this->Mass <= PISNUpperMass) {

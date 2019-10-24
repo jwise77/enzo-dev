@@ -63,8 +63,12 @@ int StarParticleAddFeedback(TopGridData *MetaData,
   FLOAT Time;
   LevelHierarchyEntry *Temp;
 
-  if (AllStars == NULL)
+  if (AllStars == NULL) {
+      printf("\n%s\n\n", "In AddFeedback: No stars");
     return SUCCESS;
+  }
+
+  printf("\n%s\n\n", "In AddFeedback");
 
   LCAPERF_START("StarParticleAddFeedback");
 
@@ -142,6 +146,8 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 
     /* If there's no feedback or something weird happens, don't bother. */
 
+    printf("\n%f\n\n", influenceRadius);
+
     if ( influenceRadius <= tiny_number || 
 	 SphereContained == FALSE ||
 	((cstar->ReturnFeedbackFlag() == MBH_THERMAL ||
@@ -208,6 +214,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
       float energies[MAX_ENERGY_BINS], deltaE;
 #ifdef TRANSFER
       if (RadiativeTransfer) {
+        printf("\nRADIATIVE TRANSFER STAR FEEDBACK\n");
 	cstar->ComputePhotonRates(TimeUnits, nbins, energies, Q);
 	sigma = (double) FindCrossSection(0, energies[0]);  // HI (cm^2)
 	Q_HI = Q[0];
