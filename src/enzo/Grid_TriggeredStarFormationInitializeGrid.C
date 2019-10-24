@@ -5,6 +5,7 @@
 /  written by: Greg Bryan
 /  date:       May, 1998
 /  modified1:  Oct, 2003 by Tom Abel -- include photons
+/  modified2:  Oct, 2019 by Corey Brummel-Smith -- add star particle
 /
 /  PURPOSE:
 /
@@ -33,15 +34,15 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
        float *TemperatureUnits, float *TimeUnits,
        float *VelocityUnits, FLOAT Time);
 int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
-float ph_gasdev();
+float tsf_gasdev();
 
 // Used to compute Bonner-Ebert density profile
-double ph_BE(double r);
-double ph_q(double r);
-double ph_Ang(double a1, double a2, double R, double r);
+double tsf_BE(double r);
+double tsf_q(double r);
+double tsf_Ang(double a1, double a2, double R, double r);
 
 // Returns random velocity from Maxwellian distribution
-double ph_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma);
+double tsf_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma);
 
 // Compute Population III star lifetime from Schaerer (2002)
 float popIII_lifetime(float mass);
@@ -51,14 +52,14 @@ float popIII_lifetime(float mass);
 int grid::TriggeredStarFormationInitializeGrid(
           float UniformDensity,
           float UniformTemperature,
-          float UniformVelocity[],
-          float UniformBField[],  
+          float UniformVelocity[MAX_DIMENSION],
+          float UniformBField[MAX_DIMENSION],  
           float SphereRadius,
           float SphereCoreRadius,
           float SphereDensity,
           float SphereTemperature,
-          FLOAT SpherePosition[],
-          float SphereVelocity[],
+          FLOAT SpherePosition[MAX_DIMENSION],
+          float SphereVelocity[MAX_DIMENSION],
           float SphereFracKeplerianRot,
           float SphereTurbulence,
           float SphereCutOff,
@@ -86,16 +87,17 @@ int grid::TriggeredStarFormationInitializeGrid(
           char *HeIIIFractionFilename,
           char *TemperatureFilename,
           float StarMass,
-          FLOAT StarPosition[],
-          float StarVelocity[],
+          FLOAT StarPosition[MAX_DIMENSION],
+          float StarVelocity[MAX_DIMENSION],
           float TimeToExplosion)
 {
   /* declarations */
 
   int dim, i, j, k, m, field, size, active_size, index, cindex;
   int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
-    DINum, DIINum, HDINum,  kphHINum, gammaNum, kphHeINum,
-    kphHeIINum, kdissH2INum, kdissH2IINum, kphHMNum, RPresNum1, RPresNum2, RPresNum3; 
+    DINum, DIINum, HDINum,  kphHINum, gammaNum, kphHeINum, 
+    kphHeIINum, kdissH2INum, kdissH2IINum, kphHMNum,
+    RPresNum1, RPresNum2, RPresNum3, B1Num, B2Num, B3Num, PhiNum, CRNum; 
   float *density_field = NULL, *HII_field = NULL, *HeII_field = NULL, 
     *HeIII_field = NULL, *Temperature_field = NULL;
 
@@ -154,7 +156,7 @@ int grid::TriggeredStarFormationInitializeGrid(
     FieldType[NumberOfBaryonFields++] = Metallicity; /* fake it with metals */
 
   if (RadiativeTransfer && (MultiSpecies < 1)) {
-    ENZO_FAIL("Grid_PhotonTestInitialize: Radiative Transfer but not MultiSpecies set");
+    ENZO_FAIL("Grid_TriggeredStarFormationInitializeGrid: Radiative Transfer but not MultiSpecies set");
   }
 
   //   Allocate fields for photo ionization and heating rates
@@ -220,7 +222,6 @@ int grid::TriggeredStarFormationInitializeGrid(
         NFWDensity[NFW_POINTS], NFWSigma[NFW_POINTS], m200;
   FLOAT NFWRadius[NFW_POINTS];
   double dpdr = 0, dpdr_old;
-  sphere = 0;
   m200   = 0;
   NFWPressure[0] = 1.0 * kboltz * UniformTemperature / (mu * mh);
   FILE *fptr = fopen("NFWProfile.out", "w");
@@ -265,7 +266,7 @@ int grid::TriggeredStarFormationInitializeGrid(
   NumberOfParticles = 1;
   NumberOfParticleAttributes = 4;
   this->AllocateNewParticles(NumberOfParticles);
-  printf("Allocated %d particles\n", NumberOfParticles);
+  printf("Allocated %"ISYM" particles", NumberOfParticles);  
 
   /* Set particle IDs and types */
 
@@ -282,9 +283,9 @@ int grid::TriggeredStarFormationInitializeGrid(
     ParticleVelocity[dim][0] = StarVelocity[dim] * 1e5*TimeUnits/LengthUnits;
   }
   ParticleMass[0] = StarParticleMass;
-  float CodeTimeToExplosion = TimeToExplosion * 1000*yr_s / TimeUnits // convert kyr to codetime 
-  ParticleAttribute[0][0] = Time - CodeTimeToExplosion + 1e-7; // creation time 
-  ParticleAttribute[1][0] = popIII_lifetime(StarMass) // lifetime [code_time]
+  float CodeTimeToExplosion = TimeToExplosion * 1000*yr_s / TimeUnits;     // convert kyr to codetime 
+  ParticleAttribute[0][0] = Time - CodeTimeToExplosion + 1e-7;             // creation time 
+  ParticleAttribute[1][0] = popIII_lifetime(StarMass) * yr_s / TimeUnits;  // lifetime [code_time]
   ParticleAttribute[2][0] = 0.0;  // Metal fraction
   ParticleAttribute[3][0] = 0.0;  // metalfSNIa
 
@@ -439,7 +440,7 @@ int grid::TriggeredStarFormationInitializeGrid(
           SphereMass = pow(VelocitySound,3) / 
             (sqrt(4*pi*pow((GravConst)/(4*pi),3) * 
             (SphereDensity))) * 
-            ph_q(SphereCutOff);
+            tsf_q(SphereCutOff);
           SphereMass = SphereMass*DensityUnits*pow(LengthUnits,3);
           printf("\nSphere Mass (M_sun): %"FSYM"\n", SphereMass/SolarMass);
         }
@@ -555,7 +556,7 @@ int grid::TriggeredStarFormationInitializeGrid(
       theta = 0.0;
 
     // Find out which shell the cell is in
-    a = ph_Ang(SphereAng1, SphereAng2, SphereRadius, r);
+    a = tsf_Ang(SphereAng1, SphereAng2, SphereRadius, r);
 
     /* Start with solid body rotation and then add in a
        velocity of a fraction of sound speed in a random
@@ -567,12 +568,12 @@ int grid::TriggeredStarFormationInitializeGrid(
       Velocity[2] =  2*pi*(xpos*sin(a)) / SphereRotationalPeriod;
     }
     Velocity[0] += SphereTurbulence * 
-      ph_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
+      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
     Velocity[1] += SphereTurbulence * 
-      ph_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
+      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
            if (dim == 0 || dim == 3)
     Velocity[2] += SphereTurbulence * 
-      ph_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
+      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
     m = 0;
 
     /* 1) Uniform */
@@ -774,7 +775,7 @@ int grid::TriggeredStarFormationInitializeGrid(
         for (dim = 0; dim < GridRank; dim++)
           Velocity[dim] = SphereVelocity[dim];
 
-      colour = dens1
+      colour = dens1;
       HII_Fraction = SphereHII;
       HeII_Fraction = SphereHeII;
       HeIII_Fraction = SphereHeIII;
@@ -929,13 +930,13 @@ int grid::TriggeredStarFormationInitializeGrid(
 /* Routine to return a Gaussian random deviate with zero mean and unite
    variance (adapted from Numerical Recipes). */
 
-static int ph_gasdev_iset = 0;
-static float ph_gasdev_gset;
+static int tsf_gasdev_iset = 0;
+static float tsf_gasdev_gset;
 
-float ph_gasdev()
+float tsf_gasdev()
 {
-  float v1, v2, r = 0, fac, ph_gasdev_ret;
-  if (ph_gasdev_iset == 0) {
+  float v1, v2, r = 0, fac, tsf_gasdev_ret;
+  if (tsf_gasdev_iset == 0) {
 
     while (r >= 1 || r == 0) {
       v1 = 2.0*float(rand())/(float(RAND_MAX)) - 1.0;
@@ -943,19 +944,19 @@ float ph_gasdev()
       r = v1*v1 + v2*v2;
     }
     fac = sqrt(-2.0*log(r)/r);
-    ph_gasdev_gset = v1*fac;
-    ph_gasdev_ret  = v2*fac;
-    ph_gasdev_iset = 1;
+    tsf_gasdev_gset = v1*fac;
+    tsf_gasdev_ret  = v2*fac;
+    tsf_gasdev_iset = 1;
   } else {
-    ph_gasdev_ret  = ph_gasdev_gset;
-    ph_gasdev_iset = 0;
+    tsf_gasdev_ret  = tsf_gasdev_gset;
+    tsf_gasdev_iset = 0;
   }
-  return ph_gasdev_ret;
+  return tsf_gasdev_ret;
 }
 
 /************************************************************************/
 
-double ph_BE(double r)
+double tsf_BE(double r)
 {
   double factor;
   factor = 4.8089e-04*pow(r,5) - 1.0173e-02*pow(r,4) + 7.7899e-02*pow(r,3) - 
@@ -965,7 +966,7 @@ double ph_BE(double r)
 
 /************************************************************************/
 
-double ph_q(double r)
+double tsf_q(double r)
 {
   double factor;
   factor = 0.0015970*pow(r,5) - 0.0229113*pow(r,4) + 0.0386709*pow(r,3) + 
@@ -975,14 +976,14 @@ double ph_q(double r)
 
 /************************************************************************/
 
-double ph_Ang(double a1, double a2, double R, double r)
+double tsf_Ang(double a1, double a2, double R, double r)
 {
   return ((a2-a1)/R)*r + a1;
 }
 
 /************************************************************************/
 
-double ph_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma)
+double tsf_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma)
 {
 
    // Compute temperature in cgs units
@@ -1013,8 +1014,7 @@ float popIII_lifetime(float mass)
   float a0 = 9.785, a1 = -3.759, a2 = 1.413, a3 = -0.186;
   logTime = a0 + a1*x + a2*pow(x,2) + a3*pow(x,3);
   lifetime = pow(10, logTime); // years
-  return lifetime * yr_s/TimeUnits // code_time
-
+  return lifetime;
 }
 
 /************************************************************************/

@@ -2412,11 +2412,48 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
 					float MaximumMetallicity);
 
   
-  // /* Pop III star particle explodes near spherical cloud problem initialization */
-  // int TriggeredStarFormationInitializeGrid(float StarParticleStarMass, 
-  //            float *Initialdt,
-  //            FLOAT StarParticleStarVelocity[],
-  //            FLOAT StarParticleStarPosition[]);
+ /* Pop III star particle explodes near spherical cloud problem initialization */
+int TriggeredStarFormationInitializeGrid(
+          float UniformDensity,
+          float UniformTemperature,
+          float UniformVelocity[MAX_DIMENSION],
+          float UniformBField[MAX_DIMENSION],  
+          float SphereRadius,
+          float SphereCoreRadius,
+          float SphereDensity,
+          float SphereTemperature,
+          FLOAT SpherePosition[MAX_DIMENSION],
+          float SphereVelocity[MAX_DIMENSION],
+          float SphereFracKeplerianRot,
+          float SphereTurbulence,
+          float SphereCutOff,
+          float SphereAng1,
+          float SphereAng2,
+          int   SphereNumShells,
+          int   SphereType,
+          int   SphereConstantPressure,
+          int   SphereSmoothSurface,
+          float SphereSmoothRadius,
+          float SphereHII,
+          float SphereHeII,
+          float SphereHeIII,
+          float SphereH2I,
+          int   UseColour,
+          float InitialFractionHII, 
+          float InitialFractionHeII,
+          float InitialFractionHeIII, 
+          float InitialFractionHM,
+          float InitialFractionH2I, 
+          float InitialFractionH2II,
+          char *DensityFilename,
+          char *HIIFractionFilename,
+          char *HeIIFractionFilename,
+          char *HeIIIFractionFilename,
+          char *TemperatureFilename,
+          float StarMass,
+          FLOAT StarPosition[MAX_DIMENSION],
+          float StarVelocity[MAX_DIMENSION],
+          float TimeToExplosion);
 
   /* Solve free-fall analytical solution. */
   int SolveOneZoneFreefall();

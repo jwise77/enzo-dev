@@ -1,8 +1,14 @@
 /***********************************************************************
 /
 /  INITIALIZE A TRIGGERED STAR FORMATION SIMULATION
-/
-/  written by: Corey Brummel-Smith
+/  
+/  based on PhotonTestInitialize(1) and TestStarParticleInitialize(2)
+/  (1) written by: Tom Abel
+/  date:       Oct 2003
+/  (2) written by: Greg Bryan
+/  date:       June, 2012
+
+/  modified:   Corey Brummel-Smith
 /  date:       October, 2019
 /
 /  PURPOSE:
@@ -33,6 +39,8 @@
 #include "Hierarchy.h"
 #include "TopGridData.h"
 
+void WriteListOfFloats(FILE *fptr, int N, float floats[]);
+void WriteListOfFloats(FILE *fptr, int N, FLOAT floats[]);
 
 static float TSF_InitialFractionHII   = 1.2e-5;
 static float TSF_InitialFractionHeII  = 1.0e-14;
@@ -41,7 +49,7 @@ static float TSF_InitialFractionHM    = 2.0e-9;
 static float TSF_InitialFractionH2I   = 2.0e-20;
 static float TSF_InitialFractionH2II  = 3.0e-14;
 
-int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
+int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
        HierarchyEntry &TopGrid, TopGridData &MetaData)
 {
   const char *DensName      = "Density";
@@ -288,8 +296,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &
       TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
       TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
       TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-      TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion)
-        ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n"));
+      TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion))
+        ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
   
  /* set up field names and units */
