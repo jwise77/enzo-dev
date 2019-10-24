@@ -43,13 +43,14 @@ double ph_Ang(double a1, double a2, double R, double r);
 // Returns random velocity from Maxwellian distribution
 double ph_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma);
 
-/*******************************************************/
+// Compute Population III star lifetime from Schaerer (2002)
+float popIII_lifetime(float mass);
 
-static int PhotonTestParticleCount = 0;
+/*******************************************************/
 
 int grid::TriggeredStarFormationInitializeGrid(
           float UniformDensity,
-          float UniformEnergy,
+          float UniformTemperature,
           float UniformVelocity[],
           float UniformBField[],  
           float SphereRadius,
@@ -72,8 +73,7 @@ int grid::TriggeredStarFormationInitializeGrid(
           float SphereHeII,
           float SphereHeIII,
           float SphereH2I,
-          int   SphereUseColour,
-          float InitialTemperature, int level, 
+          int   UseColour,
           float InitialFractionHII, 
           float InitialFractionHeII,
           float InitialFractionHeIII, 
@@ -85,10 +85,10 @@ int grid::TriggeredStarFormationInitializeGrid(
           char *HeIIFractionFilename,
           char *HeIIIFractionFilename,
           char *TemperatureFilename,
-          float StarVelocity[],
-          FLOAT StarPosition[],
           float StarMass,
-          int   SupernovaType)
+          FLOAT StarPosition[],
+          float StarVelocity[],
+          float TimeToExplosion)
 {
   /* declarations */
 
@@ -111,6 +111,26 @@ int grid::TriggeredStarFormationInitializeGrid(
     FieldType[NumberOfBaryonFields++] = Velocity2;
   if (GridRank > 2)
     FieldType[NumberOfBaryonFields++] = Velocity3;
+  if ( UseMHD ) {
+    FieldType[B1Num = NumberOfBaryonFields++] = Bfield1;
+    FieldType[B2Num = NumberOfBaryonFields++] = Bfield2;
+    FieldType[B3Num = NumberOfBaryonFields++] = Bfield3;
+    if( HydroMethod == MHD_RK ){
+        FieldType[PhiNum = NumberOfBaryonFields++] = PhiField;
+    }
+    if (UsePoissonDivergenceCleaning) {
+      FieldType[NumberOfBaryonFields++] = Phi_pField;
+    }
+  }
+
+  if ( CRModel ) {
+    CRNum = NumberOfBaryonFields;
+    FieldType[NumberOfBaryonFields++] = CRDensity;
+  }
+
+  if (WritePotential)
+    FieldType[NumberOfBaryonFields++] = GravPotential;
+
   if (MultiSpecies) {
     FieldType[DeNum    = NumberOfBaryonFields++] = ElectronDensity;
     FieldType[HINum    = NumberOfBaryonFields++] = HIDensity;
@@ -130,7 +150,7 @@ int grid::TriggeredStarFormationInitializeGrid(
     }
   }
   int ColourNum = NumberOfBaryonFields;
-  if (SphereUseColour)
+  if (UseColour)
     FieldType[NumberOfBaryonFields++] = Metallicity; /* fake it with metals */
 
   if (RadiativeTransfer && (MultiSpecies < 1)) {
@@ -175,6 +195,7 @@ int grid::TriggeredStarFormationInitializeGrid(
   FLOAT a, dadt, ExpansionFactor = 1;
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
      &TimeUnits, &VelocityUnits, Time);
+
   if (ComovingCoordinates) {
     CosmologyComputeExpansionFactor(Time, &a, &dadt);
     ExpansionFactor = a/(1.0+InitialRedshift);
@@ -201,7 +222,7 @@ int grid::TriggeredStarFormationInitializeGrid(
   double dpdr = 0, dpdr_old;
   sphere = 0;
   m200   = 0;
-  NFWPressure[0] = 1.0 * kboltz * InitialTemperature / (mu * mh);
+  NFWPressure[0] = 1.0 * kboltz * UniformTemperature / (mu * mh);
   FILE *fptr = fopen("NFWProfile.out", "w");
   for (i = 0; i < NFW_POINTS; i++) {
     NFWRadius[i] = SphereRadius*pow(10, -3*(float(i)/NFW_POINTS));
@@ -234,10 +255,10 @@ int grid::TriggeredStarFormationInitializeGrid(
  /**** ^^^ PROBABLY DONT NEED TO KEEP THIS ^^^ ******/
 
   /* Initialize star particle with mass in code units. */
-  float StarParticleMass = 1.0; 
+  float StarParticleMass; 
   StarParticleMass = StarMass*1.99e33* pow(LengthUnits*CellWidth[0][0],-3.0)/DensityUnits;
 
-  printf("Star Mass (code units): %f \n",StarParticleMass);
+  printf("Star Mass (code units): %f \n", StarParticleMass);
 
   /* Set number of particles for this grid and allocate space. */
 
@@ -250,26 +271,20 @@ int grid::TriggeredStarFormationInitializeGrid(
 
   for (i = 0; i < NumberOfParticles; i++) {
     ParticleNumber[i] = i;
-    ParticleType[i] = PARTICLE_TYPE_STAR;
+    ParticleType[i] = PARTICLE_TYPE_SINGLE_STAR;
   }
 
-  /* Set star particle. */ 
+  /* Set star particle position, velocity, mass, creation time, and lifetime. */ 
+
   for (dim = 0; dim < GridRank; dim++) {
     ParticlePosition[dim][0] = StarPosition[dim]*
       (DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
     ParticleVelocity[dim][0] = StarVelocity[dim] * 1e5*TimeUnits/LengthUnits;
   }
   ParticleMass[0] = StarParticleMass;
-  ParticleAttribute[0][0] = Time+1e-7; //creation time:make sure it is non-zero
-
-  /**** ASK WHAT TO DO ABOUT THIS PART ****/
-  if (STARFEED_METHOD(UNIGRID_STAR)) ParticleAttribute[1][0] = 10.0 * Myr_s/TimeUnits;
-  if (STARFEED_METHOD(MOM_STAR))
-    if(StarMakerExplosionDelayTime >= 0.0)
-      ParticleAttribute[1][0] = 1.0;
-    else
-      ParticleAttribute[1][0] = 10.0 * Myr_s/TimeUnits;
-  
+  float CodeTimeToExplosion = TimeToExplosion * 1000*yr_s / TimeUnits // convert kyr to codetime 
+  ParticleAttribute[0][0] = Time - CodeTimeToExplosion + 1e-7; // creation time 
+  ParticleAttribute[1][0] = popIII_lifetime(StarMass) // lifetime [code_time]
   ParticleAttribute[2][0] = 0.0;  // Metal fraction
   ParticleAttribute[3][0] = 0.0;  // metalfSNIa
 
@@ -485,7 +500,7 @@ int grid::TriggeredStarFormationInitializeGrid(
     if (Temperature_field != NULL)
       temperature = temp1 = Temperature_field[cindex];
     else
-      temperature = temp1 = InitialTemperature;
+      temperature = temp1 = UniformTemperature;
   }
 
   H2I_Fraction = InitialFractionH2I;
@@ -493,6 +508,7 @@ int grid::TriggeredStarFormationInitializeGrid(
   colour = 1.0e-10;
   for (dim = 0; dim < MAX_DIMENSION; dim++)
     Velocity[dim] = 0;
+
 
   /* Find distance from center of sphere. */
 
@@ -503,11 +519,14 @@ int grid::TriggeredStarFormationInitializeGrid(
 
   outer_radius = (SphereSmoothSurface == TRUE) ? 
     SphereSmoothRadius*SphereRadius : SphereRadius;
+
+  /* Compute fields for cells within the sphere */
+
   if (r < outer_radius) {
 
     /* Compute Cartesian coordinates for rotational properties */
 
-          FLOAT xpos, ypos, zpos, drad;
+    FLOAT xpos, ypos, zpos, drad;
 
     xpos = x-SpherePosition[0] - (dim == 1 ? 0.5*CellWidth[0][0] : 0.0);
     ypos = y-SpherePosition[1] - (dim == 2 ? 0.5*CellWidth[1][0] : 0.0);
@@ -736,7 +755,7 @@ int grid::TriggeredStarFormationInitializeGrid(
     if (dens1 > density) {
       density = dens1;
       if (SphereType != 7 && SphereType != 9) {
-          if (temp1 == InitialTemperature) {
+          if (temp1 == UniformTemperature) {
             if (SphereConstantPressure == TRUE) {
               temperature = SphereTemperature * 
                 (SphereDensity / dens1);
@@ -776,10 +795,10 @@ int grid::TriggeredStarFormationInitializeGrid(
     }
   } // end: if (SmoothSurface)
   
-
   /* Set density. */
 
-  BaryonField[0][n] = max(density*BaryonMeanDensity, tiny_number);
+  BaryonField[0][n] = max(density, tiny_number);
+
 
   /* If doing multi-species (HI, etc.), set these. */
 
@@ -803,12 +822,12 @@ int grid::TriggeredStarFormationInitializeGrid(
       BaryonField[H2INum][n] = H2I_Fraction *
         BaryonField[0][n]*CoolData.HydrogenFractionByMass*pow(301.0,5.1)*
         pow(OmegaMatterNow, float(1.5))/
-        (OmegaMatterNow*BaryonMeanDensity)/
+        (OmegaMatterNow)/
         HubbleConstantNow*2.0;
     else
       BaryonField[H2INum][n] = H2I_Fraction *
         BaryonField[0][n]*CoolData.HydrogenFractionByMass*pow(301.0,5.1)/
-        (2.0*BaryonMeanDensity);
+        (2.0);
     BaryonField[kdissH2INum][n] = 0.0;
     BaryonField[kphHMNum][n] = 0.0;
     BaryonField[kdissH2IINum][n] = 0.0;
@@ -841,7 +860,7 @@ int grid::TriggeredStarFormationInitializeGrid(
   
   /* If there is a colour field, set it. */
   
-  if (SphereUseColour)
+  if (UseColour)
     BaryonField[ColourNum][n] = colour;
   
   /* Set Velocities. */
@@ -874,54 +893,28 @@ int grid::TriggeredStarFormationInitializeGrid(
     for (dim = 0; dim < GridRank; dim++)
       BaryonField[1][n] += 0.5*pow(BaryonField[ivel+dim][n], 2);
 
-  /* Set particles if being used (generate a number of particle
-     proportional to density). */
-
-  if (SphereUseParticles)
-    if (i >= GridStartIndex[0] && i <= GridEndIndex[0] &&
-        j >= GridStartIndex[1] && j <= GridEndIndex[1] &&
-        k >= GridStartIndex[2] && k <= GridEndIndex[2]  ) {
-      ParticleCount += density;
-      while (ParticleCount > 1) {
-        if (SetupLoopCount > 0) {
-          ParticleMass[npart] = ParticleMeanDensity;
-          ParticleNumber[npart] = PhotonTestParticleCount++;
-          ParticleType[npart] = PARTICLE_TYPE_DARK_MATTER;
-      
-          /* Set random position within cell. */
-      
-          ParticlePosition[0][npart] = x + 
-                  CellWidth[0][0]*(FLOAT(rand())/FLOAT(RAND_MAX) - 0.5);
-          ParticlePosition[1][npart] = y +
-                  CellWidth[1][0]*(FLOAT(rand())/FLOAT(RAND_MAX) - 0.5);
-          ParticlePosition[2][npart] = z +
-                  CellWidth[2][0]*(FLOAT(rand())/FLOAT(RAND_MAX) - 0.5);
-      
-          /* Set bulk velocity. */
-      
-          for (dim = 0; dim < GridRank; dim++)
-            ParticleVelocity[dim][npart] = 
-              Velocity[dim]+UniformVelocity[dim];
-      
-          /* Add random velocity; */
-      
-          if (sigma != 0)
-            for (dim = 0; dim < GridRank; dim++)
-              ParticleVelocity[dim][npart] += 
-                ph_gasdev()*sigma/VelocityUnits;
-      
-        }
-        npart++;
-        ParticleCount -= 1.0;
-      }
-    } // end: if statement
+  /* Set uniform magnetic field */
+  if (UseMHD) {
+    for (dim = 0; dim < 3; dim++) 
+      BaryonField[B1Num+dim][n] = UniformBField[dim];
+    if (HydroMethod == MHD_RK){
+        BaryonField[PhiNum][n] = 0.;
+    }
+  }      
 
   } // end loop over grid
 
+  if(UseMHDCT == TRUE){
+    for(field=0;field<3;field++)
+      for(k=0; k<MagneticDims[field][2]; k++)
+  for(j=0; j<MagneticDims[field][1]; j++)
+    for(i=0; i<MagneticDims[field][0];i++){
+      index = i+MagneticDims[field][0]*(j+MagneticDims[field][1]*k);
+      MagneticField[field][index] = UniformBField[field];
+    }
+  }  // if(UseMHDCT == TRUE)
 
-  if (SphereUseParticles && debug)
-    printf("PhotonTestInitialize: DM NumberOfParticles = %"ISYM"\n", 
-     NumberOfParticles);
+
 
   delete [] density_field;
   delete [] HII_field;
@@ -1007,3 +1000,22 @@ double ph_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma)
    double x2 = mean + stdev*sqrt(-2*log(u1))*sin(2*pi*u2);
    return (x1/vel_unit);
 }
+
+/************************************************************************/
+
+float popIII_lifetime(float mass)
+{
+  // Compute Population III star lifetime from Schaerer (2002) 
+  // for masses (x) in range 5 Msun - 500 Msun (zero-metallicity, no mass loss)
+
+  float logTime, lifetime;
+  float x = log10(mass); // log10(M/Msun)
+  float a0 = 9.785, a1 = -3.759, a2 = 1.413, a3 = -0.186;
+  logTime = a0 + a1*x + a2*pow(x,2) + a3*pow(x,3);
+  lifetime = pow(10, logTime); // years
+  return lifetime * yr_s/TimeUnits // code_time
+
+}
+
+/************************************************************************/
+
