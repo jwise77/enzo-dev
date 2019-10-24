@@ -200,15 +200,19 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
           &TSF_UniformVelocity[0],
           &TSF_UniformVelocity[1],
           &TSF_UniformVelocity[2]);
-    ret += sscanf(line,"TSF_StarVelocity = %"PSYM" %"PSYM" %"PSYM, 
-          &TSF_StarVelocity[0],
-          &TSF_StarVelocity[1],
-          &TSF_StarVelocity[2]);
+    ret += sscanf(line, "TSF_UniformBField    = %"FSYM" %"FSYM" %"FSYM, 
+          &TSF_UniformBField[0],
+          &TSF_UniformBField[1],
+          &TSF_UniformBField[2]);    
+    ret += sscanf(line, "TSF_StarMass           = %"FSYM, &TSF_StarMass);
     ret += sscanf(line,"TSF_StarPosition = %"PSYM" %"PSYM" %"PSYM, 
           &TSF_StarPosition[0],
           &TSF_StarPosition[1],
           &TSF_StarPosition[2]);
-    ret += sscanf(line, "TSF_StarMass           = %"FSYM, &TSF_StarMass);
+    ret += sscanf(line,"TSF_StarVelocity = %"PSYM" %"PSYM" %"PSYM, 
+          &TSF_StarVelocity[0],
+          &TSF_StarVelocity[1],
+          &TSF_StarVelocity[2]);
     ret += sscanf(line, "TSF_TimeToExplosion    = %"ISYM,  &TSF_UseColour);    
     ret += sscanf(line, "TSF_UseColour          = %"ISYM,  &TSF_UseColour);
 
@@ -296,10 +300,9 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
       TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
       TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
       TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-      TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion))
+      TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion) == FAIL)
         ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
-  
  /* set up field names and units */
 
   int count = 0;
@@ -383,6 +386,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
     fprintf(Outfptr, "TSF_UniformTemperature     = %"FSYM"\n",     TSF_UniformTemperature);
     fprintf(Outfptr, "TSF_UniformVelocity        = %"FSYM" %"FSYM" %"FSYM"\n");
     WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_UniformVelocity); 
+    fprintf(Outfptr, "TSF_UniformBField          = %"FSYM" %"FSYM" %"FSYM"\n");
+    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_UniformBField);     
     fprintf(Outfptr, "TSF_StarPosition           = %"FSYM" %"FSYM" %"FSYM"\n");
     WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_StarPosition);     
     fprintf(Outfptr, "TSF_StarVelocity           = %"FSYM" %"FSYM" %"FSYM"\n");

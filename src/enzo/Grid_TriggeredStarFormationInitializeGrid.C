@@ -800,7 +800,6 @@ int grid::TriggeredStarFormationInitializeGrid(
 
   BaryonField[0][n] = max(density, tiny_number);
 
-
   /* If doing multi-species (HI, etc.), set these. */
 
   if (MultiSpecies > 0) {
@@ -914,8 +913,6 @@ int grid::TriggeredStarFormationInitializeGrid(
       MagneticField[field][index] = UniformBField[field];
     }
   }  // if(UseMHDCT == TRUE)
-
-
 
   delete [] density_field;
   delete [] HII_field;
