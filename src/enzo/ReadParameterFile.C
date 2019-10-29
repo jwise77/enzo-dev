@@ -1721,6 +1721,79 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
   }
 
 
+#ifdef USE_GRACKLE
+  /* If using Grackle chemistry and cooling library, override all other 
+     cooling machinery and do a translation of some of the parameters. */
+  if (use_grackle == TRUE) {
+    // grackle_data->with_radiative_cooling already set
+    // grackle_data->grackle_data_file already set
+    // grackle_data->UVbackground already set
+    // grackle_data->Compton_xray_heating already set
+    // grackle_data->LWbackground_intensity already set
+    // grackle_data->LWbackground_sawtooth_suppression already set
+    grackle_data->use_grackle                    = (Eint32) use_grackle;
+    grackle_data->Gamma                          = (double) Gamma;
+    grackle_data->primordial_chemistry           = (Eint32) MultiSpecies;
+    grackle_data->metal_cooling                  = (Eint32) MetalCooling;
+    grackle_data->h2_on_dust                     = (Eint32) H2FormationOnDust;
+    grackle_data->cmb_temperature_floor          = (Eint32) CloudyCoolingData.CMBTemperatureFloor;
+    grackle_data->three_body_rate                = (Eint32) ThreeBodyRate;
+    grackle_data->cie_cooling                    = (Eint32) CIECooling;
+    grackle_data->h2_optical_depth_approximation = (Eint32) H2OpticalDepthApproximation;
+    grackle_data->photoelectric_heating          = (Eint32) PhotoelectricHeating;
+    grackle_data->photoelectric_heating_rate     = (double) PhotoelectricHeatingRate;
+    grackle_data->NumberOfTemperatureBins        = (Eint32) CoolData.NumberOfTemperatureBins;
+    grackle_data->CaseBRecombination             = (Eint32) RateData.CaseBRecombination;
+    grackle_data->TemperatureStart               = (double) CoolData.TemperatureStart;
+    grackle_data->TemperatureEnd                 = (double) CoolData.TemperatureEnd;
+    grackle_data->NumberOfDustTemperatureBins    = (Eint32) RateData.NumberOfDustTemperatureBins;
+    grackle_data->DustTemperatureStart           = (double) RateData.DustTemperatureStart;
+    grackle_data->DustTemperatureEnd             = (double) RateData.DustTemperatureEnd;
+    grackle_data->HydrogenFractionByMass         = (double) CoolData.HydrogenFractionByMass;
+    grackle_data->DeuteriumToHydrogenRatio       = (double) CoolData.DeuteriumToHydrogenRatio;
+    grackle_data->SolarMetalFractionByMass       = (double) CoolData.SolarMetalFractionByMass;
+    //grackle_data->UVbackground_redshift_on       = (double) CoolData.RadiationRedshiftOn;
+    //grackle_data->UVbackground_redshift_off      = (double) CoolData.RadiationRedshiftOff;
+    //grackle_data->UVbackground_redshift_fullon   = (double) CoolData.RadiationRedshiftFullOn;
+    //grackle_data->UVbackground_redshift_drop     = (double) CoolData.RadiationRedshiftDropOff;
+    grackle_data->use_radiative_transfer         = (Eint32) RadiativeTransfer;
+    // grackle_data->radiative_transfer_coupled_rate_solver set in RadiativeTransferReadParameters
+    // grackle_data->radiative_transfer_hydrogen_only set in RadiativeTransferReadParameters
+    
+    // Initialize units structure.
+    FLOAT a_value, dadt;
+    a_value = 1.0;
+    code_units grackle_units;
+    grackle_units.a_units = 1.0;
+    if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
+                 &TimeUnits, &VelocityUnits, MetaData.Time) == FAIL) {
+      ENZO_FAIL("Error in GetUnits.\n");
+    }
+    if (ComovingCoordinates) {
+      if (CosmologyComputeExpansionFactor(MetaData.Time, &a_value, 
+                                          &dadt) == FAIL) {
+        ENZO_FAIL("Error in CosmologyComputeExpansionFactors.\n");
+      }
+      grackle_units.a_units            = (double) (1.0 / (1.0 + InitialRedshift));
+    }
+    grackle_units.comoving_coordinates = (Eint32) ComovingCoordinates;
+    grackle_units.density_units        = (double) DensityUnits;
+    grackle_units.length_units         = (double) LengthUnits;
+    grackle_units.time_units           = (double) TimeUnits;
+    grackle_units.velocity_units       = (double) VelocityUnits;
+    grackle_units.a_value              = (double) a_value;
+
+    // Initialize chemistry structure.
+    if (initialize_chemistry_data(&grackle_units) == FAIL) {
+      ENZO_FAIL("Error in Grackle initialize_chemistry_data.\n");
+    }
+
+    // Need to set these after initialize_chemistry_data since
+    // that function sets them automatically based on the tables.
+    if (FinalRedshift < grackle_data->UVbackground_redshift_off) {
+      grackle_data->UVbackground_redshift_off = FinalRedshift;
+      grackle_data->UVbackground_redshift_drop = FinalRedshift;
+    }
 
   // Check if Grackle is being used, and read in parameters if so
   if (GrackleReadParameters(fptr, MetaData.Time) == FAIL){
