@@ -80,6 +80,8 @@ int StarParticleRadTransfer(LevelHierarchyEntry *LevelArray[], int level,
 
   for (cstar = AllStars; cstar; cstar = cstar->NextStar) {
 
+    printf("IsARadiationSource? %d\n", cstar->IsARadiationSource(PhotonTime));
+
     // Check the rules if this star particle is radiative
     if (cstar->IsARadiationSource(PhotonTime)) {
 

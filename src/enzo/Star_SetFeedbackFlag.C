@@ -65,17 +65,23 @@ int Star::SetFeedbackFlag(FLOAT Time)
   switch (abs_type) {
 
   case PopIII:
-    if (this->type < 0) // birth
+    if (this->type < 0){ // birth
       this->FeedbackFlag = FORMATION;
+      printf("SetFeedbackFlag: FORMATION\n");
+    }
     else if (Time > this->BirthTime + this->LifeTime) // endpoint
       if (((this->Mass >= PISNLowerMass && this->Mass <= PISNUpperMass) ||
-	   (this->Mass >= TypeIILowerMass && this->Mass <= TypeIIUpperMass)) &&
-	  PopIIISupernovaExplosions == TRUE)
-	this->FeedbackFlag = SUPERNOVA;
+	        (this->Mass >= TypeIILowerMass && this->Mass <= TypeIIUpperMass)) &&
+	      PopIIISupernovaExplosions == TRUE){
+	      this->FeedbackFlag = SUPERNOVA;
+      printf("SetFeedbackFlag: SUPERNOVA\n");
+    }
       else
-	this->FeedbackFlag = NO_FEEDBACK; // BH formation
-    else // main sequence
+	      this->FeedbackFlag = NO_FEEDBACK; // BH formation
+    else{ // main sequence
       this->FeedbackFlag = NO_FEEDBACK;
+      printf("SetFeedbackFlag: MS NO_FEEDBACK\n");
+    }
     break;
 
   case SimpleSource:
@@ -135,6 +141,9 @@ int Star::SetFeedbackFlag(FLOAT Time)
    //this->type = abs_type;
 
   }
+
+   // this was commented. I uncommented it for testing
+   //this->type = abs_type;  
 
   return SUCCESS;
 }

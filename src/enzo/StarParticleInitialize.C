@@ -78,6 +78,7 @@ int StarParticleInitialize(HierarchyEntry *Grids[], TopGridData *MetaData,
 	}
 
   /* Create a master list of all star particles */
+  printf("\n\n Call StarParticleFindAll from StarParticleInitialize\n");
 
   if (StarParticleFindAll(LevelArray, AllStars) == FAIL) {
         ENZO_FAIL("Error in StarParticleFindAll.");

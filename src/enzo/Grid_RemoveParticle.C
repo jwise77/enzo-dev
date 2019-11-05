@@ -27,7 +27,7 @@
 
 int grid::RemoveParticle(int ID, bool disable)
 {
-
+  printf("\n RemoveParticle\n");
   int i, found = FALSE;
 
   if (MyProcessorNumber != ProcessorNumber)

@@ -142,6 +142,7 @@ void Star::CalculateFeedbackParameters(float &Radius,
     break;
 
   case FORMATION:
+    printf("\nFeedbackFlag\n");
     Radius = 0;
     break;
 

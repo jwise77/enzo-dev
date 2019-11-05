@@ -927,7 +927,8 @@ int grid::write_dataset(int ndims, hsize_t *dims, const char *name,
     file_dsp_id = H5Screate_simple((Eint32) ndims, dims, NULL);
     if( file_dsp_id == h5_error )
         ENZO_VFAIL("Error creating dataspace for %s", name)
-
+    //printf("\ngroup: %s\n", group);
+    printf("\nname:  %s", name);
     dset_id =  H5Dcreate(group, name, data_type, file_dsp_id, H5P_DEFAULT);
     if( dset_id == h5_error )
         ENZO_VFAIL("Error creating dataset %s", name)

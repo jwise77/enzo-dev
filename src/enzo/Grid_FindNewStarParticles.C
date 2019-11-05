@@ -37,7 +37,8 @@ int grid::FindNewStarParticles(int level)
   Star *NewStar, *cstar;
   bool exists;
 
-  for (i = 0; i < NumberOfParticles; i++)
+  for (i = 0; i < NumberOfParticles; i++) {
+  	printf("\nFindNewStarParticles: ParticleType[%d] = %d, -PARTICLE_TYPE_SINGLE_STAR = %d\n", i, ParticleType[i], -PARTICLE_TYPE_SINGLE_STAR);
     if (ParticleType[i] == -PARTICLE_TYPE_SINGLE_STAR ||
 	ParticleType[i] == -PARTICLE_TYPE_BLACK_HOLE ||
 	ParticleType[i] == -PARTICLE_TYPE_CLUSTER ||
@@ -47,17 +48,18 @@ int grid::FindNewStarParticles(int level)
 	(StarParticleRadiativeFeedback == TRUE &&
 	 ParticleType[i] == PARTICLE_TYPE_STAR)) {
 
-      // Check if it already exists (wasn't activated on the last
-      // timestep, usually because of insufficient mass)
-      exists = false;
-      for (cstar = Stars; cstar; cstar = cstar->NextStar)
-	if (cstar->Identifier == ParticleNumber[i]) {
-	  cstar->SetLevel(level);
-	  exists = true;
-	  break;
+    // Check if it already exists (wasn't activated on the last
+    // timestep, usually because of insufficient mass)
+    exists = false;
+    for (cstar = Stars; cstar; cstar = cstar->NextStar)
+	  if (cstar->Identifier == ParticleNumber[i]) {
+	    cstar->SetLevel(level);
+	    exists = true;
+	    break;
 	}
 
       if (!exists) {
+    printf("\n!Exists\n");
 	NewStar = new Star(this, i, level);
 
 	/* If using an IMF for Pop III stars, assign the mass after
@@ -74,6 +76,7 @@ int grid::FindNewStarParticles(int level)
       }
 
     }
+  }
 
   return SUCCESS;
 

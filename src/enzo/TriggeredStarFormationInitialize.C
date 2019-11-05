@@ -58,7 +58,14 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   const char *Vel1Name      = "x-velocity";
   const char *Vel2Name      = "y-velocity";
   const char *Vel3Name      = "z-velocity";
+  const char *BxName        = "Bx";
+  const char *ByName        = "By";
+  const char *BzName        = "Bz";
+  const char *PhiName       = "Phi";  
+  const char *Phi_pName     = "Phi_p";  
   const char *ColourName    = "colour";
+  const char *CRName        = "CREnergyDensity";
+  const char *GPotName      = "Grav_Potential";  
   const char *ElectronName  = "Electron_Density";
   const char *HIName        = "HI_Density";
   const char *HIIName       = "HII_Density";
@@ -110,7 +117,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   float TSF_StarVelocity[MAX_DIMENSION];
   FLOAT TSF_StarPosition[MAX_DIMENSION];
   float TSF_StarMass;
-  int   TSF_TimeToExplosion;
+  float TSF_TimeToExplosion;
 
   /* spherical cloud params */
 
@@ -213,7 +220,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
           &TSF_StarVelocity[0],
           &TSF_StarVelocity[1],
           &TSF_StarVelocity[2]);
-    ret += sscanf(line, "TSF_TimeToExplosion    = %"ISYM,  &TSF_UseColour);    
+    ret += sscanf(line, "TSF_TimeToExplosion    = %"FSYM,  &TSF_TimeToExplosion);    
     ret += sscanf(line, "TSF_UseColour          = %"ISYM,  &TSF_UseColour);
 
     /* read cloud parameters */
@@ -313,6 +320,23 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   DataLabel[count++] = (char*) Vel1Name;
   DataLabel[count++] = (char*) Vel2Name;
   DataLabel[count++] = (char*) Vel3Name;
+  if ( UseMHD ) {    
+    DataLabel[count++] = (char*) BxName;
+    DataLabel[count++] = (char*) ByName;
+    DataLabel[count++] = (char*) BzName;
+    if( HydroMethod == MHD_RK ){
+        DataLabel[count++] = (char*) PhiName;
+    }
+    if (UsePoissonDivergenceCleaning) {
+      DataLabel[count++] = (char*) Phi_pName;
+    }
+  }  
+  if ( CRModel ) {
+    DataLabel[count++] = (char*) CRName;
+  } 
+  if (WritePotential)
+    DataLabel[count++] = (char*) GPotName;
+
   if (MultiSpecies) {
     DataLabel[count++] = (char*) ElectronName;
     DataLabel[count++] = (char*) HIName;
@@ -331,9 +355,10 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
       DataLabel[count++] = (char*) HDIName;
     }
   }  // if Multispecies
-  if (TSF_UseColour)
-    DataLabel[count++] = (char*) ColourName;
   
+  if (TSF_UseColour)
+    DataLabel[count++] = (char*) ColourName;  
+
   if (RadiativeTransfer)
     if (MultiSpecies) {
       DataLabel[count++]  = (char*) kphHIName;
@@ -341,9 +366,9 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
       DataLabel[count++]  = (char*) kphHeIName;
       DataLabel[count++]  = (char*) kphHeIIName;
       if (MultiSpecies > 1) {
-  DataLabel[count++]= (char*) kdissH2IName;
-  DataLabel[count++]= (char*) kdissH2IIName;
-  DataLabel[count++]= (char*) kphHMName;
+        DataLabel[count++]= (char*) kdissH2IName;
+        DataLabel[count++]= (char*) kdissH2IIName;
+        DataLabel[count++]= (char*) kphHMName;
       }
     } // if RadiativeTransfer
 

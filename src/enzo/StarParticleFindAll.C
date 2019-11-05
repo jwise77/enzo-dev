@@ -64,6 +64,9 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 
     for (GridNum = 0; GridNum < NumberOfGrids; GridNum++) {
 
+      printf("\nIn StarParticleFindAll grid loop\n");
+
+
       // First update any existing star particles (e.g. position,
       // velocity)
       if (Grids[GridNum]->GridData->UpdateStarParticles(level) == FAIL) {
@@ -134,7 +137,6 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
     }
 
     /* If any, gather all shining particles */
-
     if (TotalNumberOfStars > 0) {
 
       recvBuffer = new StarBuffer[TotalNumberOfStars];
@@ -180,15 +182,20 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 #endif /* USE_MPI */
   }  /* ENDIF NumberOfProcessors > 1 */
   else {
+    printf("\n\n 1. TotalNumberOfStars in StarParticleFindAll = %d\n", TotalNumberOfStars);    
     TotalNumberOfStars = LocalNumberOfStars;
+    printf("\n\n 2. TotalNumberOfStars in StarParticleFindAll = %d\n", TotalNumberOfStars);    
+
     AllStars = LocalStars;
   }
 
   /* Find minimum stellar lifetime */
   
   for (cstar = AllStars; cstar; cstar = cstar->NextStar)
-    if (cstar->ReturnMass() > 1e-9)
+    if (cstar->ReturnMass() > 1e-9) {
       minStarLifetime = min(minStarLifetime, cstar->ReturnLifetime());
+      printf("\nminStarLifetime, cstar->ReturnLifetime() = %d, %d\n", minStarLifetime, cstar->ReturnLifetime());
+    }
 
   /* Store in global variable */
   

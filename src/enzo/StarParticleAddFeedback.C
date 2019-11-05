@@ -63,12 +63,8 @@ int StarParticleAddFeedback(TopGridData *MetaData,
   FLOAT Time;
   LevelHierarchyEntry *Temp;
 
-  if (AllStars == NULL) {
-      printf("\n%s\n\n", "In AddFeedback: No stars");
+  if (AllStars == NULL)
     return SUCCESS;
-  }
-
-  printf("\n%s\n\n", "In AddFeedback");
 
   LCAPERF_START("StarParticleAddFeedback");
 
@@ -146,7 +142,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 
     /* If there's no feedback or something weird happens, don't bother. */
 
-    printf("\n%f\n\n", influenceRadius);
+    //printf("\n%f\n\n", influenceRadius);
 
     if ( influenceRadius <= tiny_number || 
 	 SphereContained == FALSE ||

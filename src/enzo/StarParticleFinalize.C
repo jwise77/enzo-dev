@@ -145,7 +145,7 @@ int StarParticleFinalize(HierarchyEntry *Grids[], TopGridData *MetaData,
     if (AddedFeedback[count]) {
       ThisStar->ActivateNewStar(TimeNow, Timestep);
       if (ThisStar->ReturnType() == PopIII && PopIIIOutputOnFeedback == TRUE)
-	OutputNow = TRUE;
+	     OutputNow = TRUE;
     }
     ThisStar->ResetAccretion();
     ThisStar->CopyToGrid();
