@@ -183,8 +183,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   TSF_SphereConstantPressure = FALSE;
   TSF_SphereSmoothSurface = FALSE;
   
-  TSF_StarPosition[0] = 0.5;
-  TSF_StarPosition[1] = 0.5;
+  TSF_StarPosition[0] = 0.0;
+  TSF_StarPosition[1] = 0.0;
   TSF_StarPosition[2] = 0.0;
   TSF_StarMass        = 100.0; // Msun
   TSF_TimeToExplosion = 0.0;   // kyr

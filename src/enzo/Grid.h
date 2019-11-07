@@ -2850,7 +2850,7 @@ int TriggeredStarFormationInitializeGrid(
 
   int RemoveActiveParticle(PINT ID, int NewProcessorNumber);
   
-  int AddFeedbackSphere(Star *cstar, int level, float radius, float DensityUnits,
+  int AddFeedbackSphere(TopGridData *MetaData, Star *cstar, int level, float radius, float DensityUnits,
 			float LengthUnits, float VelocityUnits, 
 			float TemperatureUnits, float TimeUnits, double EjectaDensity, 
 			double EjectaMetalDensity, double EjectaThermalEnergy,

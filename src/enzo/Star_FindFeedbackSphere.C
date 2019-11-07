@@ -33,7 +33,7 @@
 #include "CommunicationUtilities.h"
 #include "phys_constants.h"
 
-int Star::FindFeedbackSphere(LevelHierarchyEntry *LevelArray[], int level,
+int Star::FindFeedbackSphere(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[], int level,
 			     float &Radius, double &EjectaDensity, double &EjectaThermalEnergy,
 			     int &SphereContained, int &SkipMassRemoval,
 			     float DensityUnits, float LengthUnits, 
@@ -110,12 +110,16 @@ int Star::FindFeedbackSphere(LevelHierarchyEntry *LevelArray[], int level,
   while (SphereTooSmall || MBHFeedbackThermalRadiusTooSmall) { 
 #endif
   while (SphereTooSmall) { 
+    printf("Star_FindFeedbackSphere: 1.Radius = %d\n", Radius);    
     Radius += CellWidth;
+    printf("Star_FindFeedbackSphere: 2.Radius = %d\n", Radius);    
 
     /* Before we sum the enclosed mass, check if the sphere with
        r=Radius is completely contained in grids on this level */
 
     SphereContained = this->SphereContained(LevelArray, level, Radius);
+    printf("Star_FindFeedbackSphere: SphereContained = %d\n", SphereContained);
+
     if (SphereContained == FALSE)
       break;
 
@@ -275,21 +279,22 @@ int Star::FindFeedbackSphere(LevelHierarchyEntry *LevelArray[], int level,
     // single Pop III star
     if (StarType == PopIII && LevelArray[level+1] != NULL)
       if (MassEnclosed > (1.0+epsMass)*(AccretedMass+float(Mass))) {
-	SphereContained = FALSE;
-	return SUCCESS;
+	     SphereContained = FALSE;
+       printf("Star_FindFeedbackSphere: FeedbackFlag = FORMATION, SphereContained = FALSE\n");
+	     return SUCCESS;
       }
     if (StarType == SimpleSource && LevelArray[level+1] != NULL)
       if (MassEnclosed > (1.0+epsMass)*(AccretedMass+float(Mass))) {
-	SphereContained = FALSE;
-	return SUCCESS;
+	     SphereContained = FALSE;
+	     return SUCCESS;
       }
     // t_dyn \propto M_enc^{-1/2} => t_dyn > sqrt(1.0+eps)*lifetime
     // Star cluster
     if (StarType == PopII && LevelArray[level+1] != NULL) {
       eps_tdyn = sqrt(1.0+epsMass) * tdyn_code;
       if (DynamicalTime > eps_tdyn) {
-	SphereContained = FALSE;
-	return SUCCESS;
+	     SphereContained = FALSE;
+	     return SUCCESS;
       }
     }
 

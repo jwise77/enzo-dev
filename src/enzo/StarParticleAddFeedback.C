@@ -63,8 +63,12 @@ int StarParticleAddFeedback(TopGridData *MetaData,
   FLOAT Time;
   LevelHierarchyEntry *Temp;
 
-  if (AllStars == NULL)
+  if (AllStars == NULL) {
+      printf("\nIn AddFeedback: No stars\n");
     return SUCCESS;
+  }
+
+  printf("\nAddFeedbackSTART\n");
 
   LCAPERF_START("StarParticleAddFeedback");
 
@@ -109,7 +113,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
     dtForThisStar = LevelArray[level]->GridData->ReturnTimeStep();
 	  
     /* Compute some parameters */
-
+    printf("StarParticleAddFeedback: Call CalculateFeedbackParameters\n");
     cstar->CalculateFeedbackParameters
       (influenceRadius, RootCellWidth, SNe_dt, EjectaDensity, 
        EjectaThermalEnergy, EjectaMetalDensity, DensityUnits, LengthUnits, 
@@ -128,8 +132,10 @@ int StarParticleAddFeedback(TopGridData *MetaData,
        for SNe) is enclosed within grids on this level */
 
     LCAPERF_START("star_FindFeedbackSphere");
+    printf("StarParticleAddFeedback: call FindFeedbackSphere\n");
+
     cstar->FindFeedbackSphere
-      (LevelArray, level, influenceRadius, EjectaDensity, EjectaThermalEnergy, 
+      (MetaData, LevelArray, level, influenceRadius, EjectaDensity, EjectaThermalEnergy, 
        SphereContained, SkipMassRemoval, DensityUnits, LengthUnits, 
        TemperatureUnits, TimeUnits, VelocityUnits, Time, MarkedSubgrids);
     LCAPERF_STOP("star_FindFeedbackSphere");
@@ -142,15 +148,17 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 
     /* If there's no feedback or something weird happens, don't bother. */
 
-    //printf("\n%f\n\n", influenceRadius);
+    printf("StarParticleAddFeedback: SphereContained %d\n", SphereContained);
 
     if ( influenceRadius <= tiny_number || 
-	 SphereContained == FALSE ||
-	((cstar->ReturnFeedbackFlag() == MBH_THERMAL ||
-	  cstar->ReturnFeedbackFlag() == MBH_JETS) &&
-	 (influenceRadius >= RootCellWidth/2 || 
-	  EjectaThermalEnergy <= tiny_number)) )
+   SphereContained == FALSE ||
+  ((cstar->ReturnFeedbackFlag() == MBH_THERMAL ||
+    cstar->ReturnFeedbackFlag() == MBH_JETS) &&
+   (influenceRadius >= RootCellWidth/2 || 
+    EjectaThermalEnergy <= tiny_number)) ){
+      printf("StarParticleAddFeedback: CONTINUE (no feedback this level)");
       continue;
+    }
 
     /* Determine if a sphere is enclosed within the grids on next level
        If that is the case, we perform AddFeedbackSphere not here, 
@@ -164,7 +172,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 	 cstar->ReturnFeedbackFlag() == CONT_SUPERNOVA) &&
 	LevelArray[level+1] != NULL)
       cstar->FindFeedbackSphere
-	(LevelArray, level+1, influenceRadius, EjectaDensity, EjectaThermalEnergy, 
+	(MetaData, LevelArray, level+1, influenceRadius, EjectaDensity, EjectaThermalEnergy, 
 	 SphereContainedNextLevel, dummy, DensityUnits, LengthUnits, 
 	 TemperatureUnits, TimeUnits, VelocityUnits, Time, MarkedSubgrids);
     LCAPERF_STOP("star_FindFeedbackSphere2");
@@ -223,13 +231,16 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 	deltaE = 0.0;
       }
 
-      for (l = level; l < MAX_DEPTH_OF_HIERARCHY; l++)
-	for (Temp = LevelArray[l]; Temp; Temp = Temp->NextGridThisLevel) 
-	  Temp->GridData->AddFeedbackSphere
-	    (cstar, l, influenceRadius, DensityUnits, LengthUnits, 
-	     VelocityUnits, TemperatureUnits, TimeUnits, EjectaDensity, 
-	     EjectaMetalDensity, EjectaThermalEnergy, Q_HI, sigma, deltaE, 
-	     CellsModified);
+      for (l = level; l < MAX_DEPTH_OF_HIERARCHY; l++) {
+	     for (Temp = LevelArray[l]; Temp; Temp = Temp->NextGridThisLevel) {
+         printf("StarParticleAddFeedback: calling Grid_AddFeedbackSphere\n");
+	       Temp->GridData->AddFeedbackSphere
+	         (MetaData, cstar, l, influenceRadius, DensityUnits, LengthUnits, 
+	          VelocityUnits, TemperatureUnits, TimeUnits, EjectaDensity, 
+	          EjectaMetalDensity, EjectaThermalEnergy, Q_HI, sigma, deltaE, 
+	          CellsModified);
+        }
+      }
     } // ENDIF
 
 //    fprintf(stdout, "StarParticleAddFeedback[%"ISYM"][%"ISYM"]: "

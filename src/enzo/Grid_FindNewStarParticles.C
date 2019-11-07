@@ -59,7 +59,7 @@ int grid::FindNewStarParticles(int level)
 	}
 
       if (!exists) {
-    printf("\n!Exists\n");
+    printf("Grid_FindNewStarParticle: Creating new star.\n");
 	NewStar = new Star(this, i, level);
 
 	/* If using an IMF for Pop III stars, assign the mass after

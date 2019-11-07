@@ -130,7 +130,7 @@ int StarParticleSubtractAccretedMass(TopGridData *MetaData,
 	 we use FindFeedbackSphere function, but we are not doing any "feedback" here; 
 	 we simply subtract the mass */
 
-      cstar->FindFeedbackSphere(LevelArray, level, influenceRadius, 
+      cstar->FindFeedbackSphere(MetaData, LevelArray, level, influenceRadius, 
 				Subtraction, dummy_float, 
 				SphereContained, dummy, DensityUnits, 
 				LengthUnits, TemperatureUnits, TimeUnits, 
@@ -149,7 +149,7 @@ int StarParticleSubtractAccretedMass(TopGridData *MetaData,
       SphereContainedNextLevel = FALSE;
 
       if (LevelArray[level+1] != NULL) {
-	cstar->FindFeedbackSphere(LevelArray, level+1, influenceRadius, 
+	cstar->FindFeedbackSphere(MetaData, LevelArray, level+1, influenceRadius, 
 				  Subtraction, dummy_float, 
 				  SphereContainedNextLevel, dummy, DensityUnits, 
 				  LengthUnits, TemperatureUnits, TimeUnits, 

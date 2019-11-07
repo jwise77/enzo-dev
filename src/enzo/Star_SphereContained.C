@@ -70,8 +70,18 @@ int Star::SphereContained(LevelHierarchyEntry *LevelArray[], int level,
 	if (cornerDone[i]) continue;  // Skip if already locally found
 	inside = true;
 	for (dim = 0; dim < MAX_DIMENSION; dim++)
-	  inside &= (corners[dim][i] >= Temp->GridData->GridLeftEdge[dim] &&
-		     corners[dim][i] <= Temp->GridData->GridRightEdge[dim]);
+    /* valid corner if inside the grid, or outside domain boundary and supernova.
+       if outside domain boundary, feedback/mass removal will be handled 
+       by grid functions based on boundary conditions. */
+    if (FeedbackFlag == SUPERNOVA) // hack
+      inside &= (corners[dim][i] >= Temp->GridData->GridLeftEdge[dim] &&
+                 corners[dim][i] <= Temp->GridData->GridRightEdge[dim]) ||
+                 corners[dim][i] <= DomainLeftEdge[dim]   ||
+                 corners[dim][i] >= DomainRightEdge[dim]; 
+    else
+      inside &= (corners[dim][i] >= Temp->GridData->GridLeftEdge[dim] &&
+           corners[dim][i] <= Temp->GridData->GridRightEdge[dim]);
+
 	if (inside)
 	  cornerDone[i] = 1;
       } // ENDFOR corners

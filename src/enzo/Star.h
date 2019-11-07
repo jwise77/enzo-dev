@@ -17,6 +17,7 @@
 #include "typedefs.h"
 #include "Grid.h"
 #include "Hierarchy.h"
+#include "TopGridData.h"
 #include "LevelHierarchy.h"
 #include "StarBuffer.h"
 
@@ -157,7 +158,7 @@ public:
 				      float DensityUnits, float LengthUnits,
 				      int &CellsModified);
 
-  int FindFeedbackSphere(LevelHierarchyEntry *LevelArray[], int level,
+  int FindFeedbackSphere(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[], int level,
 			 float &Radius, double &EjectaDensity, double &EjectaThermalEnergy,
 			 int &SphereContained, int &SkipMassRemoval,
 			 float DensityUnits, float LengthUnits, 

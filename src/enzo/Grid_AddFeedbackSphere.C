@@ -44,7 +44,7 @@
 
 int FindField(int field, int farray[], int numfields);
 
-int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityUnits, 
+int grid::AddFeedbackSphere(TopGridData *MetaData, Star *cstar, int level, float radius, float DensityUnits, 
 			    float LengthUnits, float VelocityUnits, 
 			    float TemperatureUnits, float TimeUnits, double EjectaDensity, 
 			    double EjectaMetalDensity, double EjectaThermalEnergy, 
@@ -187,14 +187,18 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
       delz = CellLeftEdge[2][k] + 0.5*CellWidth[2][k] - cstar->pos[2];
       sz = sign(delz);
       delz = fabs(delz);
-      delz = min(delz, DomainWidth[2]-delz);
+      if ((MetaData->LeftFaceBoundaryCondition[2] == periodic && sz < 0) ||
+          (MetaData->RightFaceBoundaryCondition[2] == periodic && sz > 0))
+        delz = min(delz, DomainWidth[2]-delz);
 
-      for (j = 0; j < GridDimension[1]; j++) {
+    for (j = 0; j < GridDimension[1]; j++) {
 
-	dely = CellLeftEdge[1][j] + 0.5*CellWidth[1][j] - cstar->pos[1];
-	sy = sign(dely);
-	dely = fabs(dely);
-	dely = min(dely, DomainWidth[1]-dely);
+	  dely = CellLeftEdge[1][j] + 0.5*CellWidth[1][j] - cstar->pos[1];
+	  sy = sign(dely);
+	  dely = fabs(dely);
+      if ((MetaData->LeftFaceBoundaryCondition[1] == periodic && sy < 0) ||
+          (MetaData->RightFaceBoundaryCondition[1] == periodic && sy > 0))
+        dely = min(dely, DomainWidth[1]-dely);
 
 	index = (k*GridDimension[1] + j)*GridDimension[0];
 	for (i = 0; i < GridDimension[0]; i++, index++) {
@@ -202,8 +206,10 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 	  delx = CellLeftEdge[0][i] + 0.5*CellWidth[0][i] - cstar->pos[0];
 	  sx = sign(delx);
 	  delx = fabs(delx);
-	  delx = min(delx, DomainWidth[0]-delx);
-
+      if ((MetaData->LeftFaceBoundaryCondition[0] == periodic && sx < 0) ||
+          (MetaData->RightFaceBoundaryCondition[0] == periodic && sx > 0))
+        delx = min(delx, DomainWidth[0]-delx);
+      
 	  radius2 = delx*delx + dely*dely + delz*delz;
 	  if (radius2 <= outerRadius2) {
 
