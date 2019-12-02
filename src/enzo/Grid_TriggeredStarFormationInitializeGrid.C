@@ -283,17 +283,16 @@ int grid::TriggeredStarFormationInitializeGrid(
     ParticleVelocity[dim][0] = StarVelocity[dim] * 1e5*TimeUnits/LengthUnits;
   }
   ParticleMass[0] = StarParticleMass;
-  float CodeTimeToExplosion = TimeToExplosion * Myr_s / TimeUnits;     // convert kyr to codetime 
+  float CodeTimeToExplosion = TimeToExplosion * Myr_s / TimeUnits;     // convert Myr to codetime 
   ParticleAttribute[0][0] = Time + 1e-7;             // creation time 
   ParticleAttribute[1][0] = CodeTimeToExplosion;
   ParticleAttribute[2][0] = 0.0;  // Metal fraction
   ParticleAttribute[3][0] = 0.0;  // metalfSNIa
 
-  printf("\nTimeToExplosion %g\n", TimeToExplosion);
-  printf("CodeTimeToExplosion %g\n", CodeTimeToExplosion);
-  printf("Myr_s / TimeUnits %g\n",  Myr_s / TimeUnits);  
-
-  // End Initialize star particle
+  printf("\nCodeTimeToExplosion %f\n", CodeTimeToExplosion);
+  printf("\nTimeToExplosion %f\n", TimeToExplosion);
+  
+  /* End Initialize star particle */
 
   /* Set up the baryon field. */
   /* compute size of fields */
@@ -911,11 +910,11 @@ int grid::TriggeredStarFormationInitializeGrid(
   if(UseMHDCT == TRUE){
     for(field=0;field<3;field++)
       for(k=0; k<MagneticDims[field][2]; k++)
-  for(j=0; j<MagneticDims[field][1]; j++)
-    for(i=0; i<MagneticDims[field][0];i++){
-      index = i+MagneticDims[field][0]*(j+MagneticDims[field][1]*k);
-      MagneticField[field][index] = UniformBField[field];
-    }
+        for(j=0; j<MagneticDims[field][1]; j++)
+          for(i=0; i<MagneticDims[field][0];i++){
+            index = i+MagneticDims[field][0]*(j+MagneticDims[field][1]*k);
+            MagneticField[field][index] = UniformBField[field];
+            }
   }  // if(UseMHDCT == TRUE)
 
   delete [] density_field;
