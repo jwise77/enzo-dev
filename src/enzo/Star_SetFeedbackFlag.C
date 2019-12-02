@@ -141,9 +141,5 @@ int Star::SetFeedbackFlag(FLOAT Time)
    //this->type = abs_type;
 
   }
-
-   // Hack to add star as photon source
-   this->type = abs_type;  
-
   return SUCCESS;
 }

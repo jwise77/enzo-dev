@@ -272,7 +272,7 @@ int grid::TriggeredStarFormationInitializeGrid(
 
   for (i = 0; i < NumberOfParticles; i++) {
     ParticleNumber[i] = i;
-    ParticleType[i] = -PopIII;
+    ParticleType[i] = -PopIII; // particle type must be negative to create star object
   }
 
   /* Set star particle position, velocity, mass, creation time, and lifetime. */ 
@@ -291,6 +291,21 @@ int grid::TriggeredStarFormationInitializeGrid(
 
   printf("\nCodeTimeToExplosion %f\n", CodeTimeToExplosion);
   printf("\nTimeToExplosion %f\n", TimeToExplosion);
+  
+
+    // Create star particle object
+    if (this->FindNewStarParticles(GridLevel) == FAIL) {
+    ENZO_FAIL("Error in grid::FindNewStarParticles.");
+    }
+
+  /* Reset particle type to be positive*/
+  for (i = 0; i < NumberOfParticles; i++) {
+    ParticleNumber[i] = i;
+    ParticleType[i] = PopIII;
+  }
+  Star *cstar;
+  for (cstar = Stars; cstar; cstar = cstar->NextStar)
+    cstar->type = PopIII;
   
   /* End Initialize star particle */
 
