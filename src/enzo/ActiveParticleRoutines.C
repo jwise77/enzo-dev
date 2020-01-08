@@ -265,7 +265,14 @@ void ActiveParticleType_SmartStar::SmartMerge(ActiveParticleType_SmartStar *a)
   }
   Mass += a->Mass;
   NotEjectedMass += a->NotEjectedMass;
-  ParticleClass = max(ParticleClass, a->ParticleClass);
+  if (ParticleClass == BH || a->ParticleClass == BH) {
+    ParticleClass = BH;
+  } else
+  {
+      ParticleClass = min(ParticleClass, a->ParticleClass);
+  }
+
+  //ParticleClass = max(ParticleClass, a->ParticleClass);
   return;
 }
 
