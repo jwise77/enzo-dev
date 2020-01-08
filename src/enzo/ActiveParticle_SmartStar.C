@@ -998,7 +998,7 @@ int ActiveParticleType_SmartStar::UpdateAccretionRateStats(int nParticles,
 	  }
 	  else {
 	    float Age = Time - SS->BirthTime;
-	    if(Age*TimeUnits/yr_s > 1e4) { /* Don't do this at very start */
+	    if(Age*TimeUnits/yr_s > 1e4 && SS->ParticleClass == SMS) { /* Don't do this at very start */
 	      printf("%s: WARNING: ParticleClass switching from SMS to POPIII (deltatime = %f kyrs)\n", __FUNCTION__,
 		     deltatime*TimeUnits/(yr_s*1e3));
 	      printf("%s: WARNING: Accretion Rate = %f Msolar/yr. Critical rate = %f Msolar/yr\n", __FUNCTION__,

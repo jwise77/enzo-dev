@@ -322,7 +322,7 @@ c
 
       do n = 1,ncolor
          do i = i1,i2+1
-            colf(i,j,n) = dt*colf(i,j,n)
+            colf(i,j,n) = dt/dx(i)*colf(i,j,n)
          enddo
       enddo
 c
@@ -394,15 +394,15 @@ c
       do n=1, ncolor
          do i=i1, i2
             if (colslice(i,j,n) +
-     $           (colf(i,j,n)-colf(i+1,j,n))/dx(i)
+     $           (colf(i,j,n)-colf(i+1,j,n))
      $           .lt. 0._RKIND) then
                write(6,*) 'flux_hllc: negative color',i,j,n
                write(6,*) 'a', dx(i), colf(i-1,j,n),colf(i,j,n),
      $              colf(i+1,j,n)
                write(6,*) 'b', colslice(i,j,n)+(colf(i,j,n)-
-     $              colf(i+1,j,n))/dx(i),
+     $              colf(i+1,j,n)),
      $              colslice(i,j,n),
-     $              (colf(i,j,n)-colf(i+1,j,n))/dx(i)
+     $              (colf(i,j,n)-colf(i+1,j,n))
                write(6,*) 'c', colslice(i-1,j,n),colslice(i,j,n),
      $              colslice(i+1,j,n)
                write(6,*) 'd', colls(i-1,j,n),colls(i,j,n),

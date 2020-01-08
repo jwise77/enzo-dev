@@ -1,4 +1,4 @@
-#define DEBUG 0
+#define DEBUG 1
 #define MYPROC MyProcessorNumber == ProcessorNumber
 /***********************************************************************
 /
@@ -29,8 +29,6 @@
 #include "phys_constants.h"
 
 #define MAX_HEALPIX_LEVEL 29
-
-
 
 RadiationSourceEntry* DeleteRadiationSource(RadiationSourceEntry *RS);
 FLOAT FindCrossSection(int type, float energy);
