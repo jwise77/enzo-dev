@@ -88,7 +88,7 @@ void Star::CalculateFeedbackParameters(float &Radius,
     EjectaVolume = 4.0/3.0 * pi * pow(Radius*LengthUnits, 3);
     EjectaDensity = Mass * SolarMass / EjectaVolume / DensityUnits;
 
-    printf("\n\nStar_CalculateFeedbackParameters: FeedbackFlag = SUPERNOVA\nEjectaDensity = %f\n\n", EjectaDensity);
+    printf("\n\nStar_CalculateFeedbackParameters: FeedbackFlag = SUPERNOVA\nEjectaDensity = %f\nMass = %f\n", EjectaDensity, this->Mass);
 
     // pair-instability SNe
     if (this->Mass >= PISNLowerMass && this->Mass <= PISNUpperMass) {
@@ -126,7 +126,7 @@ void Star::CalculateFeedbackParameters(float &Radius,
 #ifdef DEBUG
     if (MyProcessorNumber == ROOT_PROCESSOR)
       if (Radius > 10*PopIIISupernovaRadius * pc_cm / LengthUnits) {
-	printf("WARNING: Inserting PISN into a large radius!  %g pc\n",
+	printf("WARNING: Inserting SN into a large radius!  %g pc\n",
 	       Radius * LengthUnits / pc_cm);
       }
 #endif    

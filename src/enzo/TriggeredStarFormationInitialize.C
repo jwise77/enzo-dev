@@ -41,6 +41,9 @@
 
 void WriteListOfFloats(FILE *fptr, int N, float floats[]);
 void WriteListOfFloats(FILE *fptr, int N, FLOAT floats[]);
+void AddLevel(LevelHierarchyEntry *Array[], HierarchyEntry *Grid, int level);
+int RebuildHierarchy(TopGridData *MetaData,
+         LevelHierarchyEntry *LevelArray[], int level);
 
 static float TSF_InitialFractionHII   = 1.2e-5;
 static float TSF_InitialFractionHeII  = 1.0e-14;
@@ -94,7 +97,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
 
   char  line[MAX_LINE_LENGTH];
   char *dummy = new char[MAX_LINE_LENGTH];
-  int   dim, ret, i, source;
+  int   dim, ret, level, i, source;
   dummy[0] = 0;
 
   char *TSF_DensityFilename       = NULL,
@@ -102,8 +105,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
        *TSF_HeIIFractionFilename  = NULL,
        *TSF_HeIIIFractionFilename = NULL,
        *TSF_TemperatureFilename   = NULL;
-  int   TSF_UseColour       = TRUE; 
- 
+  int   TSF_UseColour             = TRUE; 
+  int   TSF_RefineAtStart         = TRUE;
 
   /* uniform background params */
 
@@ -124,7 +127,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   int   TSF_SphereType,
         TSF_SphereConstantPressure,
         TSF_SphereSmoothSurface,
-        TSF_SphereNumShells;
+        TSF_SphereNumShells,
+        TSF_SphereInitialLevel;
   float TSF_SphereDensity,
         TSF_SphereTemperature,
         TSF_SphereVelocity[MAX_DIMENSION],
@@ -182,6 +186,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   TSF_SphereType       = 0;
   TSF_SphereConstantPressure = FALSE;
   TSF_SphereSmoothSurface = FALSE;
+  TSF_SphereInitialLevel  = 0;
   
   TSF_StarPosition[0] = 0.0;
   TSF_StarPosition[1] = 0.0;
@@ -201,6 +206,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
 
     /* read parameters */
 
+    ret += sscanf(line, "TSF_RefineAtStart = %"ISYM, 
+                  &TSF_RefineAtStart);    
     ret += sscanf(line, "TSF_UniformDensity     = %"FSYM, &TSF_UniformDensity);
     ret += sscanf(line, "TSF_UniformTemperature = %"FSYM,  &TSF_UniformTemperature);    
     ret += sscanf(line, "TSF_UniformVelocity    = %"FSYM" %"FSYM" %"FSYM, 
@@ -264,6 +271,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
     ret += sscanf(line, "TSF_SphereAng1             = %"FSYM, &TSF_SphereAng1);
     ret += sscanf(line, "TSF_SphereAng2             = %"FSYM, &TSF_SphereAng2);
     ret += sscanf(line, "TSF_SphereNumShells        = %"ISYM, &TSF_SphereNumShells);
+    ret += sscanf(line, "TSF_SphereInitialLevel     = %"ISYM, &TSF_SphereInitialLevel);
     ret += sscanf(line, "TSF_SphereHIIFraction      = %"FSYM, &TSF_SphereHIIFraction);
     ret += sscanf(line, "TSF_SphereHeIIFraction     = %"FSYM, &TSF_SphereHeIIFraction);
     ret += sscanf(line, "TSF_SphereHeIIIFraction    = %"FSYM, &TSF_SphereHeIIIFraction);
@@ -291,7 +299,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
 
   } // end input from parameter file
 
-  /* set up uniform grid, star particle, and spherical cloud */
+  /* set up uniform grid, star particle, and spherical cloud on TopGrid */
 
   if (TopGrid.GridData->TriggeredStarFormationInitializeGrid(
       TSF_UniformDensity, TSF_UniformTemperature,
@@ -309,6 +317,159 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
       TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
       TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion) == FAIL)
         ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
+
+  /* Convert minimum initial overdensity for refinement to mass
+     (unless MinimumMass itself was actually set). */
+  for (int count = 0; count < MAX_FLAGGING_METHODS; count++)
+    if (MinimumMassForRefinement[count] == FLOAT_UNDEFINED) {
+      MinimumMassForRefinement[count] = MinimumOverDensityForRefinement[count];
+      for (dim = 0; dim < MetaData.TopGridRank; dim++)
+        MinimumMassForRefinement[count] *=(DomainRightEdge[dim]-DomainLeftEdge[dim])/
+       float(MetaData.TopGridDims[dim]);
+    }        
+
+  int MaxInitialLevel = 0;
+  MaxInitialLevel = max(MaxInitialLevel, TSF_SphereInitialLevel);
+
+  if (TSF_RefineAtStart) {
+
+    /* If the user specified an initial refinement level for a sphere,
+       then manually create the hierarchy first. */
+
+    if (MaxInitialLevel > 0) {
+
+      int lev, max_level;
+      float dx;
+      HierarchyEntry **Subgrid;
+      int NumberOfSubgridDims[MAX_DIMENSION];
+      FLOAT ThisLeftEdge[MAX_DIMENSION], ThisRightEdge[MAX_DIMENSION];
+
+      max_level = TSF_SphereInitialLevel;
+      if (max_level > 0) {
+
+        Subgrid = new HierarchyEntry*[max_level];
+        for (lev = 0; lev < max_level; lev++)
+          Subgrid[lev] = new HierarchyEntry;
+
+        for (lev = 0; lev < max_level; lev++) {
+          
+          for (dim = 0; dim < MetaData.TopGridRank; dim++) {
+            dx = 1.0 / float(MetaData.TopGridDims[dim]) / POW(RefineBy, lev);
+            ThisLeftEdge[dim] = TSF_SpherePosition[dim] -
+              0.5 * TSF_SphereRadius - 2*dx;  // plus some buffer
+            ThisLeftEdge[dim] = nint(ThisLeftEdge[dim] / dx) * dx;
+            ThisRightEdge[dim] = TSF_SpherePosition[dim] +
+              0.5 * TSF_SphereRadius + 2*dx;
+            ThisRightEdge[dim] = nint(ThisRightEdge[dim] / dx) * dx;
+            NumberOfSubgridDims[dim] = 
+              nint((ThisRightEdge[dim] - ThisLeftEdge[dim]) / 
+                   (DomainRightEdge[dim] - DomainLeftEdge[dim]) / dx);    
+          } // ENDFOR dims
+
+          if (debug)
+            printf("TSF_:: Level[%"ISYM"]: NumberOfSubgridZones[0] = %"ISYM"\n",
+             lev+1, NumberOfSubgridDims[0]);
+          
+          if (NumberOfSubgridDims[0] > 0) {
+
+            // Insert into AMR hierarchy
+            if (lev == 0) {
+        Subgrid[lev]->NextGridThisLevel = TopGrid.NextGridNextLevel;
+        TopGrid.NextGridNextLevel = Subgrid[lev];
+        Subgrid[lev]->ParentGrid = &TopGrid;
+            } else {
+        Subgrid[lev]->NextGridThisLevel = NULL;
+        Subgrid[lev]->ParentGrid = Subgrid[lev-1];
+            }
+            if (lev == max_level-1)
+        Subgrid[lev]->NextGridNextLevel = NULL;
+            else
+        Subgrid[lev]->NextGridNextLevel = Subgrid[lev+1];
+
+            // Create grid
+            for (dim = 0; dim < MetaData.TopGridRank; dim++)
+        NumberOfSubgridDims[dim] += 2*NumberOfGhostZones;
+            Subgrid[lev]->GridData = new grid;
+            Subgrid[lev]->GridData->InheritProperties(TopGrid.GridData);
+            Subgrid[lev]->GridData->PrepareGrid(MetaData.TopGridRank, 
+                  NumberOfSubgridDims,
+                  ThisLeftEdge,
+                  ThisRightEdge, 0);
+            if (Subgrid[lev]->GridData->TriggeredStarFormationInitializeGrid(
+          TSF_UniformDensity, TSF_UniformTemperature,
+          TSF_UniformVelocity, TSF_UniformBField,
+          TSF_SphereRadius, TSF_SphereCoreRadius, TSF_SphereDensity,
+          TSF_SphereTemperature, TSF_SpherePosition, TSF_SphereVelocity,
+          TSF_FracKeplerianRot, TSF_SphereTurbulence, TSF_SphereCutOff,
+          TSF_SphereAng1, TSF_SphereAng2, TSF_SphereNumShells,
+          TSF_SphereType, TSF_SphereConstantPressure, TSF_SphereSmoothSurface,
+          TSF_SphereSmoothRadius, TSF_SphereHIIFraction, TSF_SphereHeIIFraction,
+          TSF_SphereHeIIIFraction, TSF_SphereH2IFraction, TSF_UseColour,
+          TSF_InitialFractionHII, TSF_InitialFractionHeII, TSF_InitialFractionHeIII,
+          TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
+          TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
+          TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
+          TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion) == FAIL)
+            ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
+
+            
+          } // ENDIF zones exist
+        } // ENDFOR levels
+      } // ENDIF max_level > 0
+    } // ENDIF MaxInitialLevel > 0
+
+    /* Declare, initialize and fill out the LevelArray. */
+
+    LevelHierarchyEntry *LevelArray[MAX_DEPTH_OF_HIERARCHY];
+    for (level = 0; level < MAX_DEPTH_OF_HIERARCHY; level++)
+      LevelArray[level] = NULL;
+    AddLevel(LevelArray, &TopGrid, 0);
+
+    /* Add levels to the maximum depth or until no new levels are created,
+       and re-initialize the level after it is created. */
+
+    if (MaxInitialLevel == 0) {
+      for (level = 0; level < MaximumRefinementLevel; level++) {
+        if (RebuildHierarchy(&MetaData, LevelArray, level) == FAIL)
+          ENZO_FAIL("Error in RebuildHierarchy.");
+        if (LevelArray[level+1] == NULL)
+          break;
+        LevelHierarchyEntry *Temp = LevelArray[level+1];
+        while (Temp != NULL) {
+          if (Temp->GridData->TriggeredStarFormationInitializeGrid(
+            TSF_UniformDensity, TSF_UniformTemperature,
+            TSF_UniformVelocity, TSF_UniformBField,
+            TSF_SphereRadius, TSF_SphereCoreRadius, TSF_SphereDensity,
+            TSF_SphereTemperature, TSF_SpherePosition, TSF_SphereVelocity,
+            TSF_FracKeplerianRot, TSF_SphereTurbulence, TSF_SphereCutOff,
+            TSF_SphereAng1, TSF_SphereAng2, TSF_SphereNumShells,
+            TSF_SphereType, TSF_SphereConstantPressure, TSF_SphereSmoothSurface,
+            TSF_SphereSmoothRadius, TSF_SphereHIIFraction, TSF_SphereHeIIFraction,
+            TSF_SphereHeIIIFraction, TSF_SphereH2IFraction, TSF_UseColour,
+            TSF_InitialFractionHII, TSF_InitialFractionHeII, TSF_InitialFractionHeIII,
+            TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
+            TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
+            TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
+            TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion) == FAIL)
+              ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
+
+          Temp = Temp->NextGridThisLevel;
+        }
+      } // end: loop over levels
+    } // ENDELSE manually set refinement levels
+
+      /* Loop back from the bottom, restoring the consistency among levels. */
+
+    for (level = MaximumRefinementLevel; level > 0; level--) {
+      LevelHierarchyEntry *Temp = LevelArray[level];
+      while (Temp != NULL) {
+        if (Temp->GridData->ProjectSolutionToParentGrid(
+                  *LevelArray[level-1]->GridData) == FAIL)
+          ENZO_FAIL("Error in grid->ProjectSolutionToParentGrid.");
+        Temp = Temp->NextGridThisLevel;
+      }
+    }
+  }   
 
  /* set up field names and units */
 
@@ -407,6 +568,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
     fprintf(Outfptr, "TSF_SphereAng1             = %"GOUTSYM"\n",          TSF_SphereAng1);
     fprintf(Outfptr, "TSF_SphereAng2             = %"GOUTSYM"\n",          TSF_SphereAng2);
     fprintf(Outfptr, "TSF_SphereNumShells        = %"ISYM"\n\n",      TSF_SphereNumShells);
+    fprintf(Outfptr, "TSF_SphereInitialLevel     = %"ISYM"\n",        TSF_SphereInitialLevel);    
     fprintf(Outfptr, "TSF_UniformDensity         = %"FSYM"\n",         TSF_UniformDensity);
     fprintf(Outfptr, "TSF_UniformTemperature     = %"FSYM"\n",     TSF_UniformTemperature);
     fprintf(Outfptr, "TSF_UniformVelocity        = %"FSYM" %"FSYM" %"FSYM"\n");
