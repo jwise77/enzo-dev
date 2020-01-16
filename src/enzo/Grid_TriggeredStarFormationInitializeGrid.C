@@ -90,7 +90,8 @@ int grid::TriggeredStarFormationInitializeGrid(
           FLOAT StarPosition[MAX_DIMENSION],
           float StarVelocity[MAX_DIMENSION],
           float TimeToExplosion,
-          bool isTopGrid)
+          bool isTopGrid,
+          bool SecondPass)
 {
   /* declarations */
 
@@ -255,72 +256,73 @@ int grid::TriggeredStarFormationInitializeGrid(
   fclose(fptr);
 
  /**** ^^^ PROBABLY DONT NEED TO KEEP THIS ^^^ ******/
-
-  /* Check if star is within grid boundaries */
-  bool StarInGrid = true;
-  FLOAT pos;
-  for (dim = 0; dim < GridRank; dim++) {
-      pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
-      StarInGrid &= (pos >= GridLeftEdge[dim] && pos <= GridRightEdge[dim]);
-  }
-  printf("\nStarInGrid = %i", StarInGrid);
-
-  /* Initialize star particle with mass in code units. */
-  if (isTopGrid && StarInGrid) {
-    printf("\n\nTOPGRID_STARINGRID\n\n");
-    float StarParticleMass; 
-    StarParticleMass = StarMass*1.99e33* pow(LengthUnits*CellWidth[0][0],-3.0)/DensityUnits;
-
-    printf("Star Mass (code units): %f \n", StarParticleMass);
-
-    /* Set number of particles for this grid and allocate space. */
-
-    NumberOfParticles = 1;
-    NumberOfParticleAttributes = 4;
-    this->AllocateNewParticles(NumberOfParticles);
-    printf("Allocated %"ISYM" particles", NumberOfParticles);  
-
-    /* Set particle IDs and types */
-
-    for (i = 0; i < NumberOfParticles; i++) {
-      ParticleNumber[i] = i;
-      ParticleType[i] = -PopIII; // particle type must be negative to create star object
-    }
-
-    /* Set star particle position, velocity, mass, creation time, and lifetime. */ 
-    float cm_per_km = 1e5;
+  if (SecondPass) {
+    /* Check if star is within grid boundaries */
+    bool StarInGrid = true;
+    FLOAT pos;
     for (dim = 0; dim < GridRank; dim++) {
-      ParticlePosition[dim][0] = StarPosition[dim]*
-        (DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
-      ParticleVelocity[dim][0] = StarVelocity[dim] * cm_per_km*TimeUnits/LengthUnits;
+        //pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
+        pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]);
+        printf("pos%i %f\n", dim, pos);
+        StarInGrid &= (pos >= GridLeftEdge[dim] && pos <= GridRightEdge[dim]);
     }
-    ParticleMass[0] = StarParticleMass;
-    float CodeTimeToExplosion = TimeToExplosion * Myr_s / TimeUnits;     // convert Myr to codetime 
-    ParticleAttribute[0][0] = Time + 1e-7;             // creation time 
-    ParticleAttribute[1][0] = CodeTimeToExplosion;
-    ParticleAttribute[2][0] = 0.0;  // Metal fraction
-    ParticleAttribute[3][0] = 0.0;  // metalfSNIa
+    printf("\nStarInGrid = %i", StarInGrid);
 
-    printf("\nCodeTimeToExplosion %f\n", CodeTimeToExplosion);
-    printf("\nTimeToExplosion %f\n", TimeToExplosion);
-    
+    /* Initialize star particle with mass in code units. */
+    if (isTopGrid && StarInGrid) {
+      printf("\n\nTOPGRID_STARINGRID\n\n");
+      float StarParticleMass; 
+      StarParticleMass = StarMass*1.99e33* pow(LengthUnits*CellWidth[0][0],-3.0)/DensityUnits;
 
-    // Create star particle object
-    if (this->FindNewStarParticles(GridLevel) == FAIL) {
-    ENZO_FAIL("Error in grid::FindNewStarParticles.");
-    }
+      printf("Star Mass (code units): %f \n", StarParticleMass);
 
-    /* Reset particle type to be positive*/
-    for (i = 0; i < NumberOfParticles; i++) {
-      ParticleNumber[i] = i;
-      ParticleType[i] = PopIII;
-    }
-    Star *cstar;
-    for (cstar = Stars; cstar; cstar = cstar->NextStar)
-      cstar->type = PopIII; 
-  }
-  /* End Initialize star particle */
-  /* End isTopGrid */
+      /* Set number of particles for this grid and allocate space. */
+
+      NumberOfParticles = 1;
+      NumberOfParticleAttributes = 4;
+      this->AllocateNewParticles(NumberOfParticles);
+      printf("Allocated %"ISYM" particles", NumberOfParticles);  
+
+      /* Set particle IDs and types */
+
+      for (i = 0; i < NumberOfParticles; i++) {
+        ParticleNumber[i] = i;
+        ParticleType[i] = -PopIII; // particle type must be negative to create star object
+      }
+
+      /* Set star particle position, velocity, mass, creation time, and lifetime. */ 
+      float cm_per_km = 1e5;
+      for (dim = 0; dim < GridRank; dim++) {
+        ParticlePosition[dim][0] = StarPosition[dim]*
+          (DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
+        ParticleVelocity[dim][0] = StarVelocity[dim] * cm_per_km*TimeUnits/LengthUnits;
+      }
+      ParticleMass[0] = StarParticleMass;
+      float CodeTimeToExplosion = TimeToExplosion * Myr_s / TimeUnits;     // convert Myr to codetime 
+      ParticleAttribute[0][0] = Time + 1e-7;             // creation time 
+      ParticleAttribute[1][0] = CodeTimeToExplosion;
+      ParticleAttribute[2][0] = 0.0;  // Metal fraction
+      ParticleAttribute[3][0] = 0.0;  // metalfSNIa
+
+      printf("\nCodeTimeToExplosion %f\n", CodeTimeToExplosion);
+      printf("\nTimeToExplosion %f\n", TimeToExplosion);
+      
+
+      // Create star particle object
+      if (this->FindNewStarParticles(GridLevel) == FAIL) {
+      ENZO_FAIL("Error in grid::FindNewStarParticles.");
+      }
+
+      /* Reset particle type to be positive*/
+      for (i = 0; i < NumberOfParticles; i++) {
+        ParticleNumber[i] = i;
+        ParticleType[i] = PopIII;
+      }
+      Star *cstar;
+      for (cstar = Stars; cstar; cstar = cstar->NextStar)
+        cstar->type = PopIII; 
+    } /* End Initialize star particle */
+  } /* End SecondPass */
 
   /* Set up the baryon field. */
   /* compute size of fields */

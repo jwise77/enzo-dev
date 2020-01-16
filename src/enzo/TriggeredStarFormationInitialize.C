@@ -53,7 +53,7 @@ static float TSF_InitialFractionH2I   = 2.0e-20;
 static float TSF_InitialFractionH2II  = 3.0e-14;
 
 int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
-       HierarchyEntry &TopGrid, TopGridData &MetaData)
+       HierarchyEntry &TopGrid, TopGridData &MetaData, bool SecondPass)
 {
   const char *DensName      = "Density";
   const char *TEName        = "TotalEnergy";
@@ -301,26 +301,32 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
 
   } // end input from parameter file
 
-  /* set up uniform grid, star particle, and spherical cloud on TopGrid */
+  /* set up uniform grid, star particle, and spherical cloud on root grid(s) */
+  HierarchyEntry *CurrentGrid = &TopGrid;
 
-  if (TopGrid.GridData->TriggeredStarFormationInitializeGrid(
-      TSF_UniformDensity, TSF_UniformTemperature,
-      TSF_UniformVelocity, TSF_UniformBField,
-      TSF_SphereRadius, TSF_SphereCoreRadius, TSF_SphereDensity,
-      TSF_SphereTemperature, TSF_SpherePosition, TSF_SphereVelocity,
-      TSF_FracKeplerianRot, TSF_SphereTurbulence, TSF_SphereCutOff,
-      TSF_SphereAng1, TSF_SphereAng2, TSF_SphereNumShells,
-      TSF_SphereType, TSF_SphereConstantPressure, TSF_SphereSmoothSurface,
-      TSF_SphereSmoothRadius, TSF_SphereHIIFraction, TSF_SphereHeIIFraction,
-      TSF_SphereHeIIIFraction, TSF_SphereH2IFraction, TSF_UseColour,
-      TSF_InitialFractionHII, TSF_InitialFractionHeII, TSF_InitialFractionHeIII,
-      TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
-      TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
-      TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-      TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion, isTopGrid) == FAIL)
-        ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
+  while (CurrentGrid) {
+    if (TopGrid.GridData->TriggeredStarFormationInitializeGrid(
+        TSF_UniformDensity, TSF_UniformTemperature,
+        TSF_UniformVelocity, TSF_UniformBField,
+        TSF_SphereRadius, TSF_SphereCoreRadius, TSF_SphereDensity,
+        TSF_SphereTemperature, TSF_SpherePosition, TSF_SphereVelocity,
+        TSF_FracKeplerianRot, TSF_SphereTurbulence, TSF_SphereCutOff,
+        TSF_SphereAng1, TSF_SphereAng2, TSF_SphereNumShells,
+        TSF_SphereType, TSF_SphereConstantPressure, TSF_SphereSmoothSurface,
+        TSF_SphereSmoothRadius, TSF_SphereHIIFraction, TSF_SphereHeIIFraction,
+        TSF_SphereHeIIIFraction, TSF_SphereH2IFraction, TSF_UseColour,
+        TSF_InitialFractionHII, TSF_InitialFractionHeII, TSF_InitialFractionHeIII,
+        TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
+        TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
+        TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
+        TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
+        isTopGrid, SecondPass) == FAIL)
+          ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
-      isTopGrid = false;
+      CurrentGrid = CurrentGrid->NextGridThisLevel;
+  } // ENDWHILE
+
+  isTopGrid = false;
 
   /* Convert minimum initial overdensity for refinement to mass
      (unless MinimumMass itself was actually set). */
@@ -335,7 +341,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   int MaxInitialLevel = 0;
   MaxInitialLevel = max(MaxInitialLevel, TSF_SphereInitialLevel);
 
-  if (TSF_RefineAtStart) {
+  if (TSF_RefineAtStart && SecondPass) {
 
     /* If the user specified an initial refinement level for a sphere,
        then manually create the hierarchy first. */
@@ -413,7 +419,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
           TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
           TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
           TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-          TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion, isTopGrid) == FAIL)
+          TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
+          isTopGrid, SecondPass) == FAIL)
             ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
             
@@ -454,7 +461,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
             TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
             TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
             TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-            TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion, isTopGrid) == FAIL)
+            TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
+            isTopGrid, SecondPass) == FAIL)
               ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
           Temp = Temp->NextGridThisLevel;
@@ -476,117 +484,118 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   }   
 
  /* set up field names and units */
-
-  int count = 0;
-  DataLabel[count++] = (char*) DensName;
-  DataLabel[count++] = (char*) TEName;
-  if (DualEnergyFormalism)
-    DataLabel[count++] = (char*) GEName;
-  DataLabel[count++] = (char*) Vel1Name;
-  DataLabel[count++] = (char*) Vel2Name;
-  DataLabel[count++] = (char*) Vel3Name;
-  if ( UseMHD ) {    
-    DataLabel[count++] = (char*) BxName;
-    DataLabel[count++] = (char*) ByName;
-    DataLabel[count++] = (char*) BzName;
-    if( HydroMethod == MHD_RK ){
-        DataLabel[count++] = (char*) PhiName;
-    }
-    if (UsePoissonDivergenceCleaning) {
-      DataLabel[count++] = (char*) Phi_pName;
-    }
-  }  
-  if ( CRModel ) {
-    DataLabel[count++] = (char*) CRName;
-  } 
-  if (WritePotential)
-    DataLabel[count++] = (char*) GPotName;
-
-  if (MultiSpecies) {
-    DataLabel[count++] = (char*) ElectronName;
-    DataLabel[count++] = (char*) HIName;
-    DataLabel[count++] = (char*) HIIName;
-    DataLabel[count++] = (char*) HeIName;
-    DataLabel[count++] = (char*) HeIIName;
-    DataLabel[count++] = (char*) HeIIIName;
-    if (MultiSpecies > 1) {
-      DataLabel[count++] = (char*) HMName;
-      DataLabel[count++] = (char*) H2IName;
-      DataLabel[count++] = (char*) H2IIName;
-    }
-    if (MultiSpecies > 2) {
-      DataLabel[count++] = (char*) DIName;
-      DataLabel[count++] = (char*) DIIName;
-      DataLabel[count++] = (char*) HDIName;
-    }
-  }  // if Multispecies
-  
-  if (TSF_UseColour)
-    DataLabel[count++] = (char*) ColourName;  
-
-  if (RadiativeTransfer)
-    if (MultiSpecies) {
-      DataLabel[count++]  = (char*) kphHIName;
-      DataLabel[count++]  = (char*) gammaName;
-      DataLabel[count++]  = (char*) kphHeIName;
-      DataLabel[count++]  = (char*) kphHeIIName;
-      if (MultiSpecies > 1) {
-        DataLabel[count++]= (char*) kdissH2IName;
-        DataLabel[count++]= (char*) kdissH2IIName;
-        DataLabel[count++]= (char*) kphHMName;
+  if (!SecondPass) {
+    int count = 0;
+    DataLabel[count++] = (char*) DensName;
+    DataLabel[count++] = (char*) TEName;
+    if (DualEnergyFormalism)
+      DataLabel[count++] = (char*) GEName;
+    DataLabel[count++] = (char*) Vel1Name;
+    DataLabel[count++] = (char*) Vel2Name;
+    DataLabel[count++] = (char*) Vel3Name;
+    if ( UseMHD ) {    
+      DataLabel[count++] = (char*) BxName;
+      DataLabel[count++] = (char*) ByName;
+      DataLabel[count++] = (char*) BzName;
+      if( HydroMethod == MHD_RK ){
+          DataLabel[count++] = (char*) PhiName;
       }
-    } // if RadiativeTransfer
+      if (UsePoissonDivergenceCleaning) {
+        DataLabel[count++] = (char*) Phi_pName;
+      }
+    }  
+    if ( CRModel ) {
+      DataLabel[count++] = (char*) CRName;
+    } 
+    if (WritePotential)
+      DataLabel[count++] = (char*) GPotName;
 
-  if (RadiationPressure) {
-    DataLabel[count++]  = (char*) RadAccel1Name;
-    DataLabel[count++]  = (char*) RadAccel2Name;
-    DataLabel[count++]  = (char*) RadAccel3Name;
-  }
+    if (MultiSpecies) {
+      DataLabel[count++] = (char*) ElectronName;
+      DataLabel[count++] = (char*) HIName;
+      DataLabel[count++] = (char*) HIIName;
+      DataLabel[count++] = (char*) HeIName;
+      DataLabel[count++] = (char*) HeIIName;
+      DataLabel[count++] = (char*) HeIIIName;
+      if (MultiSpecies > 1) {
+        DataLabel[count++] = (char*) HMName;
+        DataLabel[count++] = (char*) H2IName;
+        DataLabel[count++] = (char*) H2IIName;
+      }
+      if (MultiSpecies > 2) {
+        DataLabel[count++] = (char*) DIName;
+        DataLabel[count++] = (char*) DIIName;
+        DataLabel[count++] = (char*) HDIName;
+      }
+    }  // if Multispecies
+    
+    if (TSF_UseColour)
+      DataLabel[count++] = (char*) ColourName;  
 
-  for (i = 0; i < count; i++)
-    DataUnits[i] = NULL;
+    if (RadiativeTransfer)
+      if (MultiSpecies) {
+        DataLabel[count++]  = (char*) kphHIName;
+        DataLabel[count++]  = (char*) gammaName;
+        DataLabel[count++]  = (char*) kphHeIName;
+        DataLabel[count++]  = (char*) kphHeIIName;
+        if (MultiSpecies > 1) {
+          DataLabel[count++]= (char*) kdissH2IName;
+          DataLabel[count++]= (char*) kdissH2IIName;
+          DataLabel[count++]= (char*) kphHMName;
+        }
+      } // if RadiativeTransfer
 
-  /* Write parameters to parameter output file */
+    if (RadiationPressure) {
+      DataLabel[count++]  = (char*) RadAccel1Name;
+      DataLabel[count++]  = (char*) RadAccel2Name;
+      DataLabel[count++]  = (char*) RadAccel3Name;
+    }
 
-  if (MyProcessorNumber == ROOT_PROCESSOR) {
-    fprintf(Outfptr, "TSF_UseColour          = %"ISYM"\n", TSF_UseColour);
-    fprintf(Outfptr, "TSF_SphereType             = %"ISYM"\n",             TSF_SphereType);
-    fprintf(Outfptr, "TSF_SphereConstantPressure = %"ISYM"\n", TSF_SphereConstantPressure);
-    fprintf(Outfptr, "TSF_SphereSmoothSurface    = %"ISYM"\n",    TSF_SphereSmoothSurface);
-    fprintf(Outfptr, "TSF_SphereSmoothRadius     = %"GOUTSYM"\n",  TSF_SphereSmoothRadius);
-    fprintf(Outfptr, "TSF_SphereRadius           = %"GOUTSYM"\n",        TSF_SphereRadius);
-    fprintf(Outfptr, "TSF_SphereCoreRadius       = %"GOUTSYM"\n",    TSF_SphereCoreRadius);
-    fprintf(Outfptr, "TSF_SphereDensity          = %"FSYM"\n",          TSF_SphereDensity);
-    fprintf(Outfptr, "TSF_SphereTemperature      = %"FSYM"\n",      TSF_SphereTemperature);
-    fprintf(Outfptr, "TSF_SpherePosition         = ");
-    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_SpherePosition);
-    fprintf(Outfptr, "TSF_SphereVelocity         = ");
-    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_SphereVelocity);
-    fprintf(Outfptr, "TSF_SphereHIIFraction      = %"GOUTSYM"\n",   TSF_SphereHIIFraction);
-    fprintf(Outfptr, "TSF_SphereHeIIFraction     = %"GOUTSYM"\n",  TSF_SphereHeIIFraction);
-    fprintf(Outfptr, "TSF_SphereHeIIIFraction    = %"GOUTSYM"\n", TSF_SphereHeIIIFraction);
-    fprintf(Outfptr, "TSF_SphereH2IFraction      = %"GOUTSYM"\n",   TSF_SphereH2IFraction);
-    fprintf(Outfptr, "TSF_FracKeplerianRot       = %"GOUTSYM"\n",    TSF_FracKeplerianRot);
-    fprintf(Outfptr, "TSF_SphereTurbulence       = %"GOUTSYM"\n",    TSF_SphereTurbulence);
-    fprintf(Outfptr, "TSF_SphereCutOff           = %"GOUTSYM"\n",        TSF_SphereCutOff);
-    fprintf(Outfptr, "TSF_SphereAng1             = %"GOUTSYM"\n",          TSF_SphereAng1);
-    fprintf(Outfptr, "TSF_SphereAng2             = %"GOUTSYM"\n",          TSF_SphereAng2);
-    fprintf(Outfptr, "TSF_SphereNumShells        = %"ISYM"\n\n",      TSF_SphereNumShells);
-    fprintf(Outfptr, "TSF_SphereInitialLevel     = %"ISYM"\n",        TSF_SphereInitialLevel);    
-    fprintf(Outfptr, "TSF_UniformDensity         = %"FSYM"\n",         TSF_UniformDensity);
-    fprintf(Outfptr, "TSF_UniformTemperature     = %"FSYM"\n",     TSF_UniformTemperature);
-    fprintf(Outfptr, "TSF_UniformVelocity        = %"FSYM" %"FSYM" %"FSYM"\n");
-    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_UniformVelocity); 
-    fprintf(Outfptr, "TSF_UniformBField          = %"FSYM" %"FSYM" %"FSYM"\n");
-    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_UniformBField);     
-    fprintf(Outfptr, "TSF_StarPosition           = %"FSYM" %"FSYM" %"FSYM"\n");
-    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_StarPosition);     
-    fprintf(Outfptr, "TSF_StarVelocity           = %"FSYM" %"FSYM" %"FSYM"\n");
-    WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_StarVelocity);     
-    fprintf(Outfptr, "TSF_StarMass               = %"FSYM"\n",               TSF_StarMass);
-    fprintf(Outfptr, "TSF_TimeToExplosion        = %"FSYM"\n",        TSF_TimeToExplosion);
+    for (i = 0; i < count; i++)
+      DataUnits[i] = NULL;
 
-  }
+    /* Write parameters to parameter output file */
+
+    if (MyProcessorNumber == ROOT_PROCESSOR) {
+      fprintf(Outfptr, "TSF_UseColour          = %"ISYM"\n", TSF_UseColour);
+      fprintf(Outfptr, "TSF_SphereType             = %"ISYM"\n",             TSF_SphereType);
+      fprintf(Outfptr, "TSF_SphereConstantPressure = %"ISYM"\n", TSF_SphereConstantPressure);
+      fprintf(Outfptr, "TSF_SphereSmoothSurface    = %"ISYM"\n",    TSF_SphereSmoothSurface);
+      fprintf(Outfptr, "TSF_SphereSmoothRadius     = %"GOUTSYM"\n",  TSF_SphereSmoothRadius);
+      fprintf(Outfptr, "TSF_SphereRadius           = %"GOUTSYM"\n",        TSF_SphereRadius);
+      fprintf(Outfptr, "TSF_SphereCoreRadius       = %"GOUTSYM"\n",    TSF_SphereCoreRadius);
+      fprintf(Outfptr, "TSF_SphereDensity          = %"FSYM"\n",          TSF_SphereDensity);
+      fprintf(Outfptr, "TSF_SphereTemperature      = %"FSYM"\n",      TSF_SphereTemperature);
+      fprintf(Outfptr, "TSF_SpherePosition         = ");
+      WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_SpherePosition);
+      fprintf(Outfptr, "TSF_SphereVelocity         = ");
+      WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_SphereVelocity);
+      fprintf(Outfptr, "TSF_SphereHIIFraction      = %"GOUTSYM"\n",   TSF_SphereHIIFraction);
+      fprintf(Outfptr, "TSF_SphereHeIIFraction     = %"GOUTSYM"\n",  TSF_SphereHeIIFraction);
+      fprintf(Outfptr, "TSF_SphereHeIIIFraction    = %"GOUTSYM"\n", TSF_SphereHeIIIFraction);
+      fprintf(Outfptr, "TSF_SphereH2IFraction      = %"GOUTSYM"\n",   TSF_SphereH2IFraction);
+      fprintf(Outfptr, "TSF_FracKeplerianRot       = %"GOUTSYM"\n",    TSF_FracKeplerianRot);
+      fprintf(Outfptr, "TSF_SphereTurbulence       = %"GOUTSYM"\n",    TSF_SphereTurbulence);
+      fprintf(Outfptr, "TSF_SphereCutOff           = %"GOUTSYM"\n",        TSF_SphereCutOff);
+      fprintf(Outfptr, "TSF_SphereAng1             = %"GOUTSYM"\n",          TSF_SphereAng1);
+      fprintf(Outfptr, "TSF_SphereAng2             = %"GOUTSYM"\n",          TSF_SphereAng2);
+      fprintf(Outfptr, "TSF_SphereNumShells        = %"ISYM"\n\n",      TSF_SphereNumShells);
+      fprintf(Outfptr, "TSF_SphereInitialLevel     = %"ISYM"\n",        TSF_SphereInitialLevel);    
+      fprintf(Outfptr, "TSF_UniformDensity         = %"FSYM"\n",         TSF_UniformDensity);
+      fprintf(Outfptr, "TSF_UniformTemperature     = %"FSYM"\n",     TSF_UniformTemperature);
+      fprintf(Outfptr, "TSF_UniformVelocity        = %"FSYM" %"FSYM" %"FSYM"\n");
+      WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_UniformVelocity); 
+      fprintf(Outfptr, "TSF_UniformBField          = %"FSYM" %"FSYM" %"FSYM"\n");
+      WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_UniformBField);     
+      fprintf(Outfptr, "TSF_StarPosition           = %"FSYM" %"FSYM" %"FSYM"\n");
+      WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_StarPosition);     
+      fprintf(Outfptr, "TSF_StarVelocity           = %"FSYM" %"FSYM" %"FSYM"\n");
+      WriteListOfFloats(Outfptr, MetaData.TopGridRank, TSF_StarVelocity);     
+      fprintf(Outfptr, "TSF_StarMass               = %"FSYM"\n",               TSF_StarMass);
+      fprintf(Outfptr, "TSF_TimeToExplosion        = %"FSYM"\n",        TSF_TimeToExplosion);
+
+    }
+  } /* End if !SecondPass */
 
   delete[] TSF_DensityFilename;
   delete[] TSF_HIIFractionFilename;

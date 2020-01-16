@@ -240,7 +240,7 @@ int MHDLoopInit(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
                           TopGridData &MetaData, ExternalBoundary &Exterior);
 
 int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
-          TopGridData &MetaData);
+          TopGridData &MetaData, bool SecondPass);
 
 void PrintMemoryUsage(char *str);
 
@@ -751,8 +751,11 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
 #endif
 
   // 550 ) Triggered star formation. Pop III star explodes near spherical cloud.
+  // last argument tells whether it is the first (0) or second (1) initialization
+  // First time: only top grid is initialized. 
+  // Second time: refinement and star particle are added
   if (ProblemType == 550)
-    ret = TriggeredStarFormationInitialize(fptr, Outfptr, TopGrid, MetaData);
+    ret = TriggeredStarFormationInitialize(fptr, Outfptr, TopGrid, MetaData, 0);
 
   // Insert new problem intializer here...
 
@@ -1036,6 +1039,12 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
     if (MHDDecayingRandomFieldInitialize(fptr, Outfptr, TopGrid, MetaData, 1)
 	== FAIL) {
       ENZO_FAIL("Error in MHDDecayingRandomField ReInitialize.\n");
+    }
+
+  if (ProblemType == 550)
+    if (TriggeredStarFormationInitialize(fptr, Outfptr, TopGrid, MetaData, 1)
+        == FAIL) {
+      ENZO_FAIL("Error in TriggeredStarFormationInitialize ReInitialize.\n");
     }
 
   CommunicationBarrier();
