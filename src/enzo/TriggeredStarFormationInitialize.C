@@ -146,6 +146,8 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
         TSF_SphereH2IFraction;
   FLOAT TSF_SpherePosition[MAX_DIMENSION];
 
+  bool isTopGrid = true;
+
   /* set default parameters */
 
   rewind(fptr);
@@ -315,8 +317,10 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
       TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
       TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
       TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-      TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion) == FAIL)
+      TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion, isTopGrid) == FAIL)
         ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
+
+      isTopGrid = false;
 
   /* Convert minimum initial overdensity for refinement to mass
      (unless MinimumMass itself was actually set). */
@@ -409,7 +413,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
           TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
           TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
           TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-          TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion) == FAIL)
+          TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion, isTopGrid) == FAIL)
             ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
             
@@ -450,7 +454,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
             TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
             TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
             TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-            TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion) == FAIL)
+            TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion, isTopGrid) == FAIL)
               ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
           Temp = Temp->NextGridThisLevel;
