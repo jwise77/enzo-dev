@@ -299,6 +299,9 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
 
   } // end input from parameter file
 
+  /* Set Pop III star mass global parameter to TSF parameter */
+  PopIIIStarMass = TSF_StarMass;
+
   /* set up uniform grid, star particle, and spherical cloud on TopGrid */
 
   if (TopGrid.GridData->TriggeredStarFormationInitializeGrid(
