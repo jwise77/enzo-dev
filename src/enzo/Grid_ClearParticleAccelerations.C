@@ -43,7 +43,7 @@ int grid::ClearParticleAccelerations()
       /* Allocate accleration field. */
  
       ParticleAcceleration[dim] = new float[NumberOfParticles];
- 
+
       /* Clear it. */
  
       for (i = 0; i < NumberOfParticles; i++)

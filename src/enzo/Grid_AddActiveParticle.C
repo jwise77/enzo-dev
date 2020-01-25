@@ -31,39 +31,43 @@ int grid::AddActiveParticle(ActiveParticleType* ThisParticle)
   FLOAT* TPpos;
   int i,j;
 
-  /* Return if this doesn't involve us */
-  if (MyProcessorNumber != ProcessorNumber) return SUCCESS;
-
-  IsHere = false;
-  TPpos = ThisParticle->ReturnPosition();
-  if (TPpos[0] >= GridLeftEdge[0] &&
-      TPpos[0] < GridRightEdge[0] &&
-      TPpos[1] >= GridLeftEdge[1] &&
-      TPpos[1] < GridRightEdge[1] &&
-      TPpos[2] >= GridLeftEdge[2] &&
-      TPpos[2] < GridRightEdge[2]) {
-    IsHere = true;
-  }
-
-  /* We should already have checked if the particle is on this grid so this
-     should never happen */
-
-  if (! IsHere) {
-    return FAIL;
-  }
-
-  /* 
-     If this particle is already on the list, it needs to be moved to
-     the end of the list. 
-  */
-
-  for (i = 0; i < NumberOfActiveParticles; i++) 
-    if (ThisParticle->ReturnID() == this->ActiveParticles[i]->ReturnID()) {
-      this->ActiveParticles.move_to_end(i);
-      this->ActiveParticles.erase(this->ActiveParticles.size()-1);
-      this->ActiveParticles.copy_and_insert(*ThisParticle);
-      return SUCCESS;
+  if (MyProcessorNumber == ProcessorNumber) {
+    IsHere = false;
+    TPpos = ThisParticle->ReturnPosition();
+    if (TPpos[0] >= GridLeftEdge[0] &&
+	TPpos[0] < GridRightEdge[0] &&
+	TPpos[1] >= GridLeftEdge[1] &&
+	TPpos[1] < GridRightEdge[1] &&
+	TPpos[2] >= GridLeftEdge[2] &&
+	TPpos[2] < GridRightEdge[2]) {
+      IsHere = true;
     }
+    
+    /* We should already have checked if the particle is on this grid so this
+       should never happen */
+
+    if (! IsHere) {
+      return FAIL;
+    }
+
+    /* 
+       If this particle is already on the list, it needs to be moved to
+       the end of the list. 
+    */
+
+    for (i = 0; i < NumberOfActiveParticles; i++) 
+      if (ThisParticle->ReturnID() == this->ActiveParticles[i]->ReturnID()) {
+	this->ActiveParticles.move_to_end(i);
+	this->ActiveParticles.erase(this->ActiveParticles.size()-1);
+	this->ActiveParticles.copy_and_insert(*ThisParticle);
+	return SUCCESS;
+      }
+
+  } else {
+    // If adding, only increase count on processors without the data */
+    NumberOfActiveParticles++;
+    return SUCCESS;
+  }
 
   ThisParticle->SetGridID(ID);
   ThisParticle->AssignCurrentGrid(this);

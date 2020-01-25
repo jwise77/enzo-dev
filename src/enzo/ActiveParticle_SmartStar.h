@@ -272,7 +272,7 @@ void ActiveParticleType_SmartStar::MergeSmartStars(
      moved. If so, disable the particle on the current grid and assign
      it to the new grid*/
 
-  int NewGrid = -1;
+  int NewGridNum = -1;
 
   for (i = 0; i < *ngroups; i++) {
     if (MergedParticles[i]->ReturnCurrentGrid()->PointInGrid(
@@ -281,27 +281,40 @@ void ActiveParticleType_SmartStar::MergeSmartStars(
       for (j = 0; j < NumberOfGrids; j++) {
         if (LevelGrids[j]->GridData->PointInGrid(
                 MergedParticles[i]->ReturnPosition())) {
-          NewGrid = j;
+          NewGridNum = j;
           break;
         }
       }
-      if (NewGrid == -1)
+      if (NewGridNum == -1)
         ENZO_FAIL("Cannot assign particle to grid after merging!\n");
-      int OldProc = MergedParticles[i]->CurrentGrid->ReturnProcessorNumber();
+      int OldProc, NewProc;
+      grid *OldGrid, *NewGrid;
       active_particle_class *temp = static_cast<active_particle_class*>(
           MergedParticles[i]->clone());
-      MergedParticles[i]->DisableParticle(LevelArray, 
-          LevelGrids[NewGrid]->GridData->ReturnProcessorNumber()); 
-      if (LevelGrids[NewGrid]->GridData->AddActiveParticle(
-              static_cast<ActiveParticleType*>(temp)) == FAIL)
+
+      OldGrid = MergedParticles[i]->CurrentGrid;
+      OldProc = OldGrid->ReturnProcessorNumber();
+      NewGrid = LevelGrids[NewGridNum]->GridData;
+      NewProc = NewGrid->ReturnProcessorNumber();
+      
+      MergedParticles[i]->DisableParticle(LevelArray, NewProc);
+      if (NewGrid->AddActiveParticle(
+	      static_cast<ActiveParticleType*>(temp)) == FAIL)
       	ENZO_FAIL("Active particle grid assignment failed!\n");
+
       if (MyProcessorNumber == OldProc) {
         MergedParticles.erase(i);
         MergedParticles.insert(*temp);
       }
-      else if (MyProcessorNumber != temp->CurrentGrid->ReturnProcessorNumber())
+      else if (MyProcessorNumber != NewProc)
         delete temp;
-      MergedParticles[i]->AssignCurrentGrid(LevelGrids[NewGrid]->GridData);
+      MergedParticles[i]->AssignCurrentGrid(NewGrid);
+      // Reallocate AP acceleration arrays if the particle changed grids
+      // after the merger
+      if (MyProcessorNumber == NewProc)
+	NewGrid->ReallocateActiveParticleAcceleration();
+      else if (MyProcessorNumber == OldProc)
+	OldGrid->ReallocateActiveParticleAcceleration();
     }
   }
 
@@ -380,7 +393,7 @@ int ActiveParticleType_SmartStar::AfterEvolveLevel(
       ParticleList.clear();
       
       if (debug)
-        printf("Number of particles after merging: %"ISYM"\n",NumberOfMergedParticles);
+	printf("Number of particles after merging: %"ISYM"\n",NumberOfMergedParticles);
       
       /* Assign local particles to grids */
       

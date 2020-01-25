@@ -140,7 +140,7 @@ int grid::InterpolateAccelerations(grid *FromGrid)
   /* --------------------------------------------------- */
   /* Interpolate accelerations to particles.             */
  
-  if (NumberOfParticles > 0) {
+  if (NumberOfParticles > 0 || NumberOfActiveParticles > 0) {
  
     /* Clear particle accelerations. */
  
