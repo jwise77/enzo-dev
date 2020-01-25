@@ -1217,7 +1217,7 @@ gradient force to gravitational force for one-zone collapse test. */
 
 /* Particles + Gravity: Clear ParticleAccleration. */
 
-   int ClearParticleAccelerations();
+   int ClearParticleAccelerations();   
 
 /* Baryons + Gravity: Interpolate the AccelerationField in FromGrid to
              AccelerationFieldForCells at the GridPositions in this grid. */
@@ -1471,6 +1471,31 @@ gradient force to gravitational force for one-zone collapse test. */
 /* Particles: Clean up moved particles (from MoveSubgridParticles). */
 
    int CleanUpMovedParticles();
+
+/* Reallocate active particle acceleration. Useful when a particle 
+   is created in an adajacent grid after a merger. Needed when this
+   happens when multiple timesteps are taken between RebuildHierarchy
+   calls, which reallocates it in that case. */
+
+   void ReallocateActiveParticleAcceleration() {
+     if (!((SelfGravity || UniformGravity || PointSourceGravity))) return;
+     if (MyProcessorNumber != ProcessorNumber) return;
+     for (int dim = 0; dim < GridRank+ComputePotential; dim++) {
+       if (ActiveParticleAcceleration[dim] != NULL) {
+	 delete [] ActiveParticleAcceleration[dim];
+	 ActiveParticleAcceleration[dim] = NULL;
+       }
+     }
+     // Will be recalculated in the next timestep
+     if (NumberOfActiveParticles > 0) {
+       for (int dim = 0; dim < GridRank+ComputePotential; dim++) {
+	 ActiveParticleAcceleration[dim] = new float[NumberOfActiveParticles];
+	 for (int i = 0; i < NumberOfActiveParticles; i++) {
+	   ActiveParticleAcceleration[dim][i] = 0.0;
+	 }
+       }
+     }
+   };
 
 /* Particles: delete accleration fields. */
 
