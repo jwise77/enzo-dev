@@ -38,10 +38,10 @@ c
 
 #define IDX(a,b,c) ( ((c)*jn + (b))*in + (a) )
 
-int rk4(double *repsi, double *impsi,
+int rk4(float *repsi, float *impsi,
          int in, int jn, int kn, int rank,
-         double dt, double dx[], double dy[], double dz[],
-         double hmcoef)
+         float dt, float dx[], float dy[], float dz[],
+         float hmcoef)
 
 {
   int ijk = MAX_ANY_SINGLE_DIRECTION;
