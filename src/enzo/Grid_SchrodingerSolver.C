@@ -78,11 +78,7 @@ int SchrodingerAddPotential(float *repsi, float *impsi,
 int GetUnits (float *DensityUnits, float *LengthUnits,
          float *TemperatureUnits, float *TimeUnits,
          float *VelocityUnits, FLOAT Time);
-int FindField(int field, int farray[], int numfields);
 int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
-
-
-int grid::SchrodingerSolver( int nhy )
 {
   /*  Locals */
   if (ProcessorNumber != MyProcessorNumber)
