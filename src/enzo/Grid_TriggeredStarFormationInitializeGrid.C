@@ -927,9 +927,6 @@ int grid::TriggeredStarFormationInitializeGrid(
       tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu_data);
     Velocity[2] += SphereTurbulence * 
       tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu_data);
-    printf("v_turb = [%f, %f, %f]\n", Velocity[0]*LengthUnits/TimeUnits, 
-                                      Velocity[1]*LengthUnits/TimeUnits, 
-                                      Velocity[2]*LengthUnits/TimeUnits);
   }
   
   /* Set Velocities. */
