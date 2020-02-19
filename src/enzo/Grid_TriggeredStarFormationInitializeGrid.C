@@ -42,7 +42,8 @@ double tsf_q(double r);
 double tsf_Ang(double a1, double a2, double R, double r);
 
 // Returns random velocity from Maxwellian distribution
-double tsf_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma);
+//double tsf_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma);
+double tsf_Maxwellian(double T, double vel_unit, double mu);
 
 // Compute Population III star lifetime from Schaerer (2002)
 float popIII_lifetime(float mass);
@@ -155,7 +156,7 @@ int grid::TriggeredStarFormationInitializeGrid(
   }
   int ColourNum = NumberOfBaryonFields;
   if (UseColour)
-    FieldType[NumberOfBaryonFields++] = Metallicity; /* fake it with metals */
+    FieldType[NumberOfBaryonFields++] = ExtraType0; /* to track gas initialized in the cloud */
 
   if (RadiativeTransfer && (MultiSpecies < 1)) {
     ENZO_FAIL("Grid_TriggeredStarFormationInitializeGrid: Radiative Transfer but not MultiSpecies set");
@@ -194,7 +195,7 @@ int grid::TriggeredStarFormationInitializeGrid(
   /* Set various units. */
 
   float DensityUnits, LengthUnits, TemperatureUnits, TimeUnits, 
-    VelocityUnits, CriticalDensity = 1, BoxLength = 1, mu = 0.6, mu_data;
+    VelocityUnits, CriticalDensity = 1, BoxLength = 1, mu = 1.2195, mu_data;
 
   FLOAT a, dadt, ExpansionFactor = 1;
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
@@ -600,13 +601,7 @@ int grid::TriggeredStarFormationInitializeGrid(
       Velocity[1] =  2*pi*(xpos*cos(a)) / SphereRotationalPeriod;
       Velocity[2] =  2*pi*(xpos*sin(a)) / SphereRotationalPeriod;
     }
-    Velocity[0] += SphereTurbulence * 
-      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
-    Velocity[1] += SphereTurbulence * 
-      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
-           if (dim == 0 || dim == 3)
-    Velocity[2] += SphereTurbulence * 
-      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu, Gamma);
+
     m = 0;
 
     /* 1) Uniform */
@@ -895,13 +890,8 @@ int grid::TriggeredStarFormationInitializeGrid(
   
   if (UseColour)
     BaryonField[ColourNum][n] = colour;
-  
-  /* Set Velocities. */
-  
-  for (dim = 0; dim < GridRank; dim++)
-    BaryonField[ivel+dim][n] = Velocity[dim] + UniformVelocity[dim];
-  
-  /* Set energy (thermal and then total if necessary). */
+
+  /* Compute mean molecular weight */
 
   if (MultiSpecies) {
     mu_data =  
@@ -914,7 +904,39 @@ int grid::TriggeredStarFormationInitializeGrid(
         0.5*(BaryonField[H2INum][i]  + BaryonField[H2IINum][i]);
     mu_data = BaryonField[0][n] / mu_data;
   } else
-    mu_data = mu;
+    mu_data = mu;  
+
+  /* Add turbulence inside the sphere. This should go in the if (r < outer_radius) block
+   but then I have to compute the multispecies densities and mean molecular weight twice
+   which is long. Maybe I'll refactor this later... maybe not. */
+
+  if (r < outer_radius) {
+
+    // Calculate speed of sound
+    // printf("density     = %f\n", density);
+    // printf("temperature = %f\n", temperature);
+    // printf("Gamma       = %f\n", Gamma);
+    // printf("mu_data     = %f\n", mu_data);
+    //VelocitySound = sqrt((temperature * Gamma)/mu_data);
+    //printf("VelocitySound (cm s^-1): %"FSYM"\n", VelocitySound * (LengthUnits/TimeUnits));
+
+    // add turbulent velocity from Maxwellian distriubtion
+    Velocity[0] += SphereTurbulence * 
+      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu_data);
+    Velocity[1] += SphereTurbulence * 
+      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu_data);
+    Velocity[2] += SphereTurbulence * 
+      tsf_Maxwellian(VelocitySound, LengthUnits/TimeUnits, mu_data);
+    printf("v_turb = [%f, %f, %f]\n", Velocity[0]*LengthUnits/TimeUnits, 
+                                      Velocity[1]*LengthUnits/TimeUnits, 
+                                      Velocity[2]*LengthUnits/TimeUnits);
+  }
+  
+  /* Set Velocities. */
+  for (dim = 0; dim < GridRank; dim++)
+    BaryonField[ivel+dim][n] = Velocity[dim] + UniformVelocity[dim];
+  
+  /* Set energy (thermal and then total if necessary). */
 
   BaryonField[1][n] = temperature/TemperatureUnits/
     ((Gamma-1.0)*mu_data);
@@ -925,6 +947,9 @@ int grid::TriggeredStarFormationInitializeGrid(
   if (HydroMethod != Zeus_Hydro)
     for (dim = 0; dim < GridRank; dim++)
       BaryonField[1][n] += 0.5*pow(BaryonField[ivel+dim][n], 2);
+
+
+
 
   /* Set uniform magnetic field */
   if (UseMHD) {
@@ -1013,13 +1038,27 @@ double tsf_Ang(double a1, double a2, double R, double r)
 
 /************************************************************************/
 
-double tsf_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma)
+// double tsf_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma)
+// {
+
+//    // Compute temperature in cgs units
+//    double c = c_tilda*vel_unit;
+//    double T = (pow(c,2)*mu*mh)/(kboltz*gamma);
+
+//    // Compute random Maxwellian velocity
+//    double mean = 0;
+//    double stdev = sqrt((kboltz*T)/(mu*mh));
+//    double u1 = rand();
+//    u1 = u1/RAND_MAX;
+//    double u2 = rand();
+//    u2 = u2/RAND_MAX;
+//    double x1 = mean + stdev*sqrt(-2*log(u1))*cos(2*pi*u2);
+//    double x2 = mean + stdev*sqrt(-2*log(u1))*sin(2*pi*u2);
+//    return (x1/vel_unit);
+// }
+
+double tsf_Maxwellian(double T, double vel_unit, double mu)
 {
-
-   // Compute temperature in cgs units
-   double c = c_tilda*vel_unit;
-   double T = (pow(c,2)*mu*mh)/(kboltz*gamma);
-
    // Compute random Maxwellian velocity
    double mean = 0;
    double stdev = sqrt((kboltz*T)/(mu*mh));

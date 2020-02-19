@@ -66,7 +66,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   const char *BzName        = "Bz";
   const char *PhiName       = "Phi";  
   const char *Phi_pName     = "Phi_p";  
-  const char *ColourName    = "colour";
+  const char *ColourName    = "Cloud_Colour";
   const char *CRName        = "CREnergyDensity";
   const char *GPotName      = "Grav_Potential";  
   const char *ElectronName  = "Electron_Density";

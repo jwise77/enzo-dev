@@ -196,6 +196,7 @@ int grid::SolveRateAndCoolEquations(int RTCoupledSolverIntermediateStep)
   MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields);
   SNColourNum = FindField(SNColour, FieldType, NumberOfBaryonFields);
   MetalFieldPresent = (MetalNum != -1 || SNColourNum != -1);
+  printf("MetalFieldPresent %d\n",MetalFieldPresent);
 
   // Double check if there's a metal field when we have metal cooling
   if (MetalCooling && MetalFieldPresent == FALSE) {
