@@ -24,7 +24,8 @@
 #include "StarParticleData.h"
 
 // defined in Grid_ReadHierarchyInformationHDF5.C 
-int HDF5_ReadAttribute(hid_t group_id, const char *AttributeName, int &Attribute, FILE *log_fptr);
+int HDF5_ReadAttribute(hid_t group_id, const char *AttributeName, Eint32 &Attribute, FILE *log_fptr);
+int HDF5_ReadAttribute(hid_t group_id, const char *AttributeName, Eint64 &Attribute, FILE *log_fptr);
 
 int ReadStarParticleData(FILE *fptr, hid_t Hfile_id, FILE *log_fptr)
 {

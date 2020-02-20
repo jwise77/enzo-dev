@@ -59,6 +59,11 @@ class Handler : public ParticleAttributeHandler
             this->mpitype = IntDataType;
 #endif
             this->hdf5type = HDF5_INT;
+        } else if (typeid(Type) == typeid(PINT)) {
+#ifdef USE_MPI
+            this->mpitype = PINTDataType;
+#endif
+            this->hdf5type = HDF5_PINT;
         } else if (typeid(Type) == typeid(float)) {
 #ifdef USE_MPI
             this->mpitype = FloatDataType;

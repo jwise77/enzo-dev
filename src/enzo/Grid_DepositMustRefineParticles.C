@@ -79,13 +79,17 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
   for (i = 0; i < size; i++)
     FlaggingField[i] = 0;
 
+  /* (1-epsilon) factor to ensure that the regular (i.e. not zoom-in)
+     particles don't flag cells when their mass is equal to Omega_DM /
+     Omega_M */
+
   float UniformParticleMass = 0.0;
   if (ProblemType == 30 &&
       (MustRefineParticlesCreateParticles == 3 ||
        MustRefineParticlesCreateParticles == 4))
-    UniformParticleMass = OmegaDarkMatterNow / OmegaMatterNow;
+    UniformParticleMass = 0.999999*OmegaDarkMatterNow / OmegaMatterNow;
 
-  /* Loop over all particles, marking wich ones are must refine
+  /* Loop over all particles, marking which ones are must refine
      To add rules, modify number of rules here and add to loop below */
   bool *rules, rule0;
   const int NumberOfRules = 2;

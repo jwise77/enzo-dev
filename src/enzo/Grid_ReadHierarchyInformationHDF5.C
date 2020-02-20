@@ -28,8 +28,6 @@ void my_exit(int status);
 
 //#define IO_LOG
 
-int HDF5_ReadAttribute(hid_t group_id, const char *AttributeName, int &Attribute, FILE *log_fptr);
-int HDF5_ReadAttribute(hid_t group_id, const char *AttributeName, float &Attribute, FILE *log_fptr);
 int HDF5_ReadAttribute(hid_t group_id, const char *AttributeName, Eint32 &Attribute, FILE *log_fptr);
 int HDF5_ReadAttribute(hid_t group_id, const char *AttributeName, Eint64 &Attribute, FILE *log_fptr);
 int HDF5_ReadAttribute(hid_t group_id, const char *AttributeName, Eflt32 &Attribute, FILE *log_fptr);
