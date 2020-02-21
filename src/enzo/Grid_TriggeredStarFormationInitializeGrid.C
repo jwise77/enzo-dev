@@ -262,8 +262,7 @@ int grid::TriggeredStarFormationInitializeGrid(
     bool StarInGrid = true;
     FLOAT pos;
     for (dim = 0; dim < GridRank; dim++) {
-        //pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
-        pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]);
+        pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
         printf("pos[%i] = %f\n", dim, pos);
         printf("LE[%i], RE[%i] = %f, %f\n", GridLeftEdge[dim], GridRightEdge[dim]);
         StarInGrid &= (pos >= GridLeftEdge[dim] && pos <= GridRightEdge[dim]);
