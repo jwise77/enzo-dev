@@ -263,16 +263,16 @@ int grid::TriggeredStarFormationInitializeGrid(
     FLOAT pos;
     for (dim = 0; dim < GridRank; dim++) {
         pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
-        printf("pos[%i] = %f\n", dim, pos);
-        printf("LE[%i], RE[%i] = %f, %f\n", GridLeftEdge[dim], GridRightEdge[dim]);
+        //printf("pos[%i] = %f\n", dim, pos);
+        //printf("LE[%i], RE[%i] = %f, %f\n", GridLeftEdge[dim], GridRightEdge[dim]);
         StarInGrid &= (pos >= GridLeftEdge[dim] && pos <= GridRightEdge[dim]);
 
     }
-    printf("StarInGrid = %i\n", StarInGrid);
+    //printf("StarInGrid = %i\n", StarInGrid);
 
     /* Initialize star particle with mass in code units. */
     if (StarInGrid) {
-      printf("\n\nTOPGRID_STARINGRID\n\n");
+      printf("\n\nSTARINGRID\n\n");
       float StarParticleMass; 
       StarParticleMass = StarMass*1.99e33* pow(LengthUnits*CellWidth[0][0],-3.0)/DensityUnits;
 

@@ -64,11 +64,11 @@ int StarParticleAddFeedback(TopGridData *MetaData,
   LevelHierarchyEntry *Temp;
 
   if (AllStars == NULL) {
-      printf("\nIn AddFeedback: No stars\n");
+      //printf("\nIn AddFeedback: No stars\n");
     return SUCCESS;
   }
 
-  printf("\nAddFeedbackSTART\n");
+  //printf("\nAddFeedbackSTART\n");
 
   LCAPERF_START("StarParticleAddFeedback");
 
@@ -113,7 +113,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
     dtForThisStar = LevelArray[level]->GridData->ReturnTimeStep();
 	  
     /* Compute some parameters */
-    printf("StarParticleAddFeedback: Call CalculateFeedbackParameters\n");
+    //printf("StarParticleAddFeedback: Call CalculateFeedbackParameters\n");
     cstar->CalculateFeedbackParameters
       (influenceRadius, RootCellWidth, SNe_dt, EjectaDensity, 
        EjectaThermalEnergy, EjectaMetalDensity, DensityUnits, LengthUnits, 
@@ -132,7 +132,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
        for SNe) is enclosed within grids on this level */
 
     LCAPERF_START("star_FindFeedbackSphere");
-    printf("StarParticleAddFeedback: call FindFeedbackSphere\n");
+    //printf("StarParticleAddFeedback: call FindFeedbackSphere\n");
 
     cstar->FindFeedbackSphere
       (MetaData, LevelArray, level, influenceRadius, EjectaDensity, EjectaThermalEnergy, 
@@ -148,7 +148,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 
     /* If there's no feedback or something weird happens, don't bother. */
 
-    printf("StarParticleAddFeedback: SphereContained %d\n", SphereContained);
+    //printf("StarParticleAddFeedback: SphereContained %d\n", SphereContained);
 
     if ( influenceRadius <= tiny_number || 
    SphereContained == FALSE ||
@@ -218,7 +218,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
       float energies[MAX_ENERGY_BINS], deltaE;
 #ifdef TRANSFER
       if (RadiativeTransfer) {
-        printf("\nRADIATIVE TRANSFER STAR FEEDBACK\n");
+        //printf("\nRADIATIVE TRANSFER STAR FEEDBACK\n");
 	cstar->ComputePhotonRates(TimeUnits, nbins, energies, Q);
 	sigma = (double) FindCrossSection(0, energies[0]);  // HI (cm^2)
 	Q_HI = Q[0];
@@ -233,7 +233,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 
       for (l = level; l < MAX_DEPTH_OF_HIERARCHY; l++) {
 	     for (Temp = LevelArray[l]; Temp; Temp = Temp->NextGridThisLevel) {
-         printf("StarParticleAddFeedback: calling Grid_AddFeedbackSphere\n");
+         //printf("StarParticleAddFeedback: calling Grid_AddFeedbackSphere\n");
 	       Temp->GridData->AddFeedbackSphere
 	         (MetaData, cstar, l, influenceRadius, DensityUnits, LengthUnits, 
 	          VelocityUnits, TemperatureUnits, TimeUnits, EjectaDensity, 
