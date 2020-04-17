@@ -1339,7 +1339,8 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 		  ResetMagneticFieldAmplitude+2);
 
     if (sscanf(line, "AppendActiveParticleType = %s", dummy) == 1) {
-      printf("%s: Found Active Particle %s\n", __FUNCTION__, dummy);
+      if (debug)
+        printf("%s: Found Active Particle %s\n", __FUNCTION__, dummy);
       active_particle_types[active_particles] = dummy;
       active_particles++;
     }

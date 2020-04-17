@@ -107,7 +107,10 @@ int ActiveParticleType_SmartStar::InitializeParticleType()
   //ah.push_back(new ArrayHandler<ap, float, 3, &ap::acc>("particle_acceleration_x", 0));
   //ah.push_back(new ArrayHandler<ap, float, 3, &ap::acc>("particle_acceleration_y", 1));
   //ah.push_back(new ArrayHandler<ap, float, 3, &ap::acc>("particle_acceleration_z", 2));
-  printf("SmartStar Initialisation complete\n"); fflush(stdout);
+  if (debug) {
+    printf("SmartStar Initialisation complete\n");
+    fflush(stdout);
+  }
   return SUCCESS;
 }
 
