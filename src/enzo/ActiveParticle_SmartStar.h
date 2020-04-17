@@ -242,20 +242,14 @@ void ActiveParticleType_SmartStar::MergeSmartStars(
   /* Merge the mergeable groups */
  
   for (i=0; i<*ngroups; i++) {
-    MergedParticles.copy_and_insert(
-        *(static_cast<active_particle_class*>(ParticleList[grouplist[i][0]])));
-    if (groupsize[i] != 1) {
-      for (j=1; j<groupsize[i]; j++) {
-    MergedParticles[i]->SmartMerge(
-          static_cast<active_particle_class*>(ParticleList[grouplist[i][j]]));
-        if (ParticleList[grouplist[i][j]]->DisableParticle(
-                LevelArray, 
-                MergedParticles[i]->ReturnCurrentGrid()->ReturnProcessorNumber()
-              ) == FAIL)
-        {
-          ENZO_FAIL("MergeSmartStars: DisableParticle failed!\n");
-        }
-      }
+    MergedParticles.copy_and_insert(*(static_cast<active_particle_class*>(ParticleList[grouplist[i][0]])));
+    if (groupsize[i] == 1) continue;
+    for (j=1; j<groupsize[i]; j++) {
+      // merge and delete
+      MergedParticles[i]->SmartMerge(
+        static_cast<active_particle_class*>(ParticleList[grouplist[i][j]]));
+      ParticleList[grouplist[i][j]]->DisableParticle(LevelArray, 
+        MergedParticles[i]->ReturnCurrentGrid()->ReturnProcessorNumber());
     }
   }
   

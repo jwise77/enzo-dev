@@ -234,12 +234,15 @@ void ActiveParticleType::Merge(ActiveParticleType *a)
  * This is a little bit more advanced merging. 
  * If all depends on which star retains the original 
  * attributes.
- * This star becomes the "new star" if 
- * 1. It's mass is greater than the "a" star.
+ * 1. The merged star retains the most properties of the oldest star
+ * 2. Use the accretion rate of the most massive star
+ * 3. A BH will always remain a BH.
+ * 4. When a SMS and MS star merge, a MS star will be the result (SMS will be disrupted since it's diffuse?)
  */
 void ActiveParticleType_SmartStar::SmartMerge(ActiveParticleType_SmartStar *a)
 {
   int dim;
+  PINT temp_id;
   double ratio1, ratio2;
 
   ratio1 = Mass / (Mass + a->Mass);
@@ -248,20 +251,25 @@ void ActiveParticleType_SmartStar::SmartMerge(ActiveParticleType_SmartStar *a)
   for (dim = 0; dim < MAX_DIMENSION; dim++) {
     pos[dim] = ratio1 * pos[dim] + ratio2 * a->pos[dim];
     vel[dim] = ratio1 * vel[dim] + ratio2 * a->vel[dim];
- 
   }
-  if(Mass > a->Mass) {
-    ;
-  }
-  else {
+
+  if (a->BirthTime < BirthTime) {
     BirthTime = a->BirthTime;
+    // Swap IDs because particles with the same IDs will cause problems during communication and particle counting. It doesn't matter because the "a" particle will be deleted
+    temp_id = Identifier;
+    Identifier = a->Identifier;
+    a->Identifier = temp_id;
+  }
+
+  if (Mass < a->Mass) {
     oldmass = a->oldmass;
     TimeIndex = a->TimeIndex;
-    for(int i = 0; i < NTIMES; i++)
+    for (int i = 0; i < NTIMES; i++) {
       {
-	AccretionRateTime[i] = a->AccretionRateTime[i];
-	AccretionRate[i] = a->AccretionRate[i];	
+        AccretionRateTime[i] = a->AccretionRateTime[i];
+        AccretionRate[i] = a->AccretionRate[i];
       }
+    }
   }
   Mass += a->Mass;
   NotEjectedMass += a->NotEjectedMass;
