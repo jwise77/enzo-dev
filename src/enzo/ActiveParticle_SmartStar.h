@@ -387,7 +387,7 @@ int ActiveParticleType_SmartStar::AfterEvolveLevel(
       ParticleList.clear();
       
       if (debug)
-	printf("Number of particles after merging: %"ISYM"\n",NumberOfMergedParticles);
+        printf("Number of particles after merging: %"ISYM"\n",NumberOfMergedParticles);
       
       /* Assign local particles to grids */
       
@@ -427,7 +427,7 @@ int ActiveParticleType_SmartStar::AfterEvolveLevel(
         dx, LevelArray, ThisLevel) == FAIL)
 	ENZO_FAIL("SmartStar Particle Feedback failed. \n");
       /* This applies all of the updates made above */
-      if (AssignActiveParticlesToGrids(ParticleList, NumberOfMergedParticles, 
+      if (AssignActiveParticlesToGrids(ParticleList, nParticles, 
               LevelArray) == FAIL)
         return FAIL;      
 

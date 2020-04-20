@@ -332,7 +332,7 @@ int ActiveParticleType_AccretingParticle::AfterEvolveLevel(
               ThisLevel) == FAIL)
         ENZO_FAIL("Accreting Particle accretion failed. \n");
       
-      if (AssignActiveParticlesToGrids(ParticleList, NumberOfMergedParticles, 
+      if (AssignActiveParticlesToGrids(ParticleList, nParticles, 
               LevelArray) == FAIL)
         return FAIL;      
 
