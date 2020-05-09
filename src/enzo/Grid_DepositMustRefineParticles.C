@@ -83,7 +83,8 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
   if (ProblemType == 30 &&
       (MustRefineParticlesCreateParticles == 3 ||
        MustRefineParticlesCreateParticles == 4))
-    UniformParticleMass = OmegaDarkMatterNow / OmegaMatterNow;
+    // Allow for some roundoff errors
+    UniformParticleMass = (1-BFLOAT_EPSILON) * OmegaDarkMatterNow / OmegaMatterNow;
 
   /* Loop over all particles, marking wich ones are must refine
      To add rules, modify number of rules here and add to loop below */
