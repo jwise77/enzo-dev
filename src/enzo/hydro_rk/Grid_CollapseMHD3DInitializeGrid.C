@@ -92,7 +92,6 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
 
   if(UsePoissonDivergenceCleaning){
     FieldType[phip_num=NumberOfBaryonFields++] = Phi_pField;
-    FieldType[NumberOfBaryonFields++] = DebugField;  
   }
 
   int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, 
@@ -123,8 +122,6 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
     //    FieldType[NumberOfBaryonFields++] = AccelerationField2;
     //    FieldType[NumberOfBaryonFields++] = AccelerationField3;
   }
-
-  FieldType[NumberOfBaryonFields++] = DebugField;
 
   /* Return if this doesn't concern us. */
 
@@ -500,7 +497,6 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
         MagneticField[1][n] = By;
         MagneticField[2][n] = Bz;
     }
-	BaryonField[NumberOfBaryonFields-1][n] = 0.;
       } // end loop over grid
     }
   }
