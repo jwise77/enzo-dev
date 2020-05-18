@@ -152,10 +152,17 @@ int ActiveParticleType_SmartStar::EvaluateFormation
   bool HasMetalField = (data.MetalNum != -1 || data.ColourNum != -1);
   bool JeansRefinement = false;
   bool MassRefinement = false;
-#if CACLDIRECTPOTENTIAL
-  float *PotentialField  = NULL;
+  bool CalculatePotential = false;
+  float *PotentialField = NULL;
+#if CALCDIRECTPOTENTIAL
+  CalculatePotential = true;
 #else
-  float *PotentialField = thisGrid->BaryonField[data.GravPotentialNum];
+  if (data.GravPotentialNum >= 0)
+    PotentialField = thisGrid->BaryonField[data.GravPotentialNum];
+#if MINIMUMPOTENTIAL
+  else
+    CalculatePotential = true;
+#endif
 #endif
   
   const int offset[] = {1, GridDimension[0], GridDimension[0]*GridDimension[1]};
@@ -275,8 +282,7 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 #endif
 #endif
 #if MINIMUMPOTENTIAL
-#if CALCDIRECTPOTENTIAL
-	if(PotentialField == NULL) {
+  if (CalculatePotential || PotentialField == NULL) {
 	  PotentialField = new float[size];
 	  thisGrid->CalculatePotentialField(PotentialField, data.DensNum, data.DensityUnits, data.TimeUnits,data.LengthUnits);
 	}
@@ -291,19 +297,18 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	 */
 	double JLength = JeansLength(CellTemperature, density[index],
 				     data.DensityUnits)/data.LengthUnits;
-	GravitationalMinimum  = thisGrid->FindMinimumPotential(centralpos, JLength*64.0,
+	GravitationalMinimum  = thisGrid->FindMinimumPotential(centralpos, JLength,
 							       PotentialField);
 	if(PotentialField[index] > GravitationalMinimum) {
 #if SSDEBUG
-	  printf("FAILURE: GravitationalMinimum = %g\t " \
-	    "PotentialField[index] = %g\n\n", GravitationalMinimum, PotentialField[index]);
+	  printf("MINIMUMPOTENTIAL: GravitationalMinimum = %g\t " \
+	    "PotentialField[index] = %g\n", GravitationalMinimum, PotentialField[index]);
 #endif
 	  continue;
 	}
-
-
 #endif
-#ifdef GRAVENERGY
+
+#if GRAVENERGY
 	static int mincount = 0;
 	/* 5. Jeans Instability Check */
 
@@ -375,8 +380,9 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	 * to change to a bluer spectrum.
 	 */
 #if SSDEBUG
-	printf("Forming a SMS - H2Fraction (Threshold) = %e (%e) \n",
-	       data.H2Fraction[index],  PopIIIH2CriticalFraction);
+  if (data.H2Fraction != NULL)
+    printf("Forming a SMS - H2Fraction (Threshold) = %e (%e) \n",
+           data.H2Fraction[index],  PopIIIH2CriticalFraction);
 #endif
 	np->ParticleClass = SMS;      //1
 	np->RadiationLifetime=SmartStarSMSLifetime*yr_s/data.TimeUnits;
