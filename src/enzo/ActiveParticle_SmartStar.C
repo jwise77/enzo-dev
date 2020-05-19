@@ -159,10 +159,6 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 #else
   if (data.GravPotentialNum >= 0)
     PotentialField = thisGrid->BaryonField[data.GravPotentialNum];
-#if MINIMUMPOTENTIAL
-  else
-    CalculatePotential = true;
-#endif
 #endif
   
   const int offset[] = {1, GridDimension[0], GridDimension[0]*GridDimension[1]};
@@ -286,7 +282,7 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	  PotentialField = new float[size];
 	  thisGrid->CalculatePotentialField(PotentialField, data.DensNum, data.DensityUnits, data.TimeUnits,data.LengthUnits);
 	}
-#endif
+
 #if SSDEBUG
         fprintf(stdout, "%s: Calculate Gravitational Potential\n", __FUNCTION__);
 #endif
