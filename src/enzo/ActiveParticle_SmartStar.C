@@ -17,10 +17,11 @@
 #define MINIMUMPOTENTIAL 1
 #define CALCDIRECTPOTENTIAL 0
 #define JEANSREFINEMENT  1
+#define GRAVENERGY 0
 #define MASSTHRESHOLDCHECK 1
 #define JEANSLENGTHCALC    1
-#define MASSTHRESHOLD      30                       //Msolar in grid
-#define COOLING_TIME       0
+#define MASSTHRESHOLD      0.1                       //Msolar in grid
+#define COOLING_TIME       1
 
 int DetermineSEDParameters(ActiveParticleType_SmartStar *SS,FLOAT Time, FLOAT dx);
 
