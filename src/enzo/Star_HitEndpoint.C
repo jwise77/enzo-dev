@@ -52,35 +52,35 @@ int Star::HitEndpoint(FLOAT Time)
       // Needs to be non-zero (multiply by a small number to retain
       // memory of mass)
       if (this->FeedbackFlag == DEATH) {
-	this->Mass *= tiny_number;  
+        this->Mass *= tiny_number;  
 
+        // Set lifetime so the time of death is exactly now.
+        this->LifeTime = Time - this->BirthTime;
 
-	// Set lifetime so the time of death is exactly now.
-	this->LifeTime = Time - this->BirthTime;
-
-	//this->FeedbackFlag = NO_FEEDBACK;
-	result = KILL_STAR;
-	//result = NO_DEATH;
+        //this->FeedbackFlag = NO_FEEDBACK;
+	      result = KILL_STAR;
+	      //result = NO_DEATH;
       } else {
-	result = NO_DEATH;
+        result = NO_DEATH;
       }
 
-    // Check mass: Don't want to kill tracer SN particles formed
-    // (above) in the previous timesteps.
+      // Check mass: Don't want to kill tracer SN particles formed
+      // (above) in the previous timesteps.
 
     } else if (this->Mass > 1e-9) {
       // Turn particle into a black hole (either radiative or tracer)
       if (PopIIIBlackHoles) {
-	this->type = BlackHole;
-	this->LifeTime = huge_number;
-	this->FeedbackFlag = NO_FEEDBACK;
-	result = NO_DEATH;
+        this->type = BlackHole;
+        this->LifeTime = huge_number;
+        this->FeedbackFlag = NO_FEEDBACK;
+        result = NO_DEATH;
       } else {
-	this->type = PARTICLE_TYPE_DARK_MATTER;
-	result = KILL_STAR;
+        this->type = PARTICLE_TYPE_DARK_MATTER;
+        result = KILL_STAR;
       }
-    } else // SN tracers (must refine)
+    } else { // SN tracers (must refine)
       result = NO_DEATH;
+    }
 
     if (debug)
       printf("HitEndpoint[%"ISYM"]: type = %"ISYM", mass = %"GOUTSYM", result = %"ISYM", feedback = %"ISYM", Time = %"PSYM"/%"PSYM"\n",

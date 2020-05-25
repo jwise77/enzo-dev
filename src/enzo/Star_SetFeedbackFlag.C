@@ -65,17 +65,19 @@ int Star::SetFeedbackFlag(FLOAT Time)
   switch (abs_type) {
 
   case PopIII:
-    if (this->type < 0) // birth
+    if (this->type < 0) { // birth
       this->FeedbackFlag = FORMATION;
-    else if (Time > this->BirthTime + this->LifeTime) // endpoint
+    } else if (Time > this->BirthTime + this->LifeTime) { // endpoint
       if (((this->Mass >= PISNLowerMass && this->Mass <= PISNUpperMass) ||
-	   (this->Mass >= TypeIILowerMass && this->Mass <= TypeIIUpperMass)) &&
-	  PopIIISupernovaExplosions == TRUE)
-	this->FeedbackFlag = SUPERNOVA;
-      else
-	this->FeedbackFlag = NO_FEEDBACK; // BH formation
-    else // main sequence
+        (this->Mass >= TypeIILowerMass && this->Mass <= TypeIIUpperMass)) &&
+        PopIIISupernovaExplosions == TRUE) {
+        this->FeedbackFlag = SUPERNOVA;
+      } else {
+        this->FeedbackFlag = NO_FEEDBACK; // BH formation
+      }
+    } else { // main sequence
       this->FeedbackFlag = NO_FEEDBACK;
+    }
     break;
 
   case SimpleSource:
@@ -84,14 +86,15 @@ int Star::SetFeedbackFlag(FLOAT Time)
     
   case PopII:
     AgeInMyr = (Time - BirthTime) * TimeUnits / Myr_s;
-    if (this->type > 0)
+    if (this->type > 0) {
       if ((AgeInMyr > StarClusterSNeStart && AgeInMyr < StarClusterSNeEnd) ||
-	  StarClusterUnresolvedModel)
-	this->FeedbackFlag = CONT_SUPERNOVA;
-      else
-	this->FeedbackFlag = NO_FEEDBACK;
-    else
+        StarClusterUnresolvedModel) {
+        this->FeedbackFlag = CONT_SUPERNOVA;
+      } else {
+        this->FeedbackFlag = NO_FEEDBACK;
+    } else { // type < 0
       this->FeedbackFlag = FORMATION;
+    }
     break;
 
   case BlackHole:

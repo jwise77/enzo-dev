@@ -35,18 +35,19 @@ void Star::ActivateNewStar(FLOAT Time, float Timestep)
       break;
     case PopII:
       if (Mass >= StarClusterMinimumMass) {
-	type = StarType;
-	if (StarClusterUnresolvedModel)
-	  BirthTime = Time-Timestep;
-	else
-	  // slightly before to avoid round-off errors in comparisons
-	  BirthTime = (1-1e-6)*Time;
+        type = StarType;
+        if (StarClusterUnresolvedModel) {
+          BirthTime = Time-Timestep;
+        } else {
+          // slightly before to avoid round-off errors in comparisons
+          BirthTime = (1-1e-6)*Time;
+        }
       }
       break;
     case PopIII:
       if (Mass >= this->FinalMass) {
-	type = StarType;
-	BirthTime = (1-1e-6)*Time;
+        type = StarType;
+        BirthTime = (1-1e-6)*Time;
       }
       break;
     case PopIII_CF:
