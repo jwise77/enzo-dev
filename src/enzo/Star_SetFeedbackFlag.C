@@ -73,7 +73,7 @@ int Star::SetFeedbackFlag(FLOAT Time)
         PopIIISupernovaExplosions == TRUE) {
         this->FeedbackFlag = SUPERNOVA;
       } else {
-        this->FeedbackFlag = NO_FEEDBACK; // BH formation
+        this->FeedbackFlag = NO_FEEDBACK; // direct BH formation
       }
     } else { // main sequence
       this->FeedbackFlag = NO_FEEDBACK;
@@ -92,6 +92,7 @@ int Star::SetFeedbackFlag(FLOAT Time)
         this->FeedbackFlag = CONT_SUPERNOVA;
       } else {
         this->FeedbackFlag = NO_FEEDBACK;
+      }
     } else { // type < 0
       this->FeedbackFlag = FORMATION;
     }

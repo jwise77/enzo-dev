@@ -312,7 +312,8 @@ const star_type
   RadSource = PARTICLE_TYPE_RAD,
   Kravtsov = PARTICLE_TYPE_STAR,
   CenOstriker = PARTICLE_TYPE_STAR,
-  AccretingParticle = PARTICLE_TYPE_MUST_REFINE;
+  AccretingParticle = PARTICLE_TYPE_MUST_REFINE,
+  NeutronStar = PARTICLE_TYPE_NEUTRON_STAR;
 
 /* Define a float/int union. */
 

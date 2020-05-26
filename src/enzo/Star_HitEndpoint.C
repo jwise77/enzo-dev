@@ -30,6 +30,7 @@ int Star::HitEndpoint(FLOAT Time)
 
   const float TypeIILowerMass = 11, TypeIIUpperMass = 40.1;
   const float PISNLowerMass = 140, PISNUpperMass = 260;
+  const float ns_bh_transition = 15;
 
   /* First check if the star's past its lifetime and then check other
      constrains based on its star type */
@@ -49,18 +50,36 @@ int Star::HitEndpoint(FLOAT Time)
         ((this->Mass >= TypeIILowerMass && this->Mass <= TypeIIUpperMass) &&
             PopIIISupernovaExplosions == TRUE)) {
 
-      // Needs to be non-zero (multiply by a small number to retain
-      // memory of mass)
       if (this->FeedbackFlag == DEATH) {
-        this->Mass *= tiny_number;  
+        // Radiating BH remnant after SN
+        if (PopIIIBlackHoles &&
+          (this->Mass >= TypeIILowerMass && this->Mass <= TypeIIUpperMass)) {
+          if (this->Mass <= ns_bh_transition) {
+            this->type = NeutronStar;  // inert (for now)
+          } else {
+            this->type = BlackHole;
+          }
+          // Fit from Heger & Woosley (2010) Figure 6 (E = 0.9 B)
+          this->Mass = 0.0147 * this->Mass * this->Mass;
+          this->LifeTime = huge_number;
+          this->FeedbackFlag = NO_FEEDBACK;
+          result = NO_DEATH;
+        } 
+        // Supernova tracer particle
+        else {
+          // SN tracer: Needs to be non-zero (multiply by a small number to 
+          // retain memory of mass)
+          this->Mass *= tiny_number;  
 
-        // Set lifetime so the time of death is exactly now.
-        this->LifeTime = Time - this->BirthTime;
+          // Set lifetime so the time of death is exactly now.
+          this->LifeTime = Time - this->BirthTime;
 
-        //this->FeedbackFlag = NO_FEEDBACK;
-	      result = KILL_STAR;
-	      //result = NO_DEATH;
+          //this->FeedbackFlag = NO_FEEDBACK;
+          result = KILL_STAR;
+          //result = NO_DEATH;
+        }
       } else {
+        // Feedback sphere not applied yet. Wait and check again later.
         result = NO_DEATH;
       }
 
@@ -68,7 +87,8 @@ int Star::HitEndpoint(FLOAT Time)
       // (above) in the previous timesteps.
 
     } else if (this->Mass > 1e-9) {
-      // Turn particle into a black hole (either radiative or tracer)
+      // Turn particle into a black hole (either radiative or tracer). Direct BH formation (all
+      // stellar mass into the BH, likely an overestimate)
       if (PopIIIBlackHoles) {
         this->type = BlackHole;
         this->LifeTime = huge_number;
