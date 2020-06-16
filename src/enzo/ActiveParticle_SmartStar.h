@@ -226,7 +226,6 @@ void ActiveParticleType_SmartStar::MergeSmartStars(
    * not necessarily constitute a merger. 
    */
   FLOAT MergingRadius = LevelArray[ThisLevel]->GridData->GetCellWidth(0,0)*ACCRETIONRADIUS; 
-  MergingRadius = MergingRadius*3.0;
   for (i=0; i<(*nParticles); i++) {
     tempPos = ParticleList[i]->ReturnPosition();
     for (dim=0; dim<3; dim++)
