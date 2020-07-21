@@ -257,12 +257,12 @@ int grid::TriggeredStarFormationInitializeGrid(
 
  /**** ^^^ PROBABLY DONT NEED TO KEEP THIS ^^^ ******/
 
-  if (SecondPass) {
+  if (SecondPass) { 
     /* Check if star is within grid boundaries */
     bool StarInGrid = true;
     FLOAT pos;
     for (dim = 0; dim < GridRank; dim++) {
-        pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
+        pos = StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]);
         //printf("pos[%i] = %f\n", dim, pos);
         //printf("LE[%i], RE[%i] = %f, %f\n", GridLeftEdge[dim], GridRightEdge[dim]);
         StarInGrid &= (pos >= GridLeftEdge[dim] && pos <= GridRightEdge[dim]);
@@ -279,7 +279,6 @@ int grid::TriggeredStarFormationInitializeGrid(
       printf("Star Mass (code units): %f \n", StarParticleMass);
 
       /* Set number of particles for this grid and allocate space. */
-
       NumberOfParticles = 1;
       NumberOfParticleAttributes = 4;
       this->AllocateNewParticles(NumberOfParticles);
@@ -296,7 +295,7 @@ int grid::TriggeredStarFormationInitializeGrid(
       float cm_per_km = 1e5;
       for (dim = 0; dim < GridRank; dim++) {
         ParticlePosition[dim][0] = StarPosition[dim]*
-          (DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
+          (DomainLeftEdge[dim]+DomainRightEdge[dim]);
         ParticleVelocity[dim][0] = StarVelocity[dim] * cm_per_km*TimeUnits/LengthUnits;
       }
       ParticleMass[0] = StarParticleMass;
@@ -325,6 +324,7 @@ int grid::TriggeredStarFormationInitializeGrid(
         cstar->type = PopIII; 
     } /* End Initialize star particle */
   } /* End SecondPass */
+
 
   // Initialize the grids if we haven't already done so in the first pass
   if (!SecondPass) {

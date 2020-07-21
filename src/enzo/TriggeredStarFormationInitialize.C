@@ -39,6 +39,8 @@
 #include "Hierarchy.h"
 #include "TopGridData.h"
 
+void DeleteStar(Star * &Node);
+void RemoveDuplicateStars(LevelHierarchyEntry *grid);
 void WriteListOfFloats(FILE *fptr, int N, float floats[]);
 void WriteListOfFloats(FILE *fptr, int N, FLOAT floats[]);
 void AddLevel(LevelHierarchyEntry *Array[], HierarchyEntry *Grid, int level);
@@ -479,6 +481,37 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
     }
   }
 
+  if (SecondPass) {
+    // Find max level with star particles
+    printf("%s\n", "TEST");
+    int maxStarLevel = -1;
+    int lvl = 0;
+    for (lvl = 0; lvl < MaximumRefinementLevel; lvl++) {
+      LevelHierarchyEntry *Temp = LevelArray[lvl];
+      while (Temp != NULL) {
+        if (Temp->GridData->ReturnNumberOfStars() >= 1) {
+          maxStarLevel = max(maxStarLevel, lvl);
+          printf("\nlvl %d, grid %p, lvl %lld, stars %d\n", lvl, Temp, Temp->GridData->GetLevel(), Temp->GridData->ReturnNumberOfStars());
+        }
+        printf("lvl %d, grid %p\n", lvl, Temp);      
+        Temp = Temp->NextGridThisLevel;
+      }
+    }
+    // Remove duplicate particles from coarse grids
+    if (maxStarLevel > -1) {
+      printf("maxStarLevel %d\n", maxStarLevel);        
+      Star *cstar, next;  
+      LevelHierarchyEntry *Temp = LevelArray[maxStarLevel];
+      while (Temp != NULL) {
+        printf("Remove duplicate stars from %p\n", Temp);        
+        RemoveDuplicateStars(Temp);
+        Temp = Temp->NextGridThisLevel;  
+      }
+    }
+  }
+
+  /********** END Delete coarse grid stars ***********/
+
  /* set up field names and units */
   if (!SecondPass) {
     int count = 0;
@@ -601,5 +634,19 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   delete[] dummy;  
 
   return SUCCESS;
+}
+
+//---------------------------------------------------------------------------------------
+
+void RemoveDuplicateStars(LevelHierarchyEntry *grid) {
+  Star *cstar, *next = NULL;
+  do { 
+    cstar = grid->GridData->ReturnStarPointer();
+    if (cstar != NULL)
+      next = cstar->NextStar;
+    if (next != NULL)
+      DeleteStar(next);
+  } while (next != NULL);
+  return;
 }
 

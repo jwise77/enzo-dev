@@ -136,6 +136,12 @@ int grid::TransportPhotonPackages(int level, int finest_level,
     RecombinationTime = 1.0 / (alphaB * DensityUnits / mh) / TimeUnits;
     MinimumPhotonFlux *= (float) ((RT_Units / TimeUnits) * (MassUnits / mh) * dtPhoton / 
 				  (10*RecombinationTime));
+
+    /* Decrease minimum photon flux for TriggeredStarFormation simulation. 
+       Photons get deleted too frequently and therefore do not propogate when MinimumPhotonFlux is too large */
+    if (ProblemType == 550) {
+      MinimumPhotonFlux /= 100;
+    }
   }
   
   count = 0;
