@@ -22,7 +22,7 @@ double Gaussian(double cs);
 
  void Turbulence_Generator(float **vel, int dim0, int dim1, int dim2, int ind,  
 			   float kmin, float kmax, float dk,
-			   FLOAT **LeftEdge, FLOAT **CellWidth, int seed)
+			   FLOAT **LeftEdge, FLOAT **CellWidth, int seed, int normalize=FALSE)
    /* 
       vel[3][ActiveSize]
       size: the grid dimension
@@ -33,7 +33,7 @@ double Gaussian(double cs);
       kmax: the upper wave number cutoff 
    */
  {
-   int igrid, i, j, k;
+   int igrid, i, j, k, n, dim;
    igrid = 0;
    for (k = 0; k < dim2; k++) {
      for (j = 0; j < dim1; j++) {
@@ -114,6 +114,25 @@ double Gaussian(double cs);
        }
      }
    }
+
+	/* Normalize to have an rms of unity to scale later */
+	if (normalize == TRUE) {
+		int size = dim0*dim1*dim2;
+		float v_rms = 0.0;
+		for (dim = 0; dim < MAX_DIMENSION; dim++) {
+			for (n = 0; n < size; n++) {
+				v_rms += vel[dim][n] * vel[dim][n];
+			}
+		}
+		v_rms = sqrt(v_rms / size);
+		printf("v_rms(unnormalized) = %g\n", v_rms);
+		for (dim = 0; dim < MAX_DIMENSION; dim++) {
+			for (n = 0; n < size; n++) {
+				vel[dim][n] /= v_rms;
+			}
+		}
+	}
+
 
    return ;
 

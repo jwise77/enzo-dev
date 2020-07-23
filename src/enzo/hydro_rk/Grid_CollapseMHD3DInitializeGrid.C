@@ -29,7 +29,7 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
 double Gaussian(double cs);
 void Turbulence_Generator(float **vel, int dim0, int dim1, int dim2, int ind, 
 			  float kmin, float kmax, float dk,
-			  FLOAT **LeftEdge, FLOAT **CellWidth, int seed);
+			  FLOAT **LeftEdge, FLOAT **CellWidth, int seed, int normalize=FALSE);
 
 
 int grid::CollapseMHD3DInitializeGrid(int n_sphere,

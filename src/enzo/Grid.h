@@ -1276,6 +1276,9 @@ gradient force to gravitational force for one-zone collapse test. */
 //
    int GetGridRank() {return GridRank;}
    int GetGridDimension(int Dimension) {return GridDimension[Dimension];}
+   int GetActiveDimension(int Dimension) {
+      return GridEndIndex[Dimension] - GridStartIndex[Dimension] + 1;
+   }
    int GetGridStartIndex(int Dimension) {return GridStartIndex[Dimension];}
    int GetGridEndIndex(int Dimension) {return GridEndIndex[Dimension];}
    int GetActiveSize() {
@@ -2145,6 +2148,7 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
 			     FLOAT SpherePosition[MAX_SPHERES][MAX_DIMENSION],
 			     float SphereVelocity[MAX_SPHERES][MAX_DIMENSION],
 			     float SphereFracKeplarianRot[MAX_SPHERES],
+              int   SphereTurbulenceType,
 			     float SphereTurbulence[MAX_SPHERES],
 			     float SphereDispersion[MAX_SPHERES],
 			     float SphereCutOff[MAX_SPHERES],

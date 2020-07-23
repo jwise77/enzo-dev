@@ -29,7 +29,7 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
 
 void Turbulence_Generator(float **vel, int dim0, int dim1, int dim2, int ind, 
 			  float kmin, float kmax, float dk,
-			  FLOAT **LeftEdge, FLOAT **CellWidth, int seed);
+			  FLOAT **LeftEdge, FLOAT **CellWidth, int seed, int normalize=FALSE);
 
 int grid::MHDTurbulenceInitializeGrid(float rho_medium, float cs_medium, float mach, 
 				      float Bnaught, int seed, int level, int SetBaryonFields)

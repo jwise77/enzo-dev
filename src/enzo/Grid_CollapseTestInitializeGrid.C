@@ -37,6 +37,10 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
 int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
 float gasdev();
 
+void Turbulence_Generator(float **vel, int dim0, int dim1, int dim2, int ind, 
+        float kmin, float kmax, float dk,
+        FLOAT **LeftEdge, FLOAT **CellWidth, int seed, int normalize=FALSE);
+
 // Used to compute Bonner-Ebert density profile
 double BE(double r);
 double q(double r);
@@ -74,6 +78,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 				     FLOAT SpherePosition[MAX_SPHERES][MAX_DIMENSION],
 				     float SphereVelocity[MAX_SPHERES][MAX_DIMENSION],
 				     float SphereFracKeplerianRot[MAX_SPHERES],
+					 int   SphereTurbulenceType,
 				     float SphereTurbulence[MAX_SPHERES],
 				     float SphereDispersion[MAX_SPHERES],
 				     float SphereCutOff[MAX_SPHERES],
@@ -104,13 +109,24 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 {
   /* declarations */
 
-  int dim, i, j, k, m, sphere;
+  int dim, i, j, k, m, sphere, igrid;
+  int ActiveDim[MAX_DIMENSION];
   int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
     DINum, DIINum, HDINum, MetalNum;
   float xdist,ydist,zdist;
 
+  /* Turbulence variables */
+
+  const int TurbulenceSeed = 191105;  // Should be a parameter
+  float *TurbulenceVelocity[MAX_DIMENSION];
+  for (dim = 0; dim < MAX_DIMENSION; dim++)
+    TurbulenceVelocity[dim] = NULL;
+
   /* create fields */
 
+  for (dim = 0; dim < GridRank; dim++) {
+    ActiveDim[dim] = this->GetActiveDimension(dim);
+  }
   NumberOfBaryonFields = 0;
   FieldType[NumberOfBaryonFields++] = Density;
   FieldType[NumberOfBaryonFields++] = TotalEnergy;
@@ -445,6 +461,34 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 
     } // ENDFOR sphere
 
+    /* Initialize turbulent velocity field */
+
+    bool SphereTurbulenceExists = true;
+    for (sphere = 0; sphere < NumberOfSpheres; sphere++)
+      SphereTurbulenceExists &= SphereTurbulence[sphere] > 0;
+    if (SphereTurbulenceType == 1 && SphereTurbulenceExists) {
+      // Copied from grid::CollapseMHD3DInitializeGrid(). Why these values?
+      float k1, k2, dk, slope;
+      slope = 4.0;
+      k1 = 5;
+      k2 = 8.0;
+      dk = 1.0;
+      if (debug)
+        printf("Begin generating turbulent velocity spectrum...\n");
+      int activesize = this->GetActiveSize();
+      for (dim = 0; dim < MAX_DIMENSION; dim++)
+        TurbulenceVelocity[dim] = new float[activesize];
+      // Assumes 3D
+      Turbulence_Generator(TurbulenceVelocity, 
+        GridDimension[0]-2*NumberOfGhostZones, 
+        GridDimension[1]-2*NumberOfGhostZones,
+        GridDimension[2]-2*NumberOfGhostZones,
+        slope, k1, k2, dk, CellLeftEdge, CellWidth, TurbulenceSeed,
+        TRUE);
+      if (debug)
+        printf("Turbulent spectrum generated\n");
+    }
+
     for (k = 0; k < GridDimension[2]; k++)
       for (j = 0; j < GridDimension[1]; j++)
 	for (i = 0; i < GridDimension[0]; i++, n++) {
@@ -536,18 +580,37 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 	      } else {
 		RotVelocity[0] = RotVelocity[1] = RotVelocity[2] = 0;
 	      }
+
+		// Completely random cell-by-cell (not using power spectrum)
+		if (SphereTurbulenceType == 0) {
 	      Velocity[0] += SphereTurbulence[sphere] * 
-		Maxwellian(VelocitySound[sphere], VelocityUnits, mu, Gamma);
+			Maxwellian(VelocitySound[sphere], VelocityUnits, mu, Gamma);
 	      Velocity[1] += SphereTurbulence[sphere] * 
-		Maxwellian(VelocitySound[sphere], VelocityUnits, mu, Gamma);
+			Maxwellian(VelocitySound[sphere], VelocityUnits, mu, Gamma);
 	      Velocity[2] += SphereTurbulence[sphere] * 
-		Maxwellian(VelocitySound[sphere], VelocityUnits, mu, Gamma);
-	      m = 0;
+			Maxwellian(VelocitySound[sphere], VelocityUnits, mu, Gamma);
+		} else
+    // Use the turbulence generator (using a power spectrum)
+    if (SphereTurbulenceType == 1) {
+      // TurbulenceVelocity doesn't have ghost zones
+      if (i >= GridStartIndex[0] && i < GridEndIndex[0] &&
+          j >= GridStartIndex[1] && j < GridEndIndex[1] &&
+          k >= GridStartIndex[2] && k < GridEndIndex[2]) {
+        igrid = (i-GridStartIndex[0]) +
+          (j-GridStartIndex[1]) * ActiveDim[0] +
+          (k-GridStartIndex[2]) * ActiveDim[0] * ActiveDim[1];
+        // TODO Normalize
+        for (dim = 0; dim < GridRank; dim++) {
+          Velocity[dim] += VelocitySound[sphere] * SphereTurbulence[sphere] * TurbulenceVelocity[dim][igrid];
+        }
+      }
+    }
 
-	      /* If collapsing uniform sphere, add radial velocity (see
-		 Bertschinger 1985) */
+    m = 0;
 
-	      if (SphereType[sphere] == 8) {
+    /* If collapsing uniform sphere, add radial velocity (see Bertschinger 1985) */
+
+    if (SphereType[sphere] == 8) {
 		ibin = (int) floor(r * NR);
 		radial_velocity = vr[ibin] + 
 		  (vr[ibin+1] - vr[ibin]) / (radius_vr[ibin+1] - radius_vr[ibin]) *
@@ -1024,6 +1087,10 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 	} // end loop over grid
 
   } // end loop SetupLoopCount
+
+  for (dim = 0; dim < MAX_DIMENSION; dim++)
+    if (TurbulenceVelocity[dim] != NULL)
+      delete [] TurbulenceVelocity[dim];
 
   if (SphereUseParticles && debug)
     printf("CollapseTestInitialize: NumberOfParticles = %"ISYM"\n", 

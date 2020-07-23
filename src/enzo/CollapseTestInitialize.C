@@ -89,6 +89,7 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
   int CollapseTestWind            = FALSE;
   float CollapseTestInitialTemperature = 1000;
   float CollapseTestInitialDensity     = 1.0;
+  int CollapseTestTurbulenceType = 0;
   float CollapseTestSphereDensity[MAX_SPHERES],
     CollapseTestSphereTemperature[MAX_SPHERES],
     CollapseTestSphereVelocity[MAX_SPHERES][MAX_DIMENSION],
@@ -174,6 +175,8 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
 		  &CollapseTestInitialTemperature);
     ret += sscanf(line, "CollapseTestInitialDensity = %"FSYM,
 		  &CollapseTestInitialDensity);
+    ret += sscanf(line, "CollapseTestTurbulenceType = %"ISYM,
+		  &CollapseTestTurbulenceType);
     ret += sscanf(line, "CollapseTestUniformVelocity = %"FSYM" %"FSYM" %"FSYM, 
 		  CollapseTestUniformVelocity, CollapseTestUniformVelocity+1,
 		  CollapseTestUniformVelocity+2);
@@ -279,26 +282,27 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
   /* set up grid */
 
   if (TopGrid.GridData->CollapseTestInitializeGrid(
-	     CollapseTestNumberOfSpheres, CollapseTestSphereRadius,
-	     CollapseTestSphereCoreRadius, CollapseTestSphereDensity,
-	     CollapseTestSphereTemperature, CollapseTestSphereMetallicity,
-	     CollapseTestSpherePosition, CollapseTestSphereVelocity,
-             CollapseTestFracKeplerianRot, CollapseTestSphereTurbulence,
-	     CollapseTestSphereDispersion,
-             CollapseTestSphereCutOff, CollapseTestSphereAng1,
-             CollapseTestSphereAng2, CollapseTestSphereNumShells,
-	     CollapseTestSphereType, CollapseTestSphereConstantPressure,
-	     CollapseTestSphereSmoothSurface, CollapseTestSphereSmoothRadius, 
-	     CollapseTestSphereHIIFraction, CollapseTestSphereHeIIFraction,
-	     CollapseTestSphereHeIIIFraction, CollapseTestSphereH2IFraction,
-	     CollapseTestUseParticles, CollapseTestParticleMeanDensity,
-             CollapseTestUniformVelocity, CollapseTestUseColour,
-	     CollapseTestUseMetals, 
-             CollapseTestInitialTemperature, CollapseTestInitialDensity,
-	     0,
-	     CollapseTestInitialFractionHII, CollapseTestInitialFractionHeII,
-	     CollapseTestInitialFractionHeIII, CollapseTestInitialFractionHM,
-	     CollapseTestInitialFractionH2I, CollapseTestInitialFractionH2II) == FAIL) {
+      CollapseTestNumberOfSpheres, CollapseTestSphereRadius,
+      CollapseTestSphereCoreRadius, CollapseTestSphereDensity,
+      CollapseTestSphereTemperature, CollapseTestSphereMetallicity,
+      CollapseTestSpherePosition, CollapseTestSphereVelocity,
+      CollapseTestFracKeplerianRot, 
+      CollapseTestTurbulenceType, CollapseTestSphereTurbulence,
+      CollapseTestSphereDispersion,
+      CollapseTestSphereCutOff, CollapseTestSphereAng1,
+      CollapseTestSphereAng2, CollapseTestSphereNumShells,
+      CollapseTestSphereType, CollapseTestSphereConstantPressure,
+      CollapseTestSphereSmoothSurface, CollapseTestSphereSmoothRadius, 
+      CollapseTestSphereHIIFraction, CollapseTestSphereHeIIFraction,
+      CollapseTestSphereHeIIIFraction, CollapseTestSphereH2IFraction,
+      CollapseTestUseParticles, CollapseTestParticleMeanDensity,
+      CollapseTestUniformVelocity, CollapseTestUseColour,
+      CollapseTestUseMetals, 
+      CollapseTestInitialTemperature, CollapseTestInitialDensity,
+      0,
+      CollapseTestInitialFractionHII, CollapseTestInitialFractionHeII,
+      CollapseTestInitialFractionHeIII, CollapseTestInitialFractionHM,
+      CollapseTestInitialFractionH2I, CollapseTestInitialFractionH2II) == FAIL) {
     ENZO_FAIL("Error in CollapseTestInitializeGrid.");
   }
 
@@ -389,26 +393,27 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
 
 
 	      if (Subgrid[lev]->GridData->CollapseTestInitializeGrid(
-	          CollapseTestNumberOfSpheres, CollapseTestSphereRadius,
-		  CollapseTestSphereCoreRadius, CollapseTestSphereDensity,
-		  CollapseTestSphereTemperature, CollapseTestSphereMetallicity,
-		  CollapseTestSpherePosition, CollapseTestSphereVelocity,
-		  CollapseTestFracKeplerianRot, CollapseTestSphereTurbulence,
-		  CollapseTestSphereDispersion,
-		  CollapseTestSphereCutOff, CollapseTestSphereAng1,
-		  CollapseTestSphereAng2, CollapseTestSphereNumShells,
-		  CollapseTestSphereType, CollapseTestSphereConstantPressure,
-		  CollapseTestSphereSmoothSurface, CollapseTestSphereSmoothRadius, 
-		  CollapseTestSphereHIIFraction, CollapseTestSphereHeIIFraction,
-		  CollapseTestSphereHeIIIFraction, CollapseTestSphereH2IFraction,
-		  CollapseTestUseParticles, CollapseTestParticleMeanDensity,
-		  CollapseTestUniformVelocity, CollapseTestUseColour,
-		  CollapseTestUseMetals,
-		  CollapseTestInitialTemperature, CollapseTestInitialDensity,
-		  lev-1,
-		  CollapseTestInitialFractionHII, CollapseTestInitialFractionHeII,
-		  CollapseTestInitialFractionHeIII, CollapseTestInitialFractionHM,
-		  CollapseTestInitialFractionH2I, CollapseTestInitialFractionH2II) == FAIL) {
+            CollapseTestNumberOfSpheres, CollapseTestSphereRadius,
+            CollapseTestSphereCoreRadius, CollapseTestSphereDensity,
+            CollapseTestSphereTemperature, CollapseTestSphereMetallicity,
+            CollapseTestSpherePosition, CollapseTestSphereVelocity,
+            CollapseTestFracKeplerianRot, 
+            CollapseTestTurbulenceType, CollapseTestSphereTurbulence,
+            CollapseTestSphereDispersion,
+            CollapseTestSphereCutOff, CollapseTestSphereAng1,
+            CollapseTestSphereAng2, CollapseTestSphereNumShells,
+            CollapseTestSphereType, CollapseTestSphereConstantPressure,
+            CollapseTestSphereSmoothSurface, CollapseTestSphereSmoothRadius, 
+            CollapseTestSphereHIIFraction, CollapseTestSphereHeIIFraction,
+            CollapseTestSphereHeIIIFraction, CollapseTestSphereH2IFraction,
+            CollapseTestUseParticles, CollapseTestParticleMeanDensity,
+            CollapseTestUniformVelocity, CollapseTestUseColour,
+            CollapseTestUseMetals, 
+            CollapseTestInitialTemperature, CollapseTestInitialDensity,
+            lev-1,
+            CollapseTestInitialFractionHII, CollapseTestInitialFractionHeII,
+            CollapseTestInitialFractionHeIII, CollapseTestInitialFractionHM,
+            CollapseTestInitialFractionH2I, CollapseTestInitialFractionH2II) == FAIL) {
 		ENZO_FAIL("Error in CollapseTestInitializeGrid.");
 	      }
 	      
@@ -438,26 +443,27 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
 	LevelHierarchyEntry *Temp = LevelArray[level+1];
 	while (Temp != NULL) {
 	  if (Temp->GridData->CollapseTestInitializeGrid(
-		 CollapseTestNumberOfSpheres, CollapseTestSphereRadius,
-		 CollapseTestSphereCoreRadius, CollapseTestSphereDensity,
-		 CollapseTestSphereTemperature, CollapseTestSphereMetallicity,
-		 CollapseTestSpherePosition, CollapseTestSphereVelocity,
-		 CollapseTestFracKeplerianRot, CollapseTestSphereTurbulence,
-		 CollapseTestSphereDispersion,
-		 CollapseTestSphereCutOff, CollapseTestSphereAng1,
-		 CollapseTestSphereAng2, CollapseTestSphereNumShells,
-		 CollapseTestSphereType, CollapseTestSphereConstantPressure,
-		 CollapseTestSphereSmoothSurface, CollapseTestSphereSmoothRadius, 
-		 CollapseTestSphereHIIFraction, CollapseTestSphereHeIIFraction,
-		 CollapseTestSphereHeIIIFraction, CollapseTestSphereH2IFraction,
-		 CollapseTestUseParticles, CollapseTestParticleMeanDensity,
-		 CollapseTestUniformVelocity, CollapseTestUseColour,
-		 CollapseTestUseMetals,
-		 CollapseTestInitialTemperature, CollapseTestInitialDensity,
-		 level+1,
-		 CollapseTestInitialFractionHII, CollapseTestInitialFractionHeII,
-		 CollapseTestInitialFractionHeIII, CollapseTestInitialFractionHM,
-		 CollapseTestInitialFractionH2I, CollapseTestInitialFractionH2II) == FAIL) {
+        CollapseTestNumberOfSpheres, CollapseTestSphereRadius,
+        CollapseTestSphereCoreRadius, CollapseTestSphereDensity,
+        CollapseTestSphereTemperature, CollapseTestSphereMetallicity,
+        CollapseTestSpherePosition, CollapseTestSphereVelocity,
+        CollapseTestFracKeplerianRot, 
+        CollapseTestTurbulenceType, CollapseTestSphereTurbulence,
+        CollapseTestSphereDispersion,
+        CollapseTestSphereCutOff, CollapseTestSphereAng1,
+        CollapseTestSphereAng2, CollapseTestSphereNumShells,
+        CollapseTestSphereType, CollapseTestSphereConstantPressure,
+        CollapseTestSphereSmoothSurface, CollapseTestSphereSmoothRadius, 
+        CollapseTestSphereHIIFraction, CollapseTestSphereHeIIFraction,
+        CollapseTestSphereHeIIIFraction, CollapseTestSphereH2IFraction,
+        CollapseTestUseParticles, CollapseTestParticleMeanDensity,
+        CollapseTestUniformVelocity, CollapseTestUseColour,
+        CollapseTestUseMetals, 
+        CollapseTestInitialTemperature, CollapseTestInitialDensity,
+        level+1,
+        CollapseTestInitialFractionHII, CollapseTestInitialFractionHeII,
+        CollapseTestInitialFractionHeIII, CollapseTestInitialFractionHM,
+        CollapseTestInitialFractionH2I, CollapseTestInitialFractionH2II) == FAIL) {
 	    ENZO_FAIL("Error in CollapseTestInitializeGrid.");
 	  }
 	  Temp = Temp->NextGridThisLevel;
@@ -585,7 +591,9 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
 	    CollapseTestInitialTemperature);
     fprintf(Outfptr, "CollapseTestInitialDensity     = %"FSYM"\n",
 	    CollapseTestInitialDensity);
-    fprintf(Outfptr, "CollapseTestUniformVelocity    = %"FSYM" %"FSYM" %"FSYM"\n",
+    fprintf(Outfptr, "CollapseTestTurbulenceType     = %"ISYM"\n",
+	    CollapseTestTurbulenceType);
+     fprintf(Outfptr, "CollapseTestUniformVelocity    = %"FSYM" %"FSYM" %"FSYM"\n",
 	    CollapseTestUniformVelocity[0], CollapseTestUniformVelocity[1],
 	    CollapseTestUniformVelocity[2]);
     fprintf(Outfptr, "CollapseTestWindVelocity    = %"FSYM" %"FSYM" %"FSYM"\n",
