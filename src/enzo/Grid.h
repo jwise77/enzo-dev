@@ -635,7 +635,7 @@ gradient force to gravitational force for one-zone collapse test. */
 
 /* Debugging support. */
 
-   int DebugCheck(char *message = "Debug");
+   int DebugCheck(const char *message = "Debug");
 
 #ifdef EMISSIVITY
    /* define function prototype as a grid member function */
@@ -1752,7 +1752,8 @@ int CommunicationTransferActiveParticles(grid* Grids[], int NumberOfGrids,
 			   int EndIndex, star_data* &List, 
 			   bool KeepLocal, bool ParticlesAreLocal,
 			   int CopyDirection,
-			   int IncludeGhostZones = FALSE);
+			   int IncludeGhostZones = FALSE,
+                           int CountOnly = FALSE);
 
 int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
                      int* &NumberToMove, int StartIndex,

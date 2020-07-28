@@ -14,13 +14,14 @@
 
 #define DYNAMIC_ACCRETION_RADIUS 0
 #define BONDIHOYLERADIUS 0
-#define MINIMUMPOTENTIAL 0
+#define MINIMUMPOTENTIAL 1
 #define CALCDIRECTPOTENTIAL 0
 #define JEANSREFINEMENT  1
+#define GRAVENERGY 0
 #define MASSTHRESHOLDCHECK 1
 #define JEANSLENGTHCALC    1
-#define MASSTHRESHOLD      30                       //Msolar in grid
-#define COOLING_TIME       0
+#define MASSTHRESHOLD      0.1                       //Msolar in grid
+#define COOLING_TIME       1
 
 int DetermineSEDParameters(ActiveParticleType_SmartStar *SS,FLOAT Time, FLOAT dx);
 
@@ -107,7 +108,10 @@ int ActiveParticleType_SmartStar::InitializeParticleType()
   //ah.push_back(new ArrayHandler<ap, float, 3, &ap::acc>("particle_acceleration_x", 0));
   //ah.push_back(new ArrayHandler<ap, float, 3, &ap::acc>("particle_acceleration_y", 1));
   //ah.push_back(new ArrayHandler<ap, float, 3, &ap::acc>("particle_acceleration_z", 2));
-  printf("SmartStar Initialisation complete\n"); fflush(stdout);
+  if (debug) {
+    printf("SmartStar Initialisation complete\n");
+    fflush(stdout);
+  }
   return SUCCESS;
 }
 
@@ -149,10 +153,13 @@ int ActiveParticleType_SmartStar::EvaluateFormation
   bool HasMetalField = (data.MetalNum != -1 || data.ColourNum != -1);
   bool JeansRefinement = false;
   bool MassRefinement = false;
-#if CACLDIRECTPOTENTIAL
-  float *PotentialField  = NULL;
+  bool CalculatePotential = false;
+  float *PotentialField = NULL;
+#if CALCDIRECTPOTENTIAL
+  CalculatePotential = true;
 #else
-  float *PotentialField = thisGrid->BaryonField[data.GravPotentialNum];
+  if (data.GravPotentialNum >= 0)
+    PotentialField = thisGrid->BaryonField[data.GravPotentialNum];
 #endif
   
   const int offset[] = {1, GridDimension[0], GridDimension[0]*GridDimension[1]};
@@ -211,8 +218,8 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 
 	mass = density[index]*dx*dx*dx;
 #if SSDEBUG
-	//fprintf(stdout, "%s: Excellent! Density threshold exceeeded - density = %g cm^-3\n",
-	//		__FUNCTION__, density[index]*data.DensityUnits/mh);
+	fprintf(stdout, "%s: Excellent! Density threshold exceeeded - density = %g cm^-3\n",
+			__FUNCTION__, density[index]*data.DensityUnits/mh);
 #endif
 	/* 3. Negative divergence: For ZEUS, the velocities are
 	   face-centered, and all of the other routines have
@@ -231,13 +238,21 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	}
 	/* All three components must be negative to pass the test */
 	if (divx > 0.0 || divy > 0.0 || divz > 0.0) continue;
+#if SSDEBUG
+        fprintf(stdout, "%s: Negative Divergence passed\n", __FUNCTION__);
+#endif
+
 	/* We now need to define a control volume - this is the region within 
 	   an accretion radius of the cell identified */
 	centralpos[0] = thisGrid->CellLeftEdge[0][i] + 0.5*thisGrid->CellWidth[0][i];
 	centralpos[1] = thisGrid->CellLeftEdge[1][j] + 0.5*thisGrid->CellWidth[1][j];
 	centralpos[2] = thisGrid->CellLeftEdge[2][k] + 0.5*thisGrid->CellWidth[2][k];
-	
+
 #if COOLING_TIME
+#if SSDEBUG
+        fprintf(stdout, "%s: Calculate cooling time\n", __FUNCTION__);
+#endif
+
 	// 4. t_cool < t_freefall (skip if T > 11000 K)
 	dtot = ( density[index] + data.DarkMatterDensity[index] ) * 
 	  data.DensityUnits;
@@ -246,44 +261,51 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	    data.Temperature[index] > 1.1e4)
 	  continue;
 #endif
+
 #if MASSTHRESHOLDCHECK	
+#if SSDEBUG
+        fprintf(stdout, "%s: Calculate Mass Threshold Check\n", __FUNCTION__);
+#endif
+
 	TotalMass = thisGrid->FindMassinGrid(data.DensNum);
 	/* Mass Threshold check */
 	/* The control region should contain a mass greater than the mass threshold */
 	if(TotalMass*ConverttoSolar < (double)MASSTHRESHOLD) {	  
 	  continue;
 	}
-#if SSDEBUG_TOTALMASS
+#if SSDEBUG
 	printf("%s: Total Mass in Accretion Region = %g Msolar (Threshold = %g)\n", __FUNCTION__,
 	       TotalMass*ConverttoSolar, (double)MASSTHRESHOLD);
 #endif
 #endif
 #if MINIMUMPOTENTIAL
-#if CALCDIRECTPOTENTIAL
-	if(PotentialField == NULL) {
+  if (CalculatePotential || PotentialField == NULL) {
 	  PotentialField = new float[size];
 	  thisGrid->CalculatePotentialField(PotentialField, data.DensNum, data.DensityUnits, data.TimeUnits,data.LengthUnits);
 	}
+
+#if SSDEBUG
+        fprintf(stdout, "%s: Calculate Gravitational Potential\n", __FUNCTION__);
 #endif
+
 	/* 4. Gravitational Minimum Check */
 	/* 
 	 * Find the minimum of the potential over a Jeans Length. 
 	 */
 	double JLength = JeansLength(CellTemperature, density[index],
 				     data.DensityUnits)/data.LengthUnits;
-	GravitationalMinimum  = thisGrid->FindMinimumPotential(centralpos, JLength*64.0,
+	GravitationalMinimum  = thisGrid->FindMinimumPotential(centralpos, JLength,
 							       PotentialField);
 	if(PotentialField[index] > GravitationalMinimum) {
 #if SSDEBUG
-	  printf("FAILURE: GravitationalMinimum = %g\t " \
-	    "PotentialField[index] = %g\n\n", GravitationalMinimum, PotentialField[index]);
+	  printf("MINIMUMPOTENTIAL: GravitationalMinimum = %g\t " \
+	    "PotentialField[index] = %g\n", GravitationalMinimum, PotentialField[index]);
 #endif
 	  continue;
 	}
-
-
 #endif
-#ifdef GRAVENERGY
+
+#if GRAVENERGY
 	static int mincount = 0;
 	/* 5. Jeans Instability Check */
 
@@ -324,18 +346,14 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	np->pos[1] = thisGrid->CellLeftEdge[1][j] + 0.5*thisGrid->CellWidth[1][j];
 	np->pos[2] = thisGrid->CellLeftEdge[2][k] + 0.5*thisGrid->CellWidth[2][k];
 
-	if (HydroMethod == PPM_DirectEuler) {
-	  np->vel[0] = velx[index];
-	  np->vel[1] = vely[index];
-	  np->vel[2] = velz[index];
-	}
-	else if (HydroMethod == Zeus_Hydro) {
-	  np->vel[0] = 0.5 * (velx[index] + velx[index+offset[0]]);
-	  np->vel[1] = 0.5 * (vely[index] + vely[index+offset[1]]);
-	  np->vel[2] = 0.5 * (velz[index] + velz[index+offset[2]]);
-	} else {
-	  ENZO_FAIL("SmartStar does not support RK Hydro or RK MHD");
-	}
+	float *apvel = new float[MAX_DIMENSION];
+	/* Calculate AP velocity by taking average of 
+	 * surrounding cells 
+	 */
+	apvel = thisGrid->AveragedVelocityAtCell(index, data.DensNum, data.Vel1Num);
+	np->vel[0] = apvel[0];
+	np->vel[1] = apvel[1];
+	np->vel[2] = apvel[2];
 
 	if (HasMetalField)
 	  np->Metallicity = data.TotalMetals[index];
@@ -359,8 +377,9 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	 * to change to a bluer spectrum.
 	 */
 #if SSDEBUG
-	printf("Forming a SMS - H2Fraction (Threshold) = %e (%e) \n",
-	       data.H2Fraction[index],  PopIIIH2CriticalFraction);
+  if (data.H2Fraction != NULL)
+    printf("Forming a SMS - H2Fraction (Threshold) = %e (%e) \n",
+           data.H2Fraction[index],  PopIIIH2CriticalFraction);
 #endif
 	np->ParticleClass = SMS;      //1
 	np->RadiationLifetime=SmartStarSMSLifetime*yr_s/data.TimeUnits;
@@ -614,7 +633,7 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
     double MassConversion;
     const double LConv = (double) TimeUnits / pow(LengthUnits,3);
     const double mfactor = double(MassUnits) / SolarMass;
-
+    
     ActiveParticleType_SmartStar *ThisParticle = NULL;
     for (ipart = 0; ipart < nParticles; ipart++) {
       if (SmartStarList[ipart]->IsARadiationSource(Time)) {
@@ -627,16 +646,29 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
 	if( (ThisParticle->ParticleClass == POPIII || ThisParticle->ParticleClass == SMS) 
 	    && SmartStarStellarRadiativeFeedback == FALSE)
 	  continue; //No stellar radiative feedback
-
-	source = ThisParticle->RadiationSourceInitialize();
 	dx = LevelArray[ThisParticle->level]->GridData->GetCellWidth(0,0);
-	MassConversion = (float) (dx*dx*dx * mfactor); //Converts to Solar Masses
+	MassConversion = (double) (dx*dx*dx * mfactor); //Converts to Solar Masses
+	source = ThisParticle->RadiationSourceInitialize();
+	double PMass = 0.0;
+	if(POPIII == ThisParticle->ParticleClass) {
+	  FLOAT Time = LevelArray[ThisParticle->level]->GridData->ReturnTime();
+	  float Age = (Time - ThisParticle->BirthTime)*TimeUnits/yr_s;
+	  PMass = min(ThisParticle->Mass*MassConversion, 4000000.0); //cap lum mass at 40 Msolar 
+#if SSDEBUG
+	  printf("%s: Star Mass set to %f Msolar from %f Msolar for Particle Class %d. " \
+		 "Age = %f kyrs\n", 
+		 __FUNCTION__, PMass, 
+		 ThisParticle->Mass*MassConversion, ThisParticle->ParticleClass, Age/1000.0);
+#endif
+	}
+	else
+	  PMass = ThisParticle->Mass*MassConversion;
+	
 	/* Call Function to return SED parameters */
 	if(DetermineSEDParameters(ThisParticle, Time, dx) == FAIL)
 	  return FAIL;
 	source->LifeTime       = RadiationLifetime; 
-	source->Luminosity = (ThisParticle->LuminosityPerSolarMass * LConv) *
-	  (ThisParticle->Mass * MassConversion);	
+	source->Luminosity = (ThisParticle->LuminosityPerSolarMass * LConv) * PMass;	
 	source->EnergyBins = RadiationSEDNumberOfBins;
 	source->Energy = new float[RadiationSEDNumberOfBins];
 	source->SED = new float[RadiationSEDNumberOfBins];
@@ -645,12 +677,12 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
 	  source->SED[j] = ThisParticle->RadiationSED[j];
 	}
 #if SSDEBUG
-	if(ThisParticle->ParticleClass == BH) {
+	if(ThisParticle->ParticleClass == SMS) {
 	  printf("%s: !!!!!!!!!!!!!!!!!!!!!!!!SRC Luminosity: L=%lg Lcode=%g M=%g Mcode=%g\n", __FUNCTION__, 
 		 ThisParticle->LuminosityPerSolarMass * ThisParticle->Mass * MassConversion, 
 		 source->Luminosity, ThisParticle->Mass * MassConversion, ThisParticle->Mass);
 	  printf("TimeIndex = %d\n", ThisParticle->TimeIndex);
-	  printf("%s: BH Mass = %e Msolar AccretionRate = %e Msolar/yr\n", __FUNCTION__,
+	  printf("%s: SMS Mass = %e Msolar AccretionRate = %e Msolar/yr\n", __FUNCTION__,
 		 ThisParticle->Mass * MassConversion, 
 		 (ThisParticle->AccretionRate[ThisParticle->TimeIndex]*MassConversion/TimeUnits)*yr_s);
 	  printf("%s: ParticleClass = %d\t SEDs = [%f, %f, %f, %f, %f]\n", __FUNCTION__,
@@ -985,7 +1017,9 @@ int ActiveParticleType_SmartStar::UpdateAccretionRateStats(int nParticles,
       }	       
     }
   }
-
+#if SSDEBUG
+  printf("Done in %s\n", __FUNCTION__);
+#endif
   return SUCCESS;
 }
 

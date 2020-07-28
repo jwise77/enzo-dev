@@ -24,6 +24,9 @@
 float grid::FindMinimumPotential(FLOAT *cellpos, FLOAT radius, float *PotentialField)
 {
 
+  if (PotentialField == NULL)
+	ENZO_FAIL("PotentialField not defined.");
+
   int i = 0, j = 0, k = 0;
   FLOAT pos[3];
   FLOAT dx = CellWidth[0][0];

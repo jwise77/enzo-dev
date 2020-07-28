@@ -44,7 +44,7 @@ int SchrodingerAddPotential(float *repsi, float *impsi,
          int in, int jn, int kn, int rank,
          int gin, int gjn, int gkn,
          float dt, 
-         float hmcoef,
+         double hmcoef,
          float *p, int start1, int start2, int start3)
 {
   int ijk = MAX_ANY_SINGLE_DIRECTION;
@@ -56,7 +56,7 @@ int SchrodingerAddPotential(float *repsi, float *impsi,
 
   /* ======================================================================= */
 
-  double auxre, auxim;  
+  float auxre, auxim;  
 
   for (k = 0; k < kn; k++) {
     for (j = 0; j < jn; j++) {

@@ -41,7 +41,7 @@ c
 int rk4(float *repsi, float *impsi,
          int in, int jn, int kn, int rank,
          float dt, float dx[], float dy[], float dz[],
-         float hmcoef)
+         double hmcoef)
 
 {
   int ijk = MAX_ANY_SINGLE_DIRECTION;
@@ -51,14 +51,14 @@ int rk4(float *repsi, float *impsi,
   int i, j, k, jsm1, ksm1, jep1, kep1, ism2, jsm2, ksm2, jep2, kep2;
   int size = in*jn*kn;
 
-  double *r1 = new double[size];
-  double *i1 = new double[size];
-  double *r2 = new double[size];
-  double *i2 = new double[size];
-  double *r3 = new double[size];
-  double *i3 = new double[size];
-  double *r4 = new double[size];
-  double *i4 = new double[size];
+  float *r1 = new float[size];
+  float *i1 = new float[size];
+  float *r2 = new float[size];
+  float *i2 = new float[size];
+  float *r3 = new float[size];
+  float *i3 = new float[size];
+  float *r4 = new float[size];
+  float *i4 = new float[size];
 
   /* ======================================================================= */
 

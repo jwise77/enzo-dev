@@ -74,13 +74,17 @@ int AssignActiveParticlesToGrids(
         if (LevelGrids[gridnum]->GridData->PointInGrid(pos1) == true) {
 	      SavedGridOffProc = gridnum;
 	      if (LevelGrids[gridnum]->GridData->ReturnProcessorNumber() == MyProcessorNumber) {
-	        if (LevelGrids[gridnum]->GridData->isLocal() == true) { 
-	          SavedGrid = gridnum;
-	          LevelMax = level;
-	        }
+          SavedGrid = gridnum;
+          LevelMax = level;
 	      }
-          GlobalLevelMax = level;
-	    } // if MyProc
+        GlobalLevelMax = level;
+        int ID = ParticleList[i]->ReturnID();
+        FLOAT LE[MAX_DIMENSION], RE[MAX_DIMENSION];
+        for (int dim = 0; dim < MAX_DIMENSION; dim++) {
+          LE[dim] = LevelGrids[gridnum]->GridData->GetGridLeftEdge(dim);
+          RE[dim] = LevelGrids[gridnum]->GridData->GetGridRightEdge(dim);
+        }
+	    } // if inside grid
 	  } // for gridnum
       delete [] LevelGrids;
       LevelGrids = NULL;
@@ -114,14 +118,23 @@ int AssignActiveParticlesToGrids(
       ParticleList[i]->SetPositionPeriod(period);
       // Below this effectively removes the particle from the sending proc.
       grid* OldGrid = ParticleList[i]->ReturnCurrentGrid();
+      FLOAT LE[MAX_DIMENSION], RE[MAX_DIMENSION];
       int ID = ParticleList[i]->ReturnID();
+      for (int dim = 0; dim < MAX_DIMENSION; dim++) {
+        LE[dim] = OldGrid->GetGridLeftEdge(dim);
+        RE[dim] = OldGrid->GetGridRightEdge(dim);
+      } 
       OldGrid->RemoveActiveParticle(ID,LevelGrids[SavedGridOffProc]->GridData->ReturnProcessorNumber());
       // if this is the receiving proc, add it.
       if (LevelMax == GlobalLevelMax) {
-	    if (LevelGrids[SavedGrid]->GridData->AddActiveParticle(
-                static_cast<ActiveParticleType*>(ParticleList[i])) == FAIL) {
-	      ENZO_FAIL("Active particle grid assignment failed"); 
-	    } 
+        for (int dim = 0; dim < MAX_DIMENSION; dim++) {
+          LE[dim] = LevelGrids[SavedGrid]->GridData->GetGridLeftEdge(dim);
+          RE[dim] = LevelGrids[SavedGrid]->GridData->GetGridRightEdge(dim);
+        } 
+        if (LevelGrids[SavedGrid]->GridData->AddActiveParticle(
+                  static_cast<ActiveParticleType*>(ParticleList[i])) == FAIL) {
+          ENZO_FAIL("Active particle grid assignment failed"); 
+        } 
       }
       LevelMax = GlobalLevelMax;
 #endif // endif parallel

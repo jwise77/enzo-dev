@@ -17,6 +17,7 @@
 #endif /* USE_MPI */
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include "ErrorExceptions.h"
 #include "macros_and_parameters.h"
 #include "typedefs.h"
@@ -34,6 +35,12 @@
 static int FirstTimeCalled = TRUE;
 static MPI_Datatype MPI_STAR;
 #endif
+
+/* Global communication buffers to avoid reallocations and 
+   this memory fragmentation */
+
+StarBuffer *recvBuffer = NULL, *sendBuffer = NULL;
+int recvBufferSize = 0, sendBufferSize = 0;
 
 void InsertStarAfter(Star * &Node, Star * &NewNode);
 void DeleteStarList(Star * &Node);
@@ -121,7 +128,6 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 
     Eint32 *nCount = new Eint32[NumberOfProcessors];
     Eint32 *displace = new Eint32[NumberOfProcessors];
-    StarBuffer *recvBuffer, *sendBuffer;
 
     MPI_Allgather(&LocalNumberOfStars, 1, MPI_INT, nCount, 1, MPI_INT, 
 		  MPI_COMM_WORLD);
@@ -137,11 +143,18 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 
     if (TotalNumberOfStars > 0) {
 
-      recvBuffer = new StarBuffer[TotalNumberOfStars];
+      if (TotalNumberOfStars > recvBufferSize) {
+        recvBufferSize = ceil_log2(TotalNumberOfStars);
+        delete [] recvBuffer;
+        recvBuffer = new StarBuffer[recvBufferSize];
+      }
+      if (LocalNumberOfStars > sendBufferSize) {
+        sendBufferSize = ceil_log2(LocalNumberOfStars);
+        delete [] sendBuffer;
+        sendBuffer = new StarBuffer[sendBufferSize];
+      }
       if (LocalNumberOfStars > 0)
-	sendBuffer = LocalStars->StarListToBuffer(LocalNumberOfStars);
-      else
-	sendBuffer = NULL;
+        LocalStars->StarListToBuffer(sendBuffer, LocalNumberOfStars);
 
       /* Share all data with all processors */
 
@@ -173,9 +186,7 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 
       } // ENDFOR stars
 
-      delete [] recvBuffer;
-      if (LocalNumberOfStars > 0)
-	delete [] sendBuffer;
+      DeleteStarList(LocalStars);
 
     } /* ENDIF TotalNumberOfStars > 0 */
 

@@ -66,26 +66,19 @@ int rk3tvd(float *repsi, float *impsi, float *repsi0, float *impsi0,
 int rk4(float *repsi, float *impsi,
          int in, int jn, int kn, int rank,
          float dt, float dx[], float dy[], float dz[],
-         float hmcoef);
-
-int sv2(int nhy, float *repsi, float *impsi,
-         int in, int jn, int kn, int rank,
-         float dt, float dx[], float dy[], float dz[],
-         float hmcoef);
+         double hmcoef);
 
 int SchrodingerAddPotential(float *repsi, float *impsi,
          int in, int jn, int kn, int rank,
          int gin, int gjn, int gkn,
          float dt, 
-         float hmcoef,
+         double hmcoef,
          float *p, int start1, int start2, int start3);
 
 int GetUnits (float *DensityUnits, float *LengthUnits,
          float *TemperatureUnits, float *TimeUnits,
          float *VelocityUnits, FLOAT Time);
-int FindField(int field, int farray[], int numfields);
 int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
-
 
 int grid::SchrodingerSolver( int nhy )
 {
@@ -175,8 +168,9 @@ int grid::SchrodingerSolver( int nhy )
   }
 
   // calculate hbar/m
+  double afloat = double(a);
+  double hmcoef = 5.9157166856e27*TimeUnits/POW(LengthUnits/afloat,2)/FDMMass;
 
-  float hmcoef = 5.9157166856e27*TimeUnits/pow(LengthUnits,2)/FDMMass;
   //printf("hmcoef %f \n", hmcoef);
 
   int RePsiNum, ImPsiNum, FDMDensNum;

@@ -104,7 +104,7 @@
 
 #define ROOT_PROCESSOR                      0
 
-#define VERSION                             2.5  /* current version number */
+#define VERSION                             2.6  /* current version number */
 
 #define NUMBER_ENZO_PARTICLE_TYPES           3  /* Dark Matter, Stars, Active Particles */
 
@@ -248,7 +248,7 @@ typedef long long int   HDF5_hid_t;
 #endif
 
 #ifdef CONFIG_BFLOAT_8
-#define BFLOAT_EPSILON 1e-12f
+#define BFLOAT_EPSILON 1e-12
 #define Eflt double
 #define FSYM "lf"
 #define ESYM "le"
@@ -282,7 +282,7 @@ typedef long long int   HDF5_hid_t;
 #endif
 
 #ifdef CONFIG_PFLOAT_8
-#define PFLOAT_EPSILON 1e-12f
+#define PFLOAT_EPSILON 1e-12
 #define FLOAT double
 #define PEXP exp
 #define PSYM "lf"
@@ -299,7 +299,7 @@ typedef long long int   HDF5_hid_t;
 #endif
 
 #ifdef CONFIG_PFLOAT_16
-#define PFLOAT_EPSILON 1e-16f
+#define PFLOAT_EPSILON 1e-16L
 #define FLOAT long_double
 #define PEXP expl
 #define PSYM "Lf"
@@ -369,6 +369,8 @@ typedef long long int   HDF5_hid_t;
 #define POW(X,Y) pow((double) (X), (double) (Y))
 #define COS(X) cos((double) (X))
 #define SIN(X) sin((double) (X))
+#define ceil_log2(size) ((size) > 1 ? ((size_t)pow(2, (int)log2(size-1)+1)) : 1 )
+
 #ifdef CONFIG_PFLOAT_4
 #define MODF(X,Y) modff((X), (Y))
 #elif CONFIG_PFLOAT_8

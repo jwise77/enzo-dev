@@ -35,11 +35,11 @@ int grid::AddActiveParticle(ActiveParticleType* ThisParticle)
     IsHere = false;
     TPpos = ThisParticle->ReturnPosition();
     if (TPpos[0] >= GridLeftEdge[0] &&
-	TPpos[0] < GridRightEdge[0] &&
-	TPpos[1] >= GridLeftEdge[1] &&
-	TPpos[1] < GridRightEdge[1] &&
-	TPpos[2] >= GridLeftEdge[2] &&
-	TPpos[2] < GridRightEdge[2]) {
+        TPpos[0] < GridRightEdge[0] &&
+        TPpos[1] >= GridLeftEdge[1] &&
+        TPpos[1] < GridRightEdge[1] &&
+        TPpos[2] >= GridLeftEdge[2] &&
+        TPpos[2] < GridRightEdge[2]) {
       IsHere = true;
     }
     
@@ -52,16 +52,16 @@ int grid::AddActiveParticle(ActiveParticleType* ThisParticle)
 
     /* 
        If this particle is already on the list, it needs to be moved to
-       the end of the list. 
     */
 
-    for (i = 0; i < NumberOfActiveParticles; i++) 
+    for (i = 0; i < NumberOfActiveParticles; i++) {
       if (ThisParticle->ReturnID() == this->ActiveParticles[i]->ReturnID()) {
-	this->ActiveParticles.move_to_end(i);
-	this->ActiveParticles.erase(this->ActiveParticles.size()-1);
-	this->ActiveParticles.copy_and_insert(*ThisParticle);
-	return SUCCESS;
+        this->ActiveParticles.move_to_end(i);
+        this->ActiveParticles.erase(this->ActiveParticles.size()-1);
+        this->ActiveParticles.copy_and_insert(*ThisParticle);
+        return SUCCESS;
       }
+    }
 
   } else {
     // If adding, only increase count on processors without the data */
@@ -69,7 +69,6 @@ int grid::AddActiveParticle(ActiveParticleType* ThisParticle)
     return SUCCESS;
   }
 
-  ThisParticle->SetGridID(ID);
   ThisParticle->AssignCurrentGrid(this);
   this->ActiveParticles.copy_and_insert(*ThisParticle);
   NumberOfActiveParticles++;

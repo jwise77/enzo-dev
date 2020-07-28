@@ -62,9 +62,18 @@ grid* ConstructFeedbackZone(ActiveParticleType* ThisParticle,int FeedbackRadius,
       (APGrid->GetGridLeftEdge(2) > ParticlePosition[2]+FBRdx) ||
       (APGrid->GetGridRightEdge(0) < ParticlePosition[0]-FBRdx) ||
       (APGrid->GetGridRightEdge(1) < ParticlePosition[1]-FBRdx) ||
-      (APGrid->GetGridRightEdge(2) < ParticlePosition[2]-FBRdx))
+      (APGrid->GetGridRightEdge(2) < ParticlePosition[2]-FBRdx)) {
+    FLOAT LE[MAX_DIMENSION], RE[MAX_DIMENSION];
+    for (int dim = 0; dim < MAX_DIMENSION; dim++) {
+      LE[dim] = APGrid->GetGridLeftEdge(dim);
+      RE[dim] = APGrid->GetGridRightEdge(dim);
+    }
+    fprintf(stderr, "Feedback radius = %f\n", FBRdx);
+    fprintf(stderr, "Particle position = %"PSYM" %"PSYM" %"PSYM"\n", ParticlePosition[0], ParticlePosition[1], ParticlePosition[2]);
+    fprintf(stderr, "Left edge = %"PSYM" %"PSYM" %"PSYM"\n", LE[0], LE[1], LE[2]);
+    fprintf(stderr, "Right edge = %"PSYM" %"PSYM" %"PSYM"\n", RE[0], RE[1], RE[2]);
     ENZO_FAIL("Particle outside own grid!\n");
-
+  }
 
   /* Setup Feedback Zones before copying data */
 

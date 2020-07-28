@@ -226,7 +226,6 @@ void ActiveParticleType_SmartStar::MergeSmartStars(
    * not necessarily constitute a merger. 
    */
   FLOAT MergingRadius = LevelArray[ThisLevel]->GridData->GetCellWidth(0,0)*ACCRETIONRADIUS; 
-  MergingRadius = MergingRadius*3.0;
   for (i=0; i<(*nParticles); i++) {
     tempPos = ParticleList[i]->ReturnPosition();
     for (dim=0; dim<3; dim++)
@@ -242,20 +241,14 @@ void ActiveParticleType_SmartStar::MergeSmartStars(
   /* Merge the mergeable groups */
  
   for (i=0; i<*ngroups; i++) {
-    MergedParticles.copy_and_insert(
-        *(static_cast<active_particle_class*>(ParticleList[grouplist[i][0]])));
-    if (groupsize[i] != 1) {
-      for (j=1; j<groupsize[i]; j++) {
-    MergedParticles[i]->SmartMerge(
-          static_cast<active_particle_class*>(ParticleList[grouplist[i][j]]));
-        if (ParticleList[grouplist[i][j]]->DisableParticle(
-                LevelArray, 
-                MergedParticles[i]->ReturnCurrentGrid()->ReturnProcessorNumber()
-              ) == FAIL)
-        {
-          ENZO_FAIL("MergeSmartStars: DisableParticle failed!\n");
-        }
-      }
+    MergedParticles.copy_and_insert(*(static_cast<active_particle_class*>(ParticleList[grouplist[i][0]])));
+    if (groupsize[i] == 1) continue;
+    for (j=1; j<groupsize[i]; j++) {
+      // merge and delete
+      MergedParticles[i]->SmartMerge(
+        static_cast<active_particle_class*>(ParticleList[grouplist[i][j]]));
+      ParticleList[grouplist[i][j]]->DisableParticle(LevelArray, 
+        MergedParticles[i]->ReturnCurrentGrid()->ReturnProcessorNumber());
     }
   }
   
@@ -301,20 +294,15 @@ void ActiveParticleType_SmartStar::MergeSmartStars(
       if (NewGrid->AddActiveParticle(
 	      static_cast<ActiveParticleType*>(temp)) == FAIL)
       	ENZO_FAIL("Active particle grid assignment failed!\n");
-
-      if (MyProcessorNumber == OldProc) {
-        MergedParticles.erase(i);
-        MergedParticles.insert(*temp);
-      }
-      else if (MyProcessorNumber != NewProc)
-        delete temp;
       MergedParticles[i]->AssignCurrentGrid(NewGrid);
+      MergedParticles[i]->SetGridID(NewGrid->GetGridID());
+      delete temp;
       // Reallocate AP acceleration arrays if the particle changed grids
       // after the merger
       if (MyProcessorNumber == NewProc)
-	NewGrid->ReallocateActiveParticleAcceleration();
+        NewGrid->ReallocateActiveParticleAcceleration();
       else if (MyProcessorNumber == OldProc)
-	OldGrid->ReallocateActiveParticleAcceleration();
+        OldGrid->ReallocateActiveParticleAcceleration();
     }
   }
 
@@ -389,7 +377,7 @@ int ActiveParticleType_SmartStar::AfterEvolveLevel(
       MergeSmartStars<active_particle_class>(
           &nParticles, ParticleList,
           &NumberOfMergedParticles, LevelArray, ThisLevel, MergedParticles);
-      
+
       ParticleList.clear();
       
       if (debug)
@@ -433,7 +421,7 @@ int ActiveParticleType_SmartStar::AfterEvolveLevel(
         dx, LevelArray, ThisLevel) == FAIL)
 	ENZO_FAIL("SmartStar Particle Feedback failed. \n");
       /* This applies all of the updates made above */
-      if (AssignActiveParticlesToGrids(ParticleList, NumberOfMergedParticles, 
+      if (AssignActiveParticlesToGrids(ParticleList, nParticles, 
               LevelArray) == FAIL)
         return FAIL;      
 
