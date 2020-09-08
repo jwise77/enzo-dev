@@ -483,41 +483,51 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
 
   if (SecondPass) {
     /* Find max level grid at location of star */
-    bool StarInGrid = true;
+    bool StarInGrid;
     FLOAT pos;
     int lvl;
-    for (lvl = MaximumRefinementLevel-1; lvl >= 0; lvl--) {
+    printf("SecondPass: Searching for Star Grid %s\n");
+    for (lvl = MaximumRefinementLevel; lvl >= 0; lvl--) {
       LevelHierarchyEntry *Temp = LevelArray[lvl];
-      if (Temp == NULL)
+      printf("\nlvl %d\n", lvl);
+      if (LevelArray[lvl] == NULL){
+        printf("\tskip\n", lvl);
         continue;
-      for (dim = 0; dim < GridRank; dim++) {
-        /* Check if star is within grid boundaries */
-        pos = TSF_StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]);
-        StarInGrid &= (pos >= GetGridLeftEdge(dim) && pos < GetGridRightEdge(dim));
       }
-      if (StarInGrid) {
-        /* This time only initialize the star in the grid */
-        printf("StarInGrid = %i\n", StarInGrid);
-        if (Temp->GridData->TriggeredStarFormationInitializeGrid(
-          TSF_UniformDensity, TSF_UniformTemperature,
-          TSF_UniformVelocity, TSF_UniformBField,
-          TSF_SphereRadius, TSF_SphereCoreRadius, TSF_SphereDensity,
-          TSF_SphereTemperature, TSF_SpherePosition, TSF_SphereVelocity,
-          TSF_FracKeplerianRot, TSF_SphereTurbulence, TSF_SphereCutOff,
-          TSF_SphereAng1, TSF_SphereAng2, TSF_SphereNumShells,
-          TSF_SphereType, TSF_SphereConstantPressure, TSF_SphereSmoothSurface,
-          TSF_SphereSmoothRadius, TSF_SphereHIIFraction, TSF_SphereHeIIFraction,
-          TSF_SphereHeIIIFraction, TSF_SphereH2IFraction, TSF_UseColour,
-          TSF_InitialFractionHII, TSF_InitialFractionHeII, TSF_InitialFractionHeIII,
-          TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
-          TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
-          TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
-          TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
-          SecondPass, StarInGrid) == FAIL)
-            ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
-        break; // we found highest resolution grid where the star belongs. 
+      while (Temp != NULL) { 
+        StarInGrid = true;     
+        printf("grid = %p\n", Temp);        
+        for (dim = 0; dim < Temp->GridData->GetGridRank(); dim++) {
+          /* Check if star is within grid boundaries */
+          pos = TSF_StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]);
+          StarInGrid &= (pos >= Temp->GridData->GetGridLeftEdge(dim) && pos < Temp->GridData->GetGridRightEdge(dim));
+        }
+        if (StarInGrid) {
+          /* This time only initialize the star in the grid */
+          printf("StarInGrid = %i, lvl %d\n", StarInGrid, lvl);
+          if (Temp->GridData->TriggeredStarFormationInitializeGrid(
+            TSF_UniformDensity, TSF_UniformTemperature,
+            TSF_UniformVelocity, TSF_UniformBField,
+            TSF_SphereRadius, TSF_SphereCoreRadius, TSF_SphereDensity,
+            TSF_SphereTemperature, TSF_SpherePosition, TSF_SphereVelocity,
+            TSF_FracKeplerianRot, TSF_SphereTurbulence, TSF_SphereCutOff,
+            TSF_SphereAng1, TSF_SphereAng2, TSF_SphereNumShells,
+            TSF_SphereType, TSF_SphereConstantPressure, TSF_SphereSmoothSurface,
+            TSF_SphereSmoothRadius, TSF_SphereHIIFraction, TSF_SphereHeIIFraction,
+            TSF_SphereHeIIIFraction, TSF_SphereH2IFraction, TSF_UseColour,
+            TSF_InitialFractionHII, TSF_InitialFractionHeII, TSF_InitialFractionHeIII,
+            TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
+            TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
+            TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
+            TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
+            SecondPass, StarInGrid) == FAIL)
+              ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
+          break; // we found highest resolution grid where the star belongs. 
+        }
+        Temp = Temp->NextGridThisLevel;
       }
-      Temp = Temp->NextGridThisLevel;
+      if (StarInGrid)
+        break;
     }
   }
   /********** End if (SecondPass) ***********/
