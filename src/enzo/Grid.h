@@ -2454,7 +2454,8 @@ int TriggeredStarFormationInitializeGrid(
           FLOAT StarPosition[MAX_DIMENSION],
           float StarVelocity[MAX_DIMENSION],
           float TimeToExplosion,
-          bool SecondPass);
+          bool SecondPass,
+          bool InsertStar);
 
   /* Solve free-fall analytical solution. */
   int SolveOneZoneFreefall();

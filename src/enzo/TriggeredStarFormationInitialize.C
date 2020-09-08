@@ -323,7 +323,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
         TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
         TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
         TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
-        SecondPass) == FAIL)
+        SecondPass, false) == FAIL)
           ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
       CurrentGrid = CurrentGrid->NextGridThisLevel;
@@ -419,7 +419,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
         TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
         TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
         TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
-        SecondPass) == FAIL)
+        SecondPass, false) == FAIL)
           ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
           
@@ -461,7 +461,7 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
           TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
           TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
           TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
-          SecondPass) == FAIL)
+          SecondPass, false) == FAIL)
             ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
 
         Temp = Temp->NextGridThisLevel;
@@ -482,35 +482,45 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
   }
 
   if (SecondPass) {
-    // Find max level with star particles
-    printf("%s\n", "TEST");
-    int maxStarLevel = -1;
-    int lvl = 0;
-    for (lvl = 0; lvl < MaximumRefinementLevel; lvl++) {
+    /* Find max level grid at location of star */
+    bool StarInGrid = true;
+    FLOAT pos;
+    int lvl;
+    for (lvl = MaximumRefinementLevel-1; lvl >= 0; lvl--) {
       LevelHierarchyEntry *Temp = LevelArray[lvl];
-      while (Temp != NULL) {
-        if (Temp->GridData->ReturnNumberOfStars() >= 1) {
-          maxStarLevel = max(maxStarLevel, lvl);
-          printf("\nlvl %d, grid %p, lvl %lld, stars %d\n", lvl, Temp, Temp->GridData->GetLevel(), Temp->GridData->ReturnNumberOfStars());
-        }
-        printf("lvl %d, grid %p\n", lvl, Temp);      
-        Temp = Temp->NextGridThisLevel;
+      if (Temp == NULL)
+        continue;
+      for (dim = 0; dim < GridRank; dim++) {
+        /* Check if star is within grid boundaries */
+        pos = TSF_StarPosition[dim]*(DomainLeftEdge[dim]+DomainRightEdge[dim]);
+        StarInGrid &= (pos >= GetGridLeftEdge(dim) && pos < GetGridRightEdge(dim));
       }
-    }
-    // Remove duplicate particles from coarse grids
-    if (maxStarLevel > -1) {
-      printf("maxStarLevel %d\n", maxStarLevel);        
-      Star *cstar, next;  
-      LevelHierarchyEntry *Temp = LevelArray[maxStarLevel];
-      while (Temp != NULL) {
-        printf("Remove duplicate stars from %p\n", Temp);        
-        RemoveDuplicateStars(Temp);
-        Temp = Temp->NextGridThisLevel;  
+      if (StarInGrid) {
+        /* This time only initialize the star in the grid */
+        printf("StarInGrid = %i\n", StarInGrid);
+        if (Temp->GridData->TriggeredStarFormationInitializeGrid(
+          TSF_UniformDensity, TSF_UniformTemperature,
+          TSF_UniformVelocity, TSF_UniformBField,
+          TSF_SphereRadius, TSF_SphereCoreRadius, TSF_SphereDensity,
+          TSF_SphereTemperature, TSF_SpherePosition, TSF_SphereVelocity,
+          TSF_FracKeplerianRot, TSF_SphereTurbulence, TSF_SphereCutOff,
+          TSF_SphereAng1, TSF_SphereAng2, TSF_SphereNumShells,
+          TSF_SphereType, TSF_SphereConstantPressure, TSF_SphereSmoothSurface,
+          TSF_SphereSmoothRadius, TSF_SphereHIIFraction, TSF_SphereHeIIFraction,
+          TSF_SphereHeIIIFraction, TSF_SphereH2IFraction, TSF_UseColour,
+          TSF_InitialFractionHII, TSF_InitialFractionHeII, TSF_InitialFractionHeIII,
+          TSF_InitialFractionHM, TSF_InitialFractionH2I, TSF_InitialFractionH2II,
+          TSF_DensityFilename, TSF_HIIFractionFilename, TSF_HeIIFractionFilename,
+          TSF_HeIIIFractionFilename, TSF_TemperatureFilename, 
+          TSF_StarMass, TSF_StarPosition, TSF_StarVelocity, TSF_TimeToExplosion,
+          SecondPass, StarInGrid) == FAIL)
+            ENZO_FAIL("Error in TriggeredStarFormationInitializeGrid.\n");
+        break; // we found highest resolution grid where the star belongs. 
       }
+      Temp = Temp->NextGridThisLevel;
     }
   }
-
-  /********** END Delete coarse grid stars ***********/
+  /********** End if (SecondPass) ***********/
 
  /* set up field names and units */
   if (!SecondPass) {
@@ -637,16 +647,3 @@ int TriggeredStarFormationInitialize(FILE *fptr, FILE *Outfptr,
 }
 
 //---------------------------------------------------------------------------------------
-
-void RemoveDuplicateStars(LevelHierarchyEntry *grid) {
-  Star *cstar, *next = NULL;
-  do { 
-    cstar = grid->GridData->ReturnStarPointer();
-    if (cstar != NULL)
-      next = cstar->NextStar;
-    if (next != NULL)
-      DeleteStar(next);
-  } while (next != NULL);
-  return;
-}
-
