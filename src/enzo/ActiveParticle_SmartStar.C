@@ -267,7 +267,8 @@ int ActiveParticleType_SmartStar::EvaluateFormation
         fprintf(stdout, "%s: Calculate Mass Threshold Check\n", __FUNCTION__);
 #endif
 
-	TotalMass = thisGrid->FindMassinGrid(data.DensNum);
+	ExtraDensity = density[index] - DensityThreshold;
+	TotalMass = ExtraDensity * dx*dx*dx;
 	/* Mass Threshold check */
 	/* The control region should contain a mass greater than the mass threshold */
 	if(TotalMass*ConverttoSolar < (double)MASSTHRESHOLD) {	  
