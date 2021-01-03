@@ -193,7 +193,7 @@ int CommunicationBufferedSend(void *buffer, int size, MPI_Datatype Type, int Tar
   MPI_Arg Count = size;
   MPI_Arg Dest = Target;
   MPI_Arg Mtag = Tag;
- 
+
   stat = MPI_Isend(buffer_send, Count, Type, Dest, Mtag, CommWorld, RequestHandle+index);
   if( stat != MPI_SUCCESS ){ENZO_FAIL("");}
   // Uncommenting the next line can improve performance in some cases.
