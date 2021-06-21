@@ -20,6 +20,7 @@
 #include "AMRH5writer.h"
 #include "Star.h"
 #include "ActiveParticle.h"
+#include "MonteCarloTracerParticle.h"
 #include "FOF_allvars.h"
 #include "MemoryPool.h"
 #include "hydro_rk/SuperNova.h"
@@ -152,6 +153,11 @@ class grid
 // ignored for all other star makers.
   int MakeStars;
 
+  //
+  // Monte Carlo Tracer Particle Data
+  //
+  MonteCarloTracerParticle **MonteCarloTracerParticles;  
+
 //
 //  Gravity data
 // 
@@ -230,6 +236,7 @@ class grid
   friend class ActiveParticleType_Skeleton;
   friend class ActiveParticleType_SmartStar;
   friend class ActiveParticleType_SpringelHernquist;
+  friend class MonteCarloTracerParticle;  
 
 #ifdef NEW_PROBLEM_TYPES
   friend class EnzoProblemType;
@@ -1737,6 +1744,12 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
                      int CopyDirection,
                      int IncludeGhostZones = FALSE,
                      int CountOnly = FALSE);
+// -------------------------------------------------------------------------
+// Functions for use with Monte Carlo tracer particles.
+//
+  int Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
+  
+
 // -------------------------------------------------------------------------
 // Helper functions (should be made private)
 //
