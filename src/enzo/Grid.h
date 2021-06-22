@@ -157,6 +157,8 @@ class grid
   // Monte Carlo Tracer Particle Data
   //
   MonteCarloTracerParticle **MonteCarloTracerParticles;  
+  float *MassFlux[MAX_DIMENSION];
+
 
 //
 //  Gravity data
@@ -1748,6 +1750,7 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
 // Functions for use with Monte Carlo tracer particles.
 //
   int Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
+  void AllocateMonteCarloTracerParticleData();
   
 
 // -------------------------------------------------------------------------
