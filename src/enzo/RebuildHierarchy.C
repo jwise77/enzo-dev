@@ -273,6 +273,7 @@ int RebuildHierarchy(TopGridData *MetaData,
     Temp = LevelArray[0];
     while (Temp != NULL) {
       Temp->GridData->DebugCheck("Before TransferParticles");
+      Temp->GridData->SetGridID(grids);
       GridPointer[grids++] = Temp->GridData;
       Temp = Temp->NextGridThisLevel;
     }
@@ -298,7 +299,6 @@ int RebuildHierarchy(TopGridData *MetaData,
   } // ENDIF level 0
   tt1 = ReturnWallTime();
   RHperf[1] += tt1-tt0;
-
 
   /* --------------------------------------------------------------------- */
   /* Transfer particle between grids on this level to make sure that
