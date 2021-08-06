@@ -127,6 +127,10 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 
     ret += sscanf(line, "TracerParticleOn  = %"ISYM, &TracerParticleOn);
     ret += sscanf(line, "TracerParticleOutputVelocity  = %"ISYM, &TracerParticleOutputVelocity);
+    ret += sscanf(line, "MonteCarloTracerParticlesOn                    = %"ISYM, &MonteCarloTracerParticlesOn);
+    ret += sscanf(line, "NumberOfMonteCarloTracerParticlesPerCell       = %"ISYM, &NumberOfMonteCarloTracerParticlesPerCell);
+    ret += sscanf(line, "NumberOfMonteCarloTracerParticleAttributes     = %"ISYM, &NumberOfMonteCarloTracerParticleAttributes);
+    ret += sscanf(line, "NumberOfMonteCarloTracerParticlesPerSupernova  = %"ISYM, &NumberOfMonteCarloTracerParticlesPerSupernova);
     ret += sscanf(line, "WriteGhostZones = %"ISYM, &WriteGhostZones);
     ret += sscanf(line, "ReadGhostZones = %"ISYM, &ReadGhostZones);
     ret += sscanf(line, "OutputParticleTypeGrouping = %"ISYM,

@@ -149,6 +149,9 @@ int TurbulenceSimulationReInitialize(HierarchyEntry *TopGrid,
 int TracerParticleCreation(FILE *fptr, HierarchyEntry &TopGrid,
                            TopGridData &MetaData);
 
+int MonteCarloTracerParticleCreation(FILE *fptr, HierarchyEntry &TopGrid,
+                           TopGridData &MetaData);
+
 int ShearingBoxInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
                         TopGridData &MetaData);
 int ShearingBox2DInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
@@ -915,12 +918,18 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
 	  float(MetaData.TopGridDims[dim]);
     }
   
-  // Check for the creation of tracer particles
+  // Check for the creation of velocity tracer particles
   // Tracer particles will not be created at this point if ||rgio in ON
   
   if (TracerParticleCreation(fptr, TopGrid, MetaData) == FAIL) {
     ENZO_FAIL("Error in TracerParticleCreation");
   }
+
+  // Check for the creation of Monte Carlo tracer particles
+
+  if (MonteCarloTracerParticleCreation(fptr, TopGrid, MetaData) == FAIL) {
+    ENZO_FAIL("Error in MonteCarloTracerParticleCreation");
+  }  
   
   // Write the MetaData/global values to the Parameter file
   

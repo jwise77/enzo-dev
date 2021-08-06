@@ -739,6 +739,15 @@ EXTERN FLOAT TracerParticleCreationSpacing;
 EXTERN FLOAT TracerParticleCreationLeftEdge[MAX_DIMENSION];
 EXTERN FLOAT TracerParticleCreationRightEdge[MAX_DIMENSION];
 
+/* Monte Carlo tracer particle parameters */
+
+EXTERN int MonteCarloTracerParticlesOn;
+EXTERN int TotalNumberOfMonteCarloTracerParticles;
+EXTERN int NumberOfMonteCarloTracerParticlesPerCell;
+EXTERN int NumberOfMonteCarloTracerParticleAttributes;
+EXTERN int NumberOfMonteCarloTracerParticlesPerSupernova;
+
+
 EXTERN int   ParticleTypeInFile;
 EXTERN int   OutputParticleTypeGrouping;
 

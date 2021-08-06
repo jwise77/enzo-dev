@@ -15,15 +15,15 @@ void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, Monte
   if (Node == NULL)
     Node = NewNode;
   else {
-    if (NewNode == Node->NextMonteCarloTracerParticle) {
+    if (NewNode == Node->NextParticle) {
       printf("Node already in list?!\n");
       exit(1);
     }
-    NewNode->PrevMonteCarloTracerParticle = Node;
-    NewNode->NextMonteCarloTracerParticle = Node->NextMonteCarloTracerParticle;
-    if (Node->NextMonteCarloTracerParticle != NULL)
-      Node->NextMonteCarloTracerParticle->PrevMonteCarloTracerParticle = NewNode;
-    Node->NextMonteCarloTracerParticle = NewNode;
+    NewNode->PrevParticle = Node;
+    NewNode->NextParticle = Node->NextParticle;
+    if (Node->NextParticle != NULL)
+      Node->NextParticle->PrevParticle = NewNode;
+    Node->NextParticle = NewNode;
   }
   return;
 }
@@ -31,20 +31,19 @@ void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, Monte
 MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle * &Node)
 {
   MonteCarloTracerParticle *result = Node;
-  if (Node->PrevMonteCarloTracerParticle != NULL)
-    Node->PrevMonteCarloTracerParticle->NextMonteCarloTracerParticle = Node->NextMonteCarloTracerParticle;
-  if (Node->NextMonteCarloTracerParticle != NULL)
-    Node->NextMonteCarloTracerParticle->PrevMonteCarloTracerParticle = Node->PrevMonteCarloTracerParticle;
-  Node = Node->NextMonteCarloTracerParticle;
-  result->NextMonteCarloTracerParticle = NULL;
-  result->PrevMonteCarloTracerParticle = NULL;
+  if (Node->PrevParticle != NULL)
+    Node->PrevParticle->NextParticle = Node->NextParticle;
+  if (Node->NextParticle != NULL)
+    Node->NextParticle->PrevParticle = Node->PrevParticle;
+  Node = Node->NextParticle;
+  result->NextParticle = NULL;
+  result->PrevParticle = NULL;
   return result;
 }
 
 void DeleteMonteCarloTracerParticle(MonteCarloTracerParticle * &Node)
 {
   MonteCarloTracerParticle *Orphan = PopMonteCarloTracerParticle(Node);
-  //Node = Node->NextMonteCarloTracerParticle;
   if (Orphan != NULL) delete Orphan;
   return;
 }
@@ -52,45 +51,45 @@ void DeleteMonteCarloTracerParticle(MonteCarloTracerParticle * &Node)
 void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node)
 {
   MonteCarloTracerParticle *tmp = Node;
-  while (tmp)  // delete all linked stars
+  while (tmp)  // delete all linked MC tracers
     DeleteMonteCarloTracerParticle(tmp);
   Node = NULL;
   return;
 }
 
-MonteCarloTracerParticle *MonteCarloTracerParticleListToArray(MonteCarloTracerParticle *Node, int n)
-{
-  int dim, count = 0;
-  MonteCarloTracerParticle *result = new MonteCarloTracerParticle[n];
-  MonteCarloTracerParticle *tmp = Node;
-  while (tmp != NULL) {
-    result[count++] = *tmp;
-    tmp = tmp->NextMonteCarloTracerParticle;
-  }
-  return result;
-}
+// MonteCarloTracerParticle *MonteCarloTracerParticleListToArray(MonteCarloTracerParticle *Node, int n)
+// {
+//   int dim, count = 0;
+//   MonteCarloTracerParticle *result = new MonteCarloTracerParticle[n];
+//   MonteCarloTracerParticle *tmp = Node;
+//   while (tmp != NULL) {
+//     result[count++] = *tmp;
+//     tmp = tmp->NextParticle;
+//   }
+//   return result;
+// }
 
-/* Since InsertMonteCarloTracerParticleAfter puts the node after the head node.  We insert
-   the nodes in a fashion to preserve the order of the array. */
+// /* Since InsertMonteCarloTracerParticleAfter puts the node after the head node.  We insert
+//    the nodes in a fashion to preserve the order of the array. */
 
-MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer buffer)
-{
-  MonteCarloTracerParticle *result = NULL;
-  result = new MonteCarloTracerParticle(buffer);
-  return result;
-}
+// MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer buffer)
+// {
+//   MonteCarloTracerParticle *result = NULL;
+//   result = new MonteCarloTracerParticle(buffer);
+//   return result;
+// }
 
-MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer *buffer, int n) 
-{
-  int i;
-  MonteCarloTracerParticle *result = NULL, *NewNode = NULL;
-  if (n > 0) {
-    NewNode = new MonteCarloTracerParticle(buffer, 0);
-    InsertMonteCarloTracerParticleAfter(result, NewNode);
-  }
-  for (i = n-1; i > 0; i--) {
-    NewNode = new MonteCarloTracerParticle(buffer, i);
-    InsertMonteCarloTracerParticleAfter(result, NewNode);
-  }
-  return result;
-}
+// MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer *buffer, int n) 
+// {
+//   int i;
+//   MonteCarloTracerParticle *result = NULL, *NewNode = NULL;
+//   if (n > 0) {
+//     NewNode = new MonteCarloTracerParticle(buffer, 0);
+//     InsertMonteCarloTracerParticleAfter(result, NewNode);
+//   }
+//   for (i = n-1; i > 0; i--) {
+//     NewNode = new MonteCarloTracerParticle(buffer, i);
+//     InsertMonteCarloTracerParticleAfter(result, NewNode);
+//   }
+//   return result;
+// }

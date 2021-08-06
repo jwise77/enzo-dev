@@ -15,6 +15,12 @@ int grid::Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTrace
   // No particles to exchange
   if (headA == NULL)
       return 0;
+
+  // Ensure headA and headB are actually heads
+  if (headA->PrevParticle != NULL || headB->PrevParticle != NULL) {
+    printf("%s\n", "headA and headB must MCTracer linked list heads");
+    return -1;
+  }
   
   // Pointers for tracking the position in the particle list
   MonteCarloTracerParticle *previous, *next = NULL;
@@ -43,8 +49,8 @@ int grid::Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTrace
         previous->NextParticle = current->NextParticle;
 
       // Insert cellA_current at cellB_head and redirect cellB_head
-      if headB != NULL
-          current->next = headB->next;
+      if (headB != NULL)
+          current->NextParticle = headB->NextParticle;
       headB = current;
       
       // Update this particle's exchange count and set exchanged flag

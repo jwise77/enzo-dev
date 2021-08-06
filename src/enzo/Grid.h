@@ -1750,9 +1750,11 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
 // Functions for use with Monte Carlo tracer particles.
 //
   int Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
-  void AllocateMonteCarloTracerParticleData();
+  int AllocateMonteCarloTracerParticleData();
+  int DeleteMonteCarloTracerParticleData();
+  int CreateMonteCarloTracerParticles();
+  int AdvectMonteCarloTracerParticles(int CycleNumber);
   
-
 // -------------------------------------------------------------------------
 // Helper functions (should be made private)
 //

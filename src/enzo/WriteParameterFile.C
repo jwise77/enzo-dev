@@ -136,6 +136,11 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
   fprintf(fptr, "TracerParticleOn           = %"ISYM"\n", TracerParticleOn);
   fprintf(fptr, "TracerParticleOutputVelocity           = %"ISYM"\n", TracerParticleOutputVelocity);
 
+  fprintf(fptr, "MonteCarloTracerParticlesOn                   = %"ISYM"\n", MonteCarloTracerParticlesOn);
+  fprintf(fptr, "NumberOfMonteCarloTracerParticlesPerCell      = %"ISYM"\n", NumberOfMonteCarloTracerParticlesPerCell);
+  fprintf(fptr, "NumberOfMonteCarloTracerParticleAttributes    = %"ISYM"\n", NumberOfMonteCarloTracerParticleAttributes);
+  fprintf(fptr, "NumberOfMonteCarloTracerParticlesPerSupernova = %"ISYM"\n", NumberOfMonteCarloTracerParticlesPerSupernova);  
+
   fprintf(fptr, "TimeLastTracerParticleDump = %"GOUTSYM"\n",
           MetaData.TimeLastTracerParticleDump);
   fprintf(fptr, "dtTracerParticleDump       = %"GOUTSYM"\n",

@@ -29,6 +29,7 @@
 void DeleteFluxes(fluxes *Fluxes);
 void WriteListOfInts(FILE *fptr, int N, int nums[]);
 void DeleteStarList(Star * &Node);
+
 #ifdef TRANSFER
 PhotonPackageEntry*  DeletePhotonPackage(PhotonPackageEntry *PP);
 #endif /* TRANSFER */
@@ -136,6 +137,7 @@ grid::~grid()
 
 
   DeleteStarList(Stars);
+  DeleteMonteCarloTracerParticleData();
 
 #ifdef TRANSFER
   delete PhotonPackages;

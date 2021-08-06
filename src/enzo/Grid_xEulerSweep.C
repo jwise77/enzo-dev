@@ -390,7 +390,7 @@ int grid::xEulerSweep(int k, int NumberOfSubgrids, fluxes *SubgridFluxes[],
       BaryonField[TENum][index3] = eslice[index2+i];
       BaryonField[Vel1Num][index3] = uslice[index2+i];
       // Save mass (density) flux in this direction for MC Tracer Particle exchange probability
-      MassFlux[2][index3] = df[index2+i];
+      MassFlux[0][index3] = df[index2+i];
     } // ENDFOR i
 
     if (GridRank > 1)

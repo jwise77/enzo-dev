@@ -22,46 +22,53 @@
 #include "Hierarchy.h"
 #include "TopGridData.h"
 #include "LevelHierarchy.h"
-#
 
 class MonteCarloTracerParticle
 {
 
-  private:
-    grid      *CurrentGrid;                  
-    PINT       Identifier;                    // unique identifier
-    int        Level;
-    int        CellIndicies[MAX_DIMENSION];   // cell i,j,k where this particle is
-    int        ExchangeCount;                 // number of cell exchanges this particle has experienced
-    float      CreationTime;
-    float      mass;
-    // user defined attributes (e.g. max temperature, group id)
-    float     *ParticleAttributes[NumberOfMonteCarloTracerAttributes];
-    FLOAT      InitialPosition[MAX_DIMENSION];
-    bool       EchangedThisTimestep;
-    
-    // history of particle position, including the time when the position was recorded. 
-    // looks like [[x0,y0,z0,t0], [x1,y1,z1,t1], ...]
-    #ifdef TRACK_MC_POSITION
-    FLOAT     *LagrangianHistory[MAX_DIMENSION + 1]; 
-    #endif 
+ private:
 
-    friend class grid;
+  grid      *CurrentGrid;                  
+  PINT       UniqueID;
+  PINT       GroupID;
+  int        Level;
+  int        ExchangeCount;          // number of cell exchanges this particle has experienced
+  float      CreationTime;
+  float      Mass;
+  // user defined attributes (e.g. max temperature, max velocity, etc.)
+  float     *ParticleAttributes;
+  FLOAT      InitialPosition[MAX_DIMENSION];
+  bool       EchangedThisTimestep;
+  
+  // history of particle position, including the time when the position was recorded. 
+  #ifdef TRACK_MC_HISTORY
+  struct MonteCarloTracerParticleHistory
+  {
+      FLOAT Position[3];
+      float Timestamp;
+      MonteCarloTracerParticleHistory *NextFrame;
+  };     
+  MonteCarloTracerParticleHistory *LagrangianHistory;
+  #endif 
+  
+  friend class grid;
+  
+ public:
 
-  public:
+  MonteCarloTracerParticle *NextParticle;
+  MonteCarloTracerParticle *PrevParticle; 
+  
+  // Constructors and destructor
+  MonteCarloTracerParticle();
+  MonteCarloTracerParticle(grid *_grid, int _ID, int _groupID, int _level, float _creationTime, FLOAT pos[MAX_DIMENSION]);
+  ~MonteCarloTracerParticle();
 
-    MonteCarloTracerParticle *NextParticle; 
-
-    // Constructors and destructor
-    MonteCarloTracer();
-    ~MonteCarloTracer();
-
-    // Operators
-
-    // Routines
-
-    // getters
-    // setters
+  // Operators
+  
+  // Routines
+  
+  // getters
+  // setters
   
 };
 

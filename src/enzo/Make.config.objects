@@ -352,7 +352,9 @@ OBJS_CONFIG_LIB = \
 	Grid_AddParticlesFromList.o \
 	Grid_AddRandomForcing.o \
 	Grid_AddToBoundaryFluxes.o \
+    Grid_AdvectMonteCarloTracerParticles.o \
 	Grid_AllocateGrids.o \
+    Grid_AllocateMonteCarloTracerParticleData.o \
 	Grid_AnalyzeTrackPeaks.o \
     	Grid_AppendActiveParticlesToList.o \
 	Grid_AppendForcingToBaryonFields.o \
@@ -451,6 +453,7 @@ OBJS_CONFIG_LIB = \
 	Grid_CosmologySimulationInitializeGrid.o \
 	Grid_CreateChildParticles.o \
 	Grid_CreateFieldArray.o \
+    Grid_CreateMonteCarloTracerParticles.o \
 	Grid_CreateParticleTypeGrouping.o \
 	Grid_CRShockTubesInitializeGrid.o \
     	Grid_DebugActiveParticles.o \
@@ -460,6 +463,7 @@ OBJS_CONFIG_LIB = \
 	Grid_DeleteBaryonFields.o \
 	Grid_DeleteFlaggingField.o \
         Grid_DeleteObsoleteFields.o \
+    Grid_DeleteMonteCarloTracerParticleData.o \
 	Grid_DepositBaryons.o \
 	Grid_DepositMustRefineParticles.o \
 	Grid_DepositParticlePositions.o \
@@ -653,6 +657,7 @@ OBJS_CONFIG_LIB = \
         Grid_TracerParticleCreateParticles.o \
         Grid_TracerParticleOutputData.o \
         Grid_TracerParticleSetVelocity.o \
+        Grid_Transfer_MonteCarloTracerParticles_From_CellA_to_CellB.o \
         Grid_TransferSubgridActiveParticles.o \
         Grid_TransferSubgridParticles.o \
         Grid_TransferSubgridStars.o \
@@ -745,6 +750,8 @@ OBJS_CONFIG_LIB = \
         mg_relax.o \
         mg_restrict.o \
         mkl_st1.o \
+        MonteCarloTracerParticleListRoutines.o \
+        MonteCarloTracerParticleRoutines.o \
         Mpich_V1_Dims_create.o \
         multi_cool.o \
         MultigridSolver.o \
