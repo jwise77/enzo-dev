@@ -750,6 +750,7 @@ OBJS_CONFIG_LIB = \
         mg_relax.o \
         mg_restrict.o \
         mkl_st1.o \
+        MonteCarloTracerParticleCreation.o \
         MonteCarloTracerParticleListRoutines.o \
         MonteCarloTracerParticleRoutines.o \
         Mpich_V1_Dims_create.o \
