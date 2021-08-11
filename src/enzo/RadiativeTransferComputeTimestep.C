@@ -203,7 +203,7 @@ int RadiativeTransferComputeTimestep(LevelHierarchyEntry *LevelArray[],
 	     ", dtPhoton = %g, dtPhoton0 = %g\n",
 	     HydroTime, PhotonTime, dtPhoton, Saved_dtPhoton);
     dtPhoton = min(1.01 * (HydroTime - PhotonTime), Saved_dtPhoton);
-    dtPhoton = max(dtPhoton, 1e-4*Saved_dtPhoton);
+    //dtPhoton = max(dtPhoton, 1e-4*Saved_dtPhoton);
     //LastTimestepUseHII = FALSE;
   }
 
