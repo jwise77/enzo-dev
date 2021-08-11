@@ -25,14 +25,16 @@
 #include "Grid.h"
 #include "CosmologyParameters.h"
 
-#define DEVCODE 1
+// Setting to 1 causes round-off errors in optically thin regions
+#define EXACT_EXP 0
+
 int grid::RadiativeTransferIonization(PhotonPackageEntry **PP, FLOAT *dPi, int cellindex, 
 				      int species, float tau, FLOAT photonrate, 
 				      FLOAT *excessrate, float geo_correction,
 				      const int *kphNum, int gammaNum)
 {
   FLOAT dP1 = 0.0;
-#if DEVCODE
+#if EXACT_EXP
   dPi[species] = (*PP)->Photons*(1-expf(-tau));
 #else
   // at most use all photons for photo-ionizations
