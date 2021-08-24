@@ -9,7 +9,7 @@
 !         e-mail: daisuke@cs.tsukuba.ac.jp
 
 !     Modified by Robert Harkness, SDSC, MArch 2006
-
+!     Modified by John Wise, Georgia Tech, August 2021 (Making compatible with GCC v10+)
 
 
 
@@ -242,7 +242,7 @@
       implicit none
 
       INTG_PREC :: n1, n2, m1, m2
-      R_PREC :: w1(2,m1,*),w2(2,m1,*),w3(2,m2,*),w4(2,n1/m1,*)
+      CMPLX_PREC :: w1(m1,*),w2(m1,*),w3(m2,*),w4(n1/m1,*)
 
       INTG_PREC :: j, k
       INTG_PREC :: ir, is
@@ -255,22 +255,22 @@
 !$omp do
       do k = 1,m2
         do j = 1,m1
-          w1(1,j,k) = cos(px*REAL(j-1,fftkind)*REAL(k-1,fftkind))
-          w1(2,j,k) = sin(px*REAL(j-1,fftkind)*REAL(k-1,fftkind))
+          w1(j,k) = cmplx(cos(px*REAL(j-1,fftkind)*REAL(k-1,fftkind)),&
+     &      sin(px*REAL(j-1,fftkind)*REAL(k-1,fftkind)))
         end do
         do ir = 1,n1/m1
-          w3(1,k,ir) = cos(px*REAL(k-1,fftkind)*REAL(ir-1,fftkind)*REAL(m1,fftkind))
-          w3(2,k,ir) = sin(px*REAL(k-1,fftkind)*REAL(ir-1,fftkind)*REAL(m1,fftkind))
+          w3(k,ir) = cmplx(cos(px*REAL(k-1,fftkind)*REAL(ir-1,fftkind)*REAL(m1,fftkind)),&
+     &      sin(px*REAL(k-1,fftkind)*REAL(ir-1,fftkind)*REAL(m1,fftkind)))
         end do
       end do
       do is = 1,n2/m2
         do j = 1,m1
-          w2(1,j,is) = cos(px*REAL(j-1,fftkind)*REAL(is-1,fftkind)*REAL(m2,fftkind))
-          w2(2,j,is) = sin(px*REAL(j-1,fftkind)*REAL(is-1,fftkind)*REAL(m2,fftkind))
+          w2(j,is) = cmplx(cos(px*REAL(j-1,fftkind)*REAL(is-1,fftkind)*REAL(m2,fftkind)),&
+     &      sin(px*REAL(j-1,fftkind)*REAL(is-1,fftkind)*REAL(m2,fftkind)))
         end do
         do ir = 1,n1/m1
-          w4(1,ir,is) = cos(px*REAL(ir-1,fftkind)*REAL(m1,fftkind)*REAL(is-1,fftkind)*REAL(m2,fftkind))
-          w4(2,ir,is) = sin(px*REAL(ir-1,fftkind)*REAL(m1,fftkind)*REAL(is-1,fftkind)*REAL(m2,fftkind))
+          w4(ir,is) = cmplx(cos(px*REAL(ir-1,fftkind)*REAL(m1,fftkind)*REAL(is-1,fftkind)*REAL(m2,fftkind)),&
+     &      sin(px*REAL(ir-1,fftkind)*REAL(m1,fftkind)*REAL(is-1,fftkind)*REAL(m2,fftkind)))
         end do
       end do
 !$omp end parallel
@@ -817,7 +817,7 @@
       implicit none
 
       INTG_PREC :: m, l
-      R_PREC :: w(2,*)
+      CMPLX_PREC :: w(*)
       INTG_PREC :: i
       R_PREC :: pi2, px
 
@@ -825,8 +825,8 @@
       px = -pi2/(REAL(m,fftkind)*REAL(l,fftkind))
 
       do 10 i = 1,l
-        w(1,i) = cos(px*REAL(i-1,fftkind))
-        w(2,i) = sin(px*REAL(i-1,fftkind))
+        w(i)%re = cos(px*REAL(i-1,fftkind))
+        w(i)%im = sin(px*REAL(i-1,fftkind))
    10 continue
 
       return
@@ -922,20 +922,18 @@
       implicit none
 
       INTG_PREC :: m
-      R_PREC :: a(2,m,*),b(2,m,*)
+      CMPLX_PREC :: a(m,*),b(m,*)
 
       INTG_PREC :: i
       R_PREC :: x0, y0, x1, y1
 
       do i = 1,m
-        x0 = a(1,i,1)
-        y0 = a(2,i,1)
-        x1 = a(1,i,2)
-        y1 = a(2,i,2)
-        b(1,i,1) = x0+x1
-        b(2,i,1) = y0+y1
-        b(1,i,2) = x0-x1
-        b(2,i,2) = y0-y1
+        x0 = REAL(a(i,1))
+        y0 = AIMAG(a(i,1))
+        x1 = REAL(a(i,2))
+        y1 = AIMAG(a(i,2))
+        b(i,1) = CMPLX(x0+x1, y0+y1)
+        b(i,2) = CMPLX(x0-x1, y0-y1)
       end do
 
       return
@@ -949,7 +947,7 @@
       implicit none
 
       INTG_PREC :: l
-      R_PREC :: a(2,l,*),b(2,3,*),w(2,*)
+      CMPLX_PREC :: a(l,*),b(3,*),w(*)
 
       INTG_PREC :: i, j
       R_PREC :: wr1, wi1, wr2, wi2
@@ -960,22 +958,22 @@
       data c32/0.5_fftkind/
 
       do j = 1,l
-        wr1 = w(1,j)
-        wi1 = w(2,j)
+        wr1 = w(j)%re
+        wi1 = w(j)%im
         wr2 = wr1*wr1-wi1*wi1
         wi2 = wr1*wi1+wr1*wi1
-        x0 = a(1,j,2)+a(1,j,3)
-        y0 = a(2,j,2)+a(2,j,3)
-        x1 = a(1,j,1)-c32*x0
-        y1 = a(2,j,1)-c32*y0
-        x2 = c31*(a(2,j,2)-a(2,j,3))
-        y2 = c31*(a(1,j,3)-a(1,j,2))
-        b(1,1,j) = a(1,j,1)+x0
-        b(2,1,j) = a(2,j,1)+y0
-        b(1,2,j) = wr1*(x1+x2)-wi1*(y1+y2)
-        b(2,2,j) = wr1*(y1+y2)+wi1*(x1+x2)
-        b(1,3,j) = wr2*(x1-x2)-wi2*(y1-y2)
-        b(2,3,j) = wr2*(y1-y2)+wi2*(x1-x2)
+        x0 = a(j,2)%re+a(j,3)%re
+        y0 = a(j,2)%im+a(j,3)%im
+        x1 = a(j,1)%re-c32*x0
+        y1 = a(j,1)%im-c32*y0
+        x2 = c31*(a(j,2)%im-a(j,3)%im)
+        y2 = c31*(a(j,3)%re-a(j,2)%re)
+        b(1,j)%re = a(j,1)%re+x0
+        b(1,j)%im = a(j,1)%im+y0
+        b(2,j)%re = wr1*(x1+x2)-wi1*(y1+y2)
+        b(2,j)%im = wr1*(y1+y2)+wi1*(x1+x2)
+        b(3,j)%re = wr2*(x1-x2)-wi2*(y1-y2)
+        b(3,j)%im = wr2*(y1-y2)+wi2*(x1-x2)
       end do
 
       return
@@ -989,7 +987,7 @@
       implicit none
 
       INTG_PREC :: m, l
-      R_PREC :: a(2,m,l,*),b(2,m,3,*),w(2,*)
+      CMPLX_PREC :: a(m,l,*),b(m,3,*),w(*)
 
       INTG_PREC :: i, j
       R_PREC :: wr1, wi1, wr2, wi2
@@ -1000,38 +998,38 @@
       data c32/0.5_fftkind/
 
       do i = 1,m
-        x0 = a(1,i,1,2)+a(1,i,1,3)
-        y0 = a(2,i,1,2)+a(2,i,1,3)
-        x1 = a(1,i,1,1)-c32*x0
-        y1 = a(2,i,1,1)-c32*y0
-        x2 = c31*(a(2,i,1,2)-a(2,i,1,3))
-        y2 = c31*(a(1,i,1,3)-a(1,i,1,2))
-        b(1,i,1,1) = a(1,i,1,1)+x0
-        b(2,i,1,1) = a(2,i,1,1)+y0
-        b(1,i,2,1) = x1+x2
-        b(2,i,2,1) = y1+y2
-        b(1,i,3,1) = x1-x2
-        b(2,i,3,1) = y1-y2
+        x0 = a(i,1,2)%re+a(i,1,3)%re
+        y0 = a(i,1,2)%im+a(i,1,3)%im
+        x1 = a(i,1,1)%re-c32*x0
+        y1 = a(i,1,1)%im-c32*y0
+        x2 = c31*(a(i,1,2)%im-a(i,1,3)%im)
+        y2 = c31*(a(i,1,3)%re-a(i,1,2)%re)
+        b(i,1,1)%re = a(i,1,1)%re+x0
+        b(i,1,1)%im = a(i,1,1)%im+y0
+        b(i,2,1)%re = x1+x2
+        b(i,2,1)%im = y1+y2
+        b(i,3,1)%re = x1-x2
+        b(i,3,1)%im = y1-y2
       end do
 
       do j = 2,l
-        wr1 = w(1,j)
-        wi1 = w(2,j)
+        wr1 = w(j)%re
+        wi1 = w(j)%im
         wr2 = wr1*wr1-wi1*wi1
         wi2 = wr1*wi1+wr1*wi1
         do i = 1,m
-          x0 = a(1,i,j,2)+a(1,i,j,3)
-          y0 = a(2,i,j,2)+a(2,i,j,3)
-          x1 = a(1,i,j,1)-c32*x0
-          y1 = a(2,i,j,1)-c32*y0
-          x2 = c31*(a(2,i,j,2)-a(2,i,j,3))
-          y2 = c31*(a(1,i,j,3)-a(1,i,j,2))
-          b(1,i,1,j) = a(1,i,j,1)+x0
-          b(2,i,1,j) = a(2,i,j,1)+y0
-          b(1,i,2,j) = wr1*(x1+x2)-wi1*(y1+y2)
-          b(2,i,2,j) = wr1*(y1+y2)+wi1*(x1+x2)
-          b(1,i,3,j) = wr2*(x1-x2)-wi2*(y1-y2)
-          b(2,i,3,j) = wr2*(y1-y2)+wi2*(x1-x2)
+          x0 = a(i,j,2)%re+a(i,j,3)%re
+          y0 = a(i,j,2)%im+a(i,j,3)%im
+          x1 = a(i,j,1)%re-c32*x0
+          y1 = a(i,j,1)%im-c32*y0
+          x2 = c31*(a(i,j,2)%im-a(i,j,3)%im)
+          y2 = c31*(a(i,j,3)%re-a(i,j,2)%re)
+          b(i,1,j)%re = a(i,j,1)%re+x0
+          b(i,1,j)%im = a(i,j,1)%im+y0
+          b(i,2,j)%re = wr1*(x1+x2)-wi1*(y1+y2)
+          b(i,2,j)%im = wr1*(y1+y2)+wi1*(x1+x2)
+          b(i,3,j)%re = wr2*(x1-x2)-wi2*(y1-y2)
+          b(i,3,j)%im = wr2*(y1-y2)+wi2*(x1-x2)
         end do
       end do
 
@@ -1046,35 +1044,35 @@
       implicit none
 
       INTG_PREC :: l
-      R_PREC :: a(2,l,*),b(2,4,*),w(2,*)
+      CMPLX_PREC :: a(l,*),b(4,*),w(*)
 
       INTG_PREC :: j
       R_PREC :: wr1, wi1, wr2, wi2, wr3, wi3
       R_PREC :: x0, y0, x1, y1, x2, y2, x3, y3
 
       do j = 1,l
-        wr1 = w(1,j)
-        wi1 = w(2,j)
+        wr1 = w(j)%re
+        wi1 = w(j)%im
         wr2 = wr1*wr1-wi1*wi1
         wi2 = wr1*wi1+wr1*wi1
         wr3 = wr1*wr2-wi1*wi2
         wi3 = wr1*wi2+wi1*wr2
-        x0 = a(1,j,1)+a(1,j,3)
-        y0 = a(2,j,1)+a(2,j,3)
-        x1 = a(1,j,1)-a(1,j,3)
-        y1 = a(2,j,1)-a(2,j,3)
-        x2 = a(1,j,2)+a(1,j,4)
-        y2 = a(2,j,2)+a(2,j,4)
-        x3 = a(2,j,2)-a(2,j,4)
-        y3 = a(1,j,4)-a(1,j,2)
-        b(1,1,j) = x0+x2
-        b(2,1,j) = y0+y2
-        b(1,3,j) = wr2*(x0-x2)-wi2*(y0-y2)
-        b(2,3,j) = wr2*(y0-y2)+wi2*(x0-x2)
-        b(1,2,j) = wr1*(x1+x3)-wi1*(y1+y3)
-        b(2,2,j) = wr1*(y1+y3)+wi1*(x1+x3)
-        b(1,4,j) = wr3*(x1-x3)-wi3*(y1-y3)
-        b(2,4,j) = wr3*(y1-y3)+wi3*(x1-x3)
+        x0 = a(j,1)%re+a(j,3)%re
+        y0 = a(j,1)%im+a(j,3)%im
+        x1 = a(j,1)%re-a(j,3)%re
+        y1 = a(j,1)%im-a(j,3)%im
+        x2 = a(j,2)%re+a(j,4)%re
+        y2 = a(j,2)%im+a(j,4)%im
+        x3 = a(j,2)%im-a(j,4)%im
+        y3 = a(j,4)%re-a(j,2)%re
+        b(1,j)%re = x0+x2
+        b(1,j)%im = y0+y2
+        b(3,j)%re = wr2*(x0-x2)-wi2*(y0-y2)
+        b(3,j)%im = wr2*(y0-y2)+wi2*(x0-x2)
+        b(2,j)%re = wr1*(x1+x3)-wi1*(y1+y3)
+        b(2,j)%im = wr1*(y1+y3)+wi1*(x1+x3)
+        b(4,j)%re = wr3*(x1-x3)-wi3*(y1-y3)
+        b(4,j)%im = wr3*(y1-y3)+wi3*(x1-x3)
       end do
 
       return
@@ -1089,55 +1087,55 @@
       implicit none
 
       INTG_PREC :: m, l
-      R_PREC :: a(2,m,l,*),b(2,m,4,*),w(2,*)
+      CMPLX_PREC :: a(m,l,*),b(m,4,*),w(*)
 
       INTG_PREC :: i, j
       R_PREC :: wr1, wi1, wr2, wi2, wr3, wi3
       R_PREC :: x0, y0, x1, y1, x2, y2, x3, y3
 
       do i = 1,m
-        x0 = a(1,i,1,1)+a(1,i,1,3)
-        y0 = a(2,i,1,1)+a(2,i,1,3)
-        x1 = a(1,i,1,1)-a(1,i,1,3)
-        y1 = a(2,i,1,1)-a(2,i,1,3)
-        x2 = a(1,i,1,2)+a(1,i,1,4)
-        y2 = a(2,i,1,2)+a(2,i,1,4)
-        x3 = a(2,i,1,2)-a(2,i,1,4)
-        y3 = a(1,i,1,4)-a(1,i,1,2)
-        b(1,i,1,1) = x0+x2
-        b(2,i,1,1) = y0+y2
-        b(1,i,3,1) = x0-x2
-        b(2,i,3,1) = y0-y2
-        b(1,i,2,1) = x1+x3
-        b(2,i,2,1) = y1+y3
-        b(1,i,4,1) = x1-x3
-        b(2,i,4,1) = y1-y3
+        x0 = a(i,1,1)%re+a(i,1,3)%re
+        y0 = a(i,1,1)%im+a(i,1,3)%im
+        x1 = a(i,1,1)%re-a(i,1,3)%re
+        y1 = a(i,1,1)%im-a(i,1,3)%im
+        x2 = a(i,1,2)%re+a(i,1,4)%re
+        y2 = a(i,1,2)%im+a(i,1,4)%im
+        x3 = a(i,1,2)%im-a(i,1,4)%im
+        y3 = a(i,1,4)%re-a(i,1,2)%re
+        b(i,1,1) = x0+x2
+        b(i,1,1) = y0+y2
+        b(i,3,1) = x0-x2
+        b(i,3,1) = y0-y2
+        b(i,2,1) = x1+x3
+        b(i,2,1) = y1+y3
+        b(i,4,1) = x1-x3
+        b(i,4,1) = y1-y3
       end do
 
       do j = 2,l
-        wr1 = w(1,j)
-        wi1 = w(2,j)
+        wr1 = w(j)
+        wi1 = w(j)
         wr2 = wr1*wr1-wi1*wi1
         wi2 = wr1*wi1+wr1*wi1
         wr3 = wr1*wr2-wi1*wi2
         wi3 = wr1*wi2+wi1*wr2
         do i = 1,m
-          x0 = a(1,i,j,1)+a(1,i,j,3)
-          y0 = a(2,i,j,1)+a(2,i,j,3)
-          x1 = a(1,i,j,1)-a(1,i,j,3)
-          y1 = a(2,i,j,1)-a(2,i,j,3)
-          x2 = a(1,i,j,2)+a(1,i,j,4)
-          y2 = a(2,i,j,2)+a(2,i,j,4)
-          x3 = a(2,i,j,2)-a(2,i,j,4)
-          y3 = a(1,i,j,4)-a(1,i,j,2)
-          b(1,i,1,j) = x0+x2
-          b(2,i,1,j) = y0+y2
-          b(1,i,3,j) = wr2*(x0-x2)-wi2*(y0-y2)
-          b(2,i,3,j) = wr2*(y0-y2)+wi2*(x0-x2)
-          b(1,i,2,j) = wr1*(x1+x3)-wi1*(y1+y3)
-          b(2,i,2,j) = wr1*(y1+y3)+wi1*(x1+x3)
-          b(1,i,4,j) = wr3*(x1-x3)-wi3*(y1-y3)
-          b(2,i,4,j) = wr3*(y1-y3)+wi3*(x1-x3)
+          x0 = a(i,j,1)%re+a(i,j,3)%re
+          y0 = a(i,j,1)%im+a(i,j,3)%im
+          x1 = a(i,j,1)%re-a(i,j,3)%re
+          y1 = a(i,j,1)%im-a(i,j,3)%im
+          x2 = a(i,j,2)%re+a(i,j,4)%re
+          y2 = a(i,j,2)%im+a(i,j,4)%im
+          x3 = a(i,j,2)%im-a(i,j,4)%im
+          y3 = a(i,j,4)%re-a(i,j,2)%re
+          b(i,1,j)%re = x0+x2
+          b(i,1,j)%im = y0+y2
+          b(i,3,j)%re = wr2*(x0-x2)-wi2*(y0-y2)
+          b(i,3,j)%im = wr2*(y0-y2)+wi2*(x0-x2)
+          b(i,2,j)%re = wr1*(x1+x3)-wi1*(y1+y3)
+          b(i,2,j)%im = wr1*(y1+y3)+wi1*(x1+x3)
+          b(i,4,j)%re = wr3*(x1-x3)-wi3*(y1-y3)
+          b(i,4,j)%im = wr3*(y1-y3)+wi3*(x1-x3)
         end do
       end do
 
@@ -1152,7 +1150,7 @@
       implicit none
 
       INTG_PREC :: l
-      R_PREC :: a(2,l,*),b(2,5,*),w(2,*)
+      CMPLX_PREC :: a(l,*),b(5,*),w(*)
 
       INTG_PREC :: j
       R_PREC :: wr1, wi1, wr2, wi2, wr3, wi3, wr4, wi4
@@ -1167,28 +1165,28 @@
       data c54/0.25_fftkind/
 
       do j = 1,l
-        wr1 = w(1,j)
-        wi1 = w(2,j)
+        wr1 = w(j)%re
+        wi1 = w(j)%im
         wr2 = wr1*wr1-wi1*wi1
         wi2 = wr1*wi1+wr1*wi1
         wr3 = wr1*wr2-wi1*wi2
         wi3 = wr1*wi2+wi1*wr2
         wr4 = wr2*wr2-wi2*wi2
         wi4 = wr2*wi2+wr2*wi2
-        x0 = a(1,j,2)+a(1,j,5)
-        y0 = a(2,j,2)+a(2,j,5)
-        x1 = a(1,j,3)+a(1,j,4)
-        y1 = a(2,j,3)+a(2,j,4)
-        x2 = c51*(a(1,j,2)-a(1,j,5))
-        y2 = c51*(a(2,j,2)-a(2,j,5))
-        x3 = c51*(a(1,j,3)-a(1,j,4))
-        y3 = c51*(a(2,j,3)-a(2,j,4))
+        x0 = a(j,2)%re+a(j,5)%re
+        y0 = a(j,2)%im+a(j,5)%im
+        x1 = a(j,3)%re+a(j,4)%re
+        y1 = a(j,3)%im+a(j,4)%im
+        x2 = c51*(a(j,2)%re-a(j,5)%re)
+        y2 = c51*(a(j,2)%im-a(j,5)%im)
+        x3 = c51*(a(j,3)%re-a(j,4)%re)
+        y3 = c51*(a(j,3)%im-a(j,4)%im)
         x4 = x0+x1
         y4 = y0+y1
         x5 = c53*(x0-x1)
         y5 = c53*(y0-y1)
-        x6 = a(1,j,1)-c54*x4
-        y6 = a(2,j,1)-c54*y4
+        x6 = a(j,1)-c54*x4
+        y6 = a(j,1)-c54*y4
         x7 = x6+x5
         y7 = y6+y5
         x8 = x6-x5
@@ -1197,16 +1195,16 @@
         y9 = -x2-c52*x3
         x10 = c52*y2-y3
         y10 = x3-c52*x2
-        b(1,1,j) = a(1,j,1)+x4
-        b(2,1,j) = a(2,j,1)+y4
-        b(1,2,j) = wr1*(x7+x9)-wi1*(y7+y9)
-        b(2,2,j) = wr1*(y7+y9)+wi1*(x7+x9)
-        b(1,3,j) = wr2*(x8+x10)-wi2*(y8+y10)
-        b(2,3,j) = wr2*(y8+y10)+wi2*(x8+x10)
-        b(1,4,j) = wr3*(x8-x10)-wi3*(y8-y10)
-        b(2,4,j) = wr3*(y8-y10)+wi3*(x8-x10)
-        b(1,5,j) = wr4*(x7-x9)-wi4*(y7-y9)
-        b(2,5,j) = wr4*(y7-y9)+wi4*(x7-x9)
+        b(1,j)%re = a(j,1)%re+x4
+        b(1,j)%im = a(j,1)%im+y4
+        b(2,j)%re = wr1*(x7+x9)-wi1*(y7+y9)
+        b(2,j)%im = wr1*(y7+y9)+wi1*(x7+x9)
+        b(3,j)%re = wr2*(x8+x10)-wi2*(y8+y10)
+        b(3,j)%im = wr2*(y8+y10)+wi2*(x8+x10)
+        b(4,j)%re = wr3*(x8-x10)-wi3*(y8-y10)
+        b(4,j)%im = wr3*(y8-y10)+wi3*(x8-x10)
+        b(5,j)%re = wr4*(x7-x9)-wi4*(y7-y9)
+        b(5,j)%im = wr4*(y7-y9)+wi4*(x7-x9)
       end do
 
       return
@@ -1220,7 +1218,7 @@
       implicit none
 
       INTG_PREC :: m, l
-      R_PREC :: a(2,m,l,*),b(2,m,5,*),w(2,*)
+      CMPLX_PREC :: a(m,l,*),b(m,5,*),w(*)
 
       INTG_PREC :: i, j
       R_PREC :: wr1, wi1, wr2, wi2, wr3, wi3, wr4, wi4
@@ -1235,20 +1233,20 @@
       data c54/0.25_fftkind/
 
       do i = 1,m
-        x0 = a(1,i,1,2)+a(1,i,1,5)
-        y0 = a(2,i,1,2)+a(2,i,1,5)
-        x1 = a(1,i,1,3)+a(1,i,1,4)
-        y1 = a(2,i,1,3)+a(2,i,1,4)
-        x2 = c51*(a(1,i,1,2)-a(1,i,1,5))
-        y2 = c51*(a(2,i,1,2)-a(2,i,1,5))
-        x3 = c51*(a(1,i,1,3)-a(1,i,1,4))
-        y3 = c51*(a(2,i,1,3)-a(2,i,1,4))
+        x0 = a(i,1,2)%re+a(i,1,5)%re
+        y0 = a(i,1,2)%im+a(i,1,5)%im
+        x1 = a(i,1,3)%re+a(i,1,4)%re
+        y1 = a(i,1,3)%im+a(i,1,4)%im
+        x2 = c51*(a(i,1,2)%re-a(i,1,5)%re)
+        y2 = c51*(a(i,1,2)%im-a(i,1,5)%im)
+        x3 = c51*(a(i,1,3)%re-a(i,1,4)%re)
+        y3 = c51*(a(i,1,3)%im-a(i,1,4)%im)
         x4 = x0+x1
         y4 = y0+y1
         x5 = c53*(x0-x1)
         y5 = c53*(y0-y1)
-        x6 = a(1,i,1,1)-c54*x4
-        y6 = a(2,i,1,1)-c54*y4
+        x6 = a(i,1,1)-c54*x4
+        y6 = a(i,1,1)-c54*y4
         x7 = x6+x5
         y7 = y6+y5
         x8 = x6-x5
@@ -1257,21 +1255,21 @@
         y9 = -x2-c52*x3
         x10 = c52*y2-y3
         y10 = x3-c52*x2
-        b(1,i,1,1) = a(1,i,1,1)+x4
-        b(2,i,1,1) = a(2,i,1,1)+y4
-        b(1,i,2,1) = x7+x9
-        b(2,i,2,1) = y7+y9
-        b(1,i,3,1) = x8+x10
-        b(2,i,3,1) = y8+y10
-        b(1,i,4,1) = x8-x10
-        b(2,i,4,1) = y8-y10
-        b(1,i,5,1) = x7-x9
-        b(2,i,5,1) = y7-y9
+        b(i,1,1)%re = a(i,1,1)%re+x4
+        b(i,1,1)%im = a(i,1,1)%im+y4
+        b(i,2,1)%re = x7+x9
+        b(i,2,1)%im = y7+y9
+        b(i,3,1)%re = x8+x10
+        b(i,3,1)%im = y8+y10
+        b(i,4,1)%re = x8-x10
+        b(i,4,1)%im = y8-y10
+        b(i,5,1)%re = x7-x9
+        b(i,5,1)%im = y7-y9
       end do
 
       do j = 2,l
-        wr1 = w(1,j)
-        wi1 = w(2,j)
+        wr1 = w(j)%re
+        wi1 = w(j)%im
         wr2 = wr1*wr1-wi1*wi1
         wi2 = wr1*wi1+wr1*wi1
         wr3 = wr1*wr2-wi1*wi2
@@ -1279,20 +1277,20 @@
         wr4 = wr2*wr2-wi2*wi2
         wi4 = wr2*wi2+wr2*wi2
         do i = 1,m
-          x0 = a(1,i,j,2)+a(1,i,j,5)
-          y0 = a(2,i,j,2)+a(2,i,j,5)
-          x1 = a(1,i,j,3)+a(1,i,j,4)
-          y1 = a(2,i,j,3)+a(2,i,j,4)
-          x2 = c51*(a(1,i,j,2)-a(1,i,j,5))
-          y2 = c51*(a(2,i,j,2)-a(2,i,j,5))
-          x3 = c51*(a(1,i,j,3)-a(1,i,j,4))
-          y3 = c51*(a(2,i,j,3)-a(2,i,j,4))
+          x0 = a(i,j,2)%re+a(i,j,5)%re
+          y0 = a(i,j,2)%im+a(i,j,5)%im
+          x1 = a(i,j,3)%re+a(i,j,4)%re
+          y1 = a(i,j,3)%im+a(i,j,4)%im
+          x2 = c51*(a(i,j,2)%re-a(i,j,5)%re)
+          y2 = c51*(a(i,j,2)%im-a(i,j,5)%im)
+          x3 = c51*(a(i,j,3)%re-a(i,j,4)%re)
+          y3 = c51*(a(i,j,3)%im-a(i,j,4)%im)
           x4 = x0+x1
           y4 = y0+y1
           x5 = c53*(x0-x1)
           y5 = c53*(y0-y1)
-          x6 = a(1,i,j,1)-c54*x4
-          y6 = a(2,i,j,1)-c54*y4
+          x6 = a(i,j,1)%re-c54*x4
+          y6 = a(i,j,1)%im-c54*y4
           x7 = x6+x5
           y7 = y6+y5
           x8 = x6-x5
@@ -1301,16 +1299,16 @@
           y9 = -x2-c52*x3
           x10 = c52*y2-y3
           y10 = x3-c52*x2
-          b(1,i,1,j) = a(1,i,j,1)+x4
-          b(2,i,1,j) = a(2,i,j,1)+y4
-          b(1,i,2,j) = wr1*(x7+x9)-wi1*(y7+y9)
-          b(2,i,2,j) = wr1*(y7+y9)+wi1*(x7+x9)
-          b(1,i,3,j) = wr2*(x8+x10)-wi2*(y8+y10)
-          b(2,i,3,j) = wr2*(y8+y10)+wi2*(x8+x10)
-          b(1,i,4,j) = wr3*(x8-x10)-wi3*(y8-y10)
-          b(2,i,4,j) = wr3*(y8-y10)+wi3*(x8-x10)
-          b(1,i,5,j) = wr4*(x7-x9)-wi4*(y7-y9)
-          b(2,i,5,j) = wr4*(y7-y9)+wi4*(x7-x9)
+          b(i,1,j)%re = a(i,j,1)%re+x4
+          b(i,1,j)%im = a(i,j,1)%im+y4
+          b(i,2,j)%re = wr1*(x7+x9)-wi1*(y7+y9)
+          b(i,2,j)%im = wr1*(y7+y9)+wi1*(x7+x9)
+          b(i,3,j)%re = wr2*(x8+x10)-wi2*(y8+y10)
+          b(i,3,j)%im = wr2*(y8+y10)+wi2*(x8+x10)
+          b(i,4,j)%re = wr3*(x8-x10)-wi3*(y8-y10)
+          b(i,4,j)%im = wr3*(y8-y10)+wi3*(x8-x10)
+          b(i,5,j)%re = wr4*(x7-x9)-wi4*(y7-y9)
+          b(i,5,j)%im = wr4*(y7-y9)+wi4*(x7-x9)
         end do
       end do
 
@@ -1325,7 +1323,7 @@
       implicit none
 
       INTG_PREC :: l
-      R_PREC :: a(2,l,*),b(2,8,*),w(2,*)
+      CMPLX_PREC :: a(l,*),b(8,*),w(*)
 
       INTG_PREC :: j
       R_PREC :: wr1, wi1, wr2, wi2, wr3, wi3, wr4, wi4
@@ -1341,8 +1339,8 @@
       data c81/0.70710678118654752_fftkind/
 
       do j = 1,l
-        wr1 = w(1,j)
-        wi1 = w(2,j)
+        wr1 = real(w(j))
+        wi1 = aimag(w(j))
         wr2 = wr1*wr1-wi1*wi1
         wi2 = wr1*wi1+wr1*wi1
         wr3 = wr1*wr2-wi1*wi2
@@ -1355,38 +1353,38 @@
         wi6 = wr3*wi3+wr3*wi3
         wr7 = wr3*wr4-wi3*wi4
         wi7 = wr3*wi4+wi3*wr4
-        x0 = a(1,j,1)+a(1,j,5)
-        y0 = a(2,j,1)+a(2,j,5)
-        x1 = a(1,j,1)-a(1,j,5)
-        y1 = a(2,j,1)-a(2,j,5)
-        x2 = a(1,j,3)+a(1,j,7)
-        y2 = a(2,j,3)+a(2,j,7)
-        x3 = a(2,j,3)-a(2,j,7)
-        y3 = a(1,j,7)-a(1,j,3)
+        x0 = a(j,1)%re+a(j,5)%re
+        y0 = a(j,1)%im+a(j,5)%im
+        x1 = a(j,1)%re-a(j,5)%re
+        y1 = a(j,1)%im-a(j,5)%im
+        x2 = a(j,3)%re+a(j,7)%re
+        y2 = a(j,3)%im+a(j,7)%im
+        x3 = a(j,3)%im-a(j,7)%im
+        y3 = a(j,7)%re-a(j,3)%re
         u0 = x0+x2
         v0 = y0+y2
         u1 = x0-x2
         v1 = y0-y2
-        x4 = a(1,j,2)+a(1,j,6)
-        y4 = a(2,j,2)+a(2,j,6)
-        x5 = a(1,j,2)-a(1,j,6)
-        y5 = a(2,j,2)-a(2,j,6)
-        x6 = a(1,j,4)+a(1,j,8)
-        y6 = a(2,j,4)+a(2,j,8)
-        x7 = a(1,j,4)-a(1,j,8)
-        y7 = a(2,j,4)-a(2,j,8)
+        x4 = a(j,2)%re+a(j,6)%re
+        y4 = a(j,2)%im+a(j,6)%im
+        x5 = a(j,2)%re-a(j,6)%re
+        y5 = a(j,2)%im-a(j,6)%im
+        x6 = a(j,4)%re+a(j,8)%re
+        y6 = a(j,4)%im+a(j,8)%im
+        x7 = a(j,4)%re-a(j,8)%re
+        y7 = a(j,4)%im-a(j,8)%im
         u2 = x4+x6
         v2 = y4+y6
         u3 = y4-y6
         v3 = x6-x4
-        b(1,1,j) = u0+u2
-        b(2,1,j) = v0+v2
-        b(1,5,j) = wr4*(u0-u2)-wi4*(v0-v2)
-        b(2,5,j) = wr4*(v0-v2)+wi4*(u0-u2)
-        b(1,3,j) = wr2*(u1+u3)-wi2*(v1+v3)
-        b(2,3,j) = wr2*(v1+v3)+wi2*(u1+u3)
-        b(1,7,j) = wr6*(u1-u3)-wi6*(v1-v3)
-        b(2,7,j) = wr6*(v1-v3)+wi6*(u1-u3)
+        b(1,j)%re = u0+u2
+        b(1,j)%im = v0+v2
+        b(5,j)%re = wr4*(u0-u2)-wi4*(v0-v2)
+        b(5,j)%im = wr4*(v0-v2)+wi4*(u0-u2)
+        b(3,j)%re = wr2*(u1+u3)-wi2*(v1+v3)
+        b(3,j)%im = wr2*(v1+v3)+wi2*(u1+u3)
+        b(7,j)%re = wr6*(u1-u3)-wi6*(v1-v3)
+        b(7,j)%im = wr6*(v1-v3)+wi6*(u1-u3)
         u0 = x1+c81*(x5-x7)
         v0 = y1+c81*(y5-y7)
         u1 = x1-c81*(x5-x7)
@@ -1395,14 +1393,14 @@
         v2 = y3-c81*(x5+x7)
         u3 = x3-c81*(y5+y7)
         v3 = y3+c81*(x5+x7)
-        b(1,2,j) = wr1*(u0+u2)-wi1*(v0+v2)
-        b(2,2,j) = wr1*(v0+v2)+wi1*(u0+u2)
-        b(1,6,j) = wr5*(u1+u3)-wi5*(v1+v3)
-        b(2,6,j) = wr5*(v1+v3)+wi5*(u1+u3)
-        b(1,4,j) = wr3*(u1-u3)-wi3*(v1-v3)
-        b(2,4,j) = wr3*(v1-v3)+wi3*(u1-u3)
-        b(1,8,j) = wr7*(u0-u2)-wi7*(v0-v2)
-        b(2,8,j) = wr7*(v0-v2)+wi7*(u0-u2)
+        b(2,j)%re = wr1*(u0+u2)-wi1*(v0+v2)
+        b(2,j)%im = wr1*(v0+v2)+wi1*(u0+u2)
+        b(6,j)%re = wr5*(u1+u3)-wi5*(v1+v3)
+        b(6,j)%im = wr5*(v1+v3)+wi5*(u1+u3)
+        b(4,j)%re = wr3*(u1-u3)-wi3*(v1-v3)
+        b(4,j)%im = wr3*(v1-v3)+wi3*(u1-u3)
+        b(8,j)%re = wr7*(u0-u2)-wi7*(v0-v2)
+        b(8,j)%im = wr7*(v0-v2)+wi7*(u0-u2)
       end do
 
       return
@@ -1416,7 +1414,7 @@
       implicit none
 
       INTG_PREC :: m, l
-      R_PREC :: a(2,m,l,*),b(2,m,8,*),w(2,*)
+      CMPLX_PREC :: a(m,l,*),b(m,8,*),w(*)
 
       INTG_PREC :: i, j
       R_PREC :: wr1, wi1, wr2, wi2, wr3, wi3, wr4, wi4
@@ -1432,38 +1430,38 @@
       data c81/0.70710678118654752_fftkind/
 
       do i = 1,m
-        x0 = a(1,i,1,1)+a(1,i,1,5)
-        y0 = a(2,i,1,1)+a(2,i,1,5)
-        x1 = a(1,i,1,1)-a(1,i,1,5)
-        y1 = a(2,i,1,1)-a(2,i,1,5)
-        x2 = a(1,i,1,3)+a(1,i,1,7)
-        y2 = a(2,i,1,3)+a(2,i,1,7)
-        x3 = a(2,i,1,3)-a(2,i,1,7)
-        y3 = a(1,i,1,7)-a(1,i,1,3)
+        x0 = a(i,1,1)%re+a(i,1,5)%re
+        y0 = a(i,1,1)%im+a(i,1,5)%im
+        x1 = a(i,1,1)%re-a(i,1,5)%re
+        y1 = a(i,1,1)%im-a(i,1,5)%im
+        x2 = a(i,1,3)%re+a(i,1,7)%re
+        y2 = a(i,1,3)%im+a(i,1,7)%im
+        x3 = a(i,1,3)%im-a(i,1,7)%im
+        y3 = a(i,1,7)%re-a(i,1,3)%re
         u0 = x0+x2
         v0 = y0+y2
         u1 = x0-x2
         v1 = y0-y2
-        x4 = a(1,i,1,2)+a(1,i,1,6)
-        y4 = a(2,i,1,2)+a(2,i,1,6)
-        x5 = a(1,i,1,2)-a(1,i,1,6)
-        y5 = a(2,i,1,2)-a(2,i,1,6)
-        x6 = a(1,i,1,4)+a(1,i,1,8)
-        y6 = a(2,i,1,4)+a(2,i,1,8)
-        x7 = a(1,i,1,4)-a(1,i,1,8)
-        y7 = a(2,i,1,4)-a(2,i,1,8)
+        x4 = a(i,1,2)%re+a(i,1,6)%re
+        y4 = a(i,1,2)%im+a(i,1,6)%im
+        x5 = a(i,1,2)%re-a(i,1,6)%re
+        y5 = a(i,1,2)%im-a(i,1,6)%im
+        x6 = a(i,1,4)%re+a(i,1,8)%re
+        y6 = a(i,1,4)%im+a(i,1,8)%im
+        x7 = a(i,1,4)%re-a(i,1,8)%re
+        y7 = a(i,1,4)%im-a(i,1,8)%im
         u2 = x4+x6
         v2 = y4+y6
         u3 = y4-y6
         v3 = x6-x4
-        b(1,i,1,1) = u0+u2
-        b(2,i,1,1) = v0+v2
-        b(1,i,5,1) = u0-u2
-        b(2,i,5,1) = v0-v2
-        b(1,i,3,1) = u1+u3
-        b(2,i,3,1) = v1+v3
-        b(1,i,7,1) = u1-u3
-        b(2,i,7,1) = v1-v3
+        b(i,1,1)%re = u0+u2
+        b(i,1,1)%im = v0+v2
+        b(i,5,1)%re = u0-u2
+        b(i,5,1)%im = v0-v2
+        b(i,3,1)%re = u1+u3
+        b(i,3,1)%im = v1+v3
+        b(i,7,1)%re = u1-u3
+        b(i,7,1)%im = v1-v3
         u0 = x1+c81*(x5-x7)
         v0 = y1+c81*(y5-y7)
         u1 = x1-c81*(x5-x7)
@@ -1472,19 +1470,19 @@
         v2 = y3-c81*(x5+x7)
         u3 = x3-c81*(y5+y7)
         v3 = y3+c81*(x5+x7)
-        b(1,i,2,1) = u0+u2
-        b(2,i,2,1) = v0+v2
-        b(1,i,6,1) = u1+u3
-        b(2,i,6,1) = v1+v3
-        b(1,i,4,1) = u1-u3
-        b(2,i,4,1) = v1-v3
-        b(1,i,8,1) = u0-u2
-        b(2,i,8,1) = v0-v2
+        b(i,2,1)%re = u0+u2
+        b(i,2,1)%im = v0+v2
+        b(i,6,1)%re = u1+u3
+        b(i,6,1)%im = v1+v3
+        b(i,4,1)%re = u1-u3
+        b(i,4,1)%im = v1-v3
+        b(i,8,1)%re = u0-u2
+        b(i,8,1)%im = v0-v2
       end do
 
       do j = 2,l
-        wr1 = w(1,j)
-        wi1 = w(2,j)
+        wr1 = w(j)%re
+        wi1 = w(j)%im
         wr2 = wr1*wr1-wi1*wi1
         wi2 = wr1*wi1+wr1*wi1
         wr3 = wr1*wr2-wi1*wi2
@@ -1498,38 +1496,38 @@
         wr7 = wr3*wr4-wi3*wi4
         wi7 = wr3*wi4+wi3*wr4
         do i = 1,m
-          x0 = a(1,i,j,1)+a(1,i,j,5)
-          y0 = a(2,i,j,1)+a(2,i,j,5)
-          x1 = a(1,i,j,1)-a(1,i,j,5)
-          y1 = a(2,i,j,1)-a(2,i,j,5)
-          x2 = a(1,i,j,3)+a(1,i,j,7)
-          y2 = a(2,i,j,3)+a(2,i,j,7)
-          x3 = a(2,i,j,3)-a(2,i,j,7)
-          y3 = a(1,i,j,7)-a(1,i,j,3)
+          x0 = a(i,j,1)%re+a(i,j,5)%re
+          y0 = a(i,j,1)%im+a(i,j,5)%im
+          x1 = a(i,j,1)%re-a(i,j,5)%re
+          y1 = a(i,j,1)%im-a(i,j,5)%im
+          x2 = a(i,j,3)%re+a(i,j,7)%re
+          y2 = a(i,j,3)%im+a(i,j,7)%im
+          x3 = a(i,j,3)%im-a(i,j,7)%im
+          y3 = a(i,j,7)%re-a(i,j,3)%re
           u0 = x0+x2
           v0 = y0+y2
           u1 = x0-x2
           v1 = y0-y2
-          x4 = a(1,i,j,2)+a(1,i,j,6)
-          y4 = a(2,i,j,2)+a(2,i,j,6)
-          x5 = a(1,i,j,2)-a(1,i,j,6)
-          y5 = a(2,i,j,2)-a(2,i,j,6)
-          x6 = a(1,i,j,4)+a(1,i,j,8)
-          y6 = a(2,i,j,4)+a(2,i,j,8)
-          x7 = a(1,i,j,4)-a(1,i,j,8)
-          y7 = a(2,i,j,4)-a(2,i,j,8)
+          x4 = a(i,j,2)%re+a(i,j,6)%re
+          y4 = a(i,j,2)%im+a(i,j,6)%im
+          x5 = a(i,j,2)%re-a(i,j,6)%re
+          y5 = a(i,j,2)%im-a(i,j,6)%im
+          x6 = a(i,j,4)%re+a(i,j,8)%re
+          y6 = a(i,j,4)%im+a(i,j,8)%im
+          x7 = a(i,j,4)%re-a(i,j,8)%re
+          y7 = a(i,j,4)%im-a(i,j,8)%im
           u2 = x4+x6
           v2 = y4+y6
           u3 = y4-y6
           v3 = x6-x4
-          b(1,i,1,j) = u0+u2
-          b(2,i,1,j) = v0+v2
-          b(1,i,5,j) = wr4*(u0-u2)-wi4*(v0-v2)
-          b(2,i,5,j) = wr4*(v0-v2)+wi4*(u0-u2)
-          b(1,i,3,j) = wr2*(u1+u3)-wi2*(v1+v3)
-          b(2,i,3,j) = wr2*(v1+v3)+wi2*(u1+u3)
-          b(1,i,7,j) = wr6*(u1-u3)-wi6*(v1-v3)
-          b(2,i,7,j) = wr6*(v1-v3)+wi6*(u1-u3)
+          b(i,1,j)%re = u0+u2
+          b(i,1,j)%im = v0+v2
+          b(i,5,j)%re = wr4*(u0-u2)-wi4*(v0-v2)
+          b(i,5,j)%im = wr4*(v0-v2)+wi4*(u0-u2)
+          b(i,3,j)%re = wr2*(u1+u3)-wi2*(v1+v3)
+          b(i,3,j)%im = wr2*(v1+v3)+wi2*(u1+u3)
+          b(i,7,j)%re = wr6*(u1-u3)-wi6*(v1-v3)
+          b(i,7,j)%im = wr6*(v1-v3)+wi6*(u1-u3)
           u0 = x1+c81*(x5-x7)
           v0 = y1+c81*(y5-y7)
           u1 = x1-c81*(x5-x7)
@@ -1538,14 +1536,14 @@
           v2 = y3-c81*(x5+x7)
           u3 = x3-c81*(y5+y7)
           v3 = y3+c81*(x5+x7)
-          b(1,i,2,j) = wr1*(u0+u2)-wi1*(v0+v2)
-          b(2,i,2,j) = wr1*(v0+v2)+wi1*(u0+u2)
-          b(1,i,6,j) = wr5*(u1+u3)-wi5*(v1+v3)
-          b(2,i,6,j) = wr5*(v1+v3)+wi5*(u1+u3)
-          b(1,i,4,j) = wr3*(u1-u3)-wi3*(v1-v3)
-          b(2,i,4,j) = wr3*(v1-v3)+wi3*(u1-u3)
-          b(1,i,8,j) = wr7*(u0-u2)-wi7*(v0-v2)
-          b(2,i,8,j) = wr7*(v0-v2)+wi7*(u0-u2)
+          b(i,2,j)%re = wr1*(u0+u2)-wi1*(v0+v2)
+          b(i,2,j)%im = wr1*(v0+v2)+wi1*(u0+u2)
+          b(i,6,j)%re = wr5*(u1+u3)-wi5*(v1+v3)
+          b(i,6,j)%im = wr5*(v1+v3)+wi5*(u1+u3)
+          b(i,4,j)%re = wr3*(u1-u3)-wi3*(v1-v3)
+          b(i,4,j)%im = wr3*(v1-v3)+wi3*(u1-u3)
+          b(i,8,j)%re = wr7*(u0-u2)-wi7*(v0-v2)
+          b(i,8,j)%im = wr7*(v0-v2)+wi7*(u0-u2)
         end do
       end do
 
