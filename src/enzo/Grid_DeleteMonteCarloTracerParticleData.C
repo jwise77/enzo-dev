@@ -14,6 +14,7 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle *&Node);
 
 int grid::DeleteMonteCarloTracerParticleData()
 {
+  printf("\n%s", "DeleteMonteCarloTracerParticleData...");
   /* Compute grid size. */
   int size = 1;
   int i, dim;
@@ -27,5 +28,8 @@ int grid::DeleteMonteCarloTracerParticleData()
   delete [] this->MonteCarloTracerParticles;
   for (dim = 0; dim < GridRank; dim++)    
     delete [] this->MassFlux[dim];
+
+  printf("\n%s", " Done.");
+
   return SUCCESS;
 }

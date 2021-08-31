@@ -24,6 +24,8 @@ int grid::CreateMonteCarloTracerParticles()
   FLOAT pos[3];
   MonteCarloTracerParticle *newMC;
 
+  printf("\n%s\n", "CreateMonteCarloTracerParticles...");
+
   this->AllocateMonteCarloTracerParticleData();
 
   // Loop over all cells
@@ -45,5 +47,8 @@ int grid::CreateMonteCarloTracerParticles()
       }
     }
   }
+  printf("\nTotalNumberOfMonteCarloTracerParticles %i\n", TotalNumberOfMonteCarloTracerParticles);
+  printf("%s\n", "CreateMonteCarloTracerParticles Done.");
+
   return SUCCESS;
 }

@@ -672,8 +672,13 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       UpdateParticlePositions(Grids[grid1]->GridData);
 
       /* Update Monte Carlo tracer particles (if present). */
+
+      printf("\n%s\n", "EvolveLevel: Calling AdvectMonteCarloTracerParticles.");
  
       Grids[grid1]->GridData->AdvectMonteCarloTracerParticles(LevelCycleCount[level]);
+
+      printf("\n%s\n", "EvolveLevel: After AdvectMonteCarloTracerParticles.");
+
 
     /*Trying after solving for radiative transfer */
 #ifdef EMISSIVITY

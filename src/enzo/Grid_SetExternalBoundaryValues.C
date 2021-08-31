@@ -148,6 +148,16 @@ int grid::SetExternalBoundaryValues(ExternalBoundary *Exterior)
       ENZO_FAIL("Error in Exterior->SetExternalBoundaryParticles.\n");
 
     }
+
+  /* Now we handle the Monte Carlo tracer particles (if any). */
+ 
+  if (MonteCarloTracerParticlesOn)
+    if (Exterior->SetExternalBoundaryMonteCarloTracerParticles(GridRank, 
+                  GridDimension, GridOffset,
+                  GridStartIndex, GridEndIndex,
+                  MonteCarloTracerParticles) == FAIL) {
+      ENZO_FAIL("Error in Exterior->SetExternalBoundaryMonteCarloTracerParticles.\n");
+    }   
  
   return SUCCESS;
  

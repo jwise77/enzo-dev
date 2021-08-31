@@ -47,7 +47,7 @@ int READ_BV(float         *bv_buffer, int field, int dim, int face, int slabsize
 //   field type in the list of boundary's and apply that boundary value/type.
 //   Returns: 0 on failure
 
-int ExternalBoundary::SetExternalBoundary(int FieldRank, int GridDims[],
+int ExternalBoundary::SetExternalBoundary(int GridRank, int GridDims[],
 					  int GridOffset[],
 					  int StartIndex[], int EndIndex[],
 					  float *Field, int FieldType)

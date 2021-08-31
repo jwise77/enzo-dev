@@ -101,6 +101,15 @@ class ExternalBoundary
 //
   int SetExternalBoundaryParticles(int FieldRank, int NumberOfParticles,
                                    FLOAT *Position[], float *Velocity[]);
+
+//
+// This routine handle the boundary conditions for Monte Carlo Tracer particles.  
+//  The conditions are assumed to be the same as the mass field.
+//
+int SetExternalBoundaryMonteCarloTracerParticles(int FieldRank, int GridDims[], 
+                  int GridOffset[], int StartIndex[], int EndIndex[],
+                  MonteCarloTracerParticle **&MonteCarloTracerParticles);
+
 //
 // Finds and returns the indexes to commonly used physical quantities.
 //
