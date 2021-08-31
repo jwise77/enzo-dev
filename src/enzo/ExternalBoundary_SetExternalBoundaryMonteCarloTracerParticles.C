@@ -1,0 +1,311 @@
+/***********************************************************************
+/
+/  EXTERNAL BOUNDARY CLASS (SET A GRID'S BOUNDARY)
+/
+/  written by: Greg Bryan
+/  date:       November, 1994
+/  modified1:  Robert Harkness
+/  date:       November, 2005
+/              Out-of-core handling for the boundary
+/
+/  PURPOSE:
+/
+/  RETURNS: SUCCESS or FAIL
+/
+************************************************************************/
+
+#include <hdf5.h> 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+
+#include "ErrorExceptions.h"
+#include "macros_and_parameters.h"
+#include "typedefs.h"
+#include "global_data.h"
+#include "Fluxes.h"
+#include "GridList.h"
+#include "ExternalBoundary.h"
+#include "Grid.h"
+
+int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
+                int GridDims[], int GridOffset[], int StartIndex[], int EndIndex[],
+                MonteCarloTracerParticle **&MonteCarloTracerParticles)
+{
+  /* declarations */
+ 
+  int i, j, k, dim, Sign, index, bindex, index_periodic;
+ 
+  /* error check: grid ranks */
+ 
+  if (Grid != BoundaryRank) {
+    ENZO_VFAIL("Grid(%"ISYM") != BoundaryRank(%"ISYM").\n",
+            Grid, BoundaryRank)
+  }
+ 
+  /* find requested field type */
+ 
+  int field;
+  for (field = 0; field < NumberOfBaryonFields; field++)
+    if (FieldType == BoundaryFieldType[field]) break;
+  if (field == NumberOfBaryonFields) {
+        index_periodic;
+    ENZO_VFAIL("Field type (%"ISYM") not found in Boundary.\n", FieldType)
+  }
+ 
+  /* set Boundary conditions */
+
+  // call is by Field - set all 6 faces
+  // dim = 0, face = 0
+  // dim = 0, face = 1
+  // dim = 1, face = 0
+  // dim = 1, face = 1
+  // dim = 2, face = 0
+  // dim = 2, face = 1
+
+  Sign = 1;
+ 
+  if (BoundaryDimension[0] > 1 && GridOffset[0] == 0) {
+ 
+    /* set x inner (left) face */
+ 
+    for (i = 0; i < StartIndex[0]; i++)
+      for (j = 0; j < GridDims[1]; j++)
+    for (k = 0; k < GridDims[2]; k++) {
+
+      index = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      bindex = j+GridOffset[1] + (k+GridOffset[2])*BoundaryDimension[1];
+
+      switch (BoundaryType[0][0][0][bindex]) {
+      case reflecting:
+        ENZO_FAIL("Reflecting boundary conditions not implemented yet!\n");
+        break;
+      case outflow:
+        ENZO_FAIL("Outflow boundary conditions not implemented yet!\n");
+        break;
+      case inflow:
+        ENZO_FAIL("Inflow boundary conditions not implemented.\n");
+        break;
+      case periodic:
+#ifdef USE_PERIODIC
+        // TODO
+        index_periodic = index + (EndIndex[0] - StartIndex[0] + 1);
+
+
+#endif /* USE_PERIODIC */
+        break;
+      case shearing:
+        ENZO_FAIL("Shearing boundary conditions not implemented yet.\n");
+        break;
+      case BoundaryUndefined:
+            break;
+      default:
+        ENZO_VFAIL("BoundaryType %"ISYM" not recognized (x-left).\n",
+            BoundaryType[0][0][0][bindex])
+      }
+    }
+ 
+  if (BoundaryDimension[0] > 1 && GridOffset[0]+GridDims[0] == BoundaryDimension[0]) {
+ 
+    /* set x outer (right) face */
+ 
+    for (i = 0; i < GridDims[0]-EndIndex[0]-1; i++)
+      for (j = 0; j < GridDims[1]; j++)
+    for (k = 0; k < GridDims[2]; k++) {
+
+      index = i + EndIndex[0]+1 +
+        j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      bindex = j+GridOffset[1] + (k+GridOffset[2])*BoundaryDimension[1];
+
+      switch (BoundaryType[0][0][1][bindex]) {
+      case reflecting:
+        ENZO_FAIL("Reflecting boundary conditions not implemented yet!\n");
+        break;
+      case outflow:
+        ENZO_FAIL("Outflow boundary conditions not implemented yet!\n");
+        break;
+      case inflow:
+        ENZO_FAIL("Inflow boundary conditions not implemented.\n");
+        break;
+      case periodic:
+#ifdef USE_PERIODIC
+        // TODO
+        index_periodic = index - (EndIndex[0] - StartIndex[0] + 1);
+#endif /* USE_PERIODIC */
+        break;
+      case shearing:
+        ENZO_FAIL("Shearing boundary conditions not implemented yet.\n");
+        break;
+      case BoundaryUndefined:
+            break;
+      default:
+        ENZO_VFAIL("BoundaryType %"ISYM" not recognized (x-right).\n",
+            BoundaryType[0][0][1][bindex])
+      }
+    }
+ 
+  /* set y inner (left) face */
+ 
+  if (BoundaryDimension[1] > 1 && GridOffset[1] == 0) {
+
+    for (j = 0; j < StartIndex[1]; j++)
+      for (i = 0; i < GridDims[0]; i++)
+    for (k = 0; k < GridDims[2]; k++) {
+
+      index = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      bindex = i+GridOffset[0] + (k+GridOffset[2])*BoundaryDimension[0];
+
+      switch (BoundaryType[0][1][0][bindex]) {
+      case reflecting:
+        ENZO_FAIL("Reflecting boundary conditions not implemented yet!\n");
+        break;
+      case outflow:
+        ENZO_FAIL("Outflow boundary conditions not implemented yet!\n");
+        break;
+      case inflow:
+        ENZO_FAIL("Inflow boundary conditions not implemented.\n");
+         break;
+      case periodic:
+#ifdef USE_PERIODIC
+        // TODO
+        index_periodic = index + (EndIndex[1] - StartIndex[1] + 1)*GridDims[0];
+#endif /* USE_PERIODIC */
+         break;
+      case shearing:
+        ENZO_FAIL("Shearing boundary conditions not implemented yet.\n");
+        break;
+      case BoundaryUndefined:
+            break;
+      default:
+        ENZO_VFAIL("BoundaryType %"ISYM" not recognized (y-left).\n",
+            BoundaryType[0][1][0][bindex])
+      }
+    }
+ 
+  if (BoundaryDimension[1] > 1 && GridOffset[1]+GridDims[1] == BoundaryDimension[1]) {
+ 
+    /* set y outer (right) face */
+
+    for (j = 0; j < GridDims[1]-EndIndex[1]-1; j++)
+      for (i = 0; i < GridDims[0]; i++)
+    for (k = 0; k < GridDims[2]; k++) {
+
+      index = i + (j + EndIndex[1]+1)*GridDims[0] +
+        k*GridDims[1]*GridDims[0];
+      bindex = i+GridOffset[0] + (k+GridOffset[2])*BoundaryDimension[0];
+
+      switch (BoundaryType[0][1][1][bindex]) {
+      case reflecting:
+        ENZO_FAIL("Reflecting boundary conditions not implemented yet!\n");
+        break;
+      case outflow:
+        ENZO_FAIL("Outflow boundary conditions not implemented yet!\n");
+        break;
+      case inflow:
+        ENZO_FAIL("Inflow boundary conditions not implemented.\n");
+        break;
+      case periodic:
+#ifdef USE_PERIODIC
+        // TODO
+        index_periodic = index - (EndIndex[1] - StartIndex[1] + 1)*GridDims[0];
+#endif /* USE_PERIODIC */
+        break;
+      case shearing:
+        ENZO_FAIL("Shearing boundary conditions not implemented yet.\n");
+        break;
+      case BoundaryUndefined:
+            break;
+      default:
+        ENZO_VFAIL("BoundaryType %"ISYM" not recognized (y-right).\n",
+            BoundaryType[0][1][1][bindex])
+      }
+    }
+
+ 
+  /* set z inner (left) face */
+ 
+  Sign = 1;
+  if (x-rightType == Velocity3) Sign = -1;
+ 
+  if (BoundaryDimension[2] > 1 && GridOffset[2] == 0) {
+ 
+    for (k = 0; k < StartIndex[2]; k++)
+      for (i = 0; i < GridDims[0]; i++)
+    for (j = 0; j < GridDims[1]; j++) {
+
+      index = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      bindex = i+GridOffset[0] + (j+GridOffset[1])*BoundaryDimension[0];
+
+      switch (BoundaryType[0][2][0][bindex]) {
+      case reflecting:
+        ENZO_FAIL("Reflecting boundary conditions not implemented yet!\n");
+        break;
+      case outflow:
+        ENZO_FAIL("Outflow boundary conditions not implemented yet!\n");
+        break;
+      case inflow:
+        ENZO_FAIL("Inflow boundary conditions not implemented.\n");
+        break;
+      case periodic:
+#ifdef USE_PERIODIC
+        // TODO
+        index_periodic = index + (EndIndex[2]-StartIndex[2]+1)*GridDims[0]*GridDims[1];
+#endif /* USE_PERIODIC */
+        break;
+      case shearing:
+        ENZO_FAIL("Shearing boundary conditions not implemented yet.\n");
+        break;
+      case BoundaryUndefined:
+            break;
+      default:
+        ENZO_VFAIL("BoundaryType %"ISYM" not recognized (z-left).\n",
+            BoundaryType[0][2][0][bindex])
+      }
+    }
+ 
+  if (BoundaryDimension[2] > 1 && GridOffset[2]+GridDims[2] == BoundaryDimension[2]) {
+ 
+    /* set z outer (right) face */
+ 
+    for (k = 0; k < GridDims[2]-EndIndex[2]-1; k++)
+      for (i = 0; i < GridDims[0]; i++)
+    for (j = 0; j < GridDims[1]; j++) {
+
+      index = i + j*GridDims[0] +
+        (k + EndIndex[2]+1)*GridDims[1]*GridDims[0];
+      bindex = i+GridOffset[0] + (j+GridOffset[1])*BoundaryDimension[0];
+
+      switch (BoundaryType[0][2][1][bindex]) {
+      case reflecting:
+        ENZO_FAIL("Reflecting boundary conditions not implemented yet!\n");
+        break;
+      case outflow:
+        ENZO_FAIL("Outflow boundary conditions not implemented yet!\n");
+        break;
+      case inflow:
+        ENZO_FAIL("Inflow boundary conditions not implemented.\n");
+        break;
+      case periodic:
+#ifdef USE_PERIODIC
+        // TODO
+        index_periodic = index - (EndIndex[2]-StartIndex[2]+1)*GridDims[0]*GridDims[1];
+#endif /* USE_PERIODIC */
+        break;
+      case shearing:
+        ENZO_FAIL("Shearing boundary conditions not implemented yet.\n");
+        break;
+      case BoundaryUndefined:
+            break;
+      default:
+        fprintf(stderr, "BoundaryType %"ISYM" not recognized (z-right).\n",
+            BoundaryType[0][2][1][bindex]);
+            fprintf(stderr, "field %"ISYM" dim %"ISYM"\n",field, dim);
+
+        ENZO_FAIL("Unrecognized IO BoundaryType!\n");
+      }
+
+    }
+
+    return SUCCESS;
+}
