@@ -41,7 +41,8 @@ class ExternalBoundary
   float *BoundaryValue[MAX_NUMBER_OF_BARYON_FIELDS][MAX_DIMENSION][2];  
 					  // boundary values for inflow (3)
 
-  friend class grid;						    
+  friend class grid;
+  friend class MonteCarloTracerParticle;						    
 
  public:
 //
