@@ -17,6 +17,9 @@
 /
 ************************************************************************/
 
+#ifndef MONTE_CARLO_TRACER_PARTICLE_DEFINED__
+#define MONTE_CARLO_TRACER_PARTICLE_DEFINED__
+
 #include "typedefs.h"
 #include "Grid.h"
 #include "Hierarchy.h"
@@ -72,3 +75,4 @@ class MonteCarloTracerParticle
   
 };
 
+#endif
