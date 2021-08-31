@@ -13,7 +13,7 @@
 /  have lagrangian phase space coordinates. They can be thought of as a
 /  property of the grid cell. 
 /
-/  Monte Carlo Tracers in each cell are stored as a singly-linked list.
+/  Monte Carlo Tracers in each cell are stored as a linked list.
 /
 ************************************************************************/
 
