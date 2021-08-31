@@ -29,29 +29,21 @@
 #include "ExternalBoundary.h"
 #include "Grid.h"
 
+int Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB);
+
 int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
                 int GridDims[], int GridOffset[], int StartIndex[], int EndIndex[],
                 MonteCarloTracerParticle **&MonteCarloTracerParticles)
 {
   /* declarations */
  
-  int i, j, k, dim, Sign, index, bindex, index_periodic;
+  int i, j, k, dim, index, bindex, index_periodic_active;
  
   /* error check: grid ranks */
  
   if (Grid != BoundaryRank) {
     ENZO_VFAIL("Grid(%"ISYM") != BoundaryRank(%"ISYM").\n",
             Grid, BoundaryRank)
-  }
- 
-  /* find requested field type */
- 
-  int field;
-  for (field = 0; field < NumberOfBaryonFields; field++)
-    if (FieldType == BoundaryFieldType[field]) break;
-  if (field == NumberOfBaryonFields) {
-        index_periodic;
-    ENZO_VFAIL("Field type (%"ISYM") not found in Boundary.\n", FieldType)
   }
  
   /* set Boundary conditions */
@@ -63,18 +55,16 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
   // dim = 1, face = 1
   // dim = 2, face = 0
   // dim = 2, face = 1
-
-  Sign = 1;
  
   if (BoundaryDimension[0] > 1 && GridOffset[0] == 0) {
  
     /* set x inner (left) face */
  
-    for (i = 0; i < StartIndex[0]; i++)
-      for (j = 0; j < GridDims[1]; j++)
+    i = 0;
+    for (j = 0; j < GridDims[1]; j++)
     for (k = 0; k < GridDims[2]; k++) {
 
-      index = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
       bindex = j+GridOffset[1] + (k+GridOffset[2])*BoundaryDimension[1];
 
       switch (BoundaryType[0][0][0][bindex]) {
@@ -90,8 +80,8 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
       case periodic:
 #ifdef USE_PERIODIC
         // TODO
-        index_periodic = index + (EndIndex[0] - StartIndex[0] + 1);
-
+        index_periodic_active = index_ghost + (EndIndex[0] - StartIndex[0] + 1);
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
 
 #endif /* USE_PERIODIC */
         break;
@@ -109,13 +99,11 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
   if (BoundaryDimension[0] > 1 && GridOffset[0]+GridDims[0] == BoundaryDimension[0]) {
  
     /* set x outer (right) face */
- 
-    for (i = 0; i < GridDims[0]-EndIndex[0]-1; i++)
-      for (j = 0; j < GridDims[1]; j++)
+    i = EndIndex[0]+1;
+    for (j = 0; j < GridDims[1]; j++)
     for (k = 0; k < GridDims[2]; k++) {
 
-      index = i + EndIndex[0]+1 +
-        j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
       bindex = j+GridOffset[1] + (k+GridOffset[2])*BoundaryDimension[1];
 
       switch (BoundaryType[0][0][1][bindex]) {
@@ -131,7 +119,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
       case periodic:
 #ifdef USE_PERIODIC
         // TODO
-        index_periodic = index - (EndIndex[0] - StartIndex[0] + 1);
+        index_periodic_active = index_ghost - (EndIndex[0] - StartIndex[0] + 1);
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+
 #endif /* USE_PERIODIC */
         break;
       case shearing:
@@ -149,11 +139,11 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
  
   if (BoundaryDimension[1] > 1 && GridOffset[1] == 0) {
 
-    for (j = 0; j < StartIndex[1]; j++)
-      for (i = 0; i < GridDims[0]; i++)
+    j = 0;
+    for (i = 0; i < GridDims[0]; i++)
     for (k = 0; k < GridDims[2]; k++) {
 
-      index = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
       bindex = i+GridOffset[0] + (k+GridOffset[2])*BoundaryDimension[0];
 
       switch (BoundaryType[0][1][0][bindex]) {
@@ -169,7 +159,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
       case periodic:
 #ifdef USE_PERIODIC
         // TODO
-        index_periodic = index + (EndIndex[1] - StartIndex[1] + 1)*GridDims[0];
+        index_periodic_active = index_ghost + (EndIndex[1] - StartIndex[1] + 1)*GridDims[0];
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+
 #endif /* USE_PERIODIC */
          break;
       case shearing:
@@ -187,12 +179,12 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
  
     /* set y outer (right) face */
 
+    j = EndIndex[1]+1;
     for (j = 0; j < GridDims[1]-EndIndex[1]-1; j++)
       for (i = 0; i < GridDims[0]; i++)
     for (k = 0; k < GridDims[2]; k++) {
 
-      index = i + (j + EndIndex[1]+1)*GridDims[0] +
-        k*GridDims[1]*GridDims[0];
+      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
       bindex = i+GridOffset[0] + (k+GridOffset[2])*BoundaryDimension[0];
 
       switch (BoundaryType[0][1][1][bindex]) {
@@ -208,7 +200,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
       case periodic:
 #ifdef USE_PERIODIC
         // TODO
-        index_periodic = index - (EndIndex[1] - StartIndex[1] + 1)*GridDims[0];
+        index_periodic_active = index_ghost - (EndIndex[1] - StartIndex[1] + 1)*GridDims[0];
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+
 #endif /* USE_PERIODIC */
         break;
       case shearing:
@@ -225,16 +219,13 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
  
   /* set z inner (left) face */
  
-  Sign = 1;
-  if (x-rightType == Velocity3) Sign = -1;
- 
   if (BoundaryDimension[2] > 1 && GridOffset[2] == 0) {
  
-    for (k = 0; k < StartIndex[2]; k++)
-      for (i = 0; i < GridDims[0]; i++)
+    k = 0;
+    for (i = 0; i < GridDims[0]; i++)
     for (j = 0; j < GridDims[1]; j++) {
 
-      index = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
       bindex = i+GridOffset[0] + (j+GridOffset[1])*BoundaryDimension[0];
 
       switch (BoundaryType[0][2][0][bindex]) {
@@ -250,7 +241,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
       case periodic:
 #ifdef USE_PERIODIC
         // TODO
-        index_periodic = index + (EndIndex[2]-StartIndex[2]+1)*GridDims[0]*GridDims[1];
+        index_periodic_active = index_ghost + (EndIndex[2]-StartIndex[2]+1)*GridDims[0]*GridDims[1];
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+
 #endif /* USE_PERIODIC */
         break;
       case shearing:
@@ -267,13 +260,11 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
   if (BoundaryDimension[2] > 1 && GridOffset[2]+GridDims[2] == BoundaryDimension[2]) {
  
     /* set z outer (right) face */
- 
-    for (k = 0; k < GridDims[2]-EndIndex[2]-1; k++)
-      for (i = 0; i < GridDims[0]; i++)
+    k = EndIndex[2]+1;
+    for (i = 0; i < GridDims[0]; i++)
     for (j = 0; j < GridDims[1]; j++) {
 
-      index = i + j*GridDims[0] +
-        (k + EndIndex[2]+1)*GridDims[1]*GridDims[0];
+      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
       bindex = i+GridOffset[0] + (j+GridOffset[1])*BoundaryDimension[0];
 
       switch (BoundaryType[0][2][1][bindex]) {
@@ -289,7 +280,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
       case periodic:
 #ifdef USE_PERIODIC
         // TODO
-        index_periodic = index - (EndIndex[2]-StartIndex[2]+1)*GridDims[0]*GridDims[1];
+        index_periodic_active = index_ghost - (EndIndex[2]-StartIndex[2]+1)*GridDims[0]*GridDims[1];
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+
 #endif /* USE_PERIODIC */
         break;
       case shearing:

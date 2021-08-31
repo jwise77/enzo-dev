@@ -93,3 +93,43 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node)
 //   }
 //   return result;
 // }
+
+
+int Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB)
+{
+  printf("\n%s", "Transfer_MonteCarloTracerParticles_From_CellA_to_CellB...");
+
+  // No particles to exchange
+  if (headA == NULL)
+      return 0;
+
+  // Ensure headA and headB are actually heads 
+
+  if (headA->PrevParticle != NULL || headB->PrevParticle != NULL) {
+    printf("%s\n", "headA and headB must MCTracer linked list heads");
+    return -1;
+  }
+  
+  // Pointers for tracking the position in the particle list
+  MonteCarloTracerParticle *next = NULL;
+  MonteCarloTracerParticle *transfer = NULL;
+  MonteCarloTracerParticle *current = headA;
+  
+  while (current != NULL)
+  {
+    next = current->NextParticle;
+
+    // Exchange particle from cellA to cellB  
+
+    // Reassign this cell's head (headA) before transfering the particle to cellB
+    //  if the current particle is at the head of this cell
+    if (current->PrevParticle == NULL)
+      headA = current->NextParticle;
+
+    transfer = PopMonteCarloTracerParticle(current);
+    InsertMonteCarloTracerParticleAfter(headB, transfer);
+
+    current = next;  
+  }
+  return SUCCESS;
+}

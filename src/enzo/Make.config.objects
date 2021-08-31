@@ -196,6 +196,7 @@ OBJS_CONFIG_LIB = \
         ExternalBoundary_ReadExternalBoundary.o \
         ExternalBoundary_SetDoubleMachBoundary.o \
         ExternalBoundary_SetExternalBoundaryIO.o \
+		ExternalBoundary_SetExternalBoundaryMonteCarloTracerParticles.o \
         ExternalBoundary_SetExternalBoundaryParticles.o \
         ExternalBoundary_SetShockPoolBoundary.o \
         ExternalBoundary_SetGalaxySimulationBoundary.o \
