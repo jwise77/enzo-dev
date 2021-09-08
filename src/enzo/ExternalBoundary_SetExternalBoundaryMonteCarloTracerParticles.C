@@ -31,19 +31,19 @@
 
 int Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB);
 
-int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
+int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
                 int GridDims[], int GridOffset[], int StartIndex[], int EndIndex[],
-                MonteCarloTracerParticle **&MonteCarloTracerParticles)
+                grid *GridData)
 {
   /* declarations */
  
-  int i, j, k, dim, index, bindex, index_periodic_active;
+  int i, j, k, dim, index_ghost, bindex, index_periodic_active;
  
   /* error check: grid ranks */
  
-  if (Grid != BoundaryRank) {
-    ENZO_VFAIL("Grid(%"ISYM") != BoundaryRank(%"ISYM").\n",
-            Grid, BoundaryRank)
+  if (GridRank != BoundaryRank) {
+    ENZO_VFAIL("GridRank(%"ISYM") != BoundaryRank(%"ISYM").\n",
+            GridRank, BoundaryRank)
   }
  
   /* set Boundary conditions */
@@ -81,7 +81,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
 #ifdef USE_PERIODIC
         // TODO
         index_periodic_active = index_ghost + (EndIndex[0] - StartIndex[0] + 1);
-        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(
+          GridData->MonteCarloTracerParticles[index_ghost], 
+          GridData->MonteCarloTracerParticles[index_periodic_active]);
 
 #endif /* USE_PERIODIC */
         break;
@@ -95,6 +97,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
             BoundaryType[0][0][0][bindex])
       }
     }
+  }
  
   if (BoundaryDimension[0] > 1 && GridOffset[0]+GridDims[0] == BoundaryDimension[0]) {
  
@@ -120,7 +123,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
 #ifdef USE_PERIODIC
         // TODO
         index_periodic_active = index_ghost - (EndIndex[0] - StartIndex[0] + 1);
-        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(
+          GridData->MonteCarloTracerParticles[index_ghost], 
+          GridData->MonteCarloTracerParticles[index_periodic_active]);
 
 #endif /* USE_PERIODIC */
         break;
@@ -134,7 +139,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
             BoundaryType[0][0][1][bindex])
       }
     }
- 
+  }
   /* set y inner (left) face */
  
   if (BoundaryDimension[1] > 1 && GridOffset[1] == 0) {
@@ -160,7 +165,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
 #ifdef USE_PERIODIC
         // TODO
         index_periodic_active = index_ghost + (EndIndex[1] - StartIndex[1] + 1)*GridDims[0];
-        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(
+          GridData->MonteCarloTracerParticles[index_ghost], 
+          GridData->MonteCarloTracerParticles[index_periodic_active]);
 
 #endif /* USE_PERIODIC */
          break;
@@ -174,6 +181,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
             BoundaryType[0][1][0][bindex])
       }
     }
+  }
  
   if (BoundaryDimension[1] > 1 && GridOffset[1]+GridDims[1] == BoundaryDimension[1]) {
  
@@ -201,7 +209,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
 #ifdef USE_PERIODIC
         // TODO
         index_periodic_active = index_ghost - (EndIndex[1] - StartIndex[1] + 1)*GridDims[0];
-        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(
+          GridData->MonteCarloTracerParticles[index_ghost], 
+          GridData->MonteCarloTracerParticles[index_periodic_active]);
 
 #endif /* USE_PERIODIC */
         break;
@@ -215,7 +225,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
             BoundaryType[0][1][1][bindex])
       }
     }
-
+  }
  
   /* set z inner (left) face */
  
@@ -242,7 +252,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
 #ifdef USE_PERIODIC
         // TODO
         index_periodic_active = index_ghost + (EndIndex[2]-StartIndex[2]+1)*GridDims[0]*GridDims[1];
-        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(
+          GridData->MonteCarloTracerParticles[index_ghost], 
+          GridData->MonteCarloTracerParticles[index_periodic_active]);
 
 #endif /* USE_PERIODIC */
         break;
@@ -256,6 +268,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
             BoundaryType[0][2][0][bindex])
       }
     }
+  }
  
   if (BoundaryDimension[2] > 1 && GridOffset[2]+GridDims[2] == BoundaryDimension[2]) {
  
@@ -281,7 +294,9 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
 #ifdef USE_PERIODIC
         // TODO
         index_periodic_active = index_ghost - (EndIndex[2]-StartIndex[2]+1)*GridDims[0]*GridDims[1];
-        Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticles[index_ghost], MonteCarloTracerParticles[index_periodic_active]);
+        Move_MonteCarloTracerParticles_From_CellA_to_CellB(
+          GridData->MonteCarloTracerParticles[index_ghost], 
+          GridData->MonteCarloTracerParticles[index_periodic_active]);
 
 #endif /* USE_PERIODIC */
         break;
@@ -293,12 +308,10 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int Grid,
       default:
         fprintf(stderr, "BoundaryType %"ISYM" not recognized (z-right).\n",
             BoundaryType[0][2][1][bindex]);
-            fprintf(stderr, "field %"ISYM" dim %"ISYM"\n",field, dim);
-
         ENZO_FAIL("Unrecognized IO BoundaryType!\n");
       }
-
     }
+  }
 
-    return SUCCESS;
+  return SUCCESS;
 }

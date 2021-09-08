@@ -109,7 +109,7 @@ class ExternalBoundary
 //
 int SetExternalBoundaryMonteCarloTracerParticles(int FieldRank, int GridDims[], 
                   int GridOffset[], int StartIndex[], int EndIndex[],
-                  MonteCarloTracerParticle **&MonteCarloTracerParticles);
+                  grid *GridRank);  
 
 //
 // Finds and returns the indexes to commonly used physical quantities.

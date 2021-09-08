@@ -584,6 +584,7 @@ OBJS_CONFIG_LIB = \
         Grid_PreparePotentialField.o \
         Grid_PrepareRandomForcingNormalization.o \
         Grid_PressurelessCollapseInitialize.o \
+        Grid_PrintMonteCarloTracerParticlePythonDictionary.o \
         Grid_ProjectSolutionToParentGrid.o \
         Grid_ProjectToPlane.o \
         Grid_ProjectToPlane2.o \

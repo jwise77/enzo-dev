@@ -1754,6 +1754,7 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
   int DeleteMonteCarloTracerParticleData();
   int CreateMonteCarloTracerParticles();
   int AdvectMonteCarloTracerParticles(int CycleNumber);
+  void PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os);
   
 // -------------------------------------------------------------------------
 // Helper functions (should be made private)
