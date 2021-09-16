@@ -41,7 +41,7 @@ class MonteCarloTracerParticle
   // user defined attributes (e.g. max temperature, max velocity, etc.)
   float     *ParticleAttributes;
   FLOAT      InitialPosition[MAX_DIMENSION];
-  bool       EchangedThisTimestep;
+  bool       ExchangedThisTimestep;
   
   // history of particle position, including the time when the position was recorded. 
   #ifdef TRACK_MC_HISTORY
@@ -55,6 +55,7 @@ class MonteCarloTracerParticle
   #endif 
   
   friend class grid;
+  friend class ExternalBoundary;
   
  public:
 

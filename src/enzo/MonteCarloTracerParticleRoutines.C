@@ -51,7 +51,7 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(void)
   PrevParticle = NULL;
   UniqueID = GroupID = Level = ExchangeCount = 0;
   CreationTime = Mass = 0.0;
-  EchangedThisTimestep = false;
+  ExchangedThisTimestep = false;
 
   // user defined attributes (e.g. max temperature, group id)
   ParticleAttributes = new float[NumberOfParticleAttributes];
@@ -82,7 +82,7 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(grid *_grid, int _ID, int _gr
   ExchangeCount = 0;
   CreationTime = _creationTime;
   Mass = 0.0;
-  EchangedThisTimestep = false;
+  ExchangedThisTimestep = false;
 
   // user defined attributes (e.g. max temperature)
   ParticleAttributes = new float[NumberOfParticleAttributes];

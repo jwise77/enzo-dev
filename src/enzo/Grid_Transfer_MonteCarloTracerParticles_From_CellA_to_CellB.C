@@ -57,11 +57,12 @@ int grid::Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTrace
     // current particle may get cut out of cellA's particle list.
     next = current->NextParticle; // unneccesary b/c current is updated in PopMCT
 
-    random_unit_interval = (float) rand() / (float) RAND_MAX;
+    //random_unit_interval = (float) rand() / (float) RAND_MAX;
+    random_unit_interval = 0;
 
     // Probabalistically transfer particle from cellA to cellB if it 
     // was not transfered into cellA durring the current timestep.
-    if (random_unit_interval < probability && !current->EchangedThisTimestep)
+    if (random_unit_interval < probability && !current->ExchangedThisTimestep)
     {
       // a = current->PrevParticle ? current->PrevParticle->UniqueID : -1;
       // b = headB->PrevParticle ? headB->PrevParticle->UniqueID : -1;
@@ -83,26 +84,26 @@ int grid::Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTrace
       transfer = PopMonteCarloTracerParticle(current);
       InsertMonteCarloTracerParticleAfter(headB, transfer);
 
-      // if (headA){
-      //   a = headA->PrevParticle ? headA->PrevParticle->UniqueID : -1;
-      //   c = headA->NextParticle ? headA->NextParticle->UniqueID : -1;
-      // }
-      // else{
-      //   a = b = -2;
-      // }
-      // b = headB->PrevParticle ? headB->PrevParticle->UniqueID : -1;
-      // d = headB->NextParticle ? headB->NextParticle->UniqueID : -1;
-      // e = headA ? headA->UniqueID : -2;
-      // f = headB ? headB->UniqueID : -2;
+      if (headA){
+        a = headA->PrevParticle ? headA->PrevParticle->UniqueID : -1;
+        c = headA->NextParticle ? headA->NextParticle->UniqueID : -1;
+      }
+      else{
+        a = b = -2;
+      }
+      b = headB->PrevParticle ? headB->PrevParticle->UniqueID : -1;
+      d = headB->NextParticle ? headB->NextParticle->UniqueID : -1;
+      e = headA ? headA->UniqueID : -2;
+      f = headB ? headB->UniqueID : -2;
 
-      // printf("\nheadA_ID       = %i, headB_ID       = %i\n", e, f);
-      // printf("headA->Prev_ID = %i, headB->Prev_ID = %i\n", a, b);
-      // printf("headA->Next_ID = %i, headB->Next_ID = %i\n", c, d);
-      // printf("headA %p, current %p, transfer %p, headB %p", headA, current, transfer, headB);        
+      printf("\nheadA_ID       = %i, headB_ID       = %i\n", e, f);
+      printf("headA->Prev_ID = %i, headB->Prev_ID = %i\n", a, b);
+      printf("headA->Next_ID = %i, headB->Next_ID = %i\n", c, d);
+      printf("headA %p, current %p, transfer %p, headB %p", headA, current, transfer, headB);        
       
       // Update this particle's exchange count and set exchanged flag
       transfer->ExchangeCount++;
-      transfer->EchangedThisTimestep = true;
+      transfer->ExchangedThisTimestep = true;
       current = next;      
     }
     else // we skipped the current particle

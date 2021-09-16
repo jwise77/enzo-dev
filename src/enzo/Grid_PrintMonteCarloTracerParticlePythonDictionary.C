@@ -41,9 +41,9 @@ void grid::PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os)
       for (i = 0; i < GridDimension[0]; i++) {
         pos[0] = (i + 0.5) * CellWidth[0][0];
         counter = 0;
-        os << "\nMCTracers[" << index << "] = {}";
   
         index = i + GridDimension[0]*(j + GridDimension[1]*k);
+        os << "\nMCTracers[" << index << "] = {}";
         mc = MonteCarloTracerParticles[index];
         mc0 = MonteCarloTracerParticles[index];
   
@@ -52,16 +52,16 @@ void grid::PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os)
               os << "\nMCTracers[" << index << "] is NOT a MC Tracer HEAD";
   
         while (mc != NULL){
-          
-          os << "\nMCTracers[" << index << "]" << "[" << counter << "][initial_position] = (" << mc->InitialPosition[1] << ", " << mc->InitialPosition[2] << ", " << mc->InitialPosition[3] << ")"; 
-          os << "\nMCTracers[" << index << "]" << "[" << counter << "][position] = (" << pos[1] << ", " << pos[2] << ", " << pos[3] << ")"; 
-          os << "\nMCTracers[" << index << "]" << "[" << counter << "][UniqueID] = " << mc->UniqueID;
-          //os << "\nMCTracers[" << index << "]" << "[" << counter << "][GroupID] = " << mc->GroupID;
-          os << "\nMCTracers[" << index << "]" << "[" << counter << "][ExchangeCount] = " << mc->ExchangeCount;
+          os << "\nMCTracers[" << index << "]" << "[" << counter << "] = {}";  
+          os << "\nMCTracers[" << index << "]" << "[" << counter << "]['initial_position'] = (" << mc->InitialPosition[1] << ", " << mc->InitialPosition[2] << ", " << mc->InitialPosition[3] << ")"; 
+          os << "\nMCTracers[" << index << "]" << "[" << counter << "]['position'] = (" << pos[0] << ", " << pos[1] << ", " << pos[2] << ")"; 
+          os << "\nMCTracers[" << index << "]" << "[" << counter << "]['UniqueID'] = " << mc->UniqueID;
+          //os << "\nMCTracers[" << index << "]" << "[" << counter << "]['GroupID'] = " << mc->GroupID;
+          os << "\nMCTracers[" << index << "]" << "[" << counter << "]['ExchangeCount'] = " << mc->ExchangeCount;
           counter++;
           mc = mc->NextParticle;
         }
-        os << "\nMCTracers[" << index << "]" << "[" <<  "N"  << "] = " << counter << std::endl;
+        os << "\nMCTracers[" << index << "]" << "[" <<  "'N'"  << "] = " << counter << std::endl;
       }
     }
   }

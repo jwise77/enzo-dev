@@ -29,6 +29,8 @@
 #include "ExternalBoundary.h"
 #include "Grid.h"
 
+#define USE_PERIODIC
+
 int Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB);
 
 int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
@@ -84,7 +86,6 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
         Move_MonteCarloTracerParticles_From_CellA_to_CellB(
           GridData->MonteCarloTracerParticles[index_ghost], 
           GridData->MonteCarloTracerParticles[index_periodic_active]);
-
 #endif /* USE_PERIODIC */
         break;
       case shearing:
@@ -100,6 +101,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
   }
  
   if (BoundaryDimension[0] > 1 && GridOffset[0]+GridDims[0] == BoundaryDimension[0]) {
+    printf("\nEXT\n");
  
     /* set x outer (right) face */
     i = EndIndex[0]+1;
@@ -122,6 +124,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
       case periodic:
 #ifdef USE_PERIODIC
         // TODO
+        printf("\nPER\n");
         index_periodic_active = index_ghost - (EndIndex[0] - StartIndex[0] + 1);
         Move_MonteCarloTracerParticles_From_CellA_to_CellB(
           GridData->MonteCarloTracerParticles[index_ghost], 

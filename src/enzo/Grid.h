@@ -239,6 +239,9 @@ class grid
   friend class ActiveParticleType_SmartStar;
   friend class ActiveParticleType_SpringelHernquist;
   friend class MonteCarloTracerParticle;  
+  friend int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
+                int GridDims[], int GridOffset[], int StartIndex[], int EndIndex[],
+                grid *GridData);
 
 #ifdef NEW_PROBLEM_TYPES
   friend class EnzoProblemType;
@@ -1754,8 +1757,10 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
   int DeleteMonteCarloTracerParticleData();
   int CreateMonteCarloTracerParticles();
   int AdvectMonteCarloTracerParticles(int CycleNumber);
+  int CopyMonteCarloTracerParticlesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION]);
+  int ResetMonteCarloTracerParticlesExchangedThisTimestep();
   void PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os);
-  
+
 // -------------------------------------------------------------------------
 // Helper functions (should be made private)
 //

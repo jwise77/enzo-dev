@@ -605,6 +605,7 @@ OBJS_CONFIG_LIB = \
     	Grid_RemoveActiveParticle.o \
 	Grid_RemoveForcingFromBaryonFields.o \
 	Grid_RemoveParticle.o \
+    Grid_ResetMonteCarloTracerParticlesExchangedThisTimestep.o \
 	Grid_RestoreEnergyConsistency.o \
 	Grid_ReturnFluxDims.o \
 	Grid_ReturnGridInfo.o \
@@ -755,6 +756,7 @@ OBJS_CONFIG_LIB = \
         MonteCarloTracerParticleCreation.o \
         MonteCarloTracerParticleListRoutines.o \
         MonteCarloTracerParticleRoutines.o \
+        MonteCarloTracerParticleFinalize.o \
         Mpich_V1_Dims_create.o \
         multi_cool.o \
         MultigridSolver.o \

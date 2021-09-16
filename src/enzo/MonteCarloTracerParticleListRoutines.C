@@ -97,15 +97,18 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node)
 
 int Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB)
 {
-  printf("\n%s", "Transfer_MonteCarloTracerParticles_From_CellA_to_CellB...");
+  printf("\n%s", "Move_MonteCarloTracerParticles_From_CellA_to_CellB...");
 
   // No particles to exchange
   if (headA == NULL)
       return 0;
 
   // Ensure headA and headB are actually heads 
-
-  if (headA->PrevParticle != NULL || headB->PrevParticle != NULL) {
+  bool B_not_head = 0;
+  if (headB != NULL)
+    if (headB->PrevParticle != NULL)
+      B_not_head = 1;
+  if (headA->PrevParticle != NULL || B_not_head) {
     printf("%s\n", "headA and headB must MCTracer linked list heads");
     return -1;
   }

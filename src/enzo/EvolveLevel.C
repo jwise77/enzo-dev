@@ -78,6 +78,8 @@
 #include <unistd.h>
 #include <math.h>
 
+#include <fstream>
+
 #include "EnzoTiming.h"
 #include "performance.h"
 #include "ErrorExceptions.h"
@@ -221,6 +223,8 @@ int ActiveParticleInitialize(HierarchyEntry *Grids[], TopGridData *MetaData,
 int ActiveParticleFinalize(HierarchyEntry *Grids[], TopGridData *MetaData,
                int NumberOfGrids, LevelHierarchyEntry *LevelArray[],
                int level, int NumberOfNewActiveParticles[]);
+int MonteCarloTracerParticleFinalize(HierarchyEntry *Grids[], TopGridData *MetaData,
+               int NumberOfGrids, LevelHierarchyEntry *LevelArray[], int level);
 int StarParticleInitialize(HierarchyEntry *Grids[], TopGridData *MetaData,
 			   int NumberOfGrids, LevelHierarchyEntry *LevelArray[], 
 			   int ThisLevel, Star *&AllStars,
@@ -679,6 +683,11 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
       printf("\n%s\n", "EvolveLevel: After AdvectMonteCarloTracerParticles.");
 
+      std::string name="mctracer" + std::to_string(cycle) + ".py";
+      std::ofstream ofs(name);
+      Grids[grid1]->GridData->PrintMonteCarloTracerParticlePythonDictionary(ofs);
+      ofs.close();
+
 
     /*Trying after solving for radiative transfer */
 #ifdef EMISSIVITY
@@ -759,6 +768,10 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     /* Finalize (accretion, feedback, etc.) star particles */
     StarParticleFinalize(Grids, MetaData, NumberOfGrids, LevelArray,
 			 level, AllStars, TotalStarParticleCountPrevious, OutputNow);
+    /* Finalize Monte Carlo tracer particles (Reset ExchangedThisTimestep) */
+    if (MonteCarloTracerParticlesOn)
+      MonteCarloTracerParticleFinalize(Grids, MetaData, NumberOfGrids, LevelArray, level);    
+
 
     /* For each grid: a) interpolate boundaries from the parent grid.
                       b) copy any overlapping zones from siblings. */
