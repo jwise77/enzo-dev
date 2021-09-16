@@ -90,8 +90,6 @@ int grid::AdvectMonteCarloTracerParticles(int CycleNumber)
             //                        ^------^   ^--------^
             //                           ∆ML        ∆MR   
 
-            //if (i == 5 && j == 5 && k == 5)
-            //  printf("\nijk = (%i,%i,%i), DeltaML = %f, DeltaMR = %f", i,j,k, DeltaML, DeltaMR);
             printf("\nijk = (%i,%i,%i)", i,j,k);
 
             for (nLR = iLR; nLR < iLR+2; nLR++) {
@@ -99,7 +97,7 @@ int grid::AdvectMonteCarloTracerParticles(int CycleNumber)
                 /* Exchange particles for outgoing left mass fluxes (DeltaML < 0) */
                 if (DeltaML < 0) {
                   printf("\n DeltaML < 0");
-                  probability  =  DeltaML / ReducedMass[indexC];
+                  probability = -DeltaML / ReducedMass[indexC];
                   this->Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(
                     MonteCarloTracerParticles[indexC], 
                     MonteCarloTracerParticles[indexL],
@@ -112,7 +110,7 @@ int grid::AdvectMonteCarloTracerParticles(int CycleNumber)
                 /* Exchange particles for outgoing right mass fluxes (DeltaMR > 0) */
                 if (DeltaMR > 0) {
                   printf("\n DeltaMR > 0");
-        	        probability  =  DeltaMR / ReducedMass[indexC];
+        	        probability = DeltaMR / ReducedMass[indexC];
                   this->Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(
                     MonteCarloTracerParticles[indexC], 
                     MonteCarloTracerParticles[indexR],
@@ -154,7 +152,7 @@ int grid::AdvectMonteCarloTracerParticles(int CycleNumber)
                 /* Exchange particles for outgoing left mass fluxes (DeltaML < 0) */
                 if (DeltaML < 0) {
                   printf("\nY DeltaML < 0");
-                  probability  =  DeltaML / ReducedMass[indexC];
+                  probability = -DeltaML / ReducedMass[indexC];
                   this->Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(
                     MonteCarloTracerParticles[indexC], 
                     MonteCarloTracerParticles[indexL],
@@ -167,7 +165,7 @@ int grid::AdvectMonteCarloTracerParticles(int CycleNumber)
                 /* Exchange particles for outgoing right mass fluxes (DeltaMR > 0) */
                 if (DeltaMR > 0) {
                   printf("\nY DeltaMR > 0");
-                  probability  =  DeltaMR / ReducedMass[indexC];
+                  probability = DeltaMR / ReducedMass[indexC];
                   this->Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(
                     MonteCarloTracerParticles[indexC], 
                     MonteCarloTracerParticles[indexR],
@@ -210,7 +208,7 @@ int grid::AdvectMonteCarloTracerParticles(int CycleNumber)
                 /* Exchange particles for outgoing left mass fluxes (DeltaML < 0) */
                 if (DeltaML < 0) {
                   printf("\nZ DeltaML < 0");
-                  probability  =  DeltaML / ReducedMass[indexC];
+                  probability = -DeltaML / ReducedMass[indexC];
                   this->Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(
                     MonteCarloTracerParticles[indexC], 
                     MonteCarloTracerParticles[indexL],
@@ -223,7 +221,7 @@ int grid::AdvectMonteCarloTracerParticles(int CycleNumber)
                 /* Exchange particles for outgoing right mass fluxes (DeltaMR > 0) */
                 if (DeltaMR > 0) {  
                   printf("\nZ DeltaMR > 0");
-                  probability  =  DeltaMR / ReducedMass[indexC];
+                  probability = DeltaMR / ReducedMass[indexC];
                   this->Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(
                     MonteCarloTracerParticles[indexC], 
                     MonteCarloTracerParticles[indexR],
