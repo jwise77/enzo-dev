@@ -677,16 +677,16 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
       /* Update Monte Carlo tracer particles (if present). */
 
+      std::string name="mctracer" + std::to_string(MetaData->CycleNumber) + ".py";
+      std::ofstream ofs(name);
+      Grids[grid1]->GridData->PrintMonteCarloTracerParticlePythonDictionary(ofs);
+      ofs.close();      
+
       printf("\n%s\n", "EvolveLevel: Calling AdvectMonteCarloTracerParticles.");
  
       Grids[grid1]->GridData->AdvectMonteCarloTracerParticles(LevelCycleCount[level]);
 
       printf("\n%s\n", "EvolveLevel: After AdvectMonteCarloTracerParticles.");
-
-      std::string name="mctracer" + std::to_string(cycle) + ".py";
-      std::ofstream ofs(name);
-      Grids[grid1]->GridData->PrintMonteCarloTracerParticlePythonDictionary(ofs);
-      ofs.close();
 
 
     /*Trying after solving for radiative transfer */

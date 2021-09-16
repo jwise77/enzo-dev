@@ -62,7 +62,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
  
     /* set x inner (left) face */
  
-    i = 0;
+    i = StartIndex[0] - 1; // first ghost zone to the left of the active zone
     for (j = 0; j < GridDims[1]; j++)
     for (k = 0; k < GridDims[2]; k++) {
 
@@ -147,7 +147,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
  
   if (BoundaryDimension[1] > 1 && GridOffset[1] == 0) {
 
-    j = 0;
+    j = StartIndex[1] - 1;
     for (i = 0; i < GridDims[0]; i++)
     for (k = 0; k < GridDims[2]; k++) {
 
@@ -234,7 +234,7 @@ int ExternalBoundary::SetExternalBoundaryMonteCarloTracerParticles(int GridRank,
  
   if (BoundaryDimension[2] > 1 && GridOffset[2] == 0) {
  
-    k = 0;
+    k = StartIndex[2] - 1;
     for (i = 0; i < GridDims[0]; i++)
     for (j = 0; j < GridDims[1]; j++) {
 
