@@ -574,6 +574,7 @@ EXTERN int OutputOnDensity;
 EXTERN float StartDensityOutputs;
 EXTERN float CurrentDensityOutput;
 EXTERN float CurrentMaximumDensity;
+EXTERN FLOAT CurrentMaximumDensityCenter[3];
 EXTERN float IncrementDensityOutput;
 EXTERN float StopFirstTimeAtDensity;
 EXTERN float StopFirstTimeAtMetalEnrichedDensity;

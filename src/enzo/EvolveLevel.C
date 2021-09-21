@@ -215,12 +215,6 @@ int CreateSUBlingList(TopGridData *MetaData,
 int DeleteSUBlingList(int NumberOfGrids,
 		      LevelHierarchyEntry **SUBlingList);
 
-int ActiveParticleInitialize(HierarchyEntry *Grids[], TopGridData *MetaData,
-                 int NumberOfGrids, LevelHierarchyEntry *LevelArray[],
-                 int ThisLevel);
-int ActiveParticleFinalize(HierarchyEntry *Grids[], TopGridData *MetaData,
-               int NumberOfGrids, LevelHierarchyEntry *LevelArray[],
-               int level, int NumberOfNewActiveParticles[]);
 int StarParticleInitialize(HierarchyEntry *Grids[], TopGridData *MetaData,
 			   int NumberOfGrids, LevelHierarchyEntry *LevelArray[], 
 			   int ThisLevel, Star *&AllStars,
@@ -244,9 +238,8 @@ int RadiativeTransferCallFLD(LevelHierarchyEntry *LevelArray[], int level,
 			     ImplicitProblemABC *ImplicitSolver);
 #endif
 
-int ComputeDomainBoundaryMassFlux(HierarchyEntry *Grids[], int level,
-                                  int NumberOfGrids,
-                                  TopGridData *MetaData);
+int GetUnits(float *DensityUnits);
+ //cynthia
 
 int SetLevelTimeStep(HierarchyEntry *Grids[],
         int NumberOfGrids, int level,
@@ -306,7 +299,6 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   typedef HierarchyEntry* HierarchyEntryPointer;
   HierarchyEntry **Grids;
   int NumberOfGrids = GenerateGridArray(LevelArray, level, &Grids);
-  int *NumberOfNewActiveParticles = new int[NumberOfGrids]();
   int *NumberOfSubgrids = new int[NumberOfGrids];
   fluxes ***SubgridFluxesEstimate = new fluxes **[NumberOfGrids];
   int *TotalStarParticleCountPrevious = new int[NumberOfGrids];
@@ -436,9 +428,6 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
     /* Initialize the star particles */
 
-    ActiveParticleInitialize(Grids, MetaData, NumberOfGrids, LevelArray,
-                             level);
-    
     Star *AllStars = NULL;
     StarParticleInitialize(Grids, MetaData, NumberOfGrids, LevelArray,
 			   level, AllStars, TotalStarParticleCountPrevious);
@@ -485,6 +474,70 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
      PrepareDensityField(LevelArray, level, MetaData, When);
 #endif  // end FAST_SIB
  
+     /* ---------------------------------------------------------------- */
+     /* Cynthia - Find the highest density spot if Center not specified. */
+
+     LevelHierarchyEntry *Temp;
+     int dim, i, ilevel;
+     FLOAT Center[MAX_DIMENSION] = {-1, -1, -1};
+     float MaxDensity = -huge_number;
+     int gridID = 0;
+     if (Center[0] < 0.0) {
+       if (debug) printf("->finding maximum\n");
+       for (ilevel = 0; ilevel < MAX_DEPTH_OF_HIERARCHY; ilevel++) {
+	 //float MinCoolingTime = huge_number;
+	 Temp = LevelArray[ilevel];
+	 printf("LEVEL = %i\n", ilevel+1); 
+	 while (Temp != NULL) {
+	   //printf("\tlevel = %i grid = %i\n", level+1, gridID++);
+	   Temp->GridData->FindMaximumBaryonDensity(Center, &MaxDensity);
+	   //Temp->GridData->FindMinimumCoolingTime(CTCenter, &MinCoolingTime);
+	   Temp = Temp->NextGridThisLevel;
+	 }
+       }
+       
+#ifdef USE_MPI
+
+       if (NumberOfProcessors > 1) {
+
+	 // Copy center and maxdensity into a buffer and send to root. 
+
+	 FLOAT Buffer1[MAX_DIMENSION+1], *Buffer2;
+	 Buffer2 = new FLOAT[NumberOfProcessors*(MAX_DIMENSION+1)];
+	 for (dim = 0; dim < MAX_DIMENSION; dim++)
+	   Buffer1[dim+1] = Center[dim];
+	 Buffer1[0] = FLOAT(MaxDensity);
+   MPI_Gather(Buffer1, MAX_DIMENSION+1, MY_MPIFLOAT, 
+		    Buffer2, MAX_DIMENSION+1, MY_MPIFLOAT,
+		    ROOT_PROCESSOR, MPI_COMM_WORLD);
+
+	 // Find max on root. 
+
+	 int MaxIndex = 0;
+	 if (MyProcessorNumber == ROOT_PROCESSOR) {
+	   for (i = 0; i < NumberOfProcessors; i++)
+	     if (Buffer2[i*(MAX_DIMENSION+1)] > MaxDensity) {
+	       MaxIndex = i*(MAX_DIMENSION+1);
+	       MaxDensity = Buffer2[i*(MAX_DIMENSION+1)];
+	     }
+   }
+
+	 // Broadcast back center and maxdensity. 
+
+	 MPI_Bcast(Buffer2+MaxIndex, MAX_DIMENSION+1, MY_MPIFLOAT, ROOT_PROCESSOR, MPI_COMM_WORLD);
+	 CurrentMaximumDensity = float(Buffer2[MaxIndex]);
+	 for (dim = 0; dim < MAX_DIMENSION; dim++){
+	   CurrentMaximumDensityCenter[dim] = Buffer2[MaxIndex+dim+1];
+	   printf("[P%d] Current max dens center [%i]=  %"GOUTSYM",\n", MyProcessorNumber, dim, CurrentMaximumDensityCenter[dim]);
+	 }
+	 delete [] Buffer2;
+	 printf("[P%d] Current max dens =  %"GSYM",\n", MyProcessorNumber, CurrentMaximumDensity);
+       } 
+
+#endif
+
+     } // end: if (Center[0] == FLOAT_UNDEFINED)
+
  
     /* Prepare normalization for random forcing. Involves top grid only. */
  
@@ -554,11 +607,6 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
         Grids[grid1]->GridData->CopyBaryonFieldToOldBaryonField();
 
-	/* Call Schrodinger solver. */
-
-	if (QuantumPressure == 1)
-	  Grids[grid1]->GridData->SchrodingerSolver(LevelCycleCount[level]);
-
 	// Find recently-supernova stars to add them the MagneticSupernovaList 
 	if ((UseMagneticSupernovaFeedback) && (level == MaximumRefinementLevel))
 	  Grids[grid1]->GridData->AddMagneticSupernovaeToList();
@@ -570,7 +618,7 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
          * All others (PPM, Zeus, MHD_Li/CT) are called from SolveHydroEquations
          */
            
-
+	
         if( HydroMethod != HD_RK && HydroMethod != MHD_RK ){
             Grids[grid1]->GridData->SolveHydroEquations(LevelCycleCount[level],
                     NumberOfSubgrids[grid1], SubgridFluxesEstimate[grid1], level);
@@ -694,10 +742,6 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       Grids[grid1]->GridData->StarParticleHandler
 	(Grids[grid1]->NextGridNextLevel, level ,dtLevelAbove, TopGridTimeStep);
 
-      Grids[grid1]->GridData->ActiveParticleHandler
-        (Grids[grid1]->NextGridNextLevel, level ,dtLevelAbove,
-         NumberOfNewActiveParticles[grid1]);
-
       /* Include shock-finding */
 
       Grids[grid1]->GridData->ShocksHandler();
@@ -742,12 +786,11 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
  
       if (UseMagneticSupernovaFeedback)
 	Grids[grid1]->GridData->MagneticSupernovaList.clear(); 
-    } //end loop over grids
 
-    /* Finalize (accretion, feedback etc) for Active particles. */
-    ActiveParticleFinalize(Grids, MetaData, NumberOfGrids, LevelArray,
-                           level, NumberOfNewActiveParticles);
+   }  // end loop over grids
+ 
     /* Finalize (accretion, feedback, etc.) star particles */
+
     StarParticleFinalize(Grids, MetaData, NumberOfGrids, LevelArray,
 			 level, AllStars, TotalStarParticleCountPrevious, OutputNow);
 
@@ -899,10 +942,6 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
     FinalizeFluxes(Grids,SubgridFluxesEstimate,NumberOfGrids,NumberOfSubgrids);
 
-    /* Check for mass flux across outer boundaries of domain */
-    ComputeDomainBoundaryMassFlux(Grids, level, NumberOfGrids, MetaData);
-
-
     /* Recompute radiation field, if requested. */
     RadiationFieldUpdate(LevelArray, level, MetaData);
  
@@ -979,7 +1018,6 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   /* Clean up. */
  
   delete [] NumberOfSubgrids;
-  delete [] NumberOfNewActiveParticles;
   delete [] Grids;
   delete [] SubgridFluxesEstimate;
   delete [] TotalStarParticleCountPrevious;
