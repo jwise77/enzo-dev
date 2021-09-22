@@ -12,10 +12,6 @@
 
 int grid::AllocateMonteCarloTracerParticleData()
 {
-
-  printf("%s", "AllocateMonteCarloTracerParticleData...");
-
-
   /* Compute grid size. */
   int size = 1;
   int i, dim;
@@ -33,6 +29,5 @@ int grid::AllocateMonteCarloTracerParticleData()
     for (dim = 0; dim < GridRank; dim++)
       this->MassFlux[dim][i] = 0.0;
   }  
-  printf("%s\n", " Done.");
   return SUCCESS;
 }
