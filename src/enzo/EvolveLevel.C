@@ -677,11 +677,12 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
       /* Update Monte Carlo tracer particles (if present). */
 
-      std::string name="mctracer" + std::to_string(MetaData->CycleNumber) + ".py";
-      std::ofstream ofs(name);
-      Grids[grid1]->GridData->PrintMonteCarloTracerParticlePythonDictionary(ofs);
-      ofs.close();      
- 
+      // Print MC tracer data to file that can be run as Python code
+      // std::string name="mctracer" + std::to_string(MetaData->CycleNumber) + ".py";
+      // std::ofstream ofs(name);
+      // Grids[grid1]->GridData->PrintMonteCarloTracerParticlePythonDictionary(ofs);
+      // ofs.close();     
+
       Grids[grid1]->GridData->AdvectMonteCarloTracerParticles(LevelCycleCount[level]);
 
 

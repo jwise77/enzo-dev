@@ -863,12 +863,93 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     h5_status = H5Gclose(ParticleGroupID);
   }  // end: if (NumberOfActiveParticles > 0)
 
+  /* ------------------------------------------------------------------- */
+  /* 5) Save Monte Carlo Tracer particle quantities. */  
+
+  if (MonteCarloTracerParticlesOn) {
+    int NumberOfMCTracers = this->CountMonteCarloTracerParticles();
+
+    // allocate space all particles on this grid
+    int   MonteCarloTracerExchangeCount[NumberOfMCTracers];
+    PINT  MonteCarloTracerGroupID[NumberOfMCTracers];
+    PINT  MonteCarloTracerUniqueID[NumberOfMCTracers];
+    float MonteCarloTracerMass[NumberOfMCTracers];
+    float MonteCarloTracerCreationTime[NumberOfMCTracers];
+    FLOAT MonteCarloTracerInitialPosition_x[NumberOfMCTracers];
+    FLOAT MonteCarloTracerInitialPosition_y[NumberOfMCTracers];
+    FLOAT MonteCarloTracerInitialPosition_z[NumberOfMCTracers];
+    FLOAT MonteCarloTracerPosition_x[NumberOfMCTracers];
+    FLOAT MonteCarloTracerPosition_y[NumberOfMCTracers];
+    FLOAT MonteCarloTracerPosition_z[NumberOfMCTracers];   
+    
+    int i, j, k, index, dim, size = 1, n = 0;
+    FLOAT pos[GridRank];
+    MonteCarloTracerParticle *mc;
+
+    TempIntArray[0] = NumberOfMCTracers;
+
+
+    /* Compute particle position (all particles in cell center) */
+    for (k = 0; k < GridDimension[2]; k++) {
+      pos[2] = (k + 0.5) * CellWidth[2][0];
+    for (j = 0; j < GridDimension[1]; j++) {
+      pos[1] = (j + 0.5) * CellWidth[1][0];
+    for (i = 0; i < GridDimension[0]; i++) {
+      pos[0] = (i + 0.5) * CellWidth[0][0];
+      index = i + GridDimension[0]*(j + GridDimension[1]*k);
+      mc = MonteCarloTracerParticles[index];
+
+      /* Store particle properties in single arrays */
+      while(mc != NULL){
+        MonteCarloTracerExchangeCount[n]     =  mc->ExchangeCount;
+        MonteCarloTracerGroupID[n]           =  mc->GroupID;
+        MonteCarloTracerUniqueID[n]          =  mc->UniqueID;
+        MonteCarloTracerMass[n]              =  mc->Mass;
+        MonteCarloTracerCreationTime[n]      =  mc->CreationTime;
+        MonteCarloTracerInitialPosition_x[n] =  mc->InitialPosition[0];
+        MonteCarloTracerInitialPosition_y[n] =  mc->InitialPosition[1];
+        MonteCarloTracerInitialPosition_z[n] =  mc->InitialPosition[2];
+        MonteCarloTracerPosition_x[n]        =  pos[0];
+        MonteCarloTracerPosition_y[n]        =  pos[1];
+        MonteCarloTracerPosition_z[n]        =  pos[2];           
+        mc = mc->NextParticle;
+        n++;
+      }
+    } // end k
+    } // end j
+    } // end i
+
+    /* Write MC particle data to hdf5 */
+
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerExchangeCount",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerExchangeCount, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerGroupID",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerGroupID, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerUniqueID",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerUniqueID, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerMass",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerMass, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerCreationTime",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerCreationTime, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerInitialPosition_x",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerInitialPosition_x, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerInitialPosition_y",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerInitialPosition_y, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerInitialPosition_z",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerInitialPosition_z, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerPosition_x",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_x, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerPosition_y",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_y, FALSE);
+    this->write_dataset(1, TempIntArray, "MonteCarloTracerPosition_z",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_z, FALSE);
+
+  } // end: if (MonteCarloTracerParticlesOn)
+
   /* Close HDF group and file. */
  
   if (WriteEverything == TRUE) this->WriteAllFluxes(group_id);
-  h5_status = H5Gclose(group_id);
-
-  /* 4) Save Gravity info. */
+  h5_status = H5Gclose(group_id);  
  
   /* Clean up. */
  

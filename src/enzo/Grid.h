@@ -1752,13 +1752,14 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
 // -------------------------------------------------------------------------
 // Functions for use with Monte Carlo tracer particles.
 //
-  int Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
-  int AllocateMonteCarloTracerParticleData();
-  int DeleteMonteCarloTracerParticleData();
-  int CreateMonteCarloTracerParticles();
   int AdvectMonteCarloTracerParticles(int CycleNumber);
+  int AllocateMonteCarloTracerParticleData();
   int CopyMonteCarloTracerParticlesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION]);
+  int CountMonteCarloTracerParticles();
+  int CreateMonteCarloTracerParticles();
+  int DeleteMonteCarloTracerParticleData();
   int ResetMonteCarloTracerParticlesExchangedThisTimestep();
+  int Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
   void PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os);
 
 // -------------------------------------------------------------------------

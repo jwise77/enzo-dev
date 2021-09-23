@@ -452,6 +452,7 @@ OBJS_CONFIG_LIB = \
 	Grid_CosmoIonizationInitializeGrid.o \
 	Grid_CosmologyInitializeParticles.o \
 	Grid_CosmologySimulationInitializeGrid.o \
+    Grid_CountMonteCarloTracerParticles.o \
 	Grid_CreateChildParticles.o \
 	Grid_CreateFieldArray.o \
     Grid_CreateMonteCarloTracerParticles.o \

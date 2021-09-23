@@ -97,8 +97,6 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node)
 
 int Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB)
 {
-  printf("\n%s\n", "Move_MonteCarloTracerParticles_From_CellA_to_CellB...");
-
   // No particles to exchange
   if (headA == NULL)
       return 0;
