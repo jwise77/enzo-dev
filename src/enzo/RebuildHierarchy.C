@@ -679,9 +679,9 @@ int RebuildHierarchy(TopGridData *MetaData,
 	    ToGrids[k] = SubgridHierarchyPointer[k]->GridData;
 	  }
 
-      if (GridHierarchyPointer[j]->GridData->MoveSubgridActiveParticles(
-                 subgrids, ToGrids, FALSE) == FAIL)
-        ENZO_FAIL("Error in grid->MoveSubgridActiveParticles.");
+    if (GridHierarchyPointer[j]->GridData->MoveSubgridActiveParticles(
+               subgrids, ToGrids, FALSE) == FAIL)
+      ENZO_FAIL("Error in grid->MoveSubgridActiveParticles.");
       
 	  if (GridHierarchyPointer[j]->GridData->MoveSubgridStars(
 				 subgrids, ToGrids, FALSE) == FAIL)
@@ -690,20 +690,27 @@ int RebuildHierarchy(TopGridData *MetaData,
 	  if (GridHierarchyPointer[j]->GridData->MoveSubgridParticlesFast(
 				 subgrids, ToGrids, FALSE) == FAIL)
 	    ENZO_FAIL("Error in grid->MoveSubgridParticlesFast.");
- 
 	}
+
+  /* Handle boundary conditions for Monte Carlo tracer particles.
+     *** ONLY WORKS FOR UNIGRID RIGHT NOW and assumes periodic boundaries
+     (September 2021) *** */
+  if (i == 0 && grids == 1) {
+    LevelHierarchyEntry *Temp = LevelArray[0];
+    Temp->GridData->MoveTopGridMonteCarloTracerParticles();
+  }
+
  
-      /* Set boundary conditions. */
- 
-      LevelHierarchyEntry *Temp = LevelArray[i+1];
-      while (Temp != NULL) {
- 
-	if (Temp->GridData->InterpolateBoundaryFromParent
-	    (Temp->GridHierarchyEntry->ParentGrid->GridData) == FAIL)
-	  ENZO_FAIL("Error in grid->InterpolateBoundaryFromParent.");
- 
-	Temp = Temp->NextGridThisLevel;
-      }
+    /* Set boundary conditions. */
+
+    LevelHierarchyEntry *Temp = LevelArray[i+1];
+    while (Temp != NULL) {
+
+    	if (Temp->GridData->InterpolateBoundaryFromParent
+    	    (Temp->GridHierarchyEntry->ParentGrid->GridData) == FAIL)
+    	     ENZO_FAIL("Error in grid->InterpolateBoundaryFromParent.");
+    	     Temp = Temp->NextGridThisLevel;
+    }
  
     } // end: loop over levels
  

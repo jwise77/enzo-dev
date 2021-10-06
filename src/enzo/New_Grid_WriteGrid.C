@@ -882,12 +882,18 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     FLOAT MonteCarloTracerPosition_y[NumberOfMCTracers];
     FLOAT MonteCarloTracerPosition_z[NumberOfMCTracers];   
     
-    int i, j, k, index, dim, size = 1, n = 0;
+    int i, j, k, index, dim, n_per_cell, size = 1, n = 0;
     FLOAT pos[GridRank];
     MonteCarloTracerParticle *mc;
 
-    TempIntArray[0] = NumberOfMCTracers;
+    for (dim = 0; dim < GridRank; dim++)
+      size *= GridDimension[dim];   
 
+    temp = new float[size];
+    float NumberOfMCTracersPerCell[size]; /* float because write_dataset needs HDF5_REAL for 3d 
+                                             data when ACTIVE_ONLY == 1 */ 
+
+    TempIntArray[0] = NumberOfMCTracers;
 
     /* Compute particle position (all particles in cell center) */
     for (k = 0; k < GridDimension[2]; k++) {
@@ -898,6 +904,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       pos[0] = (i + 0.5) * CellWidth[0][0];
       index = i + GridDimension[0]*(j + GridDimension[1]*k);
       mc = MonteCarloTracerParticles[index];
+      n_per_cell = 0;
 
       /* Store particle properties in single arrays */
       while(mc != NULL){
@@ -914,7 +921,9 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
         MonteCarloTracerPosition_z[n]        =  pos[2];           
         mc = mc->NextParticle;
         n++;
+        n_per_cell++;
       }
+      NumberOfMCTracersPerCell[index] = n_per_cell;
     } // end k
     } // end j
     } // end i
@@ -922,11 +931,11 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     /* Write MC particle data to hdf5 */
 
     this->write_dataset(1, TempIntArray, "MonteCarloTracerExchangeCount",
-        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerExchangeCount, FALSE);
+        group_id, HDF5_PINT, (VOIDP) MonteCarloTracerExchangeCount, FALSE);
     this->write_dataset(1, TempIntArray, "MonteCarloTracerGroupID",
-        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerGroupID, FALSE);
+        group_id, HDF5_PINT, (VOIDP) MonteCarloTracerGroupID, FALSE);
     this->write_dataset(1, TempIntArray, "MonteCarloTracerUniqueID",
-        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerUniqueID, FALSE);
+        group_id, HDF5_PINT, (VOIDP) MonteCarloTracerUniqueID, FALSE);
     this->write_dataset(1, TempIntArray, "MonteCarloTracerMass",
         group_id, HDF5_REAL, (VOIDP) MonteCarloTracerMass, FALSE);
     this->write_dataset(1, TempIntArray, "MonteCarloTracerCreationTime",
@@ -942,8 +951,12 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     this->write_dataset(1, TempIntArray, "MonteCarloTracerPosition_y",
         group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_y, FALSE);
     this->write_dataset(1, TempIntArray, "MonteCarloTracerPosition_z",
-        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_z, FALSE);
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_z, FALSE);  
+    this->write_dataset(GridRank, OutDims, "NumberOfMonteCarloTracersPerCell",
+        group_id, HDF5_REAL, (VOIDP) NumberOfMCTracersPerCell,
+        CopyOnlyActive, temp);    
 
+    delete [] temp;  
   } // end: if (MonteCarloTracerParticlesOn)
 
   /* Close HDF group and file. */

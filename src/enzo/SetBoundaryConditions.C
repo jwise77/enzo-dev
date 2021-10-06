@@ -142,7 +142,7 @@ int SetBoundaryConditions(HierarchyEntry *Grids[], int NumberOfGrids,
 	/* In this final step, we get the messages as they come in and
 	   then match them to the methods which generate the receive
 	   handle. */
-
+ 
       if (CommunicationReceiveHandler() == FAIL)
 	ENZO_FAIL("CommunicationReceiveHandler() failed!\n");
       
