@@ -920,10 +920,10 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
   
   // Check for the creation of velocity tracer particles
   // Tracer particles will not be created at this point if ||rgio in ON
-  
-  if (TracerParticleCreation(fptr, TopGrid, MetaData) == FAIL) {
-    ENZO_FAIL("Error in TracerParticleCreation");
-  }
+  // *** MOVED THIS BELOW TO AFTER SECOND PASS INITIALIZATIONS!!! ***
+  //if (TracerParticleCreation(fptr, TopGrid, MetaData) == FAIL) {
+    //ENZO_FAIL("Error in TracerParticleCreation");
+  //}
 
   // Check for the creation of Monte Carlo tracer particles
 
@@ -983,6 +983,9 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
   
   PrintMemoryUsage("Before 2nd pass");
   
+  // Reset file pointer to the begining of the parameter file
+  rewind(fptr); 
+
   if (ParallelRootGridIO == TRUE && ProblemType == 30) {
     if (PartitionNestedGrids) {
       if (NestedCosmologySimulationReInitialize(&TopGrid, MetaData) == FAIL) {
@@ -1055,6 +1058,13 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
         == FAIL) {
       ENZO_FAIL("Error in TriggeredStarFormationInitialize ReInitialize.\n");
     }
+
+  // Check for the creation of velocity tracer particles
+  // Tracer particles will not be created at this point if ||rgio in ON
+  //printf("\nBeforeTPC\n");
+  if (TracerParticleCreation(fptr, TopGrid, MetaData) == FAIL) {
+            ENZO_FAIL("Error in TracerParticleCreation");
+         }
 
   CommunicationBarrier();
  

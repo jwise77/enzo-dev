@@ -120,7 +120,7 @@ int WriteTracerParticleData(char *basename, int dumpnumber,
     int_temp += MetaData->TopGridRank;  // TopGridRank velocity fields
 
 
-  // printf("tracer particle: writing %d fields and sizeof(int) is %d\n",int_temp,sizeof(int));
+  printf("tracer particle: writing %d fields and sizeof(int) is %d, sizeof(float) is %d \n",int_temp,sizeof(int),sizeof(float));
 
   fwrite((void*) &int_temp, sizeof(int), 1, fptr);  // write number of fields
  

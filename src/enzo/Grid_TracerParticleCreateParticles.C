@@ -60,6 +60,8 @@ int grid::TracerParticleCreateParticles(FLOAT LeftEdge[], FLOAT RightEdge[],
     Dims[dim] = nint((RightEdge[dim] - LeftEdge[dim])/Spacing);
     NumberOfTracerParticles *= Dims[dim];
   }
+
+  printf("\nCrerate NumberOfTracerParticles %d \n", NumberOfTracerParticles);
  
   if (ParallelRootGridIO == FALSE) {
  

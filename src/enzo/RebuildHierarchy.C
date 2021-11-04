@@ -692,14 +692,6 @@ int RebuildHierarchy(TopGridData *MetaData,
 	    ENZO_FAIL("Error in grid->MoveSubgridParticlesFast.");
 	}
 
-  /* Handle boundary conditions for Monte Carlo tracer particles.
-     *** ONLY WORKS FOR UNIGRID RIGHT NOW and assumes periodic boundaries
-     (September 2021) *** */
-  if (i == 0 && grids == 1) {
-    LevelHierarchyEntry *Temp = LevelArray[0];
-    Temp->GridData->MoveTopGridMonteCarloTracerParticles();
-  }
-
  
     /* Set boundary conditions. */
 
