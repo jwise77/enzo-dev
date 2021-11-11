@@ -49,8 +49,9 @@ void my_exit(int status);
  
 int ReadListOfFloats(FILE *fptr, int N, FLOAT floats[]);
 int ReadListOfInts(FILE *fptr, int N, int nums[]);
- 
 void MHDCTSetupFieldLabels(void);
+void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, MonteCarloTracerParticle * &NewNode);
+
 static int GridReadDataGridCounter = 0;
  
  
@@ -605,6 +606,114 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
     }
 
   } // end: if (NumberOfActiveParticles > 0) && ReadData && (MyProcessorNumber == ProcessorNumber)
+
+  // -------------------------------------------------------------------------------
+  /* Read  Monte Carlo Tracer particle quantities. */  
+
+  if (MonteCarloTracerParticlesOn) {
+
+    int NumberOfMCTracers = 0;
+    int i, j, k, index, full_index, dim, size = 1, n = 0, npc = 0;
+    FLOAT pos[GridRank];
+    MonteCarloTracerParticle *newMC;
+
+    for (dim = 0; dim < GridRank; dim++)
+      size *= GridDimension[dim];   
+
+    float NumberOfMCTracersPerCell[active_size];   
+
+    this->read_dataset(GridRank, OutDims, "NumberOfMonteCarloTracersPerCell",
+    group_id, HDF5_REAL, (VOIDP) NumberOfMCTracersPerCell);   
+
+    // Count total number of tracer particles
+
+    for (k = 0; k < ActiveDim[2]; k++) 
+      for (j = 0; j < ActiveDim[1]; j++) 
+        for (i = 0; i < ActiveDim[0]; i++) {
+          index = i + ActiveDim[0]*(j + ActiveDim[1]*k);
+          NumberOfMCTracers += NumberOfMCTracersPerCell[index];
+        } // end k, j, i    
+
+    // allocate space all particles on this grid
+    int   MonteCarloTracerExchangeCount[NumberOfMCTracers];
+    PINT  MonteCarloTracerGroupID[NumberOfMCTracers];
+    PINT  MonteCarloTracerUniqueID[NumberOfMCTracers];
+    float MonteCarloTracerMass[NumberOfMCTracers];
+    float MonteCarloTracerCreationTime[NumberOfMCTracers];
+    FLOAT MonteCarloTracerInitialPosition_x[NumberOfMCTracers];
+    FLOAT MonteCarloTracerInitialPosition_y[NumberOfMCTracers];
+    FLOAT MonteCarloTracerInitialPosition_z[NumberOfMCTracers];
+    FLOAT MonteCarloTracerPosition_x[NumberOfMCTracers];
+    FLOAT MonteCarloTracerPosition_y[NumberOfMCTracers];
+    FLOAT MonteCarloTracerPosition_z[NumberOfMCTracers];   
+
+    TempIntArray[0] = NumberOfMCTracers;
+
+    /* Read MC particle data from hdf5 */
+
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerExchangeCount",
+        group_id, HDF5_PINT, (VOIDP) MonteCarloTracerExchangeCount, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerGroupID",
+        group_id, HDF5_PINT, (VOIDP) MonteCarloTracerGroupID, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerUniqueID",
+        group_id, HDF5_PINT, (VOIDP) MonteCarloTracerUniqueID, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerMass",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerMass, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerCreationTime",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerCreationTime, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerInitialPosition_x",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerInitialPosition_x, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerInitialPosition_y",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerInitialPosition_y, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerInitialPosition_z",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerInitialPosition_z, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerPosition_x",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_x, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerPosition_y",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_y, FALSE);
+    this->read_dataset(1, TempIntArray, "MonteCarloTracerPosition_z",
+        group_id, HDF5_REAL, (VOIDP) MonteCarloTracerPosition_z, FALSE);   
+
+    this->AllocateMonteCarloTracerParticleData();
+
+    /* Loop over all cells in NumberOfMCTracersPerCell array */
+    for (k = 0; k < ActiveDim[2]; k++) {
+      for (j = 0; j < ActiveDim[1]; j++) {
+        for (i = 0; i < ActiveDim[0]; i++) {
+
+          index = i + ActiveDim[0]*(j + ActiveDim[1]*k);
+          full_index = (i + GridStartIndex[0])                           +
+                       (j + GridStartIndex[1]) * GridDimension[0]        +
+                       (k + GridStartIndex[2]) * GridDimension[0]*GridDimension[1];
+
+          // Loop over all particles in this cell
+          for (npc = 0; npc < NumberOfMCTracersPerCell[index]; npc++) {
+
+            pos[0] = MonteCarloTracerInitialPosition_x[n];
+            pos[1] = MonteCarloTracerInitialPosition_y[n];
+            pos[2] = MonteCarloTracerInitialPosition_z[n];
+
+            // Create new MC particle
+            newMC = new MonteCarloTracerParticle(this, 
+                                                 MonteCarloTracerUniqueID[n],
+                                                 MonteCarloTracerGroupID[n], 
+                                                 GridLevel, 
+                                                 MonteCarloTracerCreationTime[n], 
+                                                 pos,
+                                                 MonteCarloTracerMass[n],
+                                                 MonteCarloTracerExchangeCount[n]);
+
+            // Deposit particle into the current cell's linked list
+            InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticles[full_index], newMC);
+
+            // increment total number of particle particle index
+            n++;
+          } // end n
+        } // end i
+      } // end j
+    } // end k    
+  } // end: if (MonteCarloTracerParticlesOn)
+  // -------------------------------------------------------------------------------  
   
   /* Close file. */
  

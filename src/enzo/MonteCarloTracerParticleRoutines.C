@@ -98,6 +98,36 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(grid *_grid, int _ID, int _gr
   #endif
 }
 
+MonteCarloTracerParticle::MonteCarloTracerParticle(grid *_grid, int _ID, int _groupID, int _level, float _creationTime, FLOAT _pos[MAX_DIMENSION],
+                                                   float _mass, int _exchange_count)
+{
+  int i;
+
+  CurrentGrid = _grid;    
+  NextParticle = NULL;
+  PrevParticle = NULL;                 
+  UniqueID = _ID;
+  GroupID  = _groupID;
+  Level = _level;
+  ExchangeCount = _exchange_count;
+  CreationTime = _creationTime;
+  Mass = _mass;
+  ExchangedThisTimestep = false;
+
+  // user defined attributes (e.g. max temperature)
+  ParticleAttributes = new float[NumberOfParticleAttributes];
+  for (i = 0; i < NumberOfParticleAttributes; i++)
+    ParticleAttributes[i] = 0.0;
+
+  for (i = 0; i < MAX_DIMENSION; i++)
+    InitialPosition[i] = _pos[i];
+  
+  // history of particle position, including the time when the position was recorded. 
+  #ifdef TRACK_MC_HISTORY
+  LagrangianHistory = NULL; /* **** TODO **** */
+  #endif
+}
+
 // MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffer *buffer, int n) 
 // {
 //   // TODO

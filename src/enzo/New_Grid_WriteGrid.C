@@ -924,9 +924,9 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
         n_per_cell++;
       }
       NumberOfMCTracersPerCell[index] = n_per_cell;
-    } // end k
-    } // end j
     } // end i
+    } // end j
+    } // end k
 
     /* Write MC particle data to hdf5 */
 
