@@ -128,6 +128,32 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(grid *_grid, int _ID, int _gr
   #endif
 }
 
+MonteCarloTracerParticle::MonteCarloTracerParticle(const MonteCarloTracerParticle* mc)
+{
+  CurrentGrid            = mc->CurrentGrid;
+  NextParticle           = mc->NextParticle;
+  PrevParticle           = mc->PrevParticle;
+  UniqueID               = mc->UniqueID;
+  GroupID                = mc->GroupID;
+  Level                  = mc->Level;
+  ExchangeCount          = mc->ExchangeCount;
+  CreationTime           = mc->CreationTime;
+  Mass                   = mc->Mass;
+  ExchangedThisTimestep  = mc->ExchangedThisTimestep;
+
+  ParticleAttributes = new float[NumberOfParticleAttributes];
+  for (i = 0; i < NumberOfParticleAttributes; i++)
+    ParticleAttributes[i] = mc->ParticleAttributes[i];
+
+  for (i = 0; i < MAX_DIMENSION; i++)
+    InitialPosition[i] = mc->InitialPosition[i];
+  
+  // history of particle position, including the time when the position was recorded. 
+  #ifdef TRACK_MC_HISTORY
+  LagrangianHistory = NULL; /* **** TODO **** */
+  #endif
+}
+
 // MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffer *buffer, int n) 
 // {
 //   // TODO
@@ -176,6 +202,11 @@ MonteCarloTracerParticle::~MonteCarloTracerParticle(void)
 //    CONVENIENT ROUTINES
 
 //  **********************/
+
+bool MonteCarloTracerParticle::ShouldDelete(void)
+{
+  return this->WillDelete != 0;
+}
 
 // MonteCarloTracerParticle *MonteCarloTracerParticle::copy(void)
 // {

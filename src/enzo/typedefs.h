@@ -348,6 +348,13 @@ struct star_data {
   int proc;
 };
 
+#include "MonteCarloTracerParticleBuffer.h"
+struct mc_tracer_data {
+  MonteCarloTracerParticleBuffer data;
+  int grid;
+  int proc;
+};
+
 struct hilbert_data {
   double hkey;
   int grid_num;

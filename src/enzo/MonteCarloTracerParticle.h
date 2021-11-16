@@ -42,8 +42,9 @@ class MonteCarloTracerParticle
   float     *ParticleAttributes;
   FLOAT      InitialPosition[MAX_DIMENSION];
   bool       ExchangedThisTimestep;
+  int        WillDelete;
   
-  // history of particle position, including the time when the position was recorded. 
+  // history of particle position, including the time when the position was recorded. (NOT IMPLEMENTED)
   #ifdef TRACK_MC_HISTORY
   struct MonteCarloTracerParticleHistory
   {
@@ -56,6 +57,7 @@ class MonteCarloTracerParticle
   
   friend class grid;
   friend class ExternalBoundary;
+  friend class MonteCarloTracerParticleList;
   
  public:
 
@@ -74,8 +76,189 @@ class MonteCarloTracerParticle
   // Routines
   
   // getters
+  int ReturnGridID(void){ return CurrentGrid->ID };
+  int ReturnID(void){ return CurrentGrid->UniqueID };
   // setters
   
 };
+
+/* Comparer functions for sorting particle buffers with std::sort */
+
+struct cmp_mc_grid {
+  bool operator()(MonteCarloTracerParticle* const& a, MonteCarloTracerParticle* const& b) const {
+    if (a->ReturnGridID() < b->ReturnGridID()) return true;
+    else return false;
+  }
+};
+
+struct cmp_mc_number {
+  bool operator()(MonteCarloTracerParticle* const& a, MonteCarloTracerParticle* const& b) const {
+    if (a->ReturnID() < b->ReturnID()) return true;
+    else return false;
+  }
+};
+
+class MonteCarloTracerParticleList
+{
+private:
+  std::vector<MonteCarloTracerParticle*> internalBuffer;
+
+public:
+  MonteCarloTracerParticleList(void) {};
+  MonteCarloTracerParticleList(const int inputParticleCount);
+  MonteCarloTracerParticleList(const MonteCarloTracerParticleList &OtherList);
+  ~MonteCarloTracerParticleList(void);
+  MonteCarloTracerParticle*& operator[] (const int nIndex);
+  MonteCarloTracerParticleList& operator=(const MonteCarloTracerParticleList& OtherList);
+  void copy_and_insert(MonteCarloTracerParticle& input_particle);
+  void insert(MonteCarloTracerParticle& input_particle);
+  void clear(void);
+  void erase(int index);
+  void reserve(int size);
+  void move_to_end(int index);
+  void mark_for_deletion(int index);
+  void delete_marked_particles(void);
+  int size(void);
+  void sort_grid(const int first, const int last);
+  void sort_number(const int first, const int last);
+};
+
+// Constructors 
+MonteCarloTracerParticleList::MonteCarloTracerParticleList(const int inputParticleCount)
+{
+  this->internalBuffer.reserve(inputParticleCount);
+}
+
+MonteCarloTracerParticleList::MonteCarloTracerParticleList(
+    const MonteCarloTracerParticleList &OtherList)
+{
+  this->internalBuffer = OtherList.internalBuffer;
+}
+
+// Destructor
+MonteCarloTracerParticleList::~MonteCarloTracerParticleList(void)
+{
+  for (typename std::vector<MonteCarloTracerParticle*>::iterator 
+         it=this->internalBuffer.begin(); 
+       it != this->internalBuffer.end(); ++it)
+  {
+    delete *it;
+  }
+  
+}
+
+MonteCarloTracerParticle*& MonteCarloTracerParticleList::operator[](const int nIndex)
+{
+  return this->internalBuffer.at(nIndex);
+}
+
+void MonteCarloTracerParticleList::copy_and_insert(MonteCarloTracerParticle& input_particle)
+{
+  this->internalBuffer.push_back(static_cast<MonteCarloTracerParticle*>(input_particle.clone()));
+}
+
+void MonteCarloTracerParticleList::insert(MonteCarloTracerParticle& input_particle)
+{
+  this->internalBuffer.push_back(static_cast<MonteCarloTracerParticle*>(&input_particle));
+}
+
+void MonteCarloTracerParticleList::clear(void)
+{
+
+  if (this->size() > 0) {
+    for (typename std::vector<MonteCarloTracerParticle*>::iterator it=
+           this->internalBuffer.begin(); it != this->internalBuffer.end(); ++it)
+      {
+        delete *it;
+      }
+
+    this->internalBuffer.clear();
+  }
+}
+
+void MonteCarloTracerParticleList::erase(int index)
+{
+  delete this->internalBuffer[index];
+  this->internalBuffer.erase(this->internalBuffer.begin() + index);
+}
+
+void MonteCarloTracerParticleList::reserve(int size)
+{
+  this->internalBuffer.reserve(size);
+}
+
+void MonteCarloTracerParticleList::move_to_end(int index)
+{
+  typename std::vector<MonteCarloTracerParticle*>::iterator it = 
+    this->internalBuffer.begin() + index;
+  std::rotate(it, it+1, this->internalBuffer.end());
+}
+
+void MonteCarloTracerParticleList::mark_for_deletion(int index)
+{
+  (*this)[index]->WillDelete = 1;
+}
+
+bool should_delete(MonteCarloTracerParticle* item) // deletes the MC particle but doesn't affect the list
+{
+  bool will_delete = item->ShouldDelete();
+  if (will_delete) {
+    delete item;
+  }
+  return will_delete;
+} 
+
+void MonteCarloTracerParticleList::delete_marked_particles(void)
+{
+  this->internalBuffer.erase(
+      std::remove_if(
+          this->internalBuffer.begin(),
+          this->internalBuffer.end(),
+          should_delete), 
+      this->internalBuffer.end());
+}
+
+int MonteCarloTracerParticleList::size(void)
+{
+  return this->internalBuffer.size();
+}
+
+MonteCarloTracerParticleList& MonteCarloTracerParticleList::operator=(
+    const MonteCarloTracerParticleList& OtherList)
+{
+  for (typename std::vector<MonteCarloTracerParticle*>::const_iterator it = 
+         OtherList.internalBuffer.begin(); 
+       it != OtherList.internalBuffer.end(); ++it)
+  {
+    this->internalBuffer.push_back((*it)->clone());
+  }
+
+  return *this;
+
+}
+
+void MonteCarloTracerParticleList::sort_grid(
+    int first, int last)
+{
+  struct cmp_mc_grid comparator = cmp_mc_grid();
+  if (this->size() > 0) {
+    std::sort(
+        this->internalBuffer.begin() + first, 
+        this->internalBuffer.begin() + last,
+        comparator);
+  }
+}
+
+void MonteCarloTracerParticleList::sort_number(
+    int first, int last)
+{
+  struct cmp_mc_number comparator = cmp_mc_number();
+  if (this->size() > 0) {
+    std::sort(
+        this->internalBuffer.begin() + first, 
+        this->internalBuffer.begin() + last,
+        comparator);
+  }
+}
 
 #endif
