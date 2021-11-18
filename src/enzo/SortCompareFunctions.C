@@ -63,6 +63,37 @@ Eint32 compare_star_proc(const void *a, const void *b)
   return 0;
 }
 
+/************************************************************************/
+
+// Eint32 compare_mc_tracer_grid(const void *a, const void *b)
+// {
+//   // I DONT THINK THIS EVER GETS USED. 
+//   // CommunicationShareMonteCarloTracerParticles uses
+//   // the structs of the same name with operator().
+//   struct mc_tracer_data *ia = (struct mc_tracer_data*) a;
+//   struct mc_tracer_data *ib = (struct mc_tracer_data*) b;
+//   if (ia->grid - ib->grid < 0)
+//     return -1;
+//   else if (ia->grid - ib->grid > 0)
+//     return 1;
+//   return 0;
+// }
+// *********************************************************************
+
+// Eint32 compare_mc_tracer_proc(const void *a, const void *b)
+// {
+//   // I DONT THINK THIS EVER GETS USED. 
+//   // CommunicationShareMonteCarloTracerParticles uses
+//   // the structs of the same name with operator().
+//   struct mc_tracer_data *ia = (struct mc_tracer_data*) a;
+//   struct mc_tracer_data *ib = (struct mc_tracer_data*) b;
+//   if (ia->proc - ib->proc < 0)
+//     return -1;
+//   else if (ia->proc - ib->proc > 0)
+//     return 1;
+//   return 0;
+// }
+
 /***********************************************************************/
 
 Eint32 compare_flt(const void *a, const void *b)

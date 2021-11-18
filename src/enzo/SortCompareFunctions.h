@@ -28,6 +28,20 @@ struct cmp_star_proc {
   }
 };
 
+struct cmp_mc_tracer_grid {
+  bool operator()(mc_tracer_data const& a, mc_tracer_data const& b) const {
+    if (a.grid < b.grid) return true;
+    else return false;
+  }
+};
+
+struct cmp_mc_tracer_proc {
+  bool operator()(mc_tracer_data const& a, mc_tracer_data const& b) const {
+    if (a.proc < b.proc) return true;
+    else return false;
+  }
+};
+
 struct cmp_hkey {
   bool operator()(hilbert_data const& a, hilbert_data const& b) const {
     if (a.hkey < b.hkey) return true;

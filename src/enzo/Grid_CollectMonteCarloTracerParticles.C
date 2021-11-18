@@ -29,15 +29,15 @@ void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, Monte
  
 int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove, 
 		       int &MonteCarloTracerParticletIndex, int &EndIndex, 
-		       star_data* &List, int CopyDirection)
+		       mc_tracer_data* &List, int CopyDirection)
 {
  
   /* Declarations. */
 
-  int i, j, k, index, dim, n1, grid, proc, NumberOfMCTracersInGhostZones;
-  int size = 1;
+  int i, j, k, index, dim, icell, nmc, grid, proc;
+  int size = 1, NumberOfMCTracersInGhostZones = 0;
   MonteCarloTracerParticle *MoveMCTP;
-  NumberOfMCTracersInGhostZones = this->CountMCTracersInGhostZones();
+  NumberOfMCTracersInGhostZones = this->ReturnNumberOfMonteCarloTracerParticlesInFirstGhostCells();
   for (dim = 0; dim < GridRank; dim++)
     size *= GridDimension[dim];  
 
@@ -46,105 +46,62 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
 
   if (CopyDirection == COPY_OUT) {
 
-    /* If there are no particles in the ghost zones, we're done. */
-
-    if (NumberOfMCTracersInGhostZones == 0)
-      return SUCCESS;
-
     /* If this is the correct processor, no copy-outs required. */
 
     if (MyProcessorNumber == ProcessorNumber)
       return SUCCESS;
 
+    /* If there are no particles in the ghost zones, we're done. */
+
+    if (NumberOfMCTracersInGhostZones == 0)
+      return SUCCESS;      
+
     /* Add to the MC particle count to move */
 
-    // NumberOfMCTracersInGhostZones is still the number of local stars, not the
-    // actual total!
+    // NumberOfMCTracersInGhostZones is still the number of local particles to COPY_OUT, not the
+    // global total!
     NumberToMove[ProcessorNumber] += NumberOfMCTracersInGhostZones;
  
     /* Move MC tracers to buffer then delete from the grid of linked lists */
 
     // loop over all ghost cells neighboring the active region
 
-    // **** save code for later (DOESNT BELONG HERE) ****
-    pos[2] = (k + 0.5) * CellWidth[2][0];
-    pos[1] = (j + 0.5) * CellWidth[1][0];
-    pos[0] = (i + 0.5) * CellWidth[0][0];
-    index = (k * GridDimension[1] + j) * GridDimension[0] + i;
-    // **************************************************
-    int NumberOfFaceCells =  // count cell faces
-    int GhostCellIndices = int[2
-    /* x inner (left) face */
-     
-    i = StartIndex[0] - 1; // first ghost zone to the left of the active zone
+    const int NUMBER_OF_FACE_CELLS = 2 * (GridDimension[0] * GridDimension[1] +
+                                          GridDimension[0] * GridDimension[2] +
+                                          GridDimension[1] * GridDimension[2]);
 
-    for (j = 0; j < GridDims[1]; j++)
-    for (k = 0; k < GridDims[2]; k++) {
+    int FirstGhostCellIndices = int[NUMBER_OF_FACE_CELLS];
+    FirstGhostCellIndices = this->GetFirstGhostCells(NUMBER_OF_FACE_CELLS);
 
-      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
-    }
+    for (icell = 0; icell < NUMBER_OF_FACE_CELLS; icell++) {
+      index = FirstGhostCellIndices[icell];
 
-    /* x outer (right) face */
-    i = EndIndex[0] + 1;
-    for (j = 0; j < GridDims[1]; j++)
-    for (k = 0; k < GridDims[2]; k++) {
+      // Unravel index
+      k = index / (GridDimension[0] * GridDimension[1]);
+      j = (index / GridDimension[0]) % GridDimension[1];
+      i = index % GridDimension[0];
 
-      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
-    }
+      // Compute particle position (cell-center)
+      pos[2] = (k + 0.5) * CellWidth[2][0];
+      pos[1] = (j + 0.5) * CellWidth[1][0];
+      pos[0] = (i + 0.5) * CellWidth[0][0];
 
-    /* y inner (left) face */
-     
-    j = StartIndex[1] - 1;
-    for (i = 0; i < GridDims[0]; i++)
-    for (k = 0; k < GridDims[2]; k++) {
+      for (nmc = StartIndex, 
+           MoveMCTP = this->MonteCarloTracerParticles[index]; 
+           MoveMCTP != NULL; 
+           MoveMCTP = MoveMCTP->NextParticle,
+           nmc++;) {
 
-      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
-    }
+        MoveMCTP->MonteCarloTracerParticleToBuffer(&List[nmc].data, pos);
+        List[nmc].grid = GridNum;
+        List[nmc].proc = ProcessorNumber;
 
-    /* y outer (right) face */
+      } // End loop over this cell's particles 
 
-    j = EndIndex[1] + 1;
-    for (i = 0; i < GridDims[0]; i++)
-    for (k = 0; k < GridDims[2]; k++) {
+      StartIndex = nmc; // I don't think this is needed because we're always looping over all particles
+      DeleteMonteCarloTracerParticleList(MonteCarloTracerParticles[index]);      
 
-      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
-    }
-
-    /* z inner (left) face */
-     
-    k = StartIndex[2] - 1;
-    for (i = 0; i < GridDims[0]; i++)
-    for (j = 0; j < GridDims[1]; j++) {
-
-      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
-    }
-
-    /* z outer (right) face */
-
-    k = EndIndex[2] + 1;
-    for (i = 0; i < GridDims[0]; i++)
-    for (j = 0; j < GridDims[1]; j++) {
-
-      index_ghost = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
-    }
-
-    // END LOOP OVER GHOST CELLS  
-
-        
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // CLONE OF STAR PARTICLE CODE
-    for (i = 0, n1 = MonteCarloTracerParticletIndex, MoveMCTP = MonteCarloTracerParticles; i < NumberOfMCTracersInGhostZones;
-         i++, n1++, MoveMCTP = MoveMCTP->NextMonteCarloTracerParticle) {
-      MoveMCTP->MonteCarloTracerParticleToBuffer(&List[n1].data);
-      List[n1].grid = GridNum;
-      List[n1].proc = ProcessorNumber;
-    } // ENDFOR stars
-
-    MonteCarloTracerParticletIndex = n1;
-    DeleteMonteCarloTracerParticleList(MonteCarloTracerParticles);
-    NumberOfMCTracersInGhostZones = 0;
-    ////////////////////////////////////////////////////////////////////////////////
+    } // End loop over ghost cells
 
   } // end: if (COPY_OUT)
  
@@ -157,23 +114,37 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
       return SUCCESS;
 
     /* Count up total number. */
+    /* NumberOfMCTracersInGhostZones should be zero because if we're 
+        using COPY_IN mode, All ghost zone particles should have been
+        shared with other processors and deleted from this grid when 
+        COPY_OUT mode was previously called. */
+    if NumberOfMCTracersInGhostZones
  
     int TotalNumberOfMCTracersInGhostZones;
-    int NumberOfNewMonteCarloTracerParticles = EndIndex - MonteCarloTracerParticletIndex;
+    int NumberOfNewMonteCarloTracerParticles = EndIndex - StartIndex;
 
     TotalNumberOfMCTracersInGhostZones = NumberOfMCTracersInGhostZones + NumberOfNewMonteCarloTracerParticles;
 
+    // ***********************************************************
+    // THIS NEEDS TO BE CHANGED BECAUSE WE NEED TO LOOP OVER CELLS AND PLACE PARTICLES
+    // IN THE CORRECT CELL
     if (NumberOfNewMonteCarloTracerParticles > 0)
-      for (i = MonteCarloTracerParticletIndex; i < EndIndex; i++) {
-	MoveMCTP = MonteCarloTracerParticleBufferToList(List[i].data);
-	MoveMCTP->CurrentGrid = this;
-	MoveMCTP->GridID = this->ID;
-	InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles, MoveMCTP);
+      for (i = StartIndex; i < EndIndex; i++) {
+        
+        /* Find if this particle belongs in this grid */
+        
+
+
+  	    MoveMCTP = MonteCarloTracerParticleBufferToList(List[i].data);
+  	    MoveMCTP->CurrentGrid = this;
+  	    InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
       }
+    // ***********************************************************
+
  
     /* Set new number of stars in this grid. */
- 
-    NumberOfMCTracersInGhostZones = TotalNumberOfMCTracersInGhostZones;
+    // ****!!!!! THIS IS UNNECESSARY BECAUSE WE DON'T KEEP/NEED A RECORD OF THE NUMBER OF MC TRACERS *****/
+    NumberOfMCTracersInGhostZones = TotalNumberOfMCTracersInGhostZones; 
  
   } // end: if (COPY_IN)
  

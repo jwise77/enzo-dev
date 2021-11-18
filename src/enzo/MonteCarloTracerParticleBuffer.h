@@ -26,7 +26,7 @@ struct MonteCarloTracerParticleBuffer {
   float     *ParticleAttributes;
   FLOAT      InitialPosition[MAX_DIMENSION];
   bool       ExchangedThisTimestep;
-  
+  FLOAT      Position[MAX_DIMENSION];
 };
 
 #endif

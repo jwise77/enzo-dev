@@ -159,10 +159,26 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(const MonteCarloTracerParticl
 //   // TODO
 // }
 
-// MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffer buffer) 
-// {
-//   // TODO
-// }
+MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffer buffer) 
+{
+  CurrentGrid            = buffer.CurrentGrid;
+  NextParticle           = buffer.NextParticle;
+  PrevParticle           = buffer.PrevParticle;
+  UniqueID               = buffer.UniqueID;
+  GroupID                = buffer.GroupID;
+  Level                  = buffer.Level;
+  ExchangeCount          = buffer.ExchangeCount;
+  CreationTime           = buffer.CreationTime;
+  Mass                   = buffer.Mass;
+  ExchangedThisTimestep  = buffer.ExchangedThisTimestep;
+
+  ParticleAttributes = new float[NumberOfParticleAttributes];
+  for (i = 0; i < NumberOfParticleAttributes; i++)
+    ParticleAttributes[i] = buffer.ParticleAttributes[i];
+
+  for (i = 0; i < MAX_DIMENSION; i++)
+    InitialPosition[i] = buffer.InitialPosition[i];
+}
 
 
 MonteCarloTracerParticle::~MonteCarloTracerParticle(void)
@@ -202,11 +218,6 @@ MonteCarloTracerParticle::~MonteCarloTracerParticle(void)
 //    CONVENIENT ROUTINES
 
 //  **********************/
-
-bool MonteCarloTracerParticle::ShouldDelete(void)
-{
-  return this->WillDelete != 0;
-}
 
 // MonteCarloTracerParticle *MonteCarloTracerParticle::copy(void)
 // {
@@ -291,9 +302,26 @@ bool MonteCarloTracerParticle::ShouldDelete(void)
 //   return;
 // }
 
-// void MonteCarloTracerParticle::MonteCarloTracerParticleToBuffer(MonteCarloTracerParticleBuffer *result)
-// {
-//   // TODO
-//   return;
-// }
+void MonteCarloTracerParticle::MonteCarloTracerParticleToBuffer(MonteCarloTracerParticleBuffer *result, FLOAT* pos)
+{
+  int i, count = 0;
+  MonteCarloTracerParticle *tmp = this;
 
+  result->CurrentGrid           = tmp->CurrentGrid;
+  result->UniqueID              = tmp->UniqueID;
+  result->GroupID               = tmp->GroupID;
+  result->Level                 = tmp->Level;
+  result->ExchangeCount         = tmp->ExchangeCount;
+  result->CreationTime          = tmp->CreationTime;
+  result->Mass                  = tmp->Mass;
+  result->InitialPosition       = tmp->InitialPosition;
+  result->ExchangedThisTimestep = tmp->ExchangedThisTimestep;
+  
+  for (i = 0; i < MAX_DIMENSION; i++) {
+    result->InitialPosition[i] = tmp->InitialPosition[i];
+    result->Position[i] = pos[i];
+  }
+
+
+  return;
+}
