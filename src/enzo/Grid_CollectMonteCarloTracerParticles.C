@@ -28,7 +28,7 @@ MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerP
 void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, MonteCarloTracerParticle * &NewNode);
  
 int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove, 
-		       int &MonteCarloTracerParticletIndex, int &EndIndex, 
+		       int &StartIndex, int &EndIndex, 
 		       mc_tracer_data* &List, int CopyDirection)
 {
  
@@ -118,34 +118,26 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
         using COPY_IN mode, All ghost zone particles should have been
         shared with other processors and deleted from this grid when 
         COPY_OUT mode was previously called. */
-    if NumberOfMCTracersInGhostZones
+    printf("%sGrid_CollectMonteCarloTracerParticles: COPY_IN\nNumberOfMCTracersInGhostZones = %d (0?)", NumberOfMCTracersInGhostZones);
  
     int TotalNumberOfMCTracersInGhostZones;
     int NumberOfNewMonteCarloTracerParticles = EndIndex - StartIndex;
 
     TotalNumberOfMCTracersInGhostZones = NumberOfMCTracersInGhostZones + NumberOfNewMonteCarloTracerParticles;
 
-    // ***********************************************************
-    // THIS NEEDS TO BE CHANGED BECAUSE WE NEED TO LOOP OVER CELLS AND PLACE PARTICLES
-    // IN THE CORRECT CELL
     if (NumberOfNewMonteCarloTracerParticles > 0)
       for (i = StartIndex; i < EndIndex; i++) {
         
-        /* Find if this particle belongs in this grid */
+        /* Temporarily add particles to this grid. We don't yet know if 
+           these particles belong in this grid so it doesn't matter where we
+           put them. We arbitrarily put them in the first cell for now.
+           NOTE: CurrentGrid may not be correct. This will need
+           to be updated in CommunicationTransferParticles */
         
-
-
   	    MoveMCTP = MonteCarloTracerParticleBufferToList(List[i].data);
   	    MoveMCTP->CurrentGrid = this;
-  	    InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
+  	    InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[0], MoveMCTP);
       }
-    // ***********************************************************
-
- 
-    /* Set new number of stars in this grid. */
-    // ****!!!!! THIS IS UNNECESSARY BECAUSE WE DON'T KEEP/NEED A RECORD OF THE NUMBER OF MC TRACERS *****/
-    NumberOfMCTracersInGhostZones = TotalNumberOfMCTracersInGhostZones; 
- 
   } // end: if (COPY_IN)
  
   return SUCCESS;

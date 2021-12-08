@@ -281,6 +281,8 @@ int RebuildHierarchy(TopGridData *MetaData,
     CommunicationTransferStars(GridPointer, grids, MetaData->TopGridDims);
     CommunicationTransferActiveParticles(GridPointer, grids,
                                          MetaData->TopGridDims);
+    CommunicationTransferMonteCarloTracerParticles(GridPointer, grids,
+                                                   MetaData->TopGridDims);    
 
     /* We need to collect particles again */
 

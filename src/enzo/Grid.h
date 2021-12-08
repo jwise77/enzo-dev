@@ -1754,8 +1754,20 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
 //
   int AdvectMonteCarloTracerParticles(int CycleNumber);
   int AllocateMonteCarloTracerParticleData();
+  int CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
+                                       int &StartIndex, int &EndIndex,
+                                       mc_tracer_data* &List, int CopyDirection);
   int CopyMonteCarloTracerParticlesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION]);
+  int CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int NumberOfGrids,
+                                                     int ThisGridNum, int TopGridDims[],
+                                                     int *&NumberToMove,
+                                                     int StartIndex, int EndIndex,
+                                                     mc_tracer_data *&List, int *Layout,
+                                                     int *GStartIndex[], int *GridMap,
+                                                     int CopyDirection);
   int CountMonteCarloTracerParticles();
+  int CountMonteCarloTracerParticlesInCellZero();
+  int CountMonteCarloTracerParticlesInFirstGhostCells();
   int CreateMonteCarloTracerParticles();
   int DeleteMonteCarloTracerParticleData();
   int ResetMonteCarloTracerParticlesExchangedThisTimestep();

@@ -21,7 +21,7 @@
 #include "Grid.h"
 #include "Hierarchy.h"
 
-int grid::ReturnNumberOfMonteCarloTracerParticlesInFirstGhostCells()
+int grid::CountMonteCarloTracerParticlesInFirstGhostCells()
 {
 
   int icell, nmc = 0;

@@ -176,8 +176,10 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffe
   for (i = 0; i < NumberOfParticleAttributes; i++)
     ParticleAttributes[i] = buffer.ParticleAttributes[i];
 
-  for (i = 0; i < MAX_DIMENSION; i++)
+  for (i = 0; i < MAX_DIMENSION; i++) {
     InitialPosition[i] = buffer.InitialPosition[i];
+    Position[i] = buffer.Position[i];
+  }
 }
 
 

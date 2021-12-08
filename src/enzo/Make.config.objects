@@ -105,10 +105,12 @@ OBJS_CONFIG_LIB = \
         CommunicationSendFluxes.o \
         CommunicationShareActiveParticles.o \
         CommunicationShareGrids.o \
+        CommunicationShareMonteCarloTracerParticles.o \
         CommunicationShareParticles.o \
         CommunicationShareStars.o \
         CommunicationSyncNumberOfParticles.o \
         CommunicationTransferActiveParticles.o \
+        CommunicationTransferMonteCarloTracerParticlesOpt.o \
         CommunicationTransferParticlesOpt.o \
         CommunicationTransferStarsOpt.o \
 	CommunicationTransferSubgridParticles.o \
@@ -390,6 +392,7 @@ OBJS_CONFIG_LIB = \
 	Grid_CollapseTestInitializeGrid.o \
     	Grid_CollectActiveParticles.o \
         Grid_CollectGridInformation.o \
+        Grid_CollectMonteCarloTracerParticles.o \
         Grid_CollectParticles.o \
         Grid_CollectParticleMassFlaggingField.o \
         Grid_CollectStars.o \
@@ -400,6 +403,7 @@ OBJS_CONFIG_LIB = \
 	Grid_CommunicationSendStars.o \
 	Grid_CommunicationSendRegion.o \
     	Grid_CommunicationTransferActiveParticles.o \
+    Grid_CommunicationTransferMonteCarloTracerParticlesOpt.o \
 	Grid_CommunicationTransferParticlesOpt.o \
 	Grid_CommunicationTransferStarsOpt.o \
 	Grid_ComovingExpansionTerms.o \
@@ -453,6 +457,8 @@ OBJS_CONFIG_LIB = \
 	Grid_CosmologyInitializeParticles.o \
 	Grid_CosmologySimulationInitializeGrid.o \
     Grid_CountMonteCarloTracerParticles.o \
+    Grid_CountMonteCarloTracerParticlesInCellZero.o \
+    Grid_CountMonteCarloTracerParticlesInFirstGhostCells.o \
 	Grid_CreateChildParticles.o \
 	Grid_CreateFieldArray.o \
     Grid_CreateMonteCarloTracerParticles.o \

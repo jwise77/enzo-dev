@@ -487,7 +487,7 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
       TotalActiveParticlesToMove += GridHierarchyPointer[i]->GridData->
         ReturnNumberOfActiveParticles();
       TotalMonteCarloTracerParticlesToMove += GridHierarchyPointer[i]->GridData->
-        ReturnNumberOfMonteCarloTracerParticlesInFirstGhostCells();        
+        CountMonteCarloTracerParticlesInFirstGhostCells();        
 	}
 
       AllMovedParticles = TotalNumberToMove;
@@ -692,11 +692,18 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
       delete [] StarSendList;
     delete [] StarSharedList;
 
+    if (MCTPSendList != MCTPSharedList)
+      delete [] MCTPSendList;
+    delete [] MCTPSharedList;    
+
     } // ENDFOR grid batches
 
     /************************************************************************
        If the particles and stars are only on the grid's host
-       processor, set number of particles so everybody agrees. 
+       processor, set number of particles so everybody agrees.
+       Note: This isn't necessary for Monte Carlo tacer particles
+       because we don't keep a record of the number of particles 
+       on a grid.
     ************************************************************************/
 
     if (SyncNumberOfParticles)
@@ -722,6 +729,7 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
   delete [] NumberToMove;
   delete [] StarsToMove;
   delete [] APNumberToMove;
+  delete [] MCTPNumberToMove;
 
   return SUCCESS;
 }

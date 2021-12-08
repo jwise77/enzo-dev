@@ -72,12 +72,12 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node)
 // /* Since InsertMonteCarloTracerParticleAfter puts the node after the head node.  We insert
 //    the nodes in a fashion to preserve the order of the array. */
 
-// MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer buffer)
-// {
-//   MonteCarloTracerParticle *result = NULL;
-//   result = new MonteCarloTracerParticle(buffer);
-//   return result;
-// }
+MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer buffer)
+{
+  MonteCarloTracerParticle *result = NULL;
+  result = new MonteCarloTracerParticle(buffer);
+  return result;
+}
 
 // MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer *buffer, int n) 
 // {

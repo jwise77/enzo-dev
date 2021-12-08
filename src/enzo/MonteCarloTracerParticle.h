@@ -41,6 +41,7 @@ class MonteCarloTracerParticle
   // user defined attributes (e.g. max temperature, max velocity, etc.)
   float     *ParticleAttributes;
   FLOAT      InitialPosition[MAX_DIMENSION];
+  FLOAT      Position[MAX_DIMENSION];
   bool       ExchangedThisTimestep;
   int        WillDelete;
   
@@ -68,6 +69,7 @@ class MonteCarloTracerParticle
   MonteCarloTracerParticle(grid *_grid, int _ID, int _groupID, int _level, float _creationTime, FLOAT _pos[MAX_DIMENSION]);
   MonteCarloTracerParticle(grid *_grid, int _ID, int _groupID, int _level, float _creationTime, FLOAT _pos[MAX_DIMENSION], 
                             float _mass, int _exchange_count);
+  MonteCarloTracerParticle(MonteCarloTracerParticleBuffer buffer);
   ~MonteCarloTracerParticle();
 
   // Operators
