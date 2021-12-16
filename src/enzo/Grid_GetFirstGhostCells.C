@@ -20,71 +20,70 @@
 #include "Grid.h"
 #include "Hierarchy.h"
 
-int* grid::GetFirstGhostCells(const int NUMBER_OF_FACE_CELLS)
+void grid::GetFirstGhostCells(int GhostCellIndices[], const int NUMBER_OF_FACE_CELLS)
 {
-    int GhostCellIndices = int[NUMBER_OF_FACE_CELLS];
-    int n = 0;
+    int i, j, k, n = 0;
 
     /* x inner (left) face */
      
-    i = StartIndex[0] - 1; // first ghost zone to the left of the active zone
+    i = GridStartIndex[0] - 1; // first ghost zone to the left of the active zone
 
-    for (j = 0; j < GridDims[1]; j++)
-    for (k = 0; k < GridDims[2]; k++) {
+    for (j = 0; j < GridDimension[1]; j++)
+    for (k = 0; k < GridDimension[2]; k++) {
 
-      GhostCellIndices[n] = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      GhostCellIndices[n] = i + j*GridDimension[0] + k*GridDimension[1]*GridDimension[0];
       n++;
     }
 
     /* x outer (right) face */
-    i = EndIndex[0] + 1;
-    for (j = 0; j < GridDims[1]; j++)
-    for (k = 0; k < GridDims[2]; k++) {
+    i = GridEndIndex[0] + 1;
+    for (j = 0; j < GridDimension[1]; j++)
+    for (k = 0; k < GridDimension[2]; k++) {
 
-      GhostCellIndices[n] = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      GhostCellIndices[n] = i + j*GridDimension[0] + k*GridDimension[1]*GridDimension[0];
       n++;
     }
 
     /* y inner (left) face */
      
-    j = StartIndex[1] - 1;
-    for (i = 0; i < GridDims[0]; i++)
-    for (k = 0; k < GridDims[2]; k++) {
+    j = GridStartIndex[1] - 1;
+    for (i = 0; i < GridDimension[0]; i++)
+    for (k = 0; k < GridDimension[2]; k++) {
 
-      GhostCellIndices[n] = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      GhostCellIndices[n] = i + j*GridDimension[0] + k*GridDimension[1]*GridDimension[0];
       n++;
     }
 
     /* y outer (right) face */
 
-    j = EndIndex[1] + 1;
-    for (i = 0; i < GridDims[0]; i++)
-    for (k = 0; k < GridDims[2]; k++) {
+    j = GridEndIndex[1] + 1;
+    for (i = 0; i < GridDimension[0]; i++)
+    for (k = 0; k < GridDimension[2]; k++) {
 
-      GhostCellIndices[n] = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      GhostCellIndices[n] = i + j*GridDimension[0] + k*GridDimension[1]*GridDimension[0];
       n++;
     }
 
     /* z inner (left) face */
      
-    k = StartIndex[2] - 1;
-    for (i = 0; i < GridDims[0]; i++)
-    for (j = 0; j < GridDims[1]; j++) {
+    k = GridStartIndex[2] - 1;
+    for (i = 0; i < GridDimension[0]; i++)
+    for (j = 0; j < GridDimension[1]; j++) {
 
-      GhostCellIndices[n] = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      GhostCellIndices[n] = i + j*GridDimension[0] + k*GridDimension[1]*GridDimension[0];
       n++;
     }
 
     /* z outer (right) face */
 
-    k = EndIndex[2] + 1;
-    for (i = 0; i < GridDims[0]; i++)
-    for (j = 0; j < GridDims[1]; j++) {
+    k = GridEndIndex[2] + 1;
+    for (i = 0; i < GridDimension[0]; i++)
+    for (j = 0; j < GridDimension[1]; j++) {
 
-      GhostCellIndices[n] = i + j*GridDims[0] + k*GridDims[1]*GridDims[0];
+      GhostCellIndices[n] = i + j*GridDimension[0] + k*GridDimension[1]*GridDimension[0];
       n++;
     }
 
-    return GhostCellIndices;
+    return;
 
 }

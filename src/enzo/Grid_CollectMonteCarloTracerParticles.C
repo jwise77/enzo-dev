@@ -37,7 +37,7 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
   int i, j, k, index, dim, icell, nmc, grid, proc;
   int size = 1, NumberOfMCTracersInGhostZones = 0;
   MonteCarloTracerParticle *MoveMCTP;
-  NumberOfMCTracersInGhostZones = this->ReturnNumberOfMonteCarloTracerParticlesInFirstGhostCells();
+  NumberOfMCTracersInGhostZones = this->CountMonteCarloTracerParticlesInFirstGhostCells();
   for (dim = 0; dim < GridRank; dim++)
     size *= GridDimension[dim];  
 
@@ -70,8 +70,10 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
                                           GridDimension[0] * GridDimension[2] +
                                           GridDimension[1] * GridDimension[2]);
 
-    int FirstGhostCellIndices = int[NUMBER_OF_FACE_CELLS];
-    FirstGhostCellIndices = this->GetFirstGhostCells(NUMBER_OF_FACE_CELLS);
+    int FirstGhostCellIndices[NUMBER_OF_FACE_CELLS];
+
+    // Fill the FirstGhostCellIndices array.
+    this->GetFirstGhostCells(FirstGhostCellIndices, NUMBER_OF_FACE_CELLS);
 
     for (icell = 0; icell < NUMBER_OF_FACE_CELLS; icell++) {
       index = FirstGhostCellIndices[icell];
@@ -82,6 +84,7 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
       i = index % GridDimension[0];
 
       // Compute particle position (cell-center)
+      FLOAT pos[3];
       pos[2] = (k + 0.5) * CellWidth[2][0];
       pos[1] = (j + 0.5) * CellWidth[1][0];
       pos[0] = (i + 0.5) * CellWidth[0][0];
@@ -90,7 +93,7 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
            MoveMCTP = this->MonteCarloTracerParticles[index]; 
            MoveMCTP != NULL; 
            MoveMCTP = MoveMCTP->NextParticle,
-           nmc++;) {
+           nmc++) {
 
         MoveMCTP->MonteCarloTracerParticleToBuffer(&List[nmc].data, pos);
         List[nmc].grid = GridNum;

@@ -68,17 +68,18 @@ class MonteCarloTracerParticle
   MonteCarloTracerParticle();
   MonteCarloTracerParticle(grid *_grid, int _ID, int _groupID, int _level, float _creationTime, FLOAT _pos[MAX_DIMENSION]);
   MonteCarloTracerParticle(grid *_grid, int _ID, int _groupID, int _level, float _creationTime, FLOAT _pos[MAX_DIMENSION], 
-                            float _mass, int _exchange_count);
+                           float _mass, int _exchange_count);
+  MonteCarloTracerParticle(const MonteCarloTracerParticle* mc); 
   MonteCarloTracerParticle(MonteCarloTracerParticleBuffer buffer);
   ~MonteCarloTracerParticle();
 
   // Operators
   
   // Routines
+  void MonteCarloTracerParticleToBuffer(MonteCarloTracerParticleBuffer *result, FLOAT* pos);
   
   // getters
-  int ReturnGridID(void){ return CurrentGrid->ID };
-  int ReturnID(void){ return CurrentGrid->UniqueID };
+  
   // setters
   
 };

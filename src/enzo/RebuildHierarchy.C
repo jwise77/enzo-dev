@@ -64,6 +64,8 @@ int CommunicationTransferStars(grid *GridPointer[], int NumberOfGrids,
 			       int TopGridDims[]);
 int CommunicationTransferActiveParticles(grid *GridPointer[], int NumberOfGrids,
                                          int TopGridDims[]);
+int CommunicationTransferMonteCarloTracerParticles(grid *GridPointer[], int NumberOfGrids,
+             int TopGridDims[]);
 int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[], int level,
 				  bool ParticlesAreLocal,
 				  bool SyncNumberOfParticles, 

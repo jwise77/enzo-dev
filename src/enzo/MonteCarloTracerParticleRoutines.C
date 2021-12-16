@@ -130,6 +130,8 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(grid *_grid, int _ID, int _gr
 
 MonteCarloTracerParticle::MonteCarloTracerParticle(const MonteCarloTracerParticle* mc)
 {
+  int i;
+
   CurrentGrid            = mc->CurrentGrid;
   NextParticle           = mc->NextParticle;
   PrevParticle           = mc->PrevParticle;
@@ -161,9 +163,8 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(const MonteCarloTracerParticl
 
 MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffer buffer) 
 {
-  CurrentGrid            = buffer.CurrentGrid;
-  NextParticle           = buffer.NextParticle;
-  PrevParticle           = buffer.PrevParticle;
+  int i;
+
   UniqueID               = buffer.UniqueID;
   GroupID                = buffer.GroupID;
   Level                  = buffer.Level;
@@ -306,24 +307,21 @@ MonteCarloTracerParticle::~MonteCarloTracerParticle(void)
 
 void MonteCarloTracerParticle::MonteCarloTracerParticleToBuffer(MonteCarloTracerParticleBuffer *result, FLOAT* pos)
 {
-  int i, count = 0;
+  int i;
   MonteCarloTracerParticle *tmp = this;
 
-  result->CurrentGrid           = tmp->CurrentGrid;
   result->UniqueID              = tmp->UniqueID;
   result->GroupID               = tmp->GroupID;
   result->Level                 = tmp->Level;
   result->ExchangeCount         = tmp->ExchangeCount;
   result->CreationTime          = tmp->CreationTime;
   result->Mass                  = tmp->Mass;
-  result->InitialPosition       = tmp->InitialPosition;
   result->ExchangedThisTimestep = tmp->ExchangedThisTimestep;
   
   for (i = 0; i < MAX_DIMENSION; i++) {
     result->InitialPosition[i] = tmp->InitialPosition[i];
     result->Position[i] = pos[i];
   }
-
 
   return;
 }

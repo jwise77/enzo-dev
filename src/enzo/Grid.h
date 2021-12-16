@@ -1765,13 +1765,14 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
                                                      mc_tracer_data *&List, int *Layout,
                                                      int *GStartIndex[], int *GridMap,
                                                      int CopyDirection);
-  int CountMonteCarloTracerParticles();
-  int CountMonteCarloTracerParticlesInCellZero();
-  int CountMonteCarloTracerParticlesInFirstGhostCells();
-  int CreateMonteCarloTracerParticles();
-  int DeleteMonteCarloTracerParticleData();
-  int ResetMonteCarloTracerParticlesExchangedThisTimestep();
-  int Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
+  int  CountMonteCarloTracerParticles();
+  int  CountMonteCarloTracerParticlesInCellZero();
+  int  CountMonteCarloTracerParticlesInFirstGhostCells();
+  int  CreateMonteCarloTracerParticles();
+  int  DeleteMonteCarloTracerParticleData();
+  void GetFirstGhostCells(int GhostCellIndices[], const int NUMBER_OF_FACE_CELLS);
+  int  ResetMonteCarloTracerParticlesExchangedThisTimestep();
+  int  Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
   void PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os);
 
 // -------------------------------------------------------------------------

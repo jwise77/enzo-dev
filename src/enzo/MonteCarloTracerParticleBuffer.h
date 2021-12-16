@@ -13,9 +13,7 @@
 #define __MONTECARLOTRACERPARTICLEBUFFER_H
 
 
-struct MonteCarloTracerParticleBuffer {
-
-  grid      *CurrentGrid;                  
+struct MonteCarloTracerParticleBuffer {               
   PINT       UniqueID;
   PINT       GroupID;
   int        Level;

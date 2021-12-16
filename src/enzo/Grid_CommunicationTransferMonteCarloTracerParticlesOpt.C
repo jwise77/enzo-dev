@@ -92,7 +92,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
 
     // Periodic boundaries
     for (dim = 0; dim < GridRank; dim++) 
-      for (mctp = MonteCarloTracerParticles[0]; mctp; mctp = mctp->NextMonteCarloTracerParticle) {
+      for (mctp = MonteCarloTracerParticles[0]; mctp; mctp = mctp->NextParticle) {
       	if (mctp->Position[dim] > DomainRightEdge[dim])
       	  mctp->Position[dim] -= DomainWidth[dim];
       	else if (mctp->Position[dim] < DomainLeftEdge[dim])
@@ -101,7 +101,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
 
     for (mctp = MonteCarloTracerParticles[0], i = 0; 
          mctp; 
-         mctp = mctp->NextMonteCarloTracerParticle, i++) {
+         mctp = mctp->NextParticle, i++) {
 
       for (dim = 0; dim < GridRank; dim++) {
 
@@ -158,11 +158,12 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       i = 0;
       while (mctp != NULL) {
 
-	      MoveMCTP = PopMonteCarloTracerParticle(mctp);  // also advances to NextMonteCarloTracerParticle
+	      MoveMCTP = PopMonteCarloTracerParticle(mctp);  // also advances to NextParticle
 	      grid = ToGrid[i];
 
       	if (grid != ThisGridNum) {
-          MoveMCTP->MonteCarloTracerParticleToBuffer(&List[n1].data);
+          // MoveMCTP->Position was previously set in Grid_CollectMonteCarloTracerParticles
+          MoveMCTP->MonteCarloTracerParticleToBuffer(&List[n1].data, MoveMCTP->Position);
       	  List[n1].grid = grid;
       	  List[n1].proc = MyProcessorNumber;
       	  n1++;

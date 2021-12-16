@@ -49,7 +49,7 @@ int CommunicationShareMonteCarloTracerParticles(int *NumberToMove, mc_tracer_dat
   int mc_tracer_data_size = sizeof(mc_tracer_data);
   for (proc = 0; proc < NumberOfProcessors; proc++)
     TotalNumberToMove += NumberToMove[proc];
-  std::sort(SendList, SendList+TotalNumberToMove, compare_mc_tracer_proc());
+  std::sort(SendList, SendList+TotalNumberToMove, cmp_mc_tracer_proc());
 
   SharedList = NULL;
 

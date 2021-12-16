@@ -527,6 +527,7 @@ OBJS_CONFIG_LIB = \
     	Grid_GetActiveParticlePosition.o \
         Grid_GetEnclosedMass.o \
         Grid_GetEnclosedMassInShell.o \
+        Grid_GetFirstGhostCells.o\
         Grid_GetProjectedBoundaryFluxes.o \
         Grid_GrackleWrapper.o \
         Grid_GravityEquilibriumTestInitializeGrid.o \

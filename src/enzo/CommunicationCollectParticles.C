@@ -57,6 +57,9 @@ int CommunicationShareStars(int *NumberToMove, star_data* &SendList,
 int CommunicationShareActiveParticles(
     int *NumberToMove, ActiveParticleList<ActiveParticleType> &SendList,
     int &NumberOfReceives, ActiveParticleList<ActiveParticleType> &SharedList);
+int CommunicationShareMonteCarloTracerParticles(int *NumberToMove, 
+          mc_tracer_data* &SendList, int &NumberOfReceives, 
+          mc_tracer_data* &SharedList);
 
 #define NO_DEBUG_CCP
 #define GRIDS_PER_LOOP 100000
