@@ -399,6 +399,7 @@ OBJS_CONFIG_LIB = \
 	Grid_CommunicationMoveGrid.o \
 	Grid_CommunicationReceiveRegion.o \
     	Grid_CommunicationSendActiveParticles.o \
+	Grid_CommunicationSendMonteCarloTracerParticles.o \
 	Grid_CommunicationSendParticles.o \
 	Grid_CommunicationSendStars.o \
 	Grid_CommunicationSendRegion.o \
@@ -564,6 +565,7 @@ OBJS_CONFIG_LIB = \
 	Grid_MoveAllParticles.o \
 	Grid_MoveAllStars.o \
 	Grid_MoveParticlesFOF.o \
+	Grid_MoveSubgridMonteCarloTracerParticlesFast.o \
 	Grid_MoveSubgridParticlesFast.o \
     	Grid_MoveSubgridActiveParticles.o \
 	Grid_MoveSubgridParticles.o \
