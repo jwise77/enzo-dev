@@ -489,6 +489,8 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
   if (!ParallelRootGridIO)
     if (OldGrid->MoveSubgridParticlesFast(gridcounter, SubGrids, TRUE) == FAIL) {
       ENZO_FAIL("Error in grid->MoveSubgridParticlesFast.");
+    if (OldGrid->MoveSubgridMonteCarloTracerParticlesFast(gridcounter, SubGrids, TRUE) == FAIL) {
+      ENZO_FAIL("Error in grid->MoveSubgridMonteCarloTracerParticlesFast.");      
     }
  
   int *PartitionProcessorNumbers = NULL;

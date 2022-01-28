@@ -299,11 +299,29 @@ MonteCarloTracerParticle::~MonteCarloTracerParticle(void)
 //      CONVERSION ROUTINES FROM/TO ARRAY BUFFERS
 // **************************************************/
 
-// void MonteCarloTracerParticle::MonteCarloTracerParticleListToBuffer(MonteCarloTracerParticleBuffer *&result, int n)
-// {
-//   // TODO
-//   return;
-// }
+void MonteCarloTracerParticle::MonteCarloTracerParticleListToBuffer(MonteCarloTracerParticleBuffer *&result, int n)
+{
+  int i, count = 0;
+  MonteCarloTracerParticle *tmp = this;
+  while (tmp != NULL) {
+    result[count]->UniqueID              = tmp->UniqueID;
+    result[count]->GroupID               = tmp->GroupID;
+    result[count]->Level                 = tmp->Level;
+    result[count]->ExchangeCount         = tmp->ExchangeCount;
+    result[count]->CreationTime          = tmp->CreationTime;
+    result[count]->Mass                  = tmp->Mass;
+    result[count]->ExchangedThisTimestep = tmp->ExchangedThisTimestep;
+    
+    for (i = 0; i < MAX_DIMENSION; i++) {
+      result[count]->InitialPosition[i] = tmp->InitialPosition[i];
+      result[count]->Position[i] = tmp->Position[i];
+    }
+    count++;
+    tmp = tmp->NextParticle;
+}
+
+  return;
+}
 
 void MonteCarloTracerParticle::MonteCarloTracerParticleToBuffer(MonteCarloTracerParticleBuffer *result, FLOAT* pos)
 {

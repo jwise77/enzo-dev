@@ -170,8 +170,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       	  delete MoveMCTP;
       	}  // ENDIF different processor
 
-      	// Same processor -- no move to another grid 
-        //  (Only move from cell 0 to the correct cell)
+      	// Particle already in this grid (Only move from cell 0 to the correct cell)
       	else {
           for (dim = 0; dim < GridRank; dim++) {
               index_ijk[dim] = (int) (GridDimension[dim] * 

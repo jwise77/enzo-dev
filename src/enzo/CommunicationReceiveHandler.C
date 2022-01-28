@@ -304,6 +304,11 @@ int CommunicationReceiveHandler(fluxes **SubgridFluxesEstimate[],
 	    (grid_two, MyProcessorNumber);
 	  break;
 
+	case 23:
+	  errcode = grid_one->CommunicationSendMonteCarloTracerParticles
+	    (grid_two, MyProcessorNumber);
+	  break;	  
+
 	default:
 	  ENZO_VFAIL("Unrecognized call type %"ISYM"\n", 
 		  CommunicationReceiveCallType[index])

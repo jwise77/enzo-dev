@@ -1,0 +1,204 @@
+/***********************************************************************
+/
+/  GRID CLASS (MOVE MONTE CARLO TRACER PARTICLES FROM SPECIFIED GRID TO
+/              THIS GRID)
+/
+/  written by: Greg Bryan
+/  date:       May, 1995
+/  modified1:  Corey Brummel-Smith (modified MoveSubgridParticlesFast to
+/               work with Monte Carlo tracer particles)
+/  date:       Jan. 2022 
+/
+/  PURPOSE:
+/
+************************************************************************/
+ 
+//
+ 
+#include <stdio.h>
+#include "ErrorExceptions.h"
+#include "macros_and_parameters.h"
+#include "typedefs.h"
+#include "global_data.h"
+#include "Fluxes.h"
+#include "GridList.h"
+#include "ExternalBoundary.h"
+#include "Grid.h"
+#include "Hierarchy.h"
+ 
+int CommunicationBroadcastValue(int *Value, int BroadcastProcessor);
+void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, MonteCarloTracerParticle * &NewNode);
+ 
+ 
+int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* ToGrids[],
+				   int AllLocal)
+{
+
+  if (debug1) 
+    printf("MoveSubgridMonteCarloTracerParticlesFast: %"ISYM"\n", NumberOfParticles);
+ 
+  /* If there are no particles to move, we're done. */
+ 
+  if (NumberOfParticles == 0 || NumberOfSubgrids == 0)
+    return SUCCESS;
+ 
+  int i, j, k, dim, index, subgrid, n;
+  FLOAT pos[3];
+ 
+  /* Initialize. */
+ 
+  int *ParticlesToMove = new int[NumberOfSubgrids];
+  mc_tracer_data *SendList = NULL;
+
+  for (i = 0; i < NumberOfSubgrids; i++)
+    ParticlesToMove[i] = 0;
+ 
+  /* Error check. */
+ 
+  if (BaryonField[NumberOfBaryonFields] == NULL &&
+      MyProcessorNumber == ProcessorNumber) {
+    ENZO_FAIL("Subgrid field not present.\n");
+  }
+ 
+ 
+  int i0 = 0, j0 = 0, k0 = 0;
+  FLOAT pos[3];
+  MonteCarloTracerParticle *mctp, MoveMCTP, NewMCTP;
+
+  /* Loop over particles and count the number in each subgrid. */
+  
+  if (MyProcessorNumber == ProcessorNumber) {
+    for (k0 = GridStartIndex[2]; k0 < GridEndIndex[2]; k0++) {
+      for (j0 = GridStartIndex[1]; j0 < GridEndIndex[1]; j0++) {
+        for (i0 = GridStartIndex[0]; i0 < GridEndIndex[0]; i0++) {
+ 
+          /* Compute the cell index for particles in this cell */
+     
+          index = (k0*GridDimension[1] + j0)*GridDimension[0] + i0;   
+
+          /* Loop over all particles in this cell */
+          for (mctp = this->MonteCarloTracerParticles[index]; mctp != NULL; 
+               mctp = mctp->NextParticle) { 
+
+            /* Find subgrid number of this particle, and add to count. */
+       
+            subgrid = nint(BaryonField[NumberOfBaryonFields][index])-1;
+
+            if (subgrid >= 0)
+              ParticlesToMove[subgrid]++;
+            if (subgrid < -1 || subgrid > NumberOfSubgrids-1) {
+              ENZO_VFAIL("particle subgrid (%"ISYM"/%"ISYM") out of range\n", subgrid,
+               NumberOfSubgrids)
+            }            
+          } // end: loop over particles 
+        } // end: loop over i
+      } // end: loop over j
+    } // end: loop over k
+  } // end: if (MyProcessorNumber)
+ 
+  /* Communicate number of send particles to subgrids */
+ 
+  if (AllLocal == FALSE)
+    for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++)
+      if (CommunicationBroadcastValue(&ParticlesToMove[subgrid],
+				      ProcessorNumber) == FAIL) {
+	       ENZO_FAIL("Error in CommunicationBroadcastValue.\n");
+      }
+
+  /* Allocate space on all the subgrids with particles.
+     *** THIS SHOULD PROBABLY BE DONE REGARDLESS OF WHETHER THERE ARE PARTICLES THERE OR NOT? *** */
+ 
+  if (MyProcessorNumber == ProcessorNumber)
+    for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++)
+ 
+      if (ParticlesToMove[subgrid] > 0) {
+ 
+        /* Check if MonteCarloTracerParticles have already been allocated */
+      	if (ToGrids[subgrid]->MonteCarloTracerParticles != NULL) {
+      	  ENZO_VFAIL("Monte Carlo tracer particles already in subgrid %"ISYM" (n=%"ISYM", nm=%"ISYM")\n",
+      		  subgrid, ToGrids[subgrid]->MonteCarloTracerParticles, ParticlesToMove[subgrid])
+      	}
+        
+      	ToGrids[subgrid]->AllocateMonteCarloTracerParticleData();
+       
+      	if (debug1) printf("MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"\n",
+      			  subgrid, ParticlesToMove[subgrid]);
+ 
+      } // end: if (ParticlesToMove > 0)
+ 
+  if (MyProcessorNumber == ProcessorNumber) {
+ 
+    /* Loop over particles and move them to the appropriate ToGrid, depending
+       on their position. */
+ 
+    for (k0 = GridStartIndex[2]; k0 < GridEndIndex[2]; k0++) {
+      for (j0 = GridStartIndex[1]; j0 < GridEndIndex[1]; j0++) {
+        for (i0 = GridStartIndex[0]; i0 < GridEndIndex[0]; i0++) {
+ 
+          index = (k0*GridDimension[1] + j0)*GridDimension[0] + i0;
+
+          // Compute particle position (cell-center)
+          pos[2] = (k + 0.5) * CellWidth[2][0];
+          pos[1] = (j + 0.5) * CellWidth[1][0];
+          pos[0] = (i + 0.5) * CellWidth[0][0];
+
+          /* Find subgrid number of this particle, and move it. */
+     
+          subgrid = nint(BaryonField[NumberOfBaryonFields][index])-1;
+          
+          if (subgrid >= 0) {
+
+            /* Loop over particles in this cell */
+                        
+            mctp = MonteCarloTracerParticles[index];
+            while (mctp != NULL) {
+
+              /* Pop particle from this grid/cell and insert it into the subgrid (aka ToGrid) */
+
+              MoveMCTP = PopMonteCarloTracerParticle(mctp);  // also advances mctp to NextParticle
+
+              /* set particle position */
+              for (dim = 0; dim < MAX_DIMENSION; dim++)
+                MoveMCTP->Position[dim] = pos[dim];
+
+              /* Insert this particle into the first cell of the subgrid. This is not where it belongs
+                 but at this point, no communication has been done so these particles live on a "fake"
+                 grid on this processor,  the "real" grid may be on a different processor. These 
+                 particles are temporarily stored in cell 0 and then put into the correct cell on the
+                 "real" grid when they are received in CommunicationSendParticles(). */
+              InsertMonteCarloTracerParticleAfter(ToGrid[subgrid]->MonteCarloTracerParticles[0], MoveMCTP);
+
+            } // end: while (mctp != NULL)          
+          } // end: if (subgrid >= 0)
+        } // end: loop over i
+      } // end: loop over j
+    } // end: loop over k
+ 
+    delete [] BaryonField[NumberOfBaryonFields];
+    BaryonField[NumberOfBaryonFields] = NULL;
+ 
+  } // end: if (MyProcessorNumber)
+ 
+  /* Transfer particles from fake to real grids (and clean up).
+     **** MAYBE JUST DELETE THIS. MIGHT BE NEEDED WHEN CALLED IN REBUILD HIERARCHY. 
+     NEED TO CHECK THIS **** */
+  
+  for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++)
+    if ((MyProcessorNumber == ProcessorNumber ||
+         MyProcessorNumber == ToGrids[subgrid]->ProcessorNumber) &&
+	       ProcessorNumber != ToGrids[subgrid]->ProcessorNumber)
+      if (ParticlesToMove[subgrid] != 0) {
+        printf("\nthis->ProcessorNumber: %d\nToGrids->ProcessorNumber: %d\n", this->ProcessorNumber, ToGrids[subgrid]->ProcessorNumber);
+      	if (this->CommunicationSendMonteCarloTracerParticles(ToGrids[subgrid],
+                   ToGrids[subgrid]->ProcessorNumber, 0, ParticlesToMove[subgrid], 0)
+      	    == FAIL) {
+      	  ENZO_FAIL("Error in grid->CommunicationSendParticles.\n");
+      	}
+      	if (MyProcessorNumber == ProcessorNumber)
+      	  ToGrids[subgrid]->DeleteAllFields();
+      }
+ 
+  delete [] ParticlesToMove;
+ 
+  return SUCCESS;
+}
