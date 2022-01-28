@@ -25,25 +25,30 @@
 #include "ExternalBoundary.h"
 #include "Grid.h"
 #include "Hierarchy.h"
+
  
 int CommunicationBroadcastValue(int *Value, int BroadcastProcessor);
 void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, MonteCarloTracerParticle * &NewNode);
- 
+MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle * &Node); 
  
 int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* ToGrids[],
 				   int AllLocal)
 {
+ 
+  /* If there are no subgrids or particles to move, we're done. */
+  if (NumberOfSubgrids == 0)
+    return SUCCESS;
 
+  int NumberOfMonteCarloTracerParticles = this->CountMonteCarloTracerParticles();
   if (debug1) 
-    printf("MoveSubgridMonteCarloTracerParticlesFast: %"ISYM"\n", NumberOfParticles);
- 
-  /* If there are no particles to move, we're done. */
- 
-  if (NumberOfParticles == 0 || NumberOfSubgrids == 0)
+    printf("MoveSubgridMonteCarloTracerParticlesFast: %"ISYM"\n", NumberOfMonteCarloTracerParticles);
+
+  if (NumberOfMonteCarloTracerParticles == 0)
     return SUCCESS;
  
-  int i, j, k, dim, index, subgrid, n;
+  int i, j, k, i0, j0, k0, dim, index, subgrid, n;
   FLOAT pos[3];
+  MonteCarloTracerParticle *mctp, *MoveMCTP;
  
   /* Initialize. */
  
@@ -59,11 +64,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
       MyProcessorNumber == ProcessorNumber) {
     ENZO_FAIL("Subgrid field not present.\n");
   }
- 
- 
-  int i0 = 0, j0 = 0, k0 = 0;
-  FLOAT pos[3];
-  MonteCarloTracerParticle *mctp, MoveMCTP, NewMCTP;
+
 
   /* Loop over particles and count the number in each subgrid. */
   
@@ -166,7 +167,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
                  grid on this processor,  the "real" grid may be on a different processor. These 
                  particles are temporarily stored in cell 0 and then put into the correct cell on the
                  "real" grid when they are received in CommunicationSendParticles(). */
-              InsertMonteCarloTracerParticleAfter(ToGrid[subgrid]->MonteCarloTracerParticles[0], MoveMCTP);
+              InsertMonteCarloTracerParticleAfter(ToGrids[subgrid]->MonteCarloTracerParticles[0], MoveMCTP);
 
             } // end: while (mctp != NULL)          
           } // end: if (subgrid >= 0)
@@ -189,8 +190,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
 	       ProcessorNumber != ToGrids[subgrid]->ProcessorNumber)
       if (ParticlesToMove[subgrid] != 0) {
         printf("\nthis->ProcessorNumber: %d\nToGrids->ProcessorNumber: %d\n", this->ProcessorNumber, ToGrids[subgrid]->ProcessorNumber);
-      	if (this->CommunicationSendMonteCarloTracerParticles(ToGrids[subgrid],
-                   ToGrids[subgrid]->ProcessorNumber, 0, ParticlesToMove[subgrid], 0)
+      	if (this->CommunicationSendMonteCarloTracerParticles(ToGrids[subgrid], ToGrids[subgrid]->ProcessorNumber)
       	    == FAIL) {
       	  ENZO_FAIL("Error in grid->CommunicationSendParticles.\n");
       	}

@@ -15,6 +15,13 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle *&Node);
 int grid::DeleteMonteCarloTracerParticleData()
 {
   printf("\n%s", "DeleteMonteCarloTracerParticleData...");
+
+  // Check if MonteCarloTracerParticles array has been allocated
+  if (this->MonteCarloTracerParticles == NULL) {
+    printf("\nMonteCarloTracerParticles array has NOT been allocated\n");
+    return SUCCESS;
+  }
+
   /* Compute grid size. */
   int size = 1;
   int i, dim;

@@ -32,12 +32,12 @@
 
 #ifdef USE_MPI
 static int FirstTimeCalled = TRUE;
-static MPI_Datatype MPI_MCTP;
+static MPI_Datatype MPI_MCTP; 
 int CommunicationBufferedSend(void *buffer, int size, MPI_Datatype Type, 
                               int Target, int Tag, MPI_Comm CommWorld, 
 			      int BufferSize);
 #endif /* USE_MPI */
-MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer *buffer, int n);
+MonteCarloTracerParticle* MonteCarloTracerParticleBufferToList(MonteCarloTracerParticleBuffer buffer);
 void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, MonteCarloTracerParticle * &NewNode);
 void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node);
 
@@ -150,7 +150,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
        CommunicationDirection == COMMUNICATION_RECEIVE)) {
 
     for (dim = 0; dim < MAX_DIMENSION; dim++) {
-      DomainWidth[dim] = ToGrid->DomainRightEdge[dim] - ToGrid->DomainLeftEdge[dim];
+      DomainWidth[dim] = DomainRightEdge[dim] - DomainLeftEdge[dim];
       DomainWidthInv[dim] = 1.0/DomainWidth[dim];    
     }
     for (n = 0; n < TransferSize; n++) {
@@ -160,7 +160,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       /* Find which cell this particle belongs in */
       for (dim = 0; dim < GridRank; dim++) {
           index_ijk[dim] = (int) (ToGrid->GridDimension[dim] * 
-                                  (mctp->Position[dim] - ToGrid->DomainLeftEdge[dim]) *
+                                  (mctp->Position[dim] - DomainLeftEdge[dim]) *
                                   DomainWidthInv[dim]);
       }
       index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);

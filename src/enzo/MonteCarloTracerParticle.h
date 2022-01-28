@@ -77,6 +77,7 @@ class MonteCarloTracerParticle
   
   // Routines
   void MonteCarloTracerParticleToBuffer(MonteCarloTracerParticleBuffer *result, FLOAT* pos);
+  void MonteCarloTracerParticleListToBuffer(MonteCarloTracerParticleBuffer *&result, int n);
   
   // getters
   

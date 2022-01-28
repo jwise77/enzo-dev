@@ -1758,6 +1758,7 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
                                        int &StartIndex, int &EndIndex,
                                        mc_tracer_data* &List, int CopyDirection);
   int CopyMonteCarloTracerParticlesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION]);
+  int CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor);  
   int CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int NumberOfGrids,
                                                      int ThisGridNum, int TopGridDims[],
                                                      int *&NumberToMove,
@@ -1771,6 +1772,7 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
   int  CreateMonteCarloTracerParticles();
   int  DeleteMonteCarloTracerParticleData();
   void GetFirstGhostCells(int GhostCellIndices[], const int NUMBER_OF_FACE_CELLS);
+  int  MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* ToGrids[], int AllLocal);
   int  ResetMonteCarloTracerParticlesExchangedThisTimestep();
   int  Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
   void PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os);
