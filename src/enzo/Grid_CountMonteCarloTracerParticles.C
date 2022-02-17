@@ -29,11 +29,13 @@ int grid::CountMonteCarloTracerParticles()
 {
   /* Compute grid size. */
   int i, dim, size = 1, N = 0;
+  MonteCarloTracerParticle *mc;
+
   for (dim = 0; dim < GridRank; dim++)
     size *= GridDimension[dim];   
 
   for (i = 0; i < size; i++){
-    MonteCarloTracerParticle *mc = MonteCarloTracerParticles[i];
+    mc = MonteCarloTracerParticles[i];
     while(mc != NULL){
       N++;
       mc = mc->NextParticle;
