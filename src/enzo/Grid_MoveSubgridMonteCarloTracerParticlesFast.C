@@ -34,16 +34,9 @@ MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle *
 int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* ToGrids[],
 				   int AllLocal)
 {
- 
+
   /* If there are no subgrids or particles to move, we're done. */
   if (NumberOfSubgrids == 0)
-    return SUCCESS;
-
-  int NumberOfMonteCarloTracerParticles = this->CountMonteCarloTracerParticles();
-  if (debug1) 
-    printf("MoveSubgridMonteCarloTracerParticlesFast: %"ISYM"\n", NumberOfMonteCarloTracerParticles);
-
-  if (NumberOfMonteCarloTracerParticles == 0)
     return SUCCESS;
  
   int i, j, k, i0, j0, k0, dim, index, subgrid, n;
@@ -69,6 +62,14 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   /* Loop over particles and count the number in each subgrid. */
   
   if (MyProcessorNumber == ProcessorNumber) {
+
+    int NumberOfMonteCarloTracerParticles = this->CountMonteCarloTracerParticles();
+    if (debug1) 
+      printf("MoveSubgridMonteCarloTracerParticlesFast: %"ISYM"\n", NumberOfMonteCarloTracerParticles);
+
+    if (NumberOfMonteCarloTracerParticles == 0)
+      return SUCCESS; 
+         
     for (k0 = GridStartIndex[2]; k0 < GridEndIndex[2]; k0++) {
       for (j0 = GridStartIndex[1]; j0 < GridEndIndex[1]; j0++) {
         for (i0 = GridStartIndex[0]; i0 < GridEndIndex[0]; i0++) {
