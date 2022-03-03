@@ -126,8 +126,10 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
       			  subgrid, ParticlesToMove[subgrid]);
  
       } // end: if (ParticlesToMove > 0)
+
+  printf("\n\nthis       %p\nToGrids[0] %p\nToGrids[1] %p\n\n", this, ToGrids[0], ToGrids[1]); 
  
-  if (MyProcessorNumber == ProcessorNumber) {
+  if (MyProcessorNumber == ProcessorNumber) {  
  
     /* Loop over particles and move them to the appropriate ToGrid, depending
        on their position. */
@@ -148,12 +150,13 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
      
           subgrid = nint(BaryonField[NumberOfBaryonFields][index])-1;
           
-          if (subgrid >= 0) {
 
             /* Loop over particles in this cell */
                         
-            mctp = MonteCarloTracerParticles[index];
-            while (mctp != NULL) {
+          mctp = MonteCarloTracerParticles[index];
+          MonteCarloTracerParticles[index] = NULL;
+          while (mctp != NULL) {
+            if (subgrid >= 0) {
 
               /* Pop particle from this grid/cell and insert it into the subgrid (aka ToGrid) */
 
@@ -170,17 +173,14 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
                  "real" grid when they are received in CommunicationSendParticles(). */
               InsertMonteCarloTracerParticleAfter(ToGrids[subgrid]->MonteCarloTracerParticles[0], MoveMCTP);
               printf("\ninserted particle %d (%p) from this grid (%p), into ToGrids[%d] (%p)", count, MoveMCTP, this, subgrid, ToGrids[subgrid]);
-
-              // *****************************************************
-              // **** TODO: DELETE PARTICLES IN CELL[INDEX] HERE *****
-              // *****************************************************
-
-            } // end: while (mctp != NULL)          
-          } // end: if (subgrid >= 0)
+            } // end: if (subgrid >= 0)
+            else
+              InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
+          } // end: while (mctp != NULL)          
         } // end: loop over i
       } // end: loop over j
     } // end: loop over k
- 
+    
     delete [] BaryonField[NumberOfBaryonFields];
     BaryonField[NumberOfBaryonFields] = NULL;
  
@@ -207,5 +207,30 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
  
   delete [] ParticlesToMove;
  
+
+  // DEBUG
+  // for (k0 = 0; k0 <= GridDimension[2]; k0++) {
+  //   for (j0 = 0; j0 <= GridDimension[1]; j0++) {
+  //     for (i0 = 0; i0 <= GridDimension[0]; i0++) {
+  //       index = (k0*GridDimension[1] + j0)*GridDimension[0] + i0;
+  //       if ((k0 < GridStartIndex[2] or k0 > GridEndIndex[2]) or
+  //           (j0 < GridStartIndex[1] or j0 > GridEndIndex[1]) or
+  //           (i0 < GridStartIndex[0] or i0 > GridEndIndex[0]))
+  //           printf("\n* Ghost Cell * ");
+  //       else
+  //           printf("\nActive Cell "); 
+  //         mctp = this->MonteCarloTracerParticles[index];
+  //         printf(" MCTP[%d](0) %p", index, mctp);  
+  //         int count = 1;   
+  //         while (mctp != NULL) {
+  //           mctp = mctp->NextParticle;
+  //           printf("\nMCTP[%d](%d) %p", index, count, mctp);  
+  //           count++;   
+  //         }
+  //     }
+  //   }
+  // }
+  // // END DEBUG
+
   return SUCCESS;
 }
