@@ -31,6 +31,11 @@ int grid::CountMonteCarloTracerParticles()
   int i, dim, size = 1, N = 0;
   MonteCarloTracerParticle *mc;
 
+  if (MonteCarloTracerParticles == NULL) {
+    printf("\nMonteCarloTracerParticles not allocated on grid %d, ProcessorNumber %d", this->ID, ProcessorNumber);
+    return 0;
+  }
+
   for (dim = 0; dim < GridRank; dim++)
     size *= GridDimension[dim];   
 

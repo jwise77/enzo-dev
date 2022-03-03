@@ -69,9 +69,9 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
     if (NumberOfMonteCarloTracerParticles == 0)
       return SUCCESS; 
          
-    for (k0 = GridStartIndex[2]; k0 < GridEndIndex[2]; k0++) {
-      for (j0 = GridStartIndex[1]; j0 < GridEndIndex[1]; j0++) {
-        for (i0 = GridStartIndex[0]; i0 < GridEndIndex[0]; i0++) {
+    for (k0 = GridStartIndex[2]; k0 <= GridEndIndex[2]; k0++) {
+      for (j0 = GridStartIndex[1]; j0 <= GridEndIndex[1]; j0++) {
+        for (i0 = GridStartIndex[0]; i0 <= GridEndIndex[0]; i0++) {
  
           /* Compute the cell index for particles in this cell */
      
@@ -132,9 +132,9 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
     /* Loop over particles and move them to the appropriate ToGrid, depending
        on their position. */
     int count = 0;
-    for (k0 = GridStartIndex[2]; k0 < GridEndIndex[2]; k0++) {
-      for (j0 = GridStartIndex[1]; j0 < GridEndIndex[1]; j0++) {
-        for (i0 = GridStartIndex[0]; i0 < GridEndIndex[0]; i0++) {
+    for (k0 = GridStartIndex[2]; k0 <= GridEndIndex[2]; k0++) {
+      for (j0 = GridStartIndex[1]; j0 <= GridEndIndex[1]; j0++) {
+        for (i0 = GridStartIndex[0]; i0 <= GridEndIndex[0]; i0++) {
           count++;
  
           index = (k0*GridDimension[1] + j0)*GridDimension[0] + i0;
