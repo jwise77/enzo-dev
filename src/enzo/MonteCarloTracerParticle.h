@@ -39,7 +39,7 @@ class MonteCarloTracerParticle
   float      CreationTime;
   float      Mass;
   // user defined attributes (e.g. max temperature, max velocity, etc.)
-  float     *ParticleAttributes;
+  //float     *ParticleAttributes;
   FLOAT      InitialPosition[MAX_DIMENSION];
   FLOAT      Position[MAX_DIMENSION];
   bool       ExchangedThisTimestep;

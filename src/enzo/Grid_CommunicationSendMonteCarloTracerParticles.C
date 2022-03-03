@@ -51,6 +51,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
   float DomainWidth[MAX_DIMENSION], DomainWidthInv[MAX_DIMENSION];  
   MonteCarloTracerParticleBuffer *buffer = NULL;
   MonteCarloTracerParticle *mctp;
+  grid *DestinationGrid;
 
   if (CommunicationShouldExit(ProcessorNumber, ToProcessor))
     return SUCCESS;
@@ -148,6 +149,13 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
 
   /* If this is the to processor, unpack fields. */
 
+  // if ( ((MyProcessorNumber == ToProcessor) || (MyProcessorNumber == ProcessorNumber)) &&
+  //      (CommunicationDirection == COMMUNICATION_SEND_RECEIVE ||
+  //       CommunicationDirection == COMMUNICATION_RECEIVE))  {
+  //   if (MyProcessorNumber == ProcessorNumber)
+  //     DestinationGrid = this;
+  //   else if (MyProcessorNumber == ToProcessor)
+  //     DestinationGrid = ToGrid;
   if (MyProcessorNumber == ToProcessor &&
       (CommunicationDirection == COMMUNICATION_SEND_RECEIVE ||
        CommunicationDirection == COMMUNICATION_RECEIVE)) {
@@ -158,21 +166,21 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
     }
     for (n = 0; n < TransferSize; n++) {
       mctp = MonteCarloTracerParticleBufferToList(buffer[n]);
-      mctp->CurrentGrid = ToGrid;
+      mctp->CurrentGrid = DestinationGrid;
       
       /* Find which cell this particle belongs in */
       for (dim = 0; dim < GridRank; dim++) {
-          index_ijk[dim] = (int) (ToGrid->GridDimension[dim] * 
+          index_ijk[dim] = (int) (DestinationGrid->GridDimension[dim] * 
                                   (mctp->Position[dim] - DomainLeftEdge[dim]) *
                                   DomainWidthInv[dim]);
       }
       index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
-      InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);
-      printf("\nInsert MCTP from buffer into ToGrid");
+      InsertMonteCarloTracerParticleAfter(DestinationGrid->MonteCarloTracerParticles[index], mctp);
+      printf("\nInsert MCTP from buffer into DestinationGrid");
     }
     delete [] buffer;
 			  
-  } // end: if (MyProcessorNumber...)
+  } // end: if (CommunicationDirection...)
 
   return SUCCESS;
 }

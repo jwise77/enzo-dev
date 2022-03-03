@@ -140,9 +140,9 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
           index = (k0*GridDimension[1] + j0)*GridDimension[0] + i0;
 
           // Compute particle position (cell-center)
-          pos[2] = (k + 0.5) * CellWidth[2][0];
-          pos[1] = (j + 0.5) * CellWidth[1][0];
-          pos[0] = (i + 0.5) * CellWidth[0][0];
+          pos[2] = CellLeftEdge[2][k0] + 0.5 * CellWidth[2][0];
+          pos[1] = CellLeftEdge[1][j0] + 0.5 * CellWidth[1][0];
+          pos[0] = CellLeftEdge[0][i0] + 0.5 * CellWidth[0][0];
 
           /* Find subgrid number of this particle, and move it. */
      
@@ -169,7 +169,12 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
                  particles are temporarily stored in cell 0 and then put into the correct cell on the
                  "real" grid when they are received in CommunicationSendParticles(). */
               InsertMonteCarloTracerParticleAfter(ToGrids[subgrid]->MonteCarloTracerParticles[0], MoveMCTP);
-              printf("\ninserted particle %d (%p)", count, MoveMCTP);
+              printf("\ninserted particle %d (%p) from this grid (%p), into ToGrids[%d] (%p)", count, MoveMCTP, this, subgrid, ToGrids[subgrid]);
+
+              // *****************************************************
+              // **** TODO: DELETE PARTICLES IN CELL[INDEX] HERE *****
+              // *****************************************************
+
             } // end: while (mctp != NULL)          
           } // end: if (subgrid >= 0)
         } // end: loop over i

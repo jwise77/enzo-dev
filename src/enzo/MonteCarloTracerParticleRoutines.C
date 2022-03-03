@@ -54,9 +54,9 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(void)
   ExchangedThisTimestep = false;
 
   // user defined attributes (e.g. max temperature, group id)
-  ParticleAttributes = new float[NumberOfParticleAttributes];
-  for (i = 0; i < NumberOfParticleAttributes; i++)
-    ParticleAttributes[i] = 0.0;
+  // ParticleAttributes = new float[NumberOfParticleAttributes];
+  // for (i = 0; i < NumberOfParticleAttributes; i++)
+  //   ParticleAttributes[i] = 0.0;
 
   for (i = 0; i < MAX_DIMENSION; i++)
     InitialPosition[i] = 0.0;
@@ -85,9 +85,9 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(grid *_grid, int _ID, int _gr
   ExchangedThisTimestep = false;
 
   // user defined attributes (e.g. max temperature)
-  ParticleAttributes = new float[NumberOfParticleAttributes];
-  for (i = 0; i < NumberOfParticleAttributes; i++)
-    ParticleAttributes[i] = 0.0;
+  // ParticleAttributes = new float[NumberOfParticleAttributes];
+  // for (i = 0; i < NumberOfParticleAttributes; i++)
+  //   ParticleAttributes[i] = 0.0;
 
   for (i = 0; i < MAX_DIMENSION; i++)
     InitialPosition[i] = _pos[i];
@@ -115,9 +115,9 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(grid *_grid, int _ID, int _gr
   ExchangedThisTimestep = false;
 
   // user defined attributes (e.g. max temperature)
-  ParticleAttributes = new float[NumberOfParticleAttributes];
-  for (i = 0; i < NumberOfParticleAttributes; i++)
-    ParticleAttributes[i] = 0.0;
+  // ParticleAttributes = new float[NumberOfParticleAttributes];
+  // for (i = 0; i < NumberOfParticleAttributes; i++)
+  //   ParticleAttributes[i] = 0.0;
 
   for (i = 0; i < MAX_DIMENSION; i++)
     InitialPosition[i] = _pos[i];
@@ -143,9 +143,9 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(const MonteCarloTracerParticl
   Mass                   = mc->Mass;
   ExchangedThisTimestep  = mc->ExchangedThisTimestep;
 
-  ParticleAttributes = new float[NumberOfParticleAttributes];
-  for (i = 0; i < NumberOfParticleAttributes; i++)
-    ParticleAttributes[i] = mc->ParticleAttributes[i];
+  // ParticleAttributes = new float[NumberOfParticleAttributes];
+  // for (i = 0; i < NumberOfParticleAttributes; i++)
+  //   ParticleAttributes[i] = mc->ParticleAttributes[i];
 
   for (i = 0; i < MAX_DIMENSION; i++)
     InitialPosition[i] = mc->InitialPosition[i];
@@ -173,9 +173,9 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffe
   Mass                   = buffer.Mass;
   ExchangedThisTimestep  = buffer.ExchangedThisTimestep;
 
-  ParticleAttributes = new float[NumberOfParticleAttributes];
-  for (i = 0; i < NumberOfParticleAttributes; i++)
-    ParticleAttributes[i] = buffer.ParticleAttributes[i];
+  // ParticleAttributes = new float[NumberOfParticleAttributes];
+  // for (i = 0; i < NumberOfParticleAttributes; i++)
+  //   ParticleAttributes[i] = buffer.ParticleAttributes[i];
 
   for (i = 0; i < MAX_DIMENSION; i++) {
     InitialPosition[i] = buffer.InitialPosition[i];
@@ -186,8 +186,8 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffe
 
 MonteCarloTracerParticle::~MonteCarloTracerParticle(void)
 {
-  if (ParticleAttributes != NULL)
-      delete [] ParticleAttributes;
+  // if (ParticleAttributes != NULL)
+  //     delete [] ParticleAttributes;
 
   #ifdef TRACK_MC_HISTORY 
   MonteeCarloTracerParticleHistory *temp = &LagrangianHistory;
@@ -312,6 +312,9 @@ void MonteCarloTracerParticle::MonteCarloTracerParticleListToBuffer(MonteCarloTr
     result[count].Mass                  = tmp->Mass;
     result[count].ExchangedThisTimestep = tmp->ExchangedThisTimestep;
     
+  // for (i = 0; i < NumberOfParticleAttributes; i++)
+  //   result[count].ParticleAttributes[i] = tmp->ParticleAttributes[i];
+
     for (i = 0; i < MAX_DIMENSION; i++) {
       result[count].InitialPosition[i] = tmp->InitialPosition[i];
       result[count].Position[i] = tmp->Position[i];
@@ -334,6 +337,9 @@ void MonteCarloTracerParticle::MonteCarloTracerParticleToBuffer(MonteCarloTracer
   result->CreationTime          = tmp->CreationTime;
   result->Mass                  = tmp->Mass;
   result->ExchangedThisTimestep = tmp->ExchangedThisTimestep;
+
+  // for (i = 0; i < NumberOfParticleAttributes; i++)
+  //   result->ParticleAttributes[i] = tmp->ParticleAttributes[i];  
   
   for (i = 0; i < MAX_DIMENSION; i++) {
     result->InitialPosition[i] = tmp->InitialPosition[i];

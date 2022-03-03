@@ -33,13 +33,13 @@ void grid::PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os)
   MonteCarloTracerParticle *mc0;
   
   os << "\nMCTracers = {}" << std::endl;
-  
+
   for (k = 0; k < GridDimension[2]; k++) {
-    pos[2] = (k + 0.5) * CellWidth[2][0];
+    pos[2] = CellLeftEdge[2][k] + 0.5 * CellWidth[2][0];
     for (j = 0; j < GridDimension[1]; j++) {
-      pos[1] = (j + 0.5) * CellWidth[1][0];
+      pos[1] = CellLeftEdge[1][j] + 0.5 * CellWidth[1][0];
       for (i = 0; i < GridDimension[0]; i++) {
-        pos[0] = (i + 0.5) * CellWidth[0][0];
+        pos[0] = CellLeftEdge[0][i] + 0.5 * CellWidth[0][0];
         counter = 0;
   
         index = i + GridDimension[0]*(j + GridDimension[1]*k);

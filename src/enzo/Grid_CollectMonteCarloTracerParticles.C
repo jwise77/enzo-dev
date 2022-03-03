@@ -85,9 +85,9 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
 
       // Compute particle position (cell-center)
       FLOAT pos[3];
-      pos[2] = (k + 0.5) * CellWidth[2][0];
-      pos[1] = (j + 0.5) * CellWidth[1][0];
-      pos[0] = (i + 0.5) * CellWidth[0][0];
+        pos[2] = CellLeftEdge[2][k] + 0.5 * CellWidth[2][0];
+        pos[1] = CellLeftEdge[1][j] + 0.5 * CellWidth[1][0];
+        pos[0] = CellLeftEdge[0][i] + 0.5 * CellWidth[0][0];
 
       for (nmc = StartIndex, 
            MoveMCTP = this->MonteCarloTracerParticles[index]; 
