@@ -36,6 +36,7 @@
 int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles, 
 				int DeleteAllFields, int MoveSubgridMarker)
 {
+  printf("\nCommMoveGrid");
 
   int dim;
   int Zero[] = {0, 0, 0};
@@ -46,6 +47,7 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
   if ((MyProcessorNumber == ProcessorNumber ||
        MyProcessorNumber == ToProcessor) &&
       ProcessorNumber != ToProcessor) {
+    printf("\nCommMoveGrid, MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
 
     /* Copy baryons. */
  
@@ -81,7 +83,7 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
 
     /* Copy Monte Carlo tracer particles */
 
-    if (NumberOfStars > 0 && MoveParticles == TRUE)
+    if (MoveParticles == TRUE)
       this->CommunicationSendMonteCarloTracerParticles(this, ToProcessor);    
 
     /* Copy photon packages */

@@ -305,6 +305,7 @@ int CommunicationReceiveHandler(fluxes **SubgridFluxesEstimate[],
 	  break;
 
 	case 23:
+		printf("\n\nCommReceiveHandler: MCTP\n\n");
 	  errcode = grid_one->CommunicationSendMonteCarloTracerParticles
 	    (grid_two, MyProcessorNumber);
 	  break;	  

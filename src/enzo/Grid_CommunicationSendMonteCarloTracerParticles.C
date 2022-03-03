@@ -51,11 +51,11 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
   float DomainWidth[MAX_DIMENSION], DomainWidthInv[MAX_DIMENSION];  
   MonteCarloTracerParticleBuffer *buffer = NULL;
   MonteCarloTracerParticle *mctp;
-  NumberOfMonteCarloTracerParticles = this->CountMonteCarloTracerParticles();
 
   if (CommunicationShouldExit(ProcessorNumber, ToProcessor))
     return SUCCESS;
 
+  NumberOfMonteCarloTracerParticles = this->CountMonteCarloTracerParticles();
   TransferSize = NumberOfMonteCarloTracerParticles;
 
   if (TransferSize == 0)
@@ -74,6 +74,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
   /* If this is the from processor, fill the buffer and delete mc tracer particles from this grid. */
 
   if (MyProcessorNumber == ProcessorNumber) {
+    printf("\nComSendMC_delete");
     this->MonteCarloTracerParticles[0]->MonteCarloTracerParticleListToBuffer(buffer, NumberOfMonteCarloTracerParticles);
     DeleteMonteCarloTracerParticleList(this->MonteCarloTracerParticles[0]);
   }

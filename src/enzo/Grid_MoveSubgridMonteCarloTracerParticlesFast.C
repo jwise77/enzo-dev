@@ -64,8 +64,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   if (MyProcessorNumber == ProcessorNumber) {
 
     int NumberOfMonteCarloTracerParticles = this->CountMonteCarloTracerParticles();
-    if (debug1) 
-      printf("MoveSubgridMonteCarloTracerParticlesFast: %"ISYM"\n", NumberOfMonteCarloTracerParticles);
+    printf("MoveSubgridMonteCarloTracerParticlesFast: %"ISYM"\n", NumberOfMonteCarloTracerParticles);
 
     if (NumberOfMonteCarloTracerParticles == 0)
       return SUCCESS; 
@@ -123,7 +122,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
         
       	ToGrids[subgrid]->AllocateMonteCarloTracerParticleData();
        
-      	if (debug1) printf("MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"\n",
+      	printf("MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"\n",
       			  subgrid, ParticlesToMove[subgrid]);
  
       } // end: if (ParticlesToMove > 0)
@@ -132,10 +131,11 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
  
     /* Loop over particles and move them to the appropriate ToGrid, depending
        on their position. */
- 
+    int count = 0;
     for (k0 = GridStartIndex[2]; k0 < GridEndIndex[2]; k0++) {
       for (j0 = GridStartIndex[1]; j0 < GridEndIndex[1]; j0++) {
         for (i0 = GridStartIndex[0]; i0 < GridEndIndex[0]; i0++) {
+          count++;
  
           index = (k0*GridDimension[1] + j0)*GridDimension[0] + i0;
 
@@ -169,7 +169,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
                  particles are temporarily stored in cell 0 and then put into the correct cell on the
                  "real" grid when they are received in CommunicationSendParticles(). */
               InsertMonteCarloTracerParticleAfter(ToGrids[subgrid]->MonteCarloTracerParticles[0], MoveMCTP);
-
+              printf("\ninserted particle %d (%p)", count, MoveMCTP);
             } // end: while (mctp != NULL)          
           } // end: if (subgrid >= 0)
         } // end: loop over i
@@ -185,7 +185,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
      **** MAYBE JUST DELETE THIS. MIGHT BE NEEDED WHEN CALLED IN REBUILD HIERARCHY. 
      NEED TO CHECK THIS **** */
   
-  for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++)
+  for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++) {
     if ((MyProcessorNumber == ProcessorNumber ||
          MyProcessorNumber == ToGrids[subgrid]->ProcessorNumber) &&
 	       ProcessorNumber != ToGrids[subgrid]->ProcessorNumber)
@@ -198,6 +198,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
       	if (MyProcessorNumber == ProcessorNumber)
       	  ToGrids[subgrid]->DeleteAllFields();
       }
+  }
  
   delete [] ParticlesToMove;
  

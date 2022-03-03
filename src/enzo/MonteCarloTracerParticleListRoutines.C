@@ -44,6 +44,7 @@ MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle *
 void DeleteMonteCarloTracerParticle(MonteCarloTracerParticle * &Node)
 {
   MonteCarloTracerParticle *Orphan = PopMonteCarloTracerParticle(Node);
+  //printf("\nOrphan = %p", Orphan);
   if (Orphan != NULL) delete Orphan;
   return;
 }
