@@ -1771,6 +1771,7 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
   int  CountMonteCarloTracerParticlesInFirstGhostCells();
   int  CreateMonteCarloTracerParticles();
   int  DeleteMonteCarloTracerParticleData();
+  int  DistributeMonteCarloTracerParticles();
   void GetFirstGhostCells(int GhostCellIndices[], const int NUMBER_OF_FACE_CELLS);
   int  MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* ToGrids[], int AllLocal);
   int  ResetMonteCarloTracerParticlesExchangedThisTimestep();

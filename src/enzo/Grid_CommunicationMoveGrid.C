@@ -36,7 +36,7 @@
 int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles, 
 				int DeleteAllFields, int MoveSubgridMarker)
 {
-  printf("\nCommMoveGrid");
+  printf("\nStart CommMoveGrid");
 
   int dim;
   int Zero[] = {0, 0, 0};
@@ -47,7 +47,7 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
   if ((MyProcessorNumber == ProcessorNumber ||
        MyProcessorNumber == ToProcessor) &&
       ProcessorNumber != ToProcessor) {
-    printf("\nCommMoveGrid, MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
+    printf("\nCommMoveGrid: MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
 
     /* Copy baryons. */
  

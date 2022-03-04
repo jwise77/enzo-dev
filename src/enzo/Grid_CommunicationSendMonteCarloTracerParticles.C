@@ -106,7 +106,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
     if (MyProcessorNumber == ProcessorNumber){
       printf("\nSending MCTPs from proc: %d to proc: %d\n", ProcessorNumber, ToProcessor);
       CommunicationBufferedSend(buffer, Count, MPI_MCTP, 
-				Dest, MPI_SENDSTAR_TAG, MPI_COMM_WORLD, 
+				Dest, MPI_SENDMCTP_TAG, MPI_COMM_WORLD, 
 				BUFFER_IN_PLACE);
     }
 
@@ -114,7 +114,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       printf("\nReceiving MCTPs on proc: %d from proc: %d\n", ToProcessor, ProcessorNumber);
       if (CommunicationDirection == COMMUNICATION_POST_RECEIVE) {
       	MPI_Irecv(buffer, Count, MPI_MCTP, Source,
-      		  MPI_SENDSTAR_TAG, MPI_COMM_WORLD,
+      		  MPI_SENDMCTP_TAG, MPI_COMM_WORLD,
       		  CommunicationReceiveMPI_Request+CommunicationReceiveIndex);
 
       	CommunicationReceiveGridOne[CommunicationReceiveIndex] = this;
@@ -129,7 +129,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
 
       if (CommunicationDirection == COMMUNICATION_SEND_RECEIVE)
 	MPI_Recv(buffer, Count, MPI_MCTP, Source,
-		 MPI_SENDSTAR_TAG, MPI_COMM_WORLD, &status);
+		 MPI_SENDMCTP_TAG, MPI_COMM_WORLD, &status);
 
     } // ENDIF MyProcessorNumber == ToProcessor
 
@@ -156,6 +156,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
   //     DestinationGrid = this;
   //   else if (MyProcessorNumber == ToProcessor)
   //     DestinationGrid = ToGrid;
+  printf("MyProcessorNumber %d, ToProcessor %d, ProcessorNumber %d", MyProcessorNumber, ToProcessor, ProcessorNumber);
   if (MyProcessorNumber == ToProcessor &&
       (CommunicationDirection == COMMUNICATION_SEND_RECEIVE ||
        CommunicationDirection == COMMUNICATION_RECEIVE)) {
