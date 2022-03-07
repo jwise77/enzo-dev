@@ -158,6 +158,7 @@ class grid
   //
   MonteCarloTracerParticle **MonteCarloTracerParticles;  
   float *MassFlux[MAX_DIMENSION];
+  int NumberOfMonteCarloTracerParticles; // Updated by calling CountNumberOfMonteCarloTracerParticles.
 
 
 //
@@ -1775,6 +1776,7 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
   void GetFirstGhostCells(int GhostCellIndices[], const int NUMBER_OF_FACE_CELLS);
   int  MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* ToGrids[], int AllLocal);
   int  ResetMonteCarloTracerParticlesExchangedThisTimestep();
+  void SetNumberOfMonteCarloTracerParticles(int num) {NumberOfMonteCarloTracerParticles = num;};
   int  Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
   void PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os);
 

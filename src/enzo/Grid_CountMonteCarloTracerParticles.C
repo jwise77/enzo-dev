@@ -6,7 +6,8 @@
 /  date:       June, 2021
 /
 /  PURPOSE: Count the total number of Monte Carlo tracer particles 
-/           in this grid.
+/           in this grid and update the NumberOfMonteCarloTracerParticles
+/           grid variable.
 /
 /  RETURNS:
 /    N: Number of MC tracers
@@ -32,7 +33,7 @@ int grid::CountMonteCarloTracerParticles()
   MonteCarloTracerParticle *mc;
 
   if (MonteCarloTracerParticles == NULL) {
-    printf("\nMonteCarloTracerParticles not allocated on grid %d, ProcessorNumber %d, MyProcessorNumber %d", this->ID, ProcessorNumber, MyProcessorNumber);
+    printf("\nproc%0d: CountMCTP: MonteCarloTracerParticles not allocated on grid %d, ProcessorNumber %d\n", MyProcessorNumber, this->ID, ProcessorNumber);
     return 0;
   }
 
@@ -46,5 +47,6 @@ int grid::CountMonteCarloTracerParticles()
       mc = mc->NextParticle;
     }
   }
+  this->NumberOfMonteCarloTracerParticles = N;
   return N;
 }

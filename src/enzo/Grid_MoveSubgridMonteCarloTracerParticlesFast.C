@@ -64,7 +64,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   if (MyProcessorNumber == ProcessorNumber) {
 
     int NumberOfMonteCarloTracerParticles = this->CountMonteCarloTracerParticles();
-    printf("MoveSubgridMonteCarloTracerParticlesFast: %"ISYM"\n", NumberOfMonteCarloTracerParticles);
+    printf("\nproc%d: MoveSubgridMonteCarloTracerParticlesFast: Number of MCTPs = %"ISYM"", MyProcessorNumber, NumberOfMonteCarloTracerParticles);
 
     if (NumberOfMonteCarloTracerParticles == 0)
       return SUCCESS; 
@@ -98,7 +98,6 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   } // end: if (MyProcessorNumber)
  
   /* Communicate number of send particles to subgrids */
- 
   if (AllLocal == FALSE)
     for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++)
       if (CommunicationBroadcastValue(&ParticlesToMove[subgrid],
@@ -116,18 +115,18 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
  
         /* Check if MonteCarloTracerParticles have already been allocated */
       	if (ToGrids[subgrid]->MonteCarloTracerParticles != NULL) {
-      	  ENZO_VFAIL("Monte Carlo tracer particles already in subgrid %"ISYM" (n=%"ISYM", nm=%"ISYM")\n",
-      		  subgrid, ToGrids[subgrid]->MonteCarloTracerParticles, ParticlesToMove[subgrid])
+      	  ENZO_VFAIL("\nproc%d: Monte Carlo tracer particles already in subgrid %"ISYM" (n=%"ISYM", nm=%"ISYM")\n",
+      		  MyProcessorNumber, subgrid, ToGrids[subgrid]->MonteCarloTracerParticles, ParticlesToMove[subgrid])
       	}
         
       	ToGrids[subgrid]->AllocateMonteCarloTracerParticleData();
        
-      	printf("MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"\n",
-      			  subgrid, ParticlesToMove[subgrid]);
+      	printf("\nproc%d: MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"",
+      			  MyProcessorNumber, subgrid, ParticlesToMove[subgrid]);
  
       } // end: if (ParticlesToMove > 0)
 
-  printf("\n\nthis       %p\nToGrids[0] %p\nToGrids[1] %p\n\n", this, ToGrids[0], ToGrids[1]); 
+  printf("\nproc%d:\nthis(OldGrid) %p\nToGrids[0] %p\nToGrids[1] %p\n", MyProcessorNumber, this, ToGrids[0], ToGrids[1]); 
  
   if (MyProcessorNumber == ProcessorNumber) {  
  
@@ -172,7 +171,9 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
                  particles are temporarily stored in cell 0 and then put into the correct cell on the
                  "real" grid when they are received in CommunicationSendParticles(). */
               InsertMonteCarloTracerParticleAfter(ToGrids[subgrid]->MonteCarloTracerParticles[0], MoveMCTP);
-              printf("\ninserted particle %d (%p) from this grid (%p), into ToGrids[%d] (%p)", count, MoveMCTP, this, subgrid, ToGrids[subgrid]);
+              this->NumberOfMonteCarloTracerParticles--;
+              ToGrids[subgrid]->NumberOfMonteCarloTracerParticles++;
+              printf("\nproc%d: inserted particle %d (%p) from this grid (%p), into ToGrids[%d] (%p)", MyProcessorNumber, count, MoveMCTP, this, subgrid, ToGrids[subgrid]);
             } // end: if (subgrid >= 0)
             else
               InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
