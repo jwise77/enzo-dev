@@ -45,7 +45,7 @@ int grid::DistributeMonteCarloTracerParticles()
   this->MonteCarloTracerParticles[0] = NULL;
 
   if (mctp == NULL) {
-    printf("\nDistributeMonteCarloTracerParticles: No particles to distribute.\n");
+    printf("\nproc%d: DistributeMonteCarloTracerParticles: No particles to distribute.\n", MyProcessorNumber);
     return SUCCESS;
   }
 
@@ -61,12 +61,13 @@ int grid::DistributeMonteCarloTracerParticles()
     /* Find which cell this particle belongs in */
     for (dim = 0; dim < GridRank; dim++) {
         index_ijk[dim] = (int) (this->GridDimension[dim] * 
-                                (mctp->Position[dim] - DomainLeftEdge[dim]) *
-                                DomainWidthInv[dim]);
+                                (MoveMCTP->Position[dim] - DomainLeftEdge[dim]) *
+                                DomainWidthInv[dim]); // ***** CHECK INDEX IS CORRECT GIVEN POSITION *****
     }
     index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
     InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
   }
 
+  printf("\nproc%d: DistributeMonteCarloTracerParticles: Success.\n", MyProcessorNumber);
   return SUCCESS;
 }

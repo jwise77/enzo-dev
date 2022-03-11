@@ -43,11 +43,12 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
   FLOAT FZero[] = {0.0, 0.0, 0.0};
 
   //CommunicationDirection = COMMUNICATION_SEND_RECEIVE;
- 
+    printf("\nALL CommMoveGrid: MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
+
   if ((MyProcessorNumber == ProcessorNumber ||
        MyProcessorNumber == ToProcessor) &&
       ProcessorNumber != ToProcessor) {
-    printf("\nCommMoveGrid: MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
+    printf("\nSOME CommMoveGrid: MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
 
     /* Copy baryons. */
  

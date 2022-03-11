@@ -526,7 +526,7 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 	  int IntTemp  = NewGrid->ReturnNumberOfParticles();
     int IntTemp2 = NewGrid->CountMonteCarloTracerParticles();
  
-    printf("proc%d: CommPartitionGrid: NewGrid->CountMonteCarloTracerParticles(): %"ISYM"\n", MyProcessorNumber, IntTemp2);
+    printf("\nproc%d: CommPartitionGrid: NewGrid->CountMonteCarloTracerParticles(): %"ISYM"", MyProcessorNumber,IntTemp2);
  
 	  CommunicationBroadcastValue(&IntTemp, ROOT_PROCESSOR);
     CommunicationBroadcastValue(&IntTemp2, ROOT_PROCESSOR);
@@ -534,7 +534,7 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 	  NewGrid->SetNumberOfParticles(IntTemp);
     NewGrid->SetNumberOfMonteCarloTracerParticles(IntTemp2);
 
-    printf("proc%d: CommPartitionGrid: NewGrid NumberOfMonteCarloTracerParticles set to %"ISYM"\n", MyProcessorNumber, IntTemp2);
+    printf("\nproc%d: CommPartitionGrid: NewGrid NumberOfMonteCarloTracerParticles set to %"ISYM"", MyProcessorNumber, IntTemp2);
 
 	}
  
@@ -586,15 +586,24 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 #ifdef USE_NEW_CPU_DISTRIBUTION
 	  NewGrid->CommunicationMoveGrid(NewProc);
 #endif
-	
 
-	// some debug output
-        if (MyProcessorNumber == ROOT_PROCESSOR && debug1) {
-          printf("Grid = %"ISYM", K J I: [%"ISYM",%"ISYM",%"ISYM"] Proc = %"ISYM"\n", gridcounter, k, j, i, NewProc);
-          for (dim = 0; dim < Rank; dim++) {
-            printf("  %"ISYM" ::  LeftEdge[%"ISYM"] = %8.4"PSYM"  RightEdge[%"ISYM"] = %8.4"PSYM"\n",
-                   NewProc, dim, LeftEdge[dim], dim, RightEdge[dim]);
-          }
+  /* Distribute Monte Carlo tacer particles to their correct cells. This only needs to be done 
+     for new grids that are on the same processor as the old grid. Other grids on other procsessors
+     were already handled by CommunicationSendGrid in CommunicationMoveGrid */
+    printf("\nproc%d: CommPartitionGrid: pre DistributeMonteCarloTracerParticles: ProcessorNumber %d, ToProcessor  %d", MyProcessorNumber, NewGrid->ReturnProcessorNumber(), NewProc);
+
+  if (MyProcessorNumber == NewGrid->ReturnProcessorNumber() && NewGrid->ReturnProcessorNumber() == NewProc) {
+    printf("\nproc%d: CommPartitionGrid: Calling DistributeMonteCarloTracerParticles: ProcessorNumber %d, ToProcessor  %d", MyProcessorNumber, NewGrid->ReturnProcessorNumber(), NewProc);
+    NewGrid->DistributeMonteCarloTracerParticles();
+  }
+
+// some debug output
+  if (MyProcessorNumber == ROOT_PROCESSOR && debug1) {
+    printf("Grid = %"ISYM", K J I: [%"ISYM",%"ISYM",%"ISYM"] Proc = %"ISYM"\n", gridcounter, k, j, i, NewProc);
+    for (dim = 0; dim < Rank; dim++) {
+      printf("  %"ISYM" ::  LeftEdge[%"ISYM"] = %8.4"PSYM"  RightEdge[%"ISYM"] = %8.4"PSYM"\n",
+             NewProc, dim, LeftEdge[dim], dim, RightEdge[dim]);
+    }
 	}
 
         /* Detach ForcingFields from BaryonFields. */

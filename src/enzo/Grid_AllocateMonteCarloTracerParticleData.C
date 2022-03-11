@@ -12,6 +12,11 @@
 
 int grid::AllocateMonteCarloTracerParticleData()
 {
+
+  if (this->MonteCarloTracerParticles != NULL) {
+    printf("proc%d: AllocateMonteCarloTracerParticleData: Already allocated. Returning now.", MyProcessorNumber);
+    return SUCCESS;
+  }
   /* Compute grid size. */
   int size = 1;
   int i, dim;

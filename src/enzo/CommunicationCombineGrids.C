@@ -147,6 +147,10 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
             NewGrid, NewProc, false) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendActiveParticles.\n");
     }
+    if (OldGrid->CommunicationSendMonteCarloTracerParticles(
+            NewGrid, NewProc) == FAIL) {
+      ENZO_FAIL("Error in grid->CommunicationSendMonteCarloTracerParticles.\n");
+    }    
  
     /* Next Grid */
  

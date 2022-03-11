@@ -865,9 +865,14 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 
   /* ------------------------------------------------------------------- */
   /* 5) Save Monte Carlo Tracer particle quantities. */  
+  printf("\nproc%d: WriteGrid", MyProcessorNumber);
 
   if (MonteCarloTracerParticlesOn) {
+
     int NumberOfMCTracers = this->CountMonteCarloTracerParticles();
+    printf("\nproc%d: WriteGrid: Grid%d: NumberOfMCTracers = %d", MyProcessorNumber, ID, NumberOfMCTracers);
+
+    if (NumberOfMCTracers > 0) {
 
     // allocate space all particles on this grid
     int   MonteCarloTracerExchangeCount[NumberOfMCTracers];
@@ -957,6 +962,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
         CopyOnlyActive, temp);    
 
     delete [] temp;  
+    } // end: if (NumberOfMCTracers > 0)
   } // end: if (MonteCarloTracerParticlesOn)
 
   /* Close HDF group and file. */

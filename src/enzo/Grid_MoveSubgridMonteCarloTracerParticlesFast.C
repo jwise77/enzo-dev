@@ -64,7 +64,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   if (MyProcessorNumber == ProcessorNumber) {
 
     int NumberOfMonteCarloTracerParticles = this->CountMonteCarloTracerParticles();
-    printf("\nproc%d: MoveSubgridMonteCarloTracerParticlesFast: Number of MCTPs = %"ISYM"", MyProcessorNumber, NumberOfMonteCarloTracerParticles);
+    //printf("\nproc%d: MoveSubgridMonteCarloTracerParticlesFast: Number of MCTPs = %"ISYM"", MyProcessorNumber, NumberOfMonteCarloTracerParticles);
 
     if (NumberOfMonteCarloTracerParticles == 0)
       return SUCCESS; 
@@ -121,12 +121,11 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
         
       	ToGrids[subgrid]->AllocateMonteCarloTracerParticleData();
        
-      	printf("\nproc%d: MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"",
-      			  MyProcessorNumber, subgrid, ParticlesToMove[subgrid]);
+      	//printf("\nproc%d: MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"", MyProcessorNumber, subgrid, ParticlesToMove[subgrid]);
  
       } // end: if (ParticlesToMove > 0)
 
-  printf("\nproc%d:\nthis(OldGrid) %p\nToGrids[0] %p\nToGrids[1] %p\n", MyProcessorNumber, this, ToGrids[0], ToGrids[1]); 
+  //printf("\nproc%d:\nthis(OldGrid) %p\nToGrids[0] %p\nToGrids[1] %p\n", MyProcessorNumber, this, ToGrids[0], ToGrids[1]); 
  
   if (MyProcessorNumber == ProcessorNumber) {  
  
@@ -173,7 +172,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
               InsertMonteCarloTracerParticleAfter(ToGrids[subgrid]->MonteCarloTracerParticles[0], MoveMCTP);
               this->NumberOfMonteCarloTracerParticles--;
               ToGrids[subgrid]->NumberOfMonteCarloTracerParticles++;
-              printf("\nproc%d: inserted particle %d (%p) from this grid (%p), into ToGrids[%d] (%p)", MyProcessorNumber, count, MoveMCTP, this, subgrid, ToGrids[subgrid]);
+              //printf("\nproc%d: inserted particle %d (%p) from this grid (%p), into ToGrids[%d] (%p)", MyProcessorNumber, count, MoveMCTP, this, subgrid, ToGrids[subgrid]);
             } // end: if (subgrid >= 0)
             else
               InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);

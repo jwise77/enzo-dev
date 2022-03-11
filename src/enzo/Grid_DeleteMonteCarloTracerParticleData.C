@@ -14,11 +14,10 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle *&Node);
 
 int grid::DeleteMonteCarloTracerParticleData()
 {
-  printf("\n%s", "DeleteMonteCarloTracerParticleData...");
 
   // Check if MonteCarloTracerParticles array has been allocated
   if (this->MonteCarloTracerParticles == NULL) {
-    printf("\nMonteCarloTracerParticles array has NOT been allocated\n");
+    printf("\nproc%d: DeleteMonteCarloTracerParticleData: MonteCarloTracerParticles array has NOT been allocated\n", MyProcessorNumber);
     return SUCCESS;
   }
 
@@ -35,8 +34,6 @@ int grid::DeleteMonteCarloTracerParticleData()
   delete [] this->MonteCarloTracerParticles;
   for (dim = 0; dim < GridRank; dim++)    
     delete [] this->MassFlux[dim];
-
-  printf("\n%s", " Done.");
 
   return SUCCESS;
 }
