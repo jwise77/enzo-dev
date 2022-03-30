@@ -60,7 +60,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
   printf("\nproc%d: CommSendMCTP: TransferSize (NumberOfMonteCarloTracerParticles) %d", MyProcessorNumber, TransferSize);
 
   if (TransferSize == 0)
-  return SUCCESS;
+    return SUCCESS;
 
   /* Allocate buffer in ToProcessor.  This is automatically done in
      MonteCarloTracerParticleListToBuffer in the local processor. */

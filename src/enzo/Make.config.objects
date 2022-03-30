@@ -565,6 +565,7 @@ OBJS_CONFIG_LIB = \
 	Grid_MirrorStarParticles.o \
 	Grid_MoveAllParticles.o \
 	Grid_MoveAllStars.o \
+  Grid_MoveMonteCarloTracerParticlesToCellZero.o \
 	Grid_MoveParticlesFOF.o \
 	Grid_MoveSubgridMonteCarloTracerParticlesFast.o \
 	Grid_MoveSubgridParticlesFast.o \

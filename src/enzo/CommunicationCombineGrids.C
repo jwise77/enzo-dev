@@ -147,15 +147,24 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
             NewGrid, NewProc, false) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendActiveParticles.\n");
     }
+    if (OldGrid->MoveMonteCarloTracerParticlesToCellZero() == FAIL) {
+      ENZO_FAIL("Error in grid->MoveMonteCarloTracerParticlesToCellZero.\n");
+    }
     if (OldGrid->CommunicationSendMonteCarloTracerParticles(
             NewGrid, NewProc) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendMonteCarloTracerParticles.\n");
-    }    
+    }   
+    if (OldGrid->DistributeMonteCarloTracerParticles() == FAIL) {
+      ENZO_FAIL("Error in grid->DistributeMonteCarloTracerParticles.\n");
+    } 
  
     /* Next Grid */
  
     Temp = Temp->NextGridThisLevel;
   }
+
+  /*** Need to distribute particles in NewGrid ***
+
 //  printf("(%"ISYM"): done\n", MyProcessorNumber);
  
   /* Create a new first level of hierarchy entries that are all below the
