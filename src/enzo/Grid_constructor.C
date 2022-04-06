@@ -187,6 +187,15 @@ grid::grid()
   NumberOfStars = 0;
   Stars = NULL;
 
+  /* Monte Carlo Tracer Particles particles */  
+
+  NumberOfMonteCarloTracerParticles = 0;
+  MonteCarloTracerParticles = NULL;
+  for (i=0; i<MAX_DIMENSION; i++) 
+    MassFlux[i] = NULL;
+
+  /* Active particles */ 
+
   NumberOfActiveParticles = 0;
   for (i=0; i<MAX_ACTIVE_PARTICLE_TYPES; i++) {
     ActiveParticleTypeCount[i] = 0;

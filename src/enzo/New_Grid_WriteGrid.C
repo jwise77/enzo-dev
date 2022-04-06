@@ -901,12 +901,12 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     TempIntArray[0] = NumberOfMCTracers;
 
     /* Compute particle position (all particles in cell center) */
-    for (k = 0; k < GridDimension[2]; k++) {
-      pos[2] = (k + 0.5) * CellWidth[2][0];
+    for (k = 0; k < GridDimension[2]; k++) {      
+      pos[2] = CellLeftEdge[2][k] + 0.5 * CellWidth[2][0];
     for (j = 0; j < GridDimension[1]; j++) {
-      pos[1] = (j + 0.5) * CellWidth[1][0];
+      pos[1] = CellLeftEdge[1][j] + 0.5 * CellWidth[1][0];
     for (i = 0; i < GridDimension[0]; i++) {
-      pos[0] = (i + 0.5) * CellWidth[0][0];
+      pos[0] = CellLeftEdge[0][i] + 0.5 * CellWidth[0][0];
       index = i + GridDimension[0]*(j + GridDimension[1]*k);
       mc = MonteCarloTracerParticles[index];
       n_per_cell = 0;
