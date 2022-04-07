@@ -162,7 +162,7 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(const MonteCarloTracerParticl
 // }
 
 MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffer buffer) 
-{
+{ 
   int i;
 
   UniqueID               = buffer.UniqueID;
@@ -172,6 +172,9 @@ MonteCarloTracerParticle::MonteCarloTracerParticle(MonteCarloTracerParticleBuffe
   CreationTime           = buffer.CreationTime;
   Mass                   = buffer.Mass;
   ExchangedThisTimestep  = buffer.ExchangedThisTimestep;
+  PrevParticle           = NULL;
+  NextParticle           = NULL;
+
 
   // ParticleAttributes = new float[NumberOfParticleAttributes];
   // for (i = 0; i < NumberOfParticleAttributes; i++)

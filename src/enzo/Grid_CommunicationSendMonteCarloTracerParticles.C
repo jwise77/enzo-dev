@@ -78,6 +78,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
     printf("\nproc%d: CommSendMC: package buffer and delete", MyProcessorNumber);      
     this->MonteCarloTracerParticles[0]->MonteCarloTracerParticleListToBuffer(buffer, NumberOfMonteCarloTracerParticles);
     DeleteMonteCarloTracerParticleList(this->MonteCarloTracerParticles[0]);
+    // *** Add flag to not delete particles when needed (e.g. combine grids) ****
   }
     
   /* Send buffer. */
