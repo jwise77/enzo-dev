@@ -169,11 +169,11 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       
       /* Find which cell this particle belongs in */
       for (dim = 0; dim < GridRank; dim++) {
-          index_ijk[dim] = (int) (ToGrid->GridDimension[dim] * 
+          index_ijk[dim] = (int) ((NumberOfGhostZones + ToGrid->GridDimension[dim]) * 
                                   (mctp->Position[dim] - DomainLeftEdge[dim]) *
                                   DomainWidthInv[dim]);
       }
-      index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); // ***** CHECK/FIX index *******
+      index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); 
       InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);
     }
     printf("\nproc%d: CommSendMCTP: Inserted %d MCTPs from buffer into ToGrid", MyProcessorNumber, TransferSize);

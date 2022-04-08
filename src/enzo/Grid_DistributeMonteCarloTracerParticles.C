@@ -62,7 +62,7 @@ int grid::DistributeMonteCarloTracerParticles()
 
       /* Find which cell this particle belongs in */
       for (dim = 0; dim < GridRank; dim++) {
-          index_ijk[dim] = (int) (this->GridDimension[dim] * 
+          index_ijk[dim] = (int) ((NumberOfGhostZones + this->GridDimension[dim]) * 
                                   (MoveMCTP->Position[dim] - DomainLeftEdge[dim]) *
                                   DomainWidthInv[dim]); // ***** CHECK INDEX IS CORRECT GIVEN POSITION *****
       }
