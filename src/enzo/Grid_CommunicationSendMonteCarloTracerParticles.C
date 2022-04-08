@@ -169,9 +169,9 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       
       /* Find which cell this particle belongs in */
       for (dim = 0; dim < GridRank; dim++) {
-          index_ijk[dim] = (int) ((NumberOfGhostZones + ToGrid->GridDimension[dim]) * 
+          index_ijk[dim] = (int) (ToGrid->GridDimension[dim] * 
                                   (mctp->Position[dim] - DomainLeftEdge[dim]) *
-                                  DomainWidthInv[dim]);
+                                  DomainWidthInv[dim]) + NumberOfGhostZones-1;
       }
       index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); 
       InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);

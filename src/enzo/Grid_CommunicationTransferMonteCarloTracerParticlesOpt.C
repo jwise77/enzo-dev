@@ -173,9 +173,9 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       	// Particle already in this grid (Only move from cell 0 to the correct cell)
       	else {
           for (dim = 0; dim < GridRank; dim++) {
-              index_ijk[dim] = (int) ((NumberOfGhostZones + GridDimension[dim]) * 
+              index_ijk[dim] = (int) (GridDimension[dim] * 
                                       (MoveMCTP->Position[dim] - DomainLeftEdge[dim]) *
-                                      DomainWidthInv[dim]);
+                                      DomainWidthInv[dim]) + NumberOfGhostZones-1;
           }
           index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
       	  InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticles[index], MoveMCTP);
