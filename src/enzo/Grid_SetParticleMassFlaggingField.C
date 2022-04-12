@@ -29,7 +29,7 @@
 
 #ifdef USE_MPI
 int CommunicationBufferedSend(void *buffer, int size, MPI_Datatype Type, int Target,
-			      MPI_Arg Tag, MPI_Comm CommWorld, int BufferSize);
+			      int Tag, MPI_Comm CommWorld, int BufferSize);
 MPI_Arg Return_MPI_Tag(int grid_num, int proc);
 #endif /* USE_MPI */
 
