@@ -47,7 +47,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
 {
 
   int i, j, k, n,dim, index, TransferSize;
-  int index_ijk[MAX_DIMENSION], ActiveDim[MAX_DIMENSION];
+  int index_ijk[MAX_DIMENSION], ToGridActiveDim[MAX_DIMENSION];
   MonteCarloTracerParticleBuffer *buffer = NULL;
   MonteCarloTracerParticle *mctp;
   grid *DestinationGrid;
@@ -154,7 +154,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
        CommunicationDirection == COMMUNICATION_RECEIVE)) {
 
     for (dim = 0; dim < MAX_DIMENSION; dim++)
-      ActiveDim[dim] = GridEndIndex[dim] - GridStartIndex[dim] +1;           
+      ToGridActiveDim[dim] = ToGrid->GridEndIndex[dim] - ToGrid->GridStartIndex[dim] +1;           
 
     if (ToGrid->MonteCarloTracerParticles == NULL) {
       ToGrid->AllocateMonteCarloTracerParticleData();
@@ -166,9 +166,9 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       
       /* Find which cell this particle belongs in */
       for (dim = 0; dim < GridRank; dim++) {
-        index_ijk[dim] = (int) (ActiveDim[dim] * 
-                                (mctp->Position[dim] - GridLeftEdge[dim]) /
-                                (GridRightEdge[dim] - GridLeftEdge[dim])) 
+        index_ijk[dim] = (int) (ToGridActiveDim[dim] * 
+                                (mctp->Position[dim] - ToGrid->GridLeftEdge[dim]) /
+                                (ToGrid->GridRightEdge[dim] - ToGrid->GridLeftEdge[dim])) 
                               + NumberOfGhostZones;
           // index_ijk[dim] = (int) (ToGrid->GridDimension[dim] * 
           //                         (mctp->Position[dim] - ToGrid->GridLeftEdge[dim])) 
