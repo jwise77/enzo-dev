@@ -32,13 +32,16 @@ MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle *
 
 int grid::DistributeMonteCarloTracerParticles()
 {
-
-  int dim, index;
-  int index_ijk[MAX_DIMENSION];
-  float DomainWidth[MAX_DIMENSION], DomainWidthInv[MAX_DIMENSION];  
-  MonteCarloTracerParticle *mctp, *MoveMCTP;
-
   if (MyProcessorNumber == ProcessorNumber) {  
+
+    int dim, index;
+    int index_ijk[MAX_DIMENSION];
+    float DomainWidth[MAX_DIMENSION], DomainWidthInv[MAX_DIMENSION];  
+    MonteCarloTracerParticle *mctp, *MoveMCTP;
+    int ActiveDim[MAX_DIMENSION];
+
+    for (int dim = 0; dim < 3; dim++)
+      ActiveDim[dim] = GridEndIndex[dim] - GridStartIndex[dim] +1;      
 
     if (this->MonteCarloTracerParticles == NULL)
       ENZO_FAIL("\nDistributeMonteCarloTracerParticles: Attempting to distribute Monte Carlo Tracer particles in a grid that has not been initialized with Monte Carlo Tracer particles.\n");
@@ -62,9 +65,14 @@ int grid::DistributeMonteCarloTracerParticles()
 
       /* Find which cell this particle belongs in */
       for (dim = 0; dim < GridRank; dim++) {
-          index_ijk[dim] = (int) (this->GridDimension[dim] * 
-                                  (MoveMCTP->Position[dim] - this->GridLeftEdge[dim])) 
-                                  + NumberOfGhostZones - 1 ; // ***** CHECK INDEX IS CORRECT GIVEN POSITION *****
+        index_ijk[dim] = (int) (ActiveDim[dim] * 
+                                (MoveMCTP->Position[dim] - GridLeftEdge[dim]) /
+                                (GridRightEdge[dim] - GridLeftEdge[dim])) 
+                              + NumberOfGhostZones;
+
+      //     index_ijk[dim] = (int) (this->GridDimension[dim] * 
+      //                             (MoveMCTP->Position[dim] - this->GridLeftEdge[dim])) 
+      //                             + NumberOfGhostZones - 1 ; // ***** CHECK INDEX IS CORRECT GIVEN POSITION *****
       }
       index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
       InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);

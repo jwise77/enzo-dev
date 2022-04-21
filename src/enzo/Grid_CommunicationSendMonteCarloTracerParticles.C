@@ -47,8 +47,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
 {
 
   int i, j, k, n,dim, index, TransferSize;
-  int index_ijk[MAX_DIMENSION];
-  float DomainWidth[MAX_DIMENSION], DomainWidthInv[MAX_DIMENSION];  
+  int index_ijk[MAX_DIMENSION], ActiveDim[MAX_DIMENSION];
   MonteCarloTracerParticleBuffer *buffer = NULL;
   MonteCarloTracerParticle *mctp;
   grid *DestinationGrid;
@@ -154,10 +153,8 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       (CommunicationDirection == COMMUNICATION_SEND_RECEIVE ||
        CommunicationDirection == COMMUNICATION_RECEIVE)) {
 
-    for (dim = 0; dim < MAX_DIMENSION; dim++) {
-      DomainWidth[dim] = DomainRightEdge[dim] - DomainLeftEdge[dim];
-      DomainWidthInv[dim] = 1.0/DomainWidth[dim];    
-    }
+    for (dim = 0; dim < MAX_DIMENSION; dim++)
+      ActiveDim[dim] = GridEndIndex[dim] - GridStartIndex[dim] +1;           
 
     if (ToGrid->MonteCarloTracerParticles == NULL) {
       ToGrid->AllocateMonteCarloTracerParticleData();
@@ -169,9 +166,13 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       
       /* Find which cell this particle belongs in */
       for (dim = 0; dim < GridRank; dim++) {
-          index_ijk[dim] = (int) (ToGrid->GridDimension[dim] * 
-                                  (mctp->Position[dim] - ToGrid->GridLeftEdge[dim])) 
-                                  + NumberOfGhostZones - 1;
+        index_ijk[dim] = (int) (ActiveDim[dim] * 
+                                (mctp->Position[dim] - GridLeftEdge[dim]) /
+                                (GridRightEdge[dim] - GridLeftEdge[dim])) 
+                              + NumberOfGhostZones;
+          // index_ijk[dim] = (int) (ToGrid->GridDimension[dim] * 
+          //                         (mctp->Position[dim] - ToGrid->GridLeftEdge[dim])) 
+          //                         + NumberOfGhostZones - 1;
       }
       index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); 
       InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);

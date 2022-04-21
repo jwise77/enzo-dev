@@ -51,6 +51,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
   int i, j, k, dim, grid, proc, grid_num, width, bin, CenterIndex, index,
       NumberOfMCTPInCellZero;
   int GridPosition[MAX_DIMENSION], index_ijk[MAX_DIMENSION];
+  int ActiveDim[MAX_DIMENSION];
   float DomainWidth[MAX_DIMENSION], DomainWidthInv[MAX_DIMENSION];  
   FLOAT r[MAX_DIMENSION];
   int *ToGrid, *pbin;
@@ -60,6 +61,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
     GridPosition[dim] = 0;
     DomainWidth[dim] = DomainRightEdge[dim] - DomainLeftEdge[dim];
     DomainWidthInv[dim] = 1.0/DomainWidth[dim];    
+    ActiveDim[dim] = GridEndIndex[dim] - GridStartIndex[dim] +1;    
   }
  
   /* ----------------------------------------------------------------- */
@@ -173,9 +175,13 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       	// Particle already in this grid (Only move from cell 0 to the correct cell)
       	else {
           for (dim = 0; dim < GridRank; dim++) {
-              index_ijk[dim] = (int) (GridDimension[dim] * 
-                                      (MoveMCTP->Position[dim] - GridLeftEdge[dim])) 
-                                      + NumberOfGhostZones - 1;
+            index_ijk[dim] = (int) (ActiveDim[dim] * 
+                                    (MoveMCTP->Position[dim] - GridLeftEdge[dim]) /
+                                    (GridRightEdge[dim] - GridLeftEdge[dim])) 
+                                  + NumberOfGhostZones;
+              // index_ijk[dim] = (int) (GridDimension[dim] * 
+              //                         (MoveMCTP->Position[dim] - GridLeftEdge[dim][dim])) 
+              //                         + NumberOfGhostZones - 1;
           }
           index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
       	  InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticles[index], MoveMCTP);
@@ -209,9 +215,13 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       	MoveMCTP->CurrentGrid = this;
 
         for (dim = 0; dim < GridRank; dim++) {
-            index_ijk[dim] = (int) (GridDimension[dim] * 
-                                    (MoveMCTP->Position[dim] - DomainLeftEdge[dim]) *
-                                    DomainWidthInv[dim]);
+            index_ijk[dim] = (int) (ActiveDim[dim] * 
+                                    (MoveMCTP->Position[dim] - GridLeftEdge[dim]) /
+                                    (GridRightEdge[dim] - GridLeftEdge[dim])) 
+                                  + NumberOfGhostZones;
+            // index_ijk[dim] = (int) (GridDimension[dim] * 
+            //                         (MoveMCTP->Position[dim] - DomainLeftEdge[dim]) *
+            //                         DomainWidthInv[dim]);
         }
         index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
       	InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
