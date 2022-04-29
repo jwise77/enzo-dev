@@ -79,6 +79,6 @@ int grid::MoveMonteCarloTracerParticlesToCellZero()
         } // end: loop over i
       } // end: loop over j
     } // end: loop over k
-    return SUCCESS;
   }
+  return SUCCESS;
 }
