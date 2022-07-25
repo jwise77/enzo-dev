@@ -32,14 +32,6 @@
 
 #define NO_DEBUG_PS 
 
-/* function prototypes */
- 
-int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
-int GetUnits(float *DensityUnits, float *LengthUnits,
-	     float *TemperatureUnits, float *TimeUnits,
-	     float *VelocityUnits, FLOAT Time);
-int FindField(int field, int farray[], int numfields);
- 
 int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
 			   long *MustRefineIDs)
 {
@@ -50,16 +42,12 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
   if (MyProcessorNumber != ProcessorNumber)
     return SUCCESS;
 
-  if (NumberOfBaryonFields == 0)
-    return SUCCESS;
- 
   if (GridRank <=2)
     ENZO_FAIL("GridRank <= 2 has never been tested; do you really want to continue?");
 
   /* Initialize */
  
   int dim, i, j, k, index, size, field, GhostZones = NumberOfGhostZones;
-  int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num, B1Num, B2Num, B3Num,H2INum, H2IINum;
 
   LCAPERF_START("grid_ParticleSplitter");
  
@@ -69,13 +57,7 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
   for (dim = 0; dim < GridRank; dim++)
     size *= GridDimension[dim];
  
-  /* Find fields: density, total energy, velocity1-3. */
- 
   this->DebugCheck("ParticleSplitter");
-  if (this->IdentifyPhysicalQuantities(DensNum, GENum, Vel1Num, Vel2Num,
-				       Vel3Num, TENum, B1Num, B2Num, B3Num) == FAIL) {
-        ENZO_FAIL("Error in IdentifyPhysicalQuantities.");
-  }
  
   /* Find metallicity field and set flag. */
  
@@ -90,23 +72,6 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
   MetalNum = max(MetalNum, SNColourNum);
   MetallicityField = (MetalNum > 0) ? TRUE : FALSE;
 
-  /* Compute the redshift. */
- 
-  float zred;
-  FLOAT a = 1, dadt;
-  if (ComovingCoordinates)
-    CosmologyComputeExpansionFactor(Time, &a, &dadt);
-  zred = 1.0*(1.0+InitialRedshift)/a - 1.0;
- 
-  /* Set the units. */
- 
-  float DensityUnits = 1, LengthUnits = 1, TemperatureUnits = 1,
-    TimeUnits = 1, VelocityUnits = 1;
-  if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
-	       &TimeUnits, &VelocityUnits, Time) == FAIL) {
-        ENZO_FAIL("Error in GetUnits.");
-  }
- 
   float CellWidthTemp = float(CellWidth[0][0]);
 
   /* Generate a fake grid to keep the particles in. */
