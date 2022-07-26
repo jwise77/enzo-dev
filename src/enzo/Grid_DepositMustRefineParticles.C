@@ -79,6 +79,8 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
   for (i = 0; i < size; i++)
     FlaggingField[i] = 0;
 
+  int nmrp = 0, nuniform = 0;
+
   float UniformParticleMass = 0.0;
   if (ProblemType == 30 &&
       (MustRefineParticlesCreateParticles == 3 ||
@@ -119,10 +121,11 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
   }
   for (i = 0; i < NumberOfParticles; i ++){
     IsParticleMustRefine[i] = 1;
-    if (NumberOfParticleAttributes > 0)
+    if (NumberOfParticleAttributes > 0) {
       OriginalParticle = (ParticleAttribute[0][i] <= 0.0);
-    else
+    } else {
       OriginalParticle = true;
+    }
 
     // check particle type and uniform mass. Also check particle
     // creation time for DM particles that are positive, indicating
@@ -138,6 +141,13 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
 
     // check particle mass greater than minimum mass
     rules[1] = (ParticleMass[i] > MustRefineParticlesMinimumMass);
+
+    if (ParticleType[i] == PARTICLE_TYPE_MUST_REFINE) {
+      nmrp++;
+    }
+    if (ParticleType[i] == PARTICLE_TYPE_DARK_MATTER && ParticleMass[i] < UniformParticleMass && OriginalParticle) {
+      nuniform++;
+    }
 
     // add more rules here
 
@@ -201,9 +211,9 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
       }
   }
 
-  if (debug1)
-    printf("DepositMRPs[%"ISYM"]: %"ISYM" flagged cells\n", 
-	   level,NumberOfFlaggedCells);
+  //if (debug1)
+    printf("DepositMRPs[L%"ISYM"/G%"ISYM"]: %"ISYM" flagged cells, %"ISYM" MRPs, %"ISYM" nested particles\n", 
+	   level, this->ID, NumberOfFlaggedCells, nmrp, nuniform);
 
   /* If refining region before supernova, change particle type back to
      its original value. */

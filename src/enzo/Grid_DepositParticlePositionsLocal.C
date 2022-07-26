@@ -134,12 +134,23 @@ int grid::DepositParticlePositionsLocal(FLOAT DepositTime, int DepositField,
       DepositFieldPointer = ParticleMassFlaggingField;
       break;
     } // ENDSWITCH
-    
+
+    int nunflag = 0, nflag = 0;    
     for (dim = 0, size = 1; dim < GridRank; dim++)
       size *= GridDimension[dim];
+    for (i = 0; i < size; i++) {
+      if (FlaggingField[i] == 0) {
+        nunflag++;
+      } else {
+        nflag++;
+      }
+    }    
     for (i = 0; i < size; i++)
       if (FlaggingField[i] == 0)
 	DepositFieldPointer[i] = 0.0;
+
+    printf("DepositPositionLocal[G%"ISYM"]: nflag = %"ISYM", nunflag = %"ISYM"\n", this->ID, nflag, nunflag);
+
   }
   
   /* Delete the ActiveParticlePosition array */

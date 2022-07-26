@@ -1594,6 +1594,20 @@ iveParticles;};
      *Count += NumberOfParticles;
    }
 
+/* Particles: Add a particle attribute */
+   
+   void AddNewParticleAttribute(int index, float value) {
+      if (index < 0 || index > MAX_NUMBER_OF_PARTICLE_ATTRIBUTES) {
+         ENZO_FAIL("");
+      }
+      if (MyProcessorNumber == ProcessorNumber) {
+         ParticleAttribute[index] = new float[NumberOfParticles];
+         for (int i = 0; i < NumberOfParticles; i++) {
+            ParticleAttribute[index][i] = value;
+         }
+      }
+   }
+
   float ReturnTotalSinkMass() {
     float total = 0;
     double dx3 = CellWidth[0][0] * CellWidth[0][0] * CellWidth[0][0];

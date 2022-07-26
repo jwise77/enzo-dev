@@ -82,14 +82,24 @@ int grid::FlagCellsToBeRefinedByMass(int level, int method, int RestrictFlag)
      particles and must happen after all of the other flagging
      methods. */
 
+  int nflag = 0, nunflag = 0;
   if (RestrictFlag) {
-    for (i = 0; i < size; i++)
+    for (i = 0; i < size; i++) {
+      if (FlaggingField[i] == 0 && ffield[i] > ModifiedMinimumMassForRefinement) {
+        nunflag++;
+      }
+      if (FlaggingField[i] == 1 && ffield[i] > ModifiedMinimumMassForRefinement) {
+        nflag++;
+      }
       FlaggingField[i] = ((ffield[i] > ModifiedMinimumMassForRefinement) &&
 			  (FlaggingField[i] > 0)) ? 1 : 0;
+    }
   } else {
     for (i = 0; i < size; i++)
       FlaggingField[i] += (ffield[i] > ModifiedMinimumMassForRefinement) ? 1 : 0;
   }
+
+  printf("FlagByMass[G%"ISYM"]: nflag = %"ISYM", nunflag = %"ISYM"\n", this->ID, nflag, nunflag);
 
   /* Count number of flagged Cells. */
  

@@ -75,6 +75,13 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
     ParticleSplitterIterations = MAX_SPLIT_ITERATIONS;
   }
     
+  /* If no particle attributes, add one for the creation time, which is needed to distinugish between the "original" particles and the split particles. This comes in handy when refining with must-refine particles. */
+
+  bool add_creation_time = false;
+  if (NumberOfParticleAttributes == 0) {
+    NumberOfParticleAttributes = 1;
+    add_creation_time = true;
+  }
 
   /* Find total NumberOfParticles in all grids; this is needed in 
      CommunicationUpdateStarParticleCount below */
@@ -134,6 +141,12 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
       //		TotalStarParticleCountPrevious[grid1]);
       
       for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
+
+        // Mark all existing particles as "original". This is usually done in baryonic 
+        // simulations with star particles
+        if (add_creation_time) {
+          Grids[grid1]->GridData->AddNewParticleAttribute(0, FLOAT_UNDEFINED);
+        }
 
 #ifdef DEBUG_PS
 	fprintf(stdout, "ParticleSplitter [grid->NumberOfParticles=%d] starts. \n", 
