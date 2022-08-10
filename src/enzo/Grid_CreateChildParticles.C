@@ -34,16 +34,16 @@
 #include "CosmologyParameters.h"
 #include "phys_constants.h"
 
-#define DEBUG_PS
+#define NO_DEBUG_PS
 
 void mt_init(unsigned_int seed);
 
 unsigned_long_int mt_random();
 
-int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleMass,
-			       int *ParticleType, FLOAT *ParticlePosition[],
-			       float *ParticleVelocity[], float *ParticleAttribute[],
-			       FLOAT *CellLeftEdge[], int *GridDimension, 
+int grid::CreateChildParticles(float dx, int _NumberOfParticles, float *_ParticleMass,
+			       int *_ParticleType, FLOAT *_ParticlePosition[],
+			       float *_ParticleVelocity[], float *_ParticleAttribute[],
+			       FLOAT *_CellLeftEdge[], int *_GridDimension, 
 			       int MaximumNumberOfNewParticles, int iter, 
 			       int *NumberOfNewParticles)
 			 
@@ -94,7 +94,7 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
   /* Change particle refinement region in basic way */
   if(ParticleSplitterFraction[iter] != 1.0)
     {
-      fprintf(stderr, "Setting Particle Refinement using fractions.\n");
+      //fprintf(stderr, "Setting Particle Refinement using fractions.\n");
       for (i = 0; i < 3; i++) {
 	sep[i] = RefineRegionRightEdge[i] - RefineRegionLeftEdge[i];
 	midpoint[i] = sep[i]/2.0 + RefineRegionLeftEdge[i];
@@ -105,7 +105,7 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
     }
   /* Centre particle refinement region around a specific point */
   if(ParticleSplitterCenter[0] > 0.0 && ParticleSplitterCenterRegion[iter] > 0.0) {
-    fprintf(stderr, "Setting Particle Refinement around point.\n");
+    //fprintf(stderr, "Setting Particle Refinement around point.\n");
     for (i = 0; i < 3; i++) {
       midpoint[i] = ParticleSplitterCenter[i];
       newsep[i] = ParticleSplitterCenterRegion[iter]/2.0;
@@ -138,11 +138,11 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
 
   /* (Apr 2018) Include must-refine particles */
   
-  for(partnum = 0; partnum < NumberOfParticles; partnum++)
+  for(partnum = 0; partnum < _NumberOfParticles; partnum++)
     {
-      if(ParticleMass[partnum] > 0.0 &&
-	 (ParticleType[partnum] <= 2 ||
-	  ParticleType[partnum] == PARTICLE_TYPE_MUST_REFINE))
+      if(_ParticleMass[partnum] > 0.0 &&
+	 (_ParticleType[partnum] <= 2 ||
+	  _ParticleType[partnum] == PARTICLE_TYPE_MUST_REFINE))
 	{
 	  /* 
 	   * Check that particle is within the most refined region.
@@ -150,12 +150,12 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
 	   * blatantly discriminate against non-refined types around 
 	   * here.
 	   */
-	  if(ParticlePosition[0][partnum] < LeftEdge[0]  ||
-	     ParticlePosition[0][partnum] > RightEdge[0] ||
-	     ParticlePosition[1][partnum] < LeftEdge[1]  ||
-	     ParticlePosition[1][partnum] > RightEdge[1] ||
-	     ParticlePosition[2][partnum] < LeftEdge[2]  ||
-	     ParticlePosition[2][partnum] > RightEdge[2])
+	  if(_ParticlePosition[0][partnum] < LeftEdge[0]  ||
+	     _ParticlePosition[0][partnum] > RightEdge[0] ||
+	     _ParticlePosition[1][partnum] < LeftEdge[1]  ||
+	     _ParticlePosition[1][partnum] > RightEdge[1] ||
+	     _ParticlePosition[2][partnum] < LeftEdge[2]  ||
+	     _ParticlePosition[2][partnum] > RightEdge[2])
 	    {
 	      //fprintf(stdout, "grid::PS: Particle outside RR - ignoring\n"); 
 	      continue;
@@ -164,13 +164,13 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
 	  /*
 	   *  Compute index of the cell that the parent particle resides in.
 	   */
-	  xindex = (int)((ParticlePosition[0][partnum] - CellLeftEdge[0][0]) / dx);
-	  yindex = (int)((ParticlePosition[1][partnum] - CellLeftEdge[1][0]) / dx); 
-	  zindex = (int)((ParticlePosition[2][partnum] - CellLeftEdge[2][0]) / dx); 
+	  xindex = (int)((_ParticlePosition[0][partnum] - _CellLeftEdge[0][0]) / dx);
+	  yindex = (int)((_ParticlePosition[1][partnum] - _CellLeftEdge[1][0]) / dx); 
+	  zindex = (int)((_ParticlePosition[2][partnum] - _CellLeftEdge[2][0]) / dx); 
 
-	  if (xindex < 0 || xindex >= GridDimension[0] || 
-	      yindex < 0 || yindex >= GridDimension[1] || 
-	      zindex < 0 || zindex >= GridDimension[2])
+	  if (xindex < 0 || xindex >= _GridDimension[0] || 
+	      yindex < 0 || yindex >= _GridDimension[1] || 
+	      zindex < 0 || zindex >= _GridDimension[2])
 	    {
 	      fprintf(stdout, "grid::PS: parent particle out of grid (C level): \n");
 	      fprintf(stdout, "xind, yind, zind = %ld, %ld, %ld\n", xindex, yindex, zindex); 
@@ -181,7 +181,7 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
 	   * CREATE CHILDREN PARTICLES 
 	   */
 	  /* First reduce the mass of the parent down to 1/(children+parent) = 1/13 */
-	  ParticleMass[partnum] = ParticleMass[partnum] / (float)(ChildrenPerParent + 1.0);
+	  _ParticleMass[partnum] = _ParticleMass[partnum] / (float)(ChildrenPerParent + 1.0);
 	  /*
 	   * ===================================
 	   * Step I - Positioning
@@ -306,12 +306,12 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
 	  for(child = total_children, innerchild = 0 ; 
 	      child < total_children + CHILDRENPERPARENT; 
 	      child++, innerchild++)
-	    {
-	      this->ParticlePosition[0][child] = ParticlePosition[0][partnum] +
+		{
+	      this->ParticlePosition[0][child] = _ParticlePosition[0][partnum] +
 		l11*NewPos[0][innerchild] + l12*NewPos[1][innerchild] + l13*NewPos[2][innerchild];
-	      this->ParticlePosition[1][child] = ParticlePosition[1][partnum] +
+	      this->ParticlePosition[1][child] = _ParticlePosition[1][partnum] +
 		l21*NewPos[0][innerchild] + l22*NewPos[1][innerchild] + l23*NewPos[2][innerchild];
-	      this->ParticlePosition[2][child] = ParticlePosition[2][partnum] +
+	      this->ParticlePosition[2][child] = _ParticlePosition[2][partnum] +
 		l31*NewPos[0][innerchild] + l32*NewPos[1][innerchild] + l33*NewPos[2][innerchild];
 
 	      
@@ -345,30 +345,34 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
 		 
 		  return FAIL;
 		  
-		}
+		} // ENDIF outside domain
 	 
-	      this->ParticleMass[child] = ParticleMass[partnum];
-	      for(i = 0; i < 3; i++)
-		this->ParticleVelocity[i][child] = ParticleVelocity[i][partnum];
-	      this->ParticleType[child] = ParticleType[partnum];
-	      // Flag that a DM particle was split (originally -99999 or 0)
-	      if (NumberOfParticleAttributes > 0 &&
-	       	  ParticleType[partnum] == PARTICLE_TYPE_DARK_MATTER)
-	       	if (ParticleAttribute[0][partnum] <= 0)
-	       	  ParticleAttribute[0][partnum] = tiny_number;
-	      for(i = 0; i < NumberOfParticleAttributes; i++)
-		this->ParticleAttribute[i][child] = ParticleAttribute[i][partnum];
-	    }
+	    this->ParticleMass[child] = _ParticleMass[partnum];
+	    for (i = 0; i < 3; i++) {
+			this->ParticleVelocity[i][child] = _ParticleVelocity[i][partnum];
+		}
+	    this->ParticleType[child] = _ParticleType[partnum];
+	    // Flag that a DM particle was split (originally -99999 or 0)
+	    if (NumberOfParticleAttributes > 0 && 
+			_ParticleType[partnum] == PARTICLE_TYPE_DARK_MATTER) {
+			if (_ParticleAttribute[0][partnum] <= 0) {
+				_ParticleAttribute[0][partnum] = tiny_number;
+			}
+		}
+	    for (i = 0; i < NumberOfParticleAttributes; i++) {
+			this->ParticleAttribute[i][child] = _ParticleAttribute[i][partnum];
+		}
+
+	    } // ENDFOR child particles
 
 	  /* Loop forward by CHILDRENPERPARENT each time. */
 	  total_children = total_children + CHILDRENPERPARENT;
 
-	  if(total_children > MaximumNumberOfNewParticles)
-	    {
+	  if (total_children > MaximumNumberOfNewParticles) {
 	       fprintf(stdout, "Total number of Children (%ld) exceeded the maximum (%ld)\n", 
 		       total_children, MaximumNumberOfNewParticles);
 	       return FAIL;
-	    }
+	}
 
 	}
     }

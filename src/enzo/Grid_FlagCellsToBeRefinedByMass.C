@@ -1,3 +1,4 @@
+#define DEBUG_MRP
 /***********************************************************************
 /
 /  GRID CLASS (FLAG CELLS TO BE REFINED BY MASS)
@@ -82,24 +83,39 @@ int grid::FlagCellsToBeRefinedByMass(int level, int method, int RestrictFlag)
      particles and must happen after all of the other flagging
      methods. */
 
-  int nflag = 0, nunflag = 0;
+  int nflag = 0, nunflag = 0, nonzero = 0;
   if (RestrictFlag) {
     for (i = 0; i < size; i++) {
       if (FlaggingField[i] == 0 && ffield[i] > ModifiedMinimumMassForRefinement) {
         nunflag++;
       }
-      if (FlaggingField[i] == 1 && ffield[i] > ModifiedMinimumMassForRefinement) {
+      if (FlaggingField[i] > 0 && ffield[i] > ModifiedMinimumMassForRefinement) {
         nflag++;
       }
       FlaggingField[i] = ((ffield[i] > ModifiedMinimumMassForRefinement) &&
 			  (FlaggingField[i] > 0)) ? 1 : 0;
     }
   } else {
-    for (i = 0; i < size; i++)
+    for (i = 0; i < size; i++) {
       FlaggingField[i] += (ffield[i] > ModifiedMinimumMassForRefinement) ? 1 : 0;
+      if (ffield[i] > tiny_number) {
+        nonzero++;
+      }
+#ifdef DEBUG_MRP
+      if (ffield[i] > ModifiedMinimumMassForRefinement && level == 3) {
+        int ii, jj, kk;
+        FLOAT cx, cy, cz;
+        ii = i % GridDimension[0];
+        kk = i / (GridDimension[0] * GridDimension[1]);
+        jj = (i - kk * GridDimension[0] * GridDimension[1]) / GridDimension[0];
+        cx = CellLeftEdge[0][ii] + 0.5 * CellWidth[0][ii];
+        cy = CellLeftEdge[1][jj] + 0.5 * CellWidth[1][jj];
+        cz = CellLeftEdge[2][kk] + 0.5 * CellWidth[2][kk];
+        printf("FlagByMass[G%"ISYM"]: Cell %d flagged, position = %lf %lf %lf, rho = %g\n", this->ID, i, cx, cy, cz, ffield[i]);
+      }
+#endif
+    }
   }
-
-  printf("FlagByMass[G%"ISYM"]: nflag = %"ISYM", nunflag = %"ISYM"\n", this->ID, nflag, nunflag);
 
   /* Count number of flagged Cells. */
  
@@ -107,7 +123,26 @@ int grid::FlagCellsToBeRefinedByMass(int level, int method, int RestrictFlag)
   for (i = 0; i < size; i++)
     if (FlaggingField[i] > 0)
       NumberOfFlaggedCells++;
- 
+
+  // Print MRP bounding box
+#ifdef DEBUG_MRP
+  if (NumberOfFlaggedCells > 0 && level == 3) {
+    FLOAT minr[3] = {1, 1, 1};
+    FLOAT maxr[3] = {0, 0, 0};
+    for (i = 0; i < NumberOfParticles; i++) {
+      if (ParticleType[i] == PARTICLE_TYPE_MUST_REFINE) {
+        for (int dim = 0; dim < GridRank; dim++) {
+          minr[dim] = min(minr[dim], ParticlePosition[dim][i]);
+          maxr[dim] = max(maxr[dim], ParticlePosition[dim][i]);
+        }
+      }
+    }
+    printf("FlagByMass[G%"ISYM"]: MRP bounding box = (%lf %lf %lf) -> (%lf %lf %lf)\n", this->ID, minr[0], minr[1], minr[2], maxr[0], maxr[1], maxr[2]);
+  }
+
+  printf("FlagByMass[G%"ISYM"][Restrict=%"ISYM"]: nflag = %"ISYM"/%"ISYM", nunflag = %"ISYM", nonzero = %"ISYM"/%"ISYM"\n", this->ID, RestrictFlag, nflag, NumberOfFlaggedCells, nunflag, nonzero, size);
+#endif
+
   /* remove MassFlaggingField. */
  
   if (ThisFlaggingMethod == 2) {

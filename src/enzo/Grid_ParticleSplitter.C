@@ -122,15 +122,14 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
        in the later iterations, the particle types are propagated to
        the split particles. */
 
-    if (ParticleSplitterMustRefine == TRUE && MustRefineIDs != NULL &&
-	iteration == 0) {
+    if (ParticleSplitterMustRefine == TRUE && MustRefineIDs != NULL && iteration == 0) {
       for (i = 0; i < NumberOfParticles; i++) {
-	for (j = 0; j < NumberOfIDs; j++) {
-	  if (this->ParticleNumber[i] == MustRefineIDs[j]) {
-	    this->ParticleType[i] = PARTICLE_TYPE_MUST_REFINE;
-	    break;
-	  }
-	} // ENDFOR j
+        for (j = 0; j < NumberOfIDs; j++) {
+          if (this->ParticleNumber[i] == MustRefineIDs[j]) {
+            this->ParticleType[i] = PARTICLE_TYPE_MUST_REFINE;
+            break;
+          }
+        } // ENDFOR j
       } // ENDFOR i
     }
     

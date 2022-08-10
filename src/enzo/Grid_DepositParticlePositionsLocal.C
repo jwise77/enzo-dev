@@ -1,3 +1,4 @@
+#define DEBUG_MRP
 /***********************************************************************
 /
 /  GRID CLASS (DEPOSIT LOCAL PARTICLE POSITIONS ONTO THE SPECIFIED FIELD)
@@ -117,6 +118,7 @@ int grid::DepositParticlePositionsLocal(FLOAT DepositTime, int DepositField,
 
   /* If requested, only consider cells that have already been flagged. */
 
+  float maxf, totf;
   if (BothFlags) {
 
     float *DepositFieldPointer;
@@ -138,18 +140,51 @@ int grid::DepositParticlePositionsLocal(FLOAT DepositTime, int DepositField,
     int nunflag = 0, nflag = 0;    
     for (dim = 0, size = 1; dim < GridRank; dim++)
       size *= GridDimension[dim];
+
+    maxf = -1e20;
+    totf = 0;
     for (i = 0; i < size; i++) {
       if (FlaggingField[i] == 0) {
         nunflag++;
       } else {
         nflag++;
+        maxf = max(maxf, DepositFieldPointer[i]);
+        totf += DepositFieldPointer[i];
       }
     }    
     for (i = 0; i < size; i++)
       if (FlaggingField[i] == 0)
-	DepositFieldPointer[i] = 0.0;
+      	DepositFieldPointer[i] = 0.0;
 
-    printf("DepositPositionLocal[G%"ISYM"]: nflag = %"ISYM", nunflag = %"ISYM"\n", this->ID, nflag, nunflag);
+    FLOAT cx, cy, cz;
+    int ii, jj, kk;
+    FLOAT minr[3] = {1, 1, 1};
+    FLOAT maxr[3] = {0, 0, 0};
+    for (i = 0; i < size; i++) {
+      //if (DepositFieldPointer[i] > tiny_number) {
+      if (FlaggingField[i] > 0) {
+        ii = i % GridDimension[0];
+        kk = i / (GridDimension[0] * GridDimension[1]);
+        jj = (i - kk * GridDimension[0] * GridDimension[1]) / GridDimension[0];
+        cx = CellLeftEdge[0][ii] + 0.5 * CellWidth[0][ii];
+        cy = CellLeftEdge[1][jj] + 0.5 * CellWidth[1][jj];
+        cz = CellLeftEdge[2][kk] + 0.5 * CellWidth[2][kk];
+        minr[0] = min(minr[0], cx);
+        minr[1] = min(minr[1], cy);
+        minr[2] = min(minr[2], cz);
+        maxr[0] = max(maxr[0], cx);
+        maxr[1] = max(maxr[1], cy);
+        maxr[2] = max(maxr[2], cz);
+      }
+    }
+#ifdef DEBUG_MRP
+    printf("DepositPositionLocal[G%"ISYM"]: density bounding box = (%lf %lf %lf) -> (%lf %lf %lf)\n", this->ID, minr[0], minr[1], minr[2], maxr[0], maxr[1], maxr[2]);
+    printf("DepositPositionLocal[G%"ISYM"]: grid domain = (%lf %lf %lf) -> (%lf %lf %lf)\n", this->ID, GridLeftEdge[0], GridLeftEdge[1], GridLeftEdge[2], GridRightEdge[0], GridRightEdge[1], GridRightEdge[2]);
+#endif
+
+#ifdef DEBUG_MRP
+    printf("DepositPositionLocal[G%"ISYM"]: nflag = %"ISYM", nunflag = %"ISYM", size = %"ISYM", maxf/avgf = %g/%g\n", this->ID, nflag, nunflag, size, maxf, totf/nflag);
+#endif
 
   }
   

@@ -180,7 +180,10 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
     
     /* Set MetaData->NumberOfParticles again; might be needed somewhere */
 
-    MetaData->NumberOfParticles = FindTotalNumberOfParticles(LevelArray);
+    int NewNumberOfParticles = FindTotalNumberOfParticles(LevelArray);
+    if (debug) 
+      printf("ParticleSplitter[iter=%d]: Added %"ISYM" particles\n", i, NewNumberOfParticles - MetaData->NumberOfParticles);
+    MetaData->NumberOfParticles = NewNumberOfParticles;
 
 #ifdef DEBUG_PS
     fprintf(stdout, "ParticleSplitter 1 cycle done!\n");

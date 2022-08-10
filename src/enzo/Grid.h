@@ -2665,10 +2665,10 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
   int ParticleSplitter(int level, int iter, int NumberOfIDs,
 		       long *MustRefineIDs);
 
-  int CreateChildParticles(float dx, int NumberOfParticles, float *ParticleMass,
-			   int *ParticleType, FLOAT *ParticlePosition[],
-			   float *ParticleVelocity[], float *ParticleAttribute[],
-			   FLOAT *CellLeftEdge[], int *GridDimension, 
+  int CreateChildParticles(float dx, int _NumberOfParticles, float *_ParticleMass,
+			   int *_ParticleType, FLOAT *_ParticlePosition[],
+			   float *_ParticleVelocity[], float *_ParticleAttribute[],
+			   FLOAT *_CellLeftEdge[], int *_GridDimension, 
                            int MaximumNumberOfNewParticles, int iter, 
 			   int *NumberOfNewParticles);
 

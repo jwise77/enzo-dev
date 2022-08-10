@@ -1,3 +1,4 @@
+#define DEBUG_MRP
 /***********************************************************************
 /
 /  GRID CLASS (DEPOSIT MUST-REFINE PARTICLES)
@@ -119,10 +120,10 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
   if (NumberOfAntiRules > 0) {
     IsParticleNotMustRefine = new int[NumberOfParticles];
   }
-  for (i = 0; i < NumberOfParticles; i ++){
+  for (i = 0; i < NumberOfParticles; i++){
     IsParticleMustRefine[i] = 1;
     if (NumberOfParticleAttributes > 0) {
-      OriginalParticle = (ParticleAttribute[0][i] <= 0.0);
+      OriginalParticle = (ParticleAttribute[0][i] <= 0.0) && (ParticleType[i] == PARTICLE_TYPE_DARK_MATTER);
     } else {
       OriginalParticle = true;
     }
@@ -135,8 +136,7 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
     // check particle type and uniform mass
     rule0    = (ParticleType[i] == PARTICLE_TYPE_MUST_REFINE ||
                 ParticleType[i] == PARTICLE_TYPE_MBH) ||
-      (ParticleMass[i] < UniformParticleMass &&
-       ParticleType[i] == PARTICLE_TYPE_DARK_MATTER && OriginalParticle);
+      (ParticleMass[i] < UniformParticleMass && OriginalParticle);
     rules[0] = rule0;
 
     // check particle mass greater than minimum mass
@@ -145,7 +145,10 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
     if (ParticleType[i] == PARTICLE_TYPE_MUST_REFINE) {
       nmrp++;
     }
-    if (ParticleType[i] == PARTICLE_TYPE_DARK_MATTER && ParticleMass[i] < UniformParticleMass && OriginalParticle) {
+    if (ParticleMass[i] < UniformParticleMass && OriginalParticle) {
+      if (this->ID == 314 && level == 3) {
+        printf("DepositMRPs[G%d/L%d/OG=%d]: Particle mass = %g (%g), uniform_mass = %g, type = %d, attr = %g\n", this->ID, level, OriginalParticle, ParticleMass[i], ParticleMass[i]-UniformParticleMass, UniformParticleMass, ParticleType[i], ParticleAttribute[0][i]);
+      }
       nuniform++;
     }
 
@@ -174,6 +177,85 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
 	   &GridRank, &NumberOfParticles, FlaggingField,
 	   LeftEdge, GridDimension, GridDimension+1, GridDimension+2,
 	   &CellSize, &ParticleBufferSize);
+
+  FLOAT cx, cy, cz;
+  int ii, jj, kk;
+  FLOAT minr[3] = {1, 1, 1};
+  FLOAT maxr[3] = {0, 0, 0};
+  if (this->ID == 276) {
+    for (i = 0; i < size; i++) {
+      if (FlaggingField[i] > 0) {
+        ii = i % GridDimension[0];
+        kk = i / (GridDimension[0] * GridDimension[1]);
+        jj = (i - kk * GridDimension[0] * GridDimension[1]) / GridDimension[0];
+        cx = CellLeftEdge[0][ii] + 0.5 * CellWidth[0][ii];
+        cy = CellLeftEdge[1][jj] + 0.5 * CellWidth[1][jj];
+        cz = CellLeftEdge[2][kk] + 0.5 * CellWidth[2][kk];
+        minr[0] = min(minr[0], cx);
+        minr[1] = min(minr[1], cy);
+        minr[2] = min(minr[2], cz);
+        maxr[0] = max(maxr[0], cx);
+        maxr[1] = max(maxr[1], cy);
+        maxr[2] = max(maxr[2], cz);
+      }
+    }
+#ifdef DEBUG_MRP
+    printf("DepositMRPs[G%"ISYM"]: flagging field box = (%lf %lf %lf) -> (%lf %lf %lf)\n", this->ID, minr[0], minr[1], minr[2], maxr[0], maxr[1], maxr[2]);
+    for (i = 0; i < 3; i++) {
+      minr[i] = 1;
+      maxr[i] = 0;
+    }
+    for (i = 0; i < NumberOfParticles; i++) {
+      if (ParticleType[i] == PARTICLE_TYPE_MUST_REFINE) {
+        for (dim = 0; dim < 3; dim++) {
+          minr[dim] = min(minr[dim], ParticlePosition[dim][i]);
+          maxr[dim] = max(maxr[dim], ParticlePosition[dim][i]);
+        }
+      }
+    }    
+    printf("DepositMRPs[G%"ISYM"]: MRP box = (%lf %lf %lf) -> (%lf %lf %lf)\n", this->ID, minr[0], minr[1], minr[2], maxr[0], maxr[1], maxr[2]);
+
+    for (i = 0; i < 3; i++) {
+      minr[i] = 1;
+      maxr[i] = 0;
+    }
+    for (i = 0; i < NumberOfParticles; i++) {
+      if (IsParticleMustRefine[i] == 1) {
+        for (dim = 0; dim < 3; dim++) {
+          minr[dim] = min(minr[dim], ParticlePosition[dim][i]);
+          maxr[dim] = max(maxr[dim], ParticlePosition[dim][i]);
+        }
+      }
+    }
+    printf("DepositMRPs[G%"ISYM"]: boolean box = (%lf %lf %lf) -> (%lf %lf %lf)\n", this->ID, minr[0], minr[1], minr[2], maxr[0], maxr[1], maxr[2]);
+    for (i = 0; i < 3; i++) {
+      minr[i] = 1;
+      maxr[i] = 0;
+    }
+    for (i = 0; i < NumberOfParticles; i++) {
+      if (ParticleType[i] == PARTICLE_TYPE_DARK_MATTER && ParticleMass[i] < UniformParticleMass && ParticleAttribute[0][i]) {
+        for (dim = 0; dim < 3; dim++) {
+          minr[dim] = min(minr[dim], ParticlePosition[dim][i]);
+          maxr[dim] = max(maxr[dim], ParticlePosition[dim][i]);
+        }
+      }
+    }
+    printf("DepositMRPs[G%"ISYM"]: nested box = (%lf %lf %lf) -> (%lf %lf %lf)\n", this->ID, minr[0], minr[1], minr[2], maxr[0], maxr[1], maxr[2]);
+#endif
+  }
+
+
+  int nmrp0 = 0, nflag = 0;
+  for (i = 0; i < NumberOfParticles; i++) {
+    if (IsParticleMustRefine[i] == 1) {
+      nmrp0++;
+    }
+  }
+  for (i = 0; i < size; i++) {
+    if (FlaggingField[i] > 0) {
+      nflag++;
+    }
+  }
 
   if (NumberOfAntiRules > 0) {
     PFORTRAN_NAME(cic_flag)(IsParticleNotMustRefine,
@@ -212,8 +294,10 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
   }
 
   //if (debug1)
-    printf("DepositMRPs[L%"ISYM"/G%"ISYM"]: %"ISYM" flagged cells, %"ISYM" MRPs, %"ISYM" nested particles\n", 
-	   level, this->ID, NumberOfFlaggedCells, nmrp, nuniform);
+#ifdef DEBUG_MRP
+    printf("DepositMRPs[L%"ISYM"/G%"ISYM"]: %"ISYM" flagged cells, %"ISYM"/%"ISYM" MRPs, %"ISYM" nested particles, %"ISYM" particles\n", 
+	   level, this->ID, NumberOfFlaggedCells, nmrp, nmrp0, nuniform, NumberOfParticles);
+#endif
 
   /* If refining region before supernova, change particle type back to
      its original value. */
