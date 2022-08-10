@@ -143,8 +143,8 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
       for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
 
         // Mark all existing particles as "original". This is usually done in baryonic 
-        // simulations with star particles
-        if (add_creation_time) {
+        // simulations with star particles. Only do this on the first iteration.
+        if (add_creation_time && i == 0) {
           Grids[grid1]->GridData->AddNewParticleAttribute(0, FLOAT_UNDEFINED);
         }
 
