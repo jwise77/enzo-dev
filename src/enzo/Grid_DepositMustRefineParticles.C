@@ -1,4 +1,4 @@
-#define DEBUG_MRP
+#define NO_DEBUG_MRP
 /***********************************************************************
 /
 /  GRID CLASS (DEPOSIT MUST-REFINE PARTICLES)
@@ -146,9 +146,11 @@ int grid::DepositMustRefineParticles(int pmethod, int level, bool KeepFlaggingFi
       nmrp++;
     }
     if (ParticleMass[i] < UniformParticleMass && OriginalParticle) {
+#ifdef DEBUG_MRP
       if (this->ID == 314 && level == 3) {
         printf("DepositMRPs[G%d/L%d/OG=%d]: Particle mass = %g (%g), uniform_mass = %g, type = %d, attr = %g\n", this->ID, level, OriginalParticle, ParticleMass[i], ParticleMass[i]-UniformParticleMass, UniformParticleMass, ParticleType[i], ParticleAttribute[0][i]);
       }
+#endif
       nuniform++;
     }
 

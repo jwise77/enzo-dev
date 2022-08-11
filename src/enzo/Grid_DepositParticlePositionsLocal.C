@@ -1,4 +1,4 @@
-#define DEBUG_MRP
+#define NO_DEBUG_MRP
 /***********************************************************************
 /
 /  GRID CLASS (DEPOSIT LOCAL PARTICLE POSITIONS ONTO THE SPECIFIED FIELD)
