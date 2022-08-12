@@ -198,6 +198,15 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
   delete [] MustRefineIDs;
   ParticleSplitterIterations = 0;
 
+  /* If MRP split particles, set refine region to whole domain */
+
+  if (ParticleSplitterMustRefine) {
+    for (int dim = 0; dim < MAX_DIMENSION; dim++) {
+      RefineRegionLeftEdge[dim] = DomainLeftEdge[dim];
+      RefineRegionRightEdge[dim] = DomainRightEdge[dim];
+    }
+  }
+
   return SUCCESS;
 
 }
