@@ -68,7 +68,7 @@ int grid::FlagCellsToBeRefinedByJeansLength()
       if (this->ComputeTemperatureField(temperature) == FAIL)
 	ENZO_FAIL("Error in grid->ComputeTemperature.");
       for (i = 0; i < size; i++) 
-	temperature[i] = max(JeansRefinementColdTemperature, temperature[i]);
+	temperature[i] = max(-JeansRefinementColdTemperature, temperature[i]);
     }
   }
  
