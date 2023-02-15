@@ -462,7 +462,14 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
     if(AccretionRate*yr_s < 1e-30) /* Takes care of any negative accretion rates */
       AccretionRate = 1e-30/yr_s;
     /* Star Radius in units of Rsolar */
-    float StarRadius = GetStellarRadius(StarMass, AccretionRate);
+    float StarRadius;
+    if (ThisParticle->ParticleClass == SMS) {
+      // Hosokawa+ (2011) in Rsun for SMSs
+      StarRadius = 2600 * sqrt(StarMass / 100);
+    } else {
+      // Smith+ (2011) in Rsun for normal protostars
+      StarRadius = GetStellarRadius(StarMass, AccretionRate);
+    }
     float LThisTimestep=0.0, sn_nrg_thistimestep = 0.0;
     if((POPIII == ThisParticle->ParticleClass) || (SMS == ThisParticle->ParticleClass)) {
       /* Calculate SpecificL [ergs s^-1 g^-1] */
