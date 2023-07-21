@@ -208,7 +208,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
       float energies[MAX_ENERGY_BINS], deltaE;
 #ifdef TRANSFER
       if (RadiativeTransfer) {
-	cstar->ComputePhotonRates(TimeUnits, nbins, energies, Q);
+	cstar->ComputePhotonRates(TimeUnits, nbins, energies, Q, dtForThisStar);
 	sigma = (double) FindCrossSection(0, energies[0]);  // HI (cm^2)
 	Q_HI = Q[0];
 	deltaE = energies[0] - 13.6;  // eV
@@ -220,14 +220,176 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 	deltaE = 0.0;
       }
 
-      for (l = level; l < MAX_DEPTH_OF_HIERARCHY; l++)
-	for (Temp = LevelArray[l]; Temp; Temp = Temp->NextGridThisLevel) 
-	  Temp->GridData->AddFeedbackSphere
-	    (cstar, l, influenceRadius, DensityUnits, LengthUnits, 
-	     VelocityUnits, TemperatureUnits, TimeUnits, EjectaDensity, 
-	     EjectaMetalDensity, EjectaThermalEnergy, Q_HI, sigma, deltaE, 
-	     CellsModified);
-    } // ENDIF
+      float rho = EjectaDensity;
+      float z_rho = EjectaMetalDensity;
+      FLOAT AVL0 = 0.0;
+      float metalAccreted = 0.0;
+      float metalFrac;
+      float rescale = 1.0;
+      FLOAT MassUnits = DensityUnits * pow(LengthUnits, 3) /
+                        SolarMass; // code -> Msun if mult. by cell volume
+
+      /*
+          For Pop2 SN, only deposit on grid local to task if not 
+          using load balancing. This way, we avoid the 
+          MPI_Allreduce and incur minimal error when the SN bubble 
+          overlaps task boundaries 
+      */
+         
+      // loop over level hierarchy to find processor number that hosts the stars grid
+      int StarProc = 0;
+      int StarLevel = cstar->ReturnLevel();
+      int StarGrid = cstar->ReturnGridID();
+      for (Temp = LevelArray[StarLevel]; Temp; Temp = Temp->NextGridThisLevel)
+      {
+        if (Temp->GridData->GetGridID() == StarGrid)
+  {
+    StarProc = Temp->GridData->ReturnProcessorNumber();
+    break;
+  }
+      }
+
+      // printf("star proc: %d, my proc = %d, load_bal = %d",
+      //         StarProc, MyProcessorNumber,
+      //         LoadBalancing);
+      bool dep_p2_this_task =
+          (LoadBalancing == 0 && cstar->ReturnType() == PopII &&
+           cstar->ReturnFeedbackFlag() ==
+               SUPERNOVA); // true when skipping mpi_allreduce
+      for (l = level; l < MAX_DEPTH_OF_HIERARCHY;
+           l++)
+      { // initially l=level; l<MAX; l++
+        // if (!LevelArray[l]) continue;
+
+  if (cstar->ReturnFeedbackFlag() == SUPERNOVA ||
+      cstar->ReturnFeedbackFlag() == FORMATION)
+  {
+    /*
+        Spheres interacting with grids isnt consistent; Do a first pass
+       with no deposition to validate the volume we will deposit into,
+       then rescale the deposition accordingly.
+        --AIW
+    */
+
+    bool rescaleSN = cstar->ReturnFeedbackFlag() == SUPERNOVA &&
+                     (cstar->ReturnType() == PopIII);
+    bool PopIIRescale = cstar->ReturnFeedbackFlag() == SUPERNOVA &&
+                        cstar->ReturnType() == PopII;
+
+    // Things we'll sum across grids
+
+    int nCells = 0;
+    FLOAT vol_modified = 0.0;
+    float mass_dep = 0.0;
+    float metal_dep = 0.0;  // track P3 metal
+    float metal2_dep = 0.0; // track p2 metal
+
+    // sum volume across
+
+    for (Temp = LevelArray[l]; Temp; Temp = Temp->NextGridThisLevel)
+      nCells += Temp->GridData->StarParticleCalculateFeedbackVolume(
+          cstar, l, influenceRadius, DensityUnits, LengthUnits,
+          VelocityUnits, TemperatureUnits, TimeUnits, nCells, 
+          mass_dep, metal_dep, metal2_dep, vol_modified);
+
+    FLOAT AllVol = 0;
+    FLOAT old_vol = influenceRadius * influenceRadius * 
+      influenceRadius * 4.0 * pi / 3.0;
+    float allMass = 0;   // track full mass
+    float allMetal = 0;  // track p3 metal
+    float allMetal2 = 0; // track p2 metal
+
+    // sum volume and quantities across all processes for this level
+    //      (sphere can be across procs as well!) -AIW
+
+    MPI_Allreduce(&vol_modified, &AllVol, 1, MPI_DOUBLE, MPI_SUM,
+                  MPI_COMM_WORLD);
+    MPI_Allreduce(&mass_dep, &allMass, 1, MPI_DOUBLE, MPI_SUM,
+                  MPI_COMM_WORLD);
+    MPI_Allreduce(&metal_dep, &allMetal, 1, MPI_DOUBLE, MPI_SUM,
+                  MPI_COMM_WORLD);
+    MPI_Allreduce(&metal2_dep, &allMetal2, 1, MPI_DOUBLE, MPI_SUM,
+                  MPI_COMM_WORLD);
+
+    AVL0 = AllVol;
+
+    // if forming mass, need to check that mass accreting from grid is
+    // consistent MPI_Allreduce(&vol_modified, &AllVol,1,MPI_DOUBLE,
+    // MPI_SUM, MPI_COMM_WORLD);
+
+    if (cstar->ReturnFeedbackFlag() == FORMATION &&
+        rho == EjectaDensity && AVL0 > 0)
+    {
+      // set all this on the first pass that makes sense.
+
+      /* sum quantities across tasks */
+
+      allMass *= MassUnits;
+      allMetal *= MassUnits;
+      allMetal2 *= MassUnits;
+      metalFrac =
+          allMetal / (allMetal + allMetal2); // fraction of p3/all metals
+
+      if (allMass > cstar->ReturnFinalMass() && vol_modified > 0)
+      {
+        // Set the densities to constant value for the interior of
+        // Stromgren sphere
+        rho = (allMass - cstar->ReturnFinalMass()) / MassUnits / 
+          AVL0;
+        z_rho = max( (allMetal + allMetal2 - 
+          (cstar->ReturnFinalMass() * 
+          cstar->ReturnMetallicity())) / AVL0 / MassUnits, 
+          1e-30 * rho); 
+        printf("New densities rho=%g z_rho=%g M = %g Mz = %g\n", 
+          rho, z_rho, (allMass - rho * AVL0 * MassUnits),
+          allMetal + allMetal2 - z_rho * MassUnits * AVL0);
+      }
+    } // end if formation
+
+    /*
+        if dealing with supernova, rescale the densities according to the
+            actual deposition volume on the coarsest level.
+    */
+    if (rescaleSN || PopIIRescale)
+    {
+      if (AVL0 > 0)
+      {
+        // AVL0 set to the volume with 1.2*radius
+        rescale = old_vol / AVL0;
+        rho = EjectaDensity * rescale;
+        z_rho = EjectaMetalDensity * rescale;
+      }
+    }
+
+#ifdef DEBUG
+    if (rescale < 1.0 && vol_modified > 0) {
+      fprintf(stdout,
+          "\n[ %d ]Rescaling volume on level %d v = %g/%g  lratio = %f "
+          "rho = %g/%g z_rho=%g/%g m_d = %g/%g m_z = %g/%g\n",
+          cstar->ReturnLevel(), l, AVL0 * pow(LengthUnits, 3),
+          old_vol * pow(LengthUnits, 3), AllVol / AVL0,
+          rho * DensityUnits, EjectaDensity * DensityUnits,
+          z_rho * DensityUnits, EjectaMetalDensity * DensityUnits,
+          rho * AVL0 * DensityUnits * pow(LengthUnits, 3) / SolarMass,
+          EjectaDensity * old_vol * DensityUnits * pow(LengthUnits, 3) / SolarMass,
+          z_rho * AVL0 * DensityUnits * pow(LengthUnits, 3) / SolarMass,
+          EjectaMetalDensity * old_vol * DensityUnits *
+              pow(LengthUnits, 3) / SolarMass);
+    }
+#endif /* DEBUG */
+
+  } // endif supernova or formation
+
+  for (l = level; l < MAX_DEPTH_OF_HIERARCHY; l++) {
+    for (Temp = LevelArray[l]; Temp; Temp = Temp->NextGridThisLevel) {
+      Temp->GridData->AddFeedbackSphere(cstar, l, influenceRadius, 
+        DensityUnits, LengthUnits, VelocityUnits, TemperatureUnits, 
+        TimeUnits, EjectaDensity, EjectaMetalDensity, 
+        EjectaThermalEnergy, Q_HI, sigma, deltaE, CellsModified, metalFrac);
+    }
+  }
+
+  } // ENDFOR level
 
 //    fprintf(stdout, "StarParticleAddFeedback[%"ISYM"][%"ISYM"]: "
 //	    "Radius = %e pc_cm, changed %"ISYM" cells.\n", 
@@ -280,6 +442,22 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 #endif
     
   } // ENDFOR stars
+
+  /* For formation and feedback, project to parents from the bottom to make sure the information gets there as intended, i.e., don't want hydro to evolve before solutions are made consistent across levels.
+  */
+
+  for (l = MaximumRefinementLevel; l > 0; l--) {
+    Temp = LevelArray[l];
+    while (Temp != NULL) {
+      if (Temp->GridData->ProjectSolutionToParentGrid(
+              *Temp->GridHierarchyEntry->ParentGrid->GridData) == FAIL) {
+        fprintf(stderr, "Error in grid->ProjectSolutionToParentGrid\n");
+        return FAIL;
+      }
+      Temp = Temp->NextGridThisLevel;
+    }
+  }
+
 
   LCAPERF_STOP("StarParticleAddFeedback");
   return SUCCESS;

@@ -8,6 +8,9 @@
 /             July, 2009
 /  modified2: Ji-hoon Kim to include MBH_JETS feedback
 /             November, 2009
+/  modified3: Azton Wells; corrected supernova deposition to 
+/			  be mass and energy conserving.
+/			  December 2019
 /
 /  PURPOSE:
 /
@@ -48,7 +51,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 			    float LengthUnits, float VelocityUnits, 
 			    float TemperatureUnits, float TimeUnits, double EjectaDensity, 
 			    double EjectaMetalDensity, double EjectaThermalEnergy, 
-			    double Q_HI, double sigma_HI, float deltaE, int &CellsModified)
+			    double Q_HI, double sigma_HI, float deltaE, int &CellsModified, float MetalFraction)
 {
 
   const float WhalenMaxVelocity = 35;		// km/s
@@ -116,10 +119,6 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
   if (MetalNum > 0 && SNColourNum > 0 && cstar->type == PopIII)
     MetalNum = SNColourNum;
 
-  const int ncolor = 7;
-  int MetalNumArray[ncolor] = {SNColourNum, Metal2Num, MetalIaNum, MetalIINum, 
-  	MBHColourNum, Galaxy1ColourNum, Galaxy2ColourNum};
-
   float BubbleVolume = (4.0 * pi / 3.0) * radius * radius * radius;
 
   /***********************************************************************
@@ -163,6 +162,9 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 //    EjectaMetalDensity *= 0.1;
 //    EjectaThermalEnergy *= 0.1;
 //  }
+	FLOAT V_old = radius * radius * radius * 4.0 * pi / 3.0;
+	float MassUnits = DensityUnits * pow(LengthUnits, 3);
+    // 3) Continue on and profit with mass conserving feedback!
 
   // Correct for smaller enrichment radius
   EjectaMetalDensity *= pow(MetalRadius, -3.0);
@@ -175,6 +177,10 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
        increase the particle's velocity accordingly. - Ji-hoon Kim, Sep.2009 */
 
 //    printf("grid::AFS: before: cstar->Mass = %lf\n", cstar->Mass); 
+    float depositedMass = 0.0;
+    float depositedMetal = 0.0;
+    float depositedEnergy = 0.0;
+    FLOAT depositedVolume = 0.0;
     if (cstar->FeedbackFlag != SUPERNOVA) {
       float old_mass = (float)(cstar->Mass);
       cstar->Mass -= EjectaDensity * DensityUnits * BubbleVolume * pow(LengthUnits,3.0) / SolarMass;  
@@ -184,6 +190,10 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
       cstar->vel[2] *= frac;
     } // ENDIF !Supernova
 
+    int GZ = NumberOfGhostZones;
+    int maxI = GridDimension[0] - GZ;
+    int maxJ = GridDimension[1] - GZ;
+    int maxK = GridDimension[2] - GZ;
     maxGE = MAX_TEMPERATURE / (TemperatureUnits * (Gamma-1.0) * 0.6);
 
     for (k = 0; k < GridDimension[2]; k++) {
@@ -211,31 +221,29 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 	  radius2 = delx*delx + dely*dely + delz*delz;
 	  if (radius2 <= outerRadius2) {
 
+        depositedVolume += CellWidth[0][i] * CellWidth[1][j] * CellWidth[2][k];
 	    r1 = sqrt(radius2) / radius;
 	    norm = 0.98;
 	    ramp = norm*(0.5 - 0.5 * tanh(10.0*(r1-1.0)));
 //	    ramp = min(max(1.0 - (r1 - 0.8)/0.4, 0.01), 1.0);
 
-	    /* 1/1.2^3 factor to dilute the density since we're
-	       depositing a uniform ejecta in a sphere of 1.2*radius
-	       without a ramp.  The ramp is only applied to the
-	       energy*density factor. */
-	    factor = 0.578704;
-
 	    OldDensity = BaryonField[DensNum][index];
 	    BaryonField[DensNum][index] += factor*EjectaDensity;
+        if (i < maxI && i >= GZ && j < maxJ && j > GZ && k < maxK && k > GZ) {
+			depositedMass += factor * EjectaDensity * pow(CellWidth[0][0], 3);
+		}
 
 	    /* Add total energies of spheres together, then divide by
 	       density to get specific energy */
 
 	    if (GENum >= 0 && DualEnergyFormalism) {
 
-	      newGE = (OldDensity * BaryonField[GENum][index] +
-		       ramp * factor * EjectaDensity * EjectaThermalEnergy) /
-		BaryonField[DensNum][index];
-	      newGE = min(newGE, maxGE);
-	      BaryonField[GENum][index] = newGE;
-	      BaryonField[TENum][index] = newGE;
+	      	newGE = (OldDensity * BaryonField[GENum][index] +
+		       ramp * factor * EjectaDensity * EjectaThermalEnergy) / BaryonField[DensNum][index];
+			depositedEnergy += ramp * factor * EjectaDensity * EjectaThermalEnergy;
+ 	      	newGE = min(newGE, maxGE);
+	      	BaryonField[GENum][index] = newGE;
+	      	BaryonField[TENum][index] = newGE;
 
 	      for (dim = 0; dim < GridRank; dim++)
 		BaryonField[TENum][index] += 
@@ -280,15 +288,28 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 	      BaryonField[HDINum][index] *= increase;
 	    }
 
-	    if (MetallicityField == TRUE)
+	    if (MetallicityField == TRUE) {
 	      BaryonField[MetalNum][index] += EjectaMetalDensity;
+		  if (i < maxI && i >= GZ && j < maxJ && j > GZ && k < maxK && k > GZ) {
+			depositedMetal += EjectaMetalDensity * pow(CellWidth[0][0], 3);
+		  }
+		}
 
 	    CellsModified++;
 
 	  } // END if inside radius
 	}  // END i-direction
-      }  // END j-direction
+    }  // END j-direction
     }  // END k-direction
+
+#ifdef DEBUG
+    fprintf(stdout,
+            "[level: %d] <PID: %d> deposited M=%g M_z=%g v=%g dx = %f pc\n",
+            level, cstar->ReturnID(), depositedMass * MassUnits / SolarMass,
+            depositedMetal * MassUnits / SolarMass,
+            depositedVolume * pow(LengthUnits, 3),
+            CellWidth[0][0] * LengthUnits / pc_cm);
+#endif
 
   }  // END Supernova
 
@@ -334,12 +355,6 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 	    norm = 0.98;
 	    ramp = norm*(0.5 - 0.5 * tanh(10.0*(r1-1.0)));
 //          ramp = min(max(1.0 - (r1 - 0.8)/0.4, 0.01), 1.0);
-
-	    /* 1/1.2^3 factor to dilute the density since we're
-	       depositing a uniform ejecta in a sphere of 1.2*radius
-	       without a ramp.  The ramp is only applied to the
-	       energy*density factor. */
-	    factor = 0.578704;
 
 	    OldDensity = BaryonField[DensNum][index];
 	    BaryonField[DensNum][index] += factor*EjectaDensity;
@@ -868,6 +883,20 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
     int gammaNum;
     IdentifyRadiativeTransferFields(kphHINum, gammaNum, kphHeINum, kphHeIINum, 
 				    kdissH2INum, kphHMNum, kdissH2IINum);
+
+    /* 
+	Track density and metallicity prior to subtracting to make
+	sure it's conservative.  The Metal fraction in ie.,
+	cluster_maker.F is only set according to the host cell, but 
+	the metals are coming from many cells with varying metallicity 
+	levels -AIW
+    */
+
+    // hold values of initial mass and metal in grid and new mass
+    float m0 = 0;
+    float z0 = 0;
+    float zNew = 0;
+    float mNew = 0;
     
     for (k = 0; k < GridDimension[2]; k++) {
 
@@ -891,14 +920,20 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 	  delx = min(delx, DomainWidth[0]-delx);
 
 	  radius2 = delx*delx + dely*dely + delz*delz;
-	  if (radius2 <= radius*radius) {
+	  // use 1.2 radius like feedback routine
+      if (radius2 <= radius * radius * 1.2 * 1.2) {
 
 	    radius2 = max(radius2, 0.0625*CellWidth[0][i]*CellWidth[0][i]); // (0.25*dx)^2
 
-	    if (MetallicityField == TRUE)
-	      metallicity = BaryonField[MetalNum][index] / BaryonField[DensNum][index];
-	    else
+	    if (MetallicityField == TRUE) {
+			// Use total metallicity from PopIII SN as well if available -AIW 
+              metallicity = (SNColourNum > 0) ? 
+			  	(BaryonField[SNColourNum][index] + BaryonField[MetalNum][index]) / 
+				BaryonField[DensNum][index] : 
+				BaryonField[MetalNum][index] / BaryonField[DensNum][index];
+		} else {
 	      metallicity = 0;
+		}
 
 	    fhz = fh * (1-metallicity);
 	    fhez = (1-fh) * (1-metallicity);
@@ -906,7 +941,9 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 		// Save ratio to adjust metal densities accordingly to keep the 
 		// metallicities unchanged
 		rho_change = EjectaDensity / BaryonField[DensNum][index];
+		m0 += BaryonField[DensNum][index] * CellWidth[0][0] * CellWidth[0][0] * CellWidth[0][0];
 	    BaryonField[DensNum][index] = EjectaDensity;
+		mNew += BaryonField[DensNum][index] * CellWidth[0][0] * CellWidth[0][0] * CellWidth[0][0];
 
 	    if (MultiSpecies) {
 	      BaryonField[DeNum][index] = BaryonField[DensNum][index] * ionizedFraction;
@@ -929,19 +966,54 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 	      BaryonField[HDINum][index] = tiny_number * BaryonField[DensNum][index];
 	    }
 
-		for (nc = 0; nc < ncolor; nc++) {
-			if (MetalNumArray[nc] > 0) {
-				BaryonField[MetalNumArray[nc]][index] *= rho_change;
+		/* 
+		factor is initialized to zero and never set. Should we be 
+		setting the metals to zero? Why is standard metal_density 
+		field never touched?
+		*/
+
+		// only do this for P2 star formation; p3 may artificially 
+		// remove metals from neighboring regions
+		if (cstar->ReturnType() == PopII) {
+  			z0 += (BaryonField[SNColourNum][index] +
+			BaryonField[MetalNum][index]) * CellWidth[0][0] * 
+			CellWidth[0][0] * CellWidth[0][0];
+  			if (SNColourNum > 0) {
+				BaryonField[SNColourNum][index] = 
+				EjectaMetalDensity * MetalFraction;
 			}
+  			if (MetalNum > 0) {
+    			BaryonField[MetalNum][index] = EjectaMetalDensity
+				 * (1 - MetalFraction);
+			}
+  			zNew += (BaryonField[SNColourNum][index] + 
+				BaryonField[MetalNum][index]) * CellWidth[0][0]
+				* CellWidth[0][0] * CellWidth[0][0];
+  			if (Metal2Num > 0) 
+				BaryonField[Metal2Num][index] *= factor;
 		}
-	    
+
 	    CellsModified++;
 
 	  }  // END if inside radius
 
 	}  // END i-direction
-      }  // END j-direction
+    }  // END j-direction
     }  // END k-direction
+
+/* if the metal removed from the grid doesn't jive with the star metal, reset it */
+#ifdef DEBUG
+	if (EjectaMetalDensity > 0 && CellsModified > 0) {
+	printf("[ %d -- %d ] Removed %g Msun metal with mass change %g Msun\n",
+		   level, cstar->ReturnType(),
+		   (z0 * DensityUnits * pow(LengthUnits, 3) * 
+		   CellsModified * GetVCell() / SolarMass - zNew * 
+		   DensityUnits * pow(LengthUnits, 3) * CellsModified * 
+		   GetVCell() / SolarMass), (m0 - mNew) * DensityUnits * 
+		   pow(LengthUnits, 3) * GetVCell() / SolarMass);
+	}
+#endif
+
   }  // END star birth
 
   /***********************************************************************

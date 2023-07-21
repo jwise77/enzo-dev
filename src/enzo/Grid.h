@@ -405,6 +405,11 @@ public:
    FLOAT ReturnOldTime() {return OldTime;};
    float ReturnTimeStep() {return dtFixed;};
 
+   // Get the volume of one cell on this grid
+   float GetVCell() {
+      return CellWidth[0][0] * CellWidth[1][0] * CellWidth[2][0];
+   };
+
   /* Return, set grid ID */
 
   void SetGridID(int id) { ID = id; };
@@ -2865,12 +2870,19 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
   int RemoveParticle(int ID, bool disable=false);
 
   int RemoveActiveParticle(PINT ID, int NewProcessorNumber);
+
+  int StarParticleCalculateFeedbackVolume(
+      Star *cstar, int level, float radius, float DensityUnits,
+      float LengthUnits, float VelocityUnits, float TemperatureUnits,
+      float TimeUnits, int &nCells, float &depositedMass, float &depositedMetal,
+      float &depositedMetal2, FLOAT &depositedVolume);
+
   
   int AddFeedbackSphere(Star *cstar, int level, float radius, float DensityUnits,
 			float LengthUnits, float VelocityUnits, 
 			float TemperatureUnits, float TimeUnits, double EjectaDensity, 
 			double EjectaMetalDensity, double EjectaThermalEnergy,
-			double Q_HI, double sigma_HI, float deltaE, int &CellsModified);
+			double Q_HI, double sigma_HI, float deltaE, int &CellsModified, float MetalFraction);
 
   int SubtractAccretedMassFromSphere(Star *cstar, int level, float radius, float DensityUnits,
 				     float LengthUnits, float VelocityUnits, 
