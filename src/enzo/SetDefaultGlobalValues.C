@@ -393,8 +393,12 @@ int SetDefaultGlobalValues(TopGridData &MetaData)
   DiskGravityStellarDiskScaleHeightz = 2.5E-4;      // Mpc
   DiskGravityStellarBulgeMass        = 1.0E10;      // Solar Masses
   DiskGravityStellarBulgeR           = 4.0E-4;      // Mpc
-  DiskGravityDarkMatterR             = 2.3E-2;      // Mpc
-  DiskGravityDarkMatterDensity       = 3.81323E-25; // CGS
+  DiskGravityDarkMatterUseNFW        = FALSE;
+  DiskGravityDarkMatterMass          = 1.0e12;      // Solar Masses
+  DiskGravityDarkMatterConcentration = 10.0;
+  DiskGravityDarkMatterUseB95        = FALSE;
+  DiskGravityDarkMatterR             = 2.3e-2;      // Mpc
+  DiskGravityDarkMatterDensity       = 3.81323e-25; // cgs
 
   SelfGravity                 = FALSE;             // off
   SelfGravityGasOff           = FALSE;             // off
@@ -593,6 +597,12 @@ int SetDefaultGlobalValues(TopGridData &MetaData)
   StarMakerMassEfficiency          = 1;
   StarMakerMinimumMass             = 1.0e9;        // in solar masses
   StarMakerMinimumDynamicalTime    = 1.0e6;        // in years
+  StarMakerVelDivCrit              = TRUE;
+  StarMakerSelfBoundCrit           = FALSE;
+  StarMakerThermalCrit             = TRUE;
+  StarMakerUseJeansMass            = TRUE;
+  StarMakerH2Crit                  = FALSE;
+  StarMakerTemperatureThreshold    = 1.1e4;        // in K
   StarMassEjectionFraction         = 0.25;
   StarMetalYield                   = 0.02;
   StarEnergyToThermalFeedback      = 1.0e-5;
@@ -751,6 +761,12 @@ int SetDefaultGlobalValues(TopGridData &MetaData)
   StarMakerMinimumMassRampStartMass = FLOAT_UNDEFINED;
   StarMakerMinimumMassRampEndTime   = FLOAT_UNDEFINED;
   StarMakerMinimumMassRampEndMass   = FLOAT_UNDEFINED;
+
+  StarFeedbackThermalEfficiencyRamp = 0;
+  StarFeedbackThermalEfficiencyRampStartTime  = FLOAT_UNDEFINED;
+  StarFeedbackThermalEfficiencyRampStartValue = FLOAT_UNDEFINED;
+  StarFeedbackThermalEfficiencyRampEndTime    = FLOAT_UNDEFINED;
+  StarFeedbackThermalEfficiencyRampEndValue   = FLOAT_UNDEFINED;
       
   NumberOfParticleAttributes       = INT_UNDEFINED;
   AddParticleAttributes            = FALSE;
@@ -1053,6 +1069,9 @@ int SetDefaultGlobalValues(TopGridData &MetaData)
   MagneticSupernovaRadius = 300.0;      // Total injection radius of magnetic field in parsecs
   MagneticSupernovaDuration = 5e4  ;    // Total duration of magnetic feedback in years
   MagneticSupernovaEnergy = 1.0e51;    // Total energy (ergs) injected per star particle (supernova)
+
+  /* Rotating Pop III Stars Model */
+  PopIIIRotating = 0; // 0 = off; 1 = rotating; 2 = non-rotating
 
   return SUCCESS;
 }
