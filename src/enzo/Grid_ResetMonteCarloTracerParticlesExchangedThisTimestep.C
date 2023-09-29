@@ -26,6 +26,9 @@
 int grid::ResetMonteCarloTracerParticlesExchangedThisTimestep()
 {
 
+  if (MonteCarloTracerParticles == NULL)
+    return SUCCESS;
+  
   /* Compute grid size. */
   int i, dim, size = 1;
   for (dim = 0; dim < GridRank; dim++)

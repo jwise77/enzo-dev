@@ -76,6 +76,8 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
 
     NumberOfMCTPInCellZero = this->CountMonteCarloTracerParticlesInCellZero();
 
+    printf("\nMP%d-GP%d GID%d, NMCTPcz %d", MyProcessorNumber, ProcessorNumber, ID, NumberOfMCTPInCellZero);
+
     /* If there are no Monte Carlo tracer particles to move, we're done. */
 
     if (NumberOfMCTPInCellZero == 0)
@@ -179,9 +181,6 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
                                     (MoveMCTP->Position[dim] - GridLeftEdge[dim]) /
                                     (GridRightEdge[dim] - GridLeftEdge[dim])) 
                                   + NumberOfGhostZones;
-              // index_ijk[dim] = (int) (GridDimension[dim] * 
-              //                         (MoveMCTP->Position[dim] - GridLeftEdge[dim][dim])) 
-              //                         + NumberOfGhostZones - 1;
           }
           index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
       	  InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticles[index], MoveMCTP);
@@ -193,6 +192,8 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
     } // ENDIF TotalToMove > PreviousTotalToMove
 
     delete [] ToGrid;
+
+    printf("\nMP%d-GP%d GID%d, Exit CommTransferMCTP(COPY_OUT)", MyProcessorNumber, ProcessorNumber, ID);
  
   } // end: if (COPY_OUT)
  
@@ -202,6 +203,9 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
   else {
  
     int NumberOfNewMonteCarloTracerParticles = EndIndex - StartIndex;
+
+    printf("\nMP%d-GP%d GID%d, NNewMCTPs %d", MyProcessorNumber, ProcessorNumber, ID, NumberOfNewMonteCarloTracerParticles);
+
 
     /* Compute which cell the particle needs to be deposited into. 
        Copy Monte Carlo tracer particles from buffer into the 
@@ -227,6 +231,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       	InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
       } // ENDFOR Monte Carlo tracer particles
 
+    printf("\nMP%d-GP%d GID%d, Exit CommTransferMCTP(COPY_IN)", MyProcessorNumber, ProcessorNumber, ID);
   } // end: if (COPY_IN)
  
   return SUCCESS;

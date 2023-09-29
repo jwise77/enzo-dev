@@ -775,7 +775,6 @@ int Group_WriteAllData(char *basename, int filenumber,
  
   int level;
   HierarchyEntry *TempTopGrid;
-  CommunicationCombineGrids(TopGrid, &TempTopGrid, WriteTime, CheckpointDump);
  
   LevelHierarchyEntry *LevelArray[MAX_DEPTH_OF_HIERARCHY];
   for (level = 0; level < MAX_DEPTH_OF_HIERARCHY; level++)

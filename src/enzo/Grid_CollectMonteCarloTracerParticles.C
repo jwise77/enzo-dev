@@ -109,7 +109,7 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
   } // end: if (COPY_OUT)
  
   /* ----------------------------------------------------------------- */
-  /* Copy stars back into grid. */
+  /* Copy particles back into grid. */
  
   else {
 

@@ -70,9 +70,11 @@ int grid::DistributeMonteCarloTracerParticles()
                                 (GridRightEdge[dim] - GridLeftEdge[dim])) 
                               + NumberOfGhostZones;
 
-      //     index_ijk[dim] = (int) (this->GridDimension[dim] * 
-      //                             (MoveMCTP->Position[dim] - this->GridLeftEdge[dim])) 
-      //                             + NumberOfGhostZones - 1 ; // ***** CHECK INDEX IS CORRECT GIVEN POSITION *****
+        if (index_ijk[dim] < GridStartIndex[dim]){
+          // FOR DEBUGGING
+          printf("index[%d] = %d, GridStartIndex[%d] = %d, MP-P %d-%d", dim, index_ijk[dim], dim, GridStartIndex[dim], MyProcessorNumber, ProcessorNumber);
+        }
+
       }
       index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
       InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);

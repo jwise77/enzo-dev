@@ -150,13 +150,17 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
     if (OldGrid->MoveMonteCarloTracerParticlesToCellZero() == FAIL) {
       ENZO_FAIL("Error in grid->MoveMonteCarloTracerParticlesToCellZero.\n");
     }
+    /* Send Monte Carlo Tracer Particles to new grid but keep particles in OldGrid */
     if (OldGrid->CommunicationSendMonteCarloTracerParticles(
-            NewGrid, NewProc) == FAIL) {
+            NewGrid, NewProc, 0) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendMonteCarloTracerParticles.\n");
     }   
     if (OldGrid->DistributeMonteCarloTracerParticles() == FAIL) {
       ENZO_FAIL("Error in grid->DistributeMonteCarloTracerParticles.\n");
     } 
+    if (NewGrid->DistributeMonteCarloTracerParticles() == FAIL) {
+      ENZO_FAIL("Error in grid->DistributeMonteCarloTracerParticles.\n");
+    }     
  
     /* Next Grid */
  

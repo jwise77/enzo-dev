@@ -8,8 +8,9 @@
 /  PURPOSE: Count the total number of Monte Carlo tracer particles 
 /           in the first cell of this grid. The only time cell 0 has 
 /           any MC tracer particles is when they've been inserted there
-/           by CommunicationCollectMonteCarloTracerParticles(COPY_IN)
-/           to be moved to their proper grid.
+/           by CommunicationCollectMonteCarloTracerParticles(COPY_IN),
+/           or CommunicationSendMonteCarloTracerParticles to be moved 
+/           to their proper grid.
 /
 /  RETURNS:
 /    N: Number of MC tracers
@@ -31,6 +32,10 @@
 int grid::CountMonteCarloTracerParticlesInCellZero()
 {
   int N = 0;
+
+  if (MonteCarloTracerParticles == NULL)
+    return 0;
+
   MonteCarloTracerParticle *mc = MonteCarloTracerParticles[0];
   while(mc != NULL){
     N++;

@@ -12,17 +12,17 @@
 
 void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, MonteCarloTracerParticle * &NewNode)
 {
-  printf("\nInserting mc");
+  //printf("\nInserting mc");
   if (Node == NULL)
     Node = NewNode;
   else {
     if (NewNode == Node->NextParticle) {
-      printf("\nNode already in list?!\n");
+      //printf("\nNode already in list?!\n");
       exit(1);
     }
-    printf("\nNewNode->PrevParticle = Node; %p -> %p = %p", NewNode, NewNode->PrevParticle, Node);
+    //printf("\nNewNode->PrevParticle = Node; %p -> %p = %p", NewNode, NewNode->PrevParticle, Node);
     NewNode->PrevParticle = Node;
-    printf("\nNewNode->NextParticle = Node->NextParticle;; %p -> %p = %p -> ", NewNode, NewNode->NextParticle, Node, Node->NextParticle);
+    //printf("\nNewNode->NextParticle = Node->NextParticle;; %p -> %p = %p -> ", NewNode, NewNode->NextParticle, Node, Node->NextParticle);
     NewNode->NextParticle = Node->NextParticle;
     if (Node->NextParticle != NULL)
       Node->NextParticle->PrevParticle = NewNode;

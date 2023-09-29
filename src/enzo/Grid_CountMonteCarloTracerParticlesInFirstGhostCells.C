@@ -23,6 +23,8 @@
 
 int grid::CountMonteCarloTracerParticlesInFirstGhostCells()
 {
+  if (MonteCarloTracerParticles == NULL)
+    return 0;
 
   int index, icell, nmc = 0;
   MonteCarloTracerParticle *mctp;

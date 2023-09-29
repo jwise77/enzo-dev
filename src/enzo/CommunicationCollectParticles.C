@@ -528,6 +528,8 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 
     /* Count the number of particles needed to move */
 
+    printf("\nMP%d TMCTPsTM %d", MyProcessorNumber, TotalMonteCarloTracerParticlesToMove);
+
     SendList = new particle_data[TotalNumberToMove];
     StarSendList = new star_data[TotalStarsToMove];
     MCTPSendList = new mc_tracer_data[TotalMonteCarloTracerParticlesToMove];

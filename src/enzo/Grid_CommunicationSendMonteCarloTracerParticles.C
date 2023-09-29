@@ -43,7 +43,7 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node);
 
 /* Send particle from this grid to ToGrid on processor ToProcessor. */
 
-int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor)
+int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor, bool DeleteParticles)
 {
 
   int i, j, k, n,dim, index, TransferSize;
@@ -76,8 +76,8 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
   if (MyProcessorNumber == ProcessorNumber) {
     printf("\nproc%d: CommSendMC: package buffer and delete", MyProcessorNumber);      
     this->MonteCarloTracerParticles[0]->MonteCarloTracerParticleListToBuffer(buffer, NumberOfMonteCarloTracerParticles);
-    DeleteMonteCarloTracerParticleList(this->MonteCarloTracerParticles[0]);
-    // *** Add flag to not delete particles when needed (e.g. combine grids) ****
+    if (DeleteParticles)
+      DeleteMonteCarloTracerParticleList(this->MonteCarloTracerParticles[0]);
   }
     
   /* Send buffer. */
@@ -170,9 +170,11 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
                                 (mctp->Position[dim] - ToGrid->GridLeftEdge[dim]) /
                                 (ToGrid->GridRightEdge[dim] - ToGrid->GridLeftEdge[dim])) 
                               + NumberOfGhostZones;
-          // index_ijk[dim] = (int) (ToGrid->GridDimension[dim] * 
-          //                         (mctp->Position[dim] - ToGrid->GridLeftEdge[dim])) 
-          //                         + NumberOfGhostZones - 1;
+
+        if (index_ijk[dim] < ToGrid->GridStartIndex[dim]){
+          // FOR DEBUGGING
+          printf("index[%d] = %d, GridStartIndex[%d] = %d, MP-P %d-%d", dim, index_ijk[dim], dim, ToGrid->GridStartIndex[dim], MyProcessorNumber, ProcessorNumber);
+        }                              
       }
       index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); 
       InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);

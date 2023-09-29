@@ -42,11 +42,11 @@ int grid::CreateMonteCarloTracerParticles()
 
         // Add MC tracers to this cell 
         for (n = 0; n < NumberOfMonteCarloTracerParticlesPerCell; n++) {
-          printf("\n(i,j,k,n) = (%d,%d,%d,%d) New Particle", i, j, k, n);  
+          //printf("\n(i,j,k,n) = (%d,%d,%d,%d) New Particle", i, j, k, n);  
           newMC = new MonteCarloTracerParticle(this, index, groupID, GridLevel, Time, pos);
-          printf("\nnewMC %p", newMC);            
+          //printf("\nnewMC %p", newMC);            
           InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticles[index], newMC);
-          printf("\nInserted %p", newMC);            
+          //printf("\nInserted %p", newMC);            
           TotalNumberOfMonteCarloTracerParticles++;
         }
       }
