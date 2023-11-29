@@ -120,8 +120,14 @@ int ExtraOutput(int output_flag, LevelHierarchyEntry *LevelArray[],TopGridData *
 
 int ComputeDednerWaveSpeeds(TopGridData *MetaData,LevelHierarchyEntry *LevelArray[], 
 			    int level, FLOAT dt0);
-int  RebuildHierarchy(TopGridData *MetaData,
-		      LevelHierarchyEntry *LevelArray[], int level);
+int RebuildHierarchy(TopGridData *MetaData,
+         LevelHierarchyEntry *LevelArray[], int level, ExternalBoundary *Exterior
+#ifdef TRANSFER
+        , ImplicitProblemABC *ImplicitSolver
+#endif
+        );
+int RebuildHierarchy(TopGridData *MetaData,
+         LevelHierarchyEntry *LevelArray[], int level);
 int  ReportMemoryUsage(char *header = NULL);
 int  UpdateParticlePositions(grid *Grid);
 int  CheckEnergyConservation(HierarchyEntry *Grids[], int grid,
@@ -970,7 +976,12 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
        Don't bother on the last cycle, as we'll rebuild this grid soon. */
  
     if (dtThisLevelSoFar[level] < dtLevelAbove)
-      RebuildHierarchy(MetaData, LevelArray, level);
+      //RebuildHierarchy(MetaData, LevelArray, level);
+      RebuildHierarchy(MetaData, LevelArray, level, Exterior
+#ifdef TRANSFER
+        , ImplicitSolver
+#endif
+        );
 
     cycle++;
     LevelCycleCount[level]++;

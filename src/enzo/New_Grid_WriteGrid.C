@@ -914,15 +914,12 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       /* Store particle properties in single arrays */
       while(mc != NULL){
 
-        if (i < GridStartIndex[0] || 
-            j < GridStartIndex[1] || 
-            k < GridStartIndex[2] || 
-          pos[0] < 0 ||
-            pos[1] < 0 ||
-            pos[2] < 0){
-          // DEBUG
-          printf("\nMCinGZ (i,j,k)=(%d,%d,%d), pos=(%f,%f,%f)", i,j,k, pos[0], pos[1], pos[2]);
-        }
+        // if (i < GridStartIndex[0] || i > GridEndIndex[0]
+        //     j < GridStartIndex[1] || j > GridEndIndex[1]
+        //     k < GridStartIndex[2] || k > GridEndIndex[2]){
+        //   // DEBUG
+        //   printf("\nMCinGZ (i,j,k)=(%d,%d,%d), pos=(%f,%f,%f)", i,j,k, pos[0], pos[1], pos[2]);
+        // }
 
         MonteCarloTracerExchangeCount[n]     =  mc->ExchangeCount;
         MonteCarloTracerGroupID[n]           =  mc->GroupID;

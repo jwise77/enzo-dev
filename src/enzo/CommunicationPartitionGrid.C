@@ -526,7 +526,7 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 	  int IntTemp  = NewGrid->ReturnNumberOfParticles();
     int IntTemp2 = NewGrid->CountMonteCarloTracerParticles();
  
-    printf("\nproc%d: CommPartitionGrid: NewGrid->CountMonteCarloTracerParticles(): %"ISYM"", MyProcessorNumber,IntTemp2);
+    //printf("\nproc%d: CommPartitionGrid: NewGrid->CountMonteCarloTracerParticles(): %"ISYM"", MyProcessorNumber,IntTemp2);
  
 	  CommunicationBroadcastValue(&IntTemp, ROOT_PROCESSOR);
     CommunicationBroadcastValue(&IntTemp2, ROOT_PROCESSOR);
@@ -534,7 +534,7 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 	  NewGrid->SetNumberOfParticles(IntTemp);
     NewGrid->SetNumberOfMonteCarloTracerParticles(IntTemp2);
 
-    printf("\nproc%d: CommPartitionGrid: NewGrid NumberOfMonteCarloTracerParticles set to %"ISYM"", MyProcessorNumber, IntTemp2);
+    //printf("\nproc%d: CommPartitionGrid: NewGrid NumberOfMonteCarloTracerParticles set to %"ISYM"", MyProcessorNumber, IntTemp2);
 
 	}
  

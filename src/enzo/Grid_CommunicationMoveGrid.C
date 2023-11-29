@@ -43,13 +43,13 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
   FLOAT FZero[] = {0.0, 0.0, 0.0};
 
   //CommunicationDirection = COMMUNICATION_SEND_RECEIVE;
-    printf("\nALL CommMoveGrid: MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
-
+    //printf("\nALL CommMoveGrid: MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
+  
   if ((MyProcessorNumber == ProcessorNumber ||
        MyProcessorNumber == ToProcessor) &&
       ProcessorNumber != ToProcessor) {
     printf("\nSOME CommMoveGrid: MyProcessorNumber %d, ProcessorNumber %d, ToProcessor %d\n", MyProcessorNumber, ProcessorNumber, ToProcessor);
-
+    fflush(stdout);
     /* Copy baryons. */
  
     if (NumberOfBaryonFields > 0) {
@@ -83,9 +83,21 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
       this->CommunicationSendStars(this, ToProcessor);
 
     /* Copy Monte Carlo tracer particles */
-
+    //** DEBUG **
+    char ToProcessorStr[1];
+    char *filename = new char[MAX_LINE_LENGTH];
+    this->WriteMCTP("MovSubgridMCTPFast_thisGrid");
+    sprintf(ToProcessorStr, "%d", ToProcessor);  
+    strcpy(filename, "Pre_ComSend_in_ComMov");
+    strcat(filename, ToProcessorStr);
+    //** END DEBUG **
+    this->WriteMCTP(filename);
     if (MoveParticles == TRUE)
-      this->CommunicationSendMonteCarloTracerParticles(this, ToProcessor);    
+      this->CommunicationSendMonteCarloTracerParticles(this, ToProcessor);   
+    strcpy(filename, "Post_ComSend_in_ComMov");
+    strcat(filename, ToProcessorStr);       
+    this->WriteMCTP(filename);
+    delete filename;
 
     /* Copy photon packages */
 

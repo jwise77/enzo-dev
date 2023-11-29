@@ -32,7 +32,7 @@ void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, Monte
 MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle * &Node); 
  
 int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* ToGrids[],
-				   int AllLocal)
+           int AllLocal)
 {
 
   /* If there are no subgrids or particles to move, we're done. */
@@ -101,8 +101,8 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   if (AllLocal == FALSE)
     for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++)
       if (CommunicationBroadcastValue(&ParticlesToMove[subgrid],
-				      ProcessorNumber) == FAIL) {
-	       ENZO_FAIL("Error in CommunicationBroadcastValue.\n");
+              ProcessorNumber) == FAIL) {
+         ENZO_FAIL("Error in CommunicationBroadcastValue.\n");
       }
 
   /* Allocate space on all the subgrids with particles.
@@ -114,14 +114,14 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
       if (ParticlesToMove[subgrid] > 0) {
  
         /* Check if MonteCarloTracerParticles have already been allocated */
-      	if (ToGrids[subgrid]->MonteCarloTracerParticles != NULL) {
-      	  ENZO_VFAIL("\nproc%d: Monte Carlo tracer particles already in subgrid %"ISYM" (n=%"ISYM", nm=%"ISYM")\n",
-      		  MyProcessorNumber, subgrid, ToGrids[subgrid]->MonteCarloTracerParticles, ParticlesToMove[subgrid])
-      	}
+        if (ToGrids[subgrid]->MonteCarloTracerParticles != NULL) {
+          ENZO_VFAIL("\nproc%d: Monte Carlo tracer particles already in subgrid %"ISYM" (n=%"ISYM", nm=%"ISYM")\n",
+            MyProcessorNumber, subgrid, ToGrids[subgrid]->MonteCarloTracerParticles, ParticlesToMove[subgrid])
+        }
         
-      	ToGrids[subgrid]->AllocateMonteCarloTracerParticleData();
+        ToGrids[subgrid]->AllocateMonteCarloTracerParticleData();
        
-      	//printf("\nproc%d: MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"", MyProcessorNumber, subgrid, ParticlesToMove[subgrid]);
+        //printf("\nproc%d: MoveSubgridMonteCarloTracerParticles: subgrid[%"ISYM"] = %"ISYM"", MyProcessorNumber, subgrid, ParticlesToMove[subgrid]);
  
       } // end: if (ParticlesToMove > 0)
 
@@ -152,9 +152,15 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
             /* Loop over particles in this cell */
                         
           mctp = MonteCarloTracerParticles[index];
-          MonteCarloTracerParticles[index] = NULL;
+          MonteCarloTracerParticles[index] = NULL;  // Seg faults after this function in CommPartitionGrids if this isn't here.
+          // NEED TO PROPERLY FREE UP (delete) PARTICLES otherwise this is a memory leak.
+          //  At the first timestep, when MoveSubgridMCTPsFast is called from CommPartitionGrid
+          //  this should not cause problems with particle transfer since we are working with the subgrids now (i think?)
+          // Nvm. We can't free it up because we are just reassigning the particle pointers to the new grids particle lists.
           while (mctp != NULL) {
             if (subgrid >= 0) {
+
+              /* **** CHECK IF WE EVER ENTER THIS BLOCK.  WE DO**** */
 
               /* Pop particle from this grid/cell and insert it into the subgrid (aka ToGrid) */
 
@@ -175,11 +181,26 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
               //printf("\nproc%d: inserted particle %d (%p) from this grid (%p), into ToGrids[%d] (%p)", MyProcessorNumber, count, MoveMCTP, this, subgrid, ToGrids[subgrid]);
             } // end: if (subgrid >= 0)
             else
+              //printf("MoveMCTPsFast: else: subgrid %d index %d", subgrid, index);
               InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
           } // end: while (mctp != NULL)          
         } // end: loop over i
       } // end: loop over j
     } // end: loop over k
+
+    //** DEBUG **
+    char ToGridSubgrid[1];
+    char *filename = new char[MAX_LINE_LENGTH];
+    this->WriteMCTP("MovSubgridMCTPFast_thisGrid");
+    for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++) {
+        printf("\nMovSubgridMCTPFast: proc%d, this->ProcessorNumber: %d, ToGrids[%d]->ProcessorNumber: %d WriteMCTP subgrid %d", MyProcessorNumber, this->ProcessorNumber, subgrid, ToGrids[subgrid]->ProcessorNumber, subgrid);
+        sprintf(ToGridSubgrid, "%d", subgrid);  
+        strcpy(filename, "MoveSubgridMCTPFast_ToGrids");
+        strcat(filename, ToGridSubgrid);
+        ToGrids[subgrid]->WriteMCTP(filename);
+    }
+    delete filename;
+    //** END DEBUG **
     
     delete [] BaryonField[NumberOfBaryonFields];
     BaryonField[NumberOfBaryonFields] = NULL;
@@ -187,28 +208,30 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   } // end: if (MyProcessorNumber)
  
   /* Transfer particles from fake to real grids (and clean up).
+     This doesn't happen when called from CommPartitionGrid because at that point ToGrids[subgrid]->ProcessorNumber are still all 0.
      **** MAYBE JUST DELETE THIS. MIGHT BE NEEDED WHEN CALLED IN REBUILD HIERARCHY. 
      NEED TO CHECK THIS **** */
   
   for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++) {
     if ((MyProcessorNumber == ProcessorNumber ||
          MyProcessorNumber == ToGrids[subgrid]->ProcessorNumber) &&
-	       ProcessorNumber != ToGrids[subgrid]->ProcessorNumber)
+         ProcessorNumber != ToGrids[subgrid]->ProcessorNumber)
       if (ParticlesToMove[subgrid] != 0) {
-        printf("\nthis->ProcessorNumber: %d\nToGrids->ProcessorNumber: %d\n", this->ProcessorNumber, ToGrids[subgrid]->ProcessorNumber);
-      	if (this->CommunicationSendMonteCarloTracerParticles(ToGrids[subgrid], ToGrids[subgrid]->ProcessorNumber)
-      	    == FAIL) {
-      	  ENZO_FAIL("Error in grid->CommunicationSendParticles.\n");
-      	}
-      	if (MyProcessorNumber == ProcessorNumber)
-      	  ToGrids[subgrid]->DeleteAllFields();
+        printf("\nMoveSubgridMCTPsFast calling CommSendMCTPs: proc%d, this->ProcessorNumber %d, ToGrids->ProcessorNumber: %d\n", MyProcessorNumber, this->ProcessorNumber, ToGrids[subgrid]->ProcessorNumber);
+        fflush(stdout);
+        if (this->CommunicationSendMonteCarloTracerParticles(ToGrids[subgrid], ToGrids[subgrid]->ProcessorNumber)
+            == FAIL) {
+          ENZO_FAIL("Error in grid->CommunicationSendParticles.\n");
+        }
+        if (MyProcessorNumber == ProcessorNumber)
+          ToGrids[subgrid]->DeleteAllFields();
       }
   }
  
   delete [] ParticlesToMove;
  
 
-  // DEBUG
+  // // DEBUG
   // for (k0 = 0; k0 <= GridDimension[2]; k0++) {
   //   for (j0 = 0; j0 <= GridDimension[1]; j0++) {
   //     for (i0 = 0; i0 <= GridDimension[0]; i0++) {
@@ -230,7 +253,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   //     }
   //   }
   // }
-  // // END DEBUG
+  // // // END DEBUG
 
   return SUCCESS;
 }

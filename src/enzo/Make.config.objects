@@ -688,6 +688,7 @@ OBJS_CONFIG_LIB = \
         Grid_WriteGridX.o \
         Grid_WriteHierarchyInformationHDF5.o \
         Grid_WriteMemoryMap.o \
+        Grid_WriteMCTP.o \
         Grid_WriteNewMovieData.o \
         Grid_WriteNewMovieDataSeparateParticles.o \
         Grid_WriteStuff.o \

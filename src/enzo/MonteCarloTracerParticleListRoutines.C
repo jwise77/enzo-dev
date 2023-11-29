@@ -47,7 +47,7 @@ MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle *
 void DeleteMonteCarloTracerParticle(MonteCarloTracerParticle * &Node)
 {
   MonteCarloTracerParticle *Orphan = PopMonteCarloTracerParticle(Node);
-  //printf("\nOrphan = %p", Orphan);
+  ////printf("\nOrphan = %p", Orphan);
   if (Orphan != NULL) delete Orphan;
   return;
 }
@@ -111,7 +111,7 @@ int Move_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle 
     if (headB->PrevParticle != NULL)
       B_not_head = 1;
   if (headA->PrevParticle != NULL || B_not_head) {
-    printf("%s\n", "headA and headB must MCTracer linked list heads");
+    //printf("%s\n", "headA and headB must MCTracer linked list heads");
     return -1;
   }
   

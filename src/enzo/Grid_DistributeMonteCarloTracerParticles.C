@@ -51,6 +51,7 @@ int grid::DistributeMonteCarloTracerParticles()
 
     if (mctp == NULL) {
       printf("\nproc%d: DistributeMonteCarloTracerParticles: No particles to distribute.\n", MyProcessorNumber);
+      fflush(stdout);
       return SUCCESS;
     }
 
@@ -73,6 +74,7 @@ int grid::DistributeMonteCarloTracerParticles()
         if (index_ijk[dim] < GridStartIndex[dim]){
           // FOR DEBUGGING
           printf("index[%d] = %d, GridStartIndex[%d] = %d, MP-P %d-%d", dim, index_ijk[dim], dim, GridStartIndex[dim], MyProcessorNumber, ProcessorNumber);
+          fflush(stdout);
         }
 
       }
@@ -81,6 +83,7 @@ int grid::DistributeMonteCarloTracerParticles()
     }
 
     printf("\nproc%d: DistributeMonteCarloTracerParticles: Success.\n", MyProcessorNumber);
+    fflush(stdout);
     }
   return SUCCESS;
 }
