@@ -56,11 +56,13 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
     return SUCCESS;
 
   TransferSize = NumberOfMonteCarloTracerParticles;
-  printf("\nproc%d: CommSendMCTP: TransferSize (NumberOfMonteCarloTracerParticles) %d", MyProcessorNumber, TransferSize);
+  printf("\nproc%d, ToProc%d: CommSendMCTP: TransferSize (NumberOfMonteCarloTracerParticles) %d", MyProcessorNumber, ToProcessor, TransferSize);
   fflush(stdout);
 
-  if (TransferSize == 0)
+  if (TransferSize == 0){
+    printf("\nproc%d, ToProc%d: TransferSize == 0 return", MyProcessorNumber, ToProcessor, TransferSize);
     return SUCCESS;
+  }
 
   /* Allocate buffer in ToProcessor.  This is automatically done in
      MonteCarloTracerParticleListToBuffer in the local processor. */
@@ -169,20 +171,25 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       mctp->CurrentGrid = ToGrid;
       
       /* Find which cell this particle belongs in */
-      for (dim = 0; dim < GridRank; dim++) {
-        index_ijk[dim] = (int) (ToGridActiveDim[dim] * 
-                                (mctp->Position[dim] - ToGrid->GridLeftEdge[dim]) /
-                                (ToGrid->GridRightEdge[dim] - ToGrid->GridLeftEdge[dim])) 
-                              + NumberOfGhostZones;
+      // for (dim = 0; dim < GridRank; dim++) {
+      //   index_ijk[dim] = (int) (ToGridActiveDim[dim] * 
+      //                           (mctp->Position[dim] - ToGrid->GridLeftEdge[dim]) /
+      //                           (ToGrid->GridRightEdge[dim] - ToGrid->GridLeftEdge[dim])) 
+      //                         + NumberOfGhostZones;
 
-        if (index_ijk[dim] < ToGrid->GridStartIndex[dim]){
-          // FOR DEBUGGING
-          printf("index[%d] = %d, GridStartIndex[%d] = %d, MP-P %d-%d", dim, index_ijk[dim], dim, ToGrid->GridStartIndex[dim], MyProcessorNumber, ProcessorNumber);
-          fflush(stdout);
-        }                              
-      }
-      index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); 
-      InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);
+      //   if (index_ijk[dim] < ToGrid->GridStartIndex[dim]){
+      //     // FOR DEBUGGING
+      //     printf("index[%d] = %d, GridStartIndex[%d] = %d, MP-P %d-%d", dim, index_ijk[dim], dim, ToGrid->GridStartIndex[dim], MyProcessorNumber, ProcessorNumber);
+      //     fflush(stdout);
+      //   }                              
+      // }
+      // index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); 
+      // InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);
+      i = int((mctp->Position[0] - GridLeftEdge[0]) / CellWidth[0][0]);
+      j = int((mctp->Position[1] - GridLeftEdge[1]) / CellWidth[1][0]);
+      k = int((mctp->Position[2] - GridLeftEdge[2]) / CellWidth[2][0]);
+      index = GRIDINDEX(i,j,k);      
+      InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);        
     }
     printf("\nproc%d: CommSendMCTP: Inserted %d MCTPs from buffer into ToGrid. ToProcessor %d", MyProcessorNumber, TransferSize, ToProcessor);
     fflush(stdout);

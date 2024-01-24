@@ -86,14 +86,15 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
     //** DEBUG **
     char ToProcessorStr[1];
     char *filename = new char[MAX_LINE_LENGTH];
-    this->WriteMCTP("MovSubgridMCTPFast_thisGrid");
     sprintf(ToProcessorStr, "%d", ToProcessor);  
     strcpy(filename, "Pre_ComSend_in_ComMov");
     strcat(filename, ToProcessorStr);
     //** END DEBUG **
     this->WriteMCTP(filename);
-    if (MoveParticles == TRUE)
+    if (MoveParticles == TRUE){
+      printf("\nTHREE proc%d, ToProc%d: ComMovGrid: this->NMCTP %d", MyProcessorNumber, ToProcessor, this->GetNumberOfMonteCarloTracerParticles());
       this->CommunicationSendMonteCarloTracerParticles(this, ToProcessor);   
+    }
     strcpy(filename, "Post_ComSend_in_ComMov");
     strcat(filename, ToProcessorStr);       
     this->WriteMCTP(filename);

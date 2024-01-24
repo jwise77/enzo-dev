@@ -525,7 +525,8 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 
 	  int IntTemp  = NewGrid->ReturnNumberOfParticles();
     int IntTemp2 = NewGrid->CountMonteCarloTracerParticles();
- 
+    printf("\nONE proc%d: CommPartitionGrid: NewGrid->NMCTP %d", MyProcessorNumber, NewGrid->GetNumberOfMonteCarloTracerParticles());
+
     //printf("\nproc%d: CommPartitionGrid: NewGrid->CountMonteCarloTracerParticles(): %"ISYM"", MyProcessorNumber,IntTemp2);
  
 	  CommunicationBroadcastValue(&IntTemp, ROOT_PROCESSOR);
@@ -533,6 +534,8 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 
 	  NewGrid->SetNumberOfParticles(IntTemp);
     NewGrid->SetNumberOfMonteCarloTracerParticles(IntTemp2);
+    printf("\nTWO proc%d: CommPartitionGrid: NewGrid->NMCTP %d", MyProcessorNumber, NewGrid->GetNumberOfMonteCarloTracerParticles());
+
 
     //printf("\nproc%d: CommPartitionGrid: NewGrid NumberOfMonteCarloTracerParticles set to %"ISYM"", MyProcessorNumber, IntTemp2);
 
@@ -589,7 +592,7 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 
   /* Distribute Monte Carlo tacer particles to their correct cells. This only needs to be done 
      for new grids that are on the same processor as the old grid. Other grids on other procsessors
-     were already handled by CommunicationSendGrid in CommunicationMoveGrid */
+     were already handled by CommunicationSendMonteCarloTracerParticles in CommunicationMoveGrid. NO THEY WERE NOT BECAUSE THE PROCESSOR NUMBER HAD NOT BEEN SET YET. */
     printf("\nproc%d: CommPartitionGrid: pre DistributeMonteCarloTracerParticles: ProcessorNumber %d, ToProcessor  %d", MyProcessorNumber, NewGrid->ReturnProcessorNumber(), NewProc);
 
   if (MyProcessorNumber == NewGrid->ReturnProcessorNumber() && NewGrid->ReturnProcessorNumber() == NewProc) {

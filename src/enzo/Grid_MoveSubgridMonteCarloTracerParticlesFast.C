@@ -113,7 +113,8 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
  
       if (ParticlesToMove[subgrid] > 0) {
  
-        /* Check if MonteCarloTracerParticles have already been allocated */
+        /* Check if MonteCarloTracerParticles have already been allocated.
+           *** I PROBABLY SHOULDN'T ENZO_VFAIL HERE BECAUSE THE ToGrid in general might have existing particles? */
         if (ToGrids[subgrid]->MonteCarloTracerParticles != NULL) {
           ENZO_VFAIL("\nproc%d: Monte Carlo tracer particles already in subgrid %"ISYM" (n=%"ISYM", nm=%"ISYM")\n",
             MyProcessorNumber, subgrid, ToGrids[subgrid]->MonteCarloTracerParticles, ParticlesToMove[subgrid])
@@ -153,10 +154,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
                         
           mctp = MonteCarloTracerParticles[index];
           MonteCarloTracerParticles[index] = NULL;  // Seg faults after this function in CommPartitionGrids if this isn't here.
-          // NEED TO PROPERLY FREE UP (delete) PARTICLES otherwise this is a memory leak.
-          //  At the first timestep, when MoveSubgridMCTPsFast is called from CommPartitionGrid
-          //  this should not cause problems with particle transfer since we are working with the subgrids now (i think?)
-          // Nvm. We can't free it up because we are just reassigning the particle pointers to the new grids particle lists.
+
           while (mctp != NULL) {
             if (subgrid >= 0) {
 
@@ -208,9 +206,8 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   } // end: if (MyProcessorNumber)
  
   /* Transfer particles from fake to real grids (and clean up).
-     This doesn't happen when called from CommPartitionGrid because at that point ToGrids[subgrid]->ProcessorNumber are still all 0.
-     **** MAYBE JUST DELETE THIS. MIGHT BE NEEDED WHEN CALLED IN REBUILD HIERARCHY. 
-     NEED TO CHECK THIS **** */
+     Note: This doesn't happen when called from CommPartitionGrid because at that point ToGrids[subgrid]->ProcessorNumber are still all 0.
+   */
   
   for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++) {
     if ((MyProcessorNumber == ProcessorNumber ||

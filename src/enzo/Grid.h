@@ -1777,6 +1777,7 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
   int  MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* ToGrids[], int AllLocal);
   int  ResetMonteCarloTracerParticlesExchangedThisTimestep();
   void SetNumberOfMonteCarloTracerParticles(int num) {NumberOfMonteCarloTracerParticles = num;};
+  int  GetNumberOfMonteCarloTracerParticles() {return NumberOfMonteCarloTracerParticles;};
   int  Transfer_MonteCarloTracerParticles_From_CellA_to_CellB(MonteCarloTracerParticle *&headA, MonteCarloTracerParticle *&headB, double probability);
   void PrintMonteCarloTracerParticlePythonDictionary(std::ostream& os);
   void WriteMCTP(char* prename);

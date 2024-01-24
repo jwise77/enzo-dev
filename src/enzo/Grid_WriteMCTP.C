@@ -46,9 +46,9 @@ void grid::WriteMCTP(char* prename)
 
   char *groupfilename = new char[MAX_LINE_LENGTH];
   strcpy(groupfilename, base_name);
-  strcat(groupfilename, ".mycpu");
+  strcat(groupfilename, ".pid");
   strcat(groupfilename, pid);
-  strcat(groupfilename, ".cpu");
+  strcat(groupfilename, ".gpid");
   strcat(groupfilename, gpid);
 
  
