@@ -87,15 +87,17 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
     char ToProcessorStr[1];
     char *filename = new char[MAX_LINE_LENGTH];
     sprintf(ToProcessorStr, "%d", ToProcessor);  
-    strcpy(filename, "Pre_ComSend_in_ComMov");
+    strcpy(filename, "Pre_ComSend_in_ComMov_ToProc");
     strcat(filename, ToProcessorStr);
-    //** END DEBUG **
     this->WriteMCTP(filename);
+    //** END DEBUG **
+    
     if (MoveParticles == TRUE){
-      printf("\nTHREE proc%d, ToProc%d: ComMovGrid: this->NMCTP %d", MyProcessorNumber, ToProcessor, this->GetNumberOfMonteCarloTracerParticles());
+      printf("\nTHREE PRESEND pid%d, ToProc%d: ComMovGrid: this->NMCTP %d, this->CountNMCTP %d", MyProcessorNumber, ToProcessor, this->GetNumberOfMonteCarloTracerParticles(), this->CountMonteCarloTracerParticles());
       this->CommunicationSendMonteCarloTracerParticles(this, ToProcessor);   
+      printf("\nFOUR  POSTSEND pid%d, ToProc%d: ComMovGrid: this->NMCTP %d, this->CountNMCTP %d", MyProcessorNumber, ToProcessor, this->GetNumberOfMonteCarloTracerParticles(), this->CountMonteCarloTracerParticles());      
     }
-    strcpy(filename, "Post_ComSend_in_ComMov");
+    strcpy(filename, "Post_ComSend_in_ComMov_ToProc");
     strcat(filename, ToProcessorStr);       
     this->WriteMCTP(filename);
     delete filename;

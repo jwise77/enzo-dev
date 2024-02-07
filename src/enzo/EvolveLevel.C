@@ -120,12 +120,14 @@ int ExtraOutput(int output_flag, LevelHierarchyEntry *LevelArray[],TopGridData *
 
 int ComputeDednerWaveSpeeds(TopGridData *MetaData,LevelHierarchyEntry *LevelArray[], 
 			    int level, FLOAT dt0);
-int RebuildHierarchy(TopGridData *MetaData,
-         LevelHierarchyEntry *LevelArray[], int level, ExternalBoundary *Exterior
-#ifdef TRANSFER
-        , ImplicitProblemABC *ImplicitSolver
-#endif
-        );
+// *** MODIFIED CALL TO USE EXTRA OUTPUT *** //
+// int RebuildHierarchy(TopGridData *MetaData,
+//          LevelHierarchyEntry *LevelArray[], int level, ExternalBoundary *Exterior
+// #ifdef TRANSFER
+//         , ImplicitProblemABC *ImplicitSolver
+// #endif
+//         );
+// *** END MODIFIED CALL TO USE EXTRA OUTPUT *** //
 int RebuildHierarchy(TopGridData *MetaData,
          LevelHierarchyEntry *LevelArray[], int level);
 int  ReportMemoryUsage(char *header = NULL);
@@ -976,12 +978,12 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
        Don't bother on the last cycle, as we'll rebuild this grid soon. */
  
     if (dtThisLevelSoFar[level] < dtLevelAbove)
-      //RebuildHierarchy(MetaData, LevelArray, level);
-      RebuildHierarchy(MetaData, LevelArray, level, Exterior
-#ifdef TRANSFER
-        , ImplicitSolver
-#endif
-        );
+      RebuildHierarchy(MetaData, LevelArray, level);
+//       RebuildHierarchy(MetaData, LevelArray, level, Exterior
+// #ifdef TRANSFER
+//         , ImplicitSolver
+// #endif
+//         );
 
     cycle++;
     LevelCycleCount[level]++;

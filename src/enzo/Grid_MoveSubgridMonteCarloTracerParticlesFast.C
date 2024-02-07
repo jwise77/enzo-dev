@@ -129,7 +129,11 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   //printf("\nproc%d:\nthis(OldGrid) %p\nToGrids[0] %p\nToGrids[1] %p\n", MyProcessorNumber, this, ToGrids[0], ToGrids[1]); 
  
   if (MyProcessorNumber == ProcessorNumber) {  
- 
+
+    // **** DEBUG *** //
+    this->WriteMCTP("MovSubgridMCTPFast_thisGrid_PREMOVE");    
+    // **** DEBUG *** //
+    
     /* Loop over particles and move them to the appropriate ToGrid, depending
        on their position. */
     int count = 0;
@@ -189,11 +193,11 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
     //** DEBUG **
     char ToGridSubgrid[1];
     char *filename = new char[MAX_LINE_LENGTH];
-    this->WriteMCTP("MovSubgridMCTPFast_thisGrid");
+    this->WriteMCTP("MovSubgridMCTPFast_thisGrid_POSTMOVE");
     for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++) {
         printf("\nMovSubgridMCTPFast: proc%d, this->ProcessorNumber: %d, ToGrids[%d]->ProcessorNumber: %d WriteMCTP subgrid %d", MyProcessorNumber, this->ProcessorNumber, subgrid, ToGrids[subgrid]->ProcessorNumber, subgrid);
         sprintf(ToGridSubgrid, "%d", subgrid);  
-        strcpy(filename, "MoveSubgridMCTPFast_ToGrids");
+        strcpy(filename, "MoveSubgridMCTPFast_PREDISTRIBUTE_ToGrids");
         strcat(filename, ToGridSubgrid);
         ToGrids[subgrid]->WriteMCTP(filename);
     }
@@ -206,7 +210,10 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   } // end: if (MyProcessorNumber)
  
   /* Transfer particles from fake to real grids (and clean up).
-     Note: This doesn't happen when called from CommPartitionGrid because at that point ToGrids[subgrid]->ProcessorNumber are still all 0.
+     Note: This doesn't happen when called from CommPartitionGrid 
+     because at that point ToGrids[subgrid]->ProcessorNumber are still all 0.
+     And for this case (MyProcessorNumber == ProcessorNumber) that's the old grid 
+     which no longer has particles (which is correct, it shouldn't)
    */
   
   for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++) {
@@ -224,6 +231,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
           ToGrids[subgrid]->DeleteAllFields();
       }
   }
+
  
   delete [] ParticlesToMove;
  

@@ -525,7 +525,7 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 
 	  int IntTemp  = NewGrid->ReturnNumberOfParticles();
     int IntTemp2 = NewGrid->CountMonteCarloTracerParticles();
-    printf("\nONE proc%d: CommPartitionGrid: NewGrid->NMCTP %d", MyProcessorNumber, NewGrid->GetNumberOfMonteCarloTracerParticles());
+    printf("\nONE PRE_BRODCAST  pid%d, NewGrid->gpid%d CommPartitionGrid: NewGrid->NMCTP %d, NewGrid->CountNMCTP %d", MyProcessorNumber, NewGrid->ReturnProcessorNumber(), NewGrid->GetNumberOfMonteCarloTracerParticles(), NewGrid->CountMonteCarloTracerParticles());
 
     //printf("\nproc%d: CommPartitionGrid: NewGrid->CountMonteCarloTracerParticles(): %"ISYM"", MyProcessorNumber,IntTemp2);
  
@@ -534,7 +534,7 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 
 	  NewGrid->SetNumberOfParticles(IntTemp);
     NewGrid->SetNumberOfMonteCarloTracerParticles(IntTemp2);
-    printf("\nTWO proc%d: CommPartitionGrid: NewGrid->NMCTP %d", MyProcessorNumber, NewGrid->GetNumberOfMonteCarloTracerParticles());
+    printf("\nTWO POST_BRODCAST pid%d, NewGrid->gpid%d CommPartitionGrid: NewGrid->NMCTP %d, NewGrid->CountNMCTP %d", MyProcessorNumber, NewGrid->ReturnProcessorNumber(), NewGrid->GetNumberOfMonteCarloTracerParticles(), NewGrid->CountMonteCarloTracerParticles());
 
 
     //printf("\nproc%d: CommPartitionGrid: NewGrid NumberOfMonteCarloTracerParticles set to %"ISYM"", MyProcessorNumber, IntTemp2);
@@ -595,9 +595,22 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
      were already handled by CommunicationSendMonteCarloTracerParticles in CommunicationMoveGrid. NO THEY WERE NOT BECAUSE THE PROCESSOR NUMBER HAD NOT BEEN SET YET. */
     printf("\nproc%d: CommPartitionGrid: pre DistributeMonteCarloTracerParticles: ProcessorNumber %d, ToProcessor  %d", MyProcessorNumber, NewGrid->ReturnProcessorNumber(), NewProc);
 
+    // //** DEBUG **
+    // char ToGridSubgrid[1];
+    // char *filename = new char[MAX_LINE_LENGTH];
+    // OldGrid->WriteMCTP("CommPartitionGrid_OldGrid_SHOULDBEEMPTY");
+    // sprintf(ToGridSubgrid, "%d", subgrid);  
+    // strcpy(filename, "MoveSubgridMCTPFast_PREDISTRIBUTE_ToGrids");
+    // strcat(filename, ToGridSubgrid);
+    // ToGrids[subgrid]->WriteMCTP(filename);
+    // delete filename;
+    // //** END DEBUG **
+
   if (MyProcessorNumber == NewGrid->ReturnProcessorNumber() && NewGrid->ReturnProcessorNumber() == NewProc) {
     printf("\nproc%d: CommPartitionGrid: Calling DistributeMonteCarloTracerParticles: ProcessorNumber %d, ToProcessor  %d", MyProcessorNumber, NewGrid->ReturnProcessorNumber(), NewProc);
+    NewGrid->WriteMCTP("ComPartGrid_PreDistribute");
     NewGrid->DistributeMonteCarloTracerParticles();
+    NewGrid->WriteMCTP("ComPartGrid_PostDistribute");
   }
 
 // some debug output

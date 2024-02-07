@@ -159,12 +159,24 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       (CommunicationDirection == COMMUNICATION_SEND_RECEIVE ||
        CommunicationDirection == COMMUNICATION_RECEIVE)) {
 
-    for (dim = 0; dim < MAX_DIMENSION; dim++)
-      ToGridActiveDim[dim] = ToGrid->GridEndIndex[dim] - ToGrid->GridStartIndex[dim] +1;           
+    // for (dim = 0; dim < MAX_DIMENSION; dim++)
+    //   ToGridActiveDim[dim] = ToGrid->GridEndIndex[dim] - ToGrid->GridStartIndex[dim] +1;           
 
     if (ToGrid->MonteCarloTracerParticles == NULL) {
+      printf("%s\n", "COMSEND_NULL");
       ToGrid->AllocateMonteCarloTracerParticleData();
     }
+
+    ToGrid->WriteMCTP("ComSend_ToGrid_A0"); //DEBUG    
+
+    printf("COMSEND_INFO: proc%d, thisGridProc%d, ToGridProc%d, this %p, ToGrid %p, thisDims %d %d %d, ToGridDism %d %d %d, thisLE %.2f %.2f %.2f, ToGridLE %.2f %.2f %.2f, thisRE %.2f %.2f %.2f, ToGridRE %.2f %.2f %.2f \n",
+    MyProcessorNumber, ProcessorNumber, ToProcessor, this, ToGrid, 
+    this->GridDimension[0], this->GridDimension[1], this->GridDimension[2],
+    ToGrid->GridDimension[0], ToGrid->GridDimension[1], ToGrid->GridDimension[2],
+    this->GridLeftEdge[0], this->GridLeftEdge[1], this->GridLeftEdge[2],
+    ToGrid->GridLeftEdge[0], ToGrid->GridLeftEdge[1], ToGrid->GridLeftEdge[2],
+    this->GridRightEdge[0], this->GridRightEdge[1], this->GridRightEdge[2],
+    ToGrid->GridRightEdge[0], ToGrid->GridRightEdge[1], ToGrid->GridRightEdge[2]);
 
     for (n = 0; n < TransferSize; n++) {
       mctp = MonteCarloTracerParticleBufferToList(buffer[n]);
@@ -185,12 +197,29 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       // }
       // index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); 
       // InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);
-      i = int((mctp->Position[0] - GridLeftEdge[0]) / CellWidth[0][0]);
-      j = int((mctp->Position[1] - GridLeftEdge[1]) / CellWidth[1][0]);
-      k = int((mctp->Position[2] - GridLeftEdge[2]) / CellWidth[2][0]);
+
+      //i = int((mctp->Position[0] - GridLeftEdge[0]) / CellWidth[0][0]);
+      //j = int((mctp->Position[1] - GridLeftEdge[1]) / CellWidth[1][0]);
+      //k = int((mctp->Position[2] - GridLeftEdge[2]) / CellWidth[2][0]);
+
+      i = int((mctp->Position[0] - ToGrid->GridLeftEdge[0]) / ToGrid->CellWidth[0][0]);
+      j = int((mctp->Position[1] - ToGrid->GridLeftEdge[1]) / ToGrid->CellWidth[1][0]);
+      k = int((mctp->Position[2] - ToGrid->GridLeftEdge[2]) / ToGrid->CellWidth[2][0]);
+
+      // if (i < ToGrid->GridStartIndex[0] || i > ToGrid->GridEndIndex[0] ||
+      //     j < ToGrid->GridStartIndex[1] || j > ToGrid->GridEndIndex[1] ||
+      //     k < ToGrid->GridStartIndex[2] || k > ToGrid->GridEndIndex[2]){
+      //   printf("\nINGZ000");
+      //   fflush(stdout);
+      // }
+
       index = GRIDINDEX(i,j,k);      
       InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);        
     }
+
+    ToGrid->WriteMCTP("ComSend_ToGrid_A1"); //DEBUG    
+
+
     printf("\nproc%d: CommSendMCTP: Inserted %d MCTPs from buffer into ToGrid. ToProcessor %d", MyProcessorNumber, TransferSize, ToProcessor);
     fflush(stdout);
     delete [] buffer;

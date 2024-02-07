@@ -23,6 +23,8 @@
 #include "TopGridData.h"
 #include "Hierarchy.h"
 #include "LevelHierarchy.h"
+
+#include <stdlib.h> 
  
 /* function prototypes */
  
@@ -82,11 +84,42 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
  
   HierarchyEntry *Temp = OldHierarchy;
   grid *NewGrid = NewHierarchy->GridData;
+
+  if (MyProcessorNumber == ROOT_PROCESSOR) 
+    NewGrid->WriteMCTP("ComCombine_NewGrid_A0"); //DEBUG
+
+  int count = -1;//DEBUG
+
   while (Temp != NULL) {
- 
+      
+      count++; // DEBUG
+      printf("NEWGRIDA1 proc%d, count %i, NewGrid %p, Temp %p, TempNext %p\n", MyProcessorNumber, count, NewGrid, Temp, Temp->NextGridThisLevel);
+
+
     /* Compute region to send. */
+
+    //if (MyProcessorNumber == ROOT_PROCESSOR){ // DEBUG
+      char count_ch[1];
+      char write_ch[10];
+      //char rand_ch[5];
+      //int rand_int = rand() % 100000;
+      char *filename = new char[MAX_LINE_LENGTH];
+      sprintf(count_ch, "%d", count);
+      sprintf(write_ch, "%.0f", WriteTime);
+      //sprintf(rand_ch, "%d", rand_int);
+      strcpy(filename, "ComCombine_NewGrid_A1_c");
+      strcat(filename, count_ch);
+      strcat(filename, write_ch);
+      //strcat(filename, rand_ch);
+      NewGrid->WriteMCTP(filename); //DEBUG    
+    //}
+
  
     grid *OldGrid = Temp->GridData;
+
+    if (MyProcessorNumber == ROOT_PROCESSOR) 
+      NewGrid->WriteMCTP("ComCombine_NewGrid_A2"); //DEBUG
+
     OldGrid->ReturnGridInfo(&Rank, TempDims, Left, Right);
     for (dim = 0; dim < MAX_DIMENSION; dim++) {
       SendOffset[dim] = (dim < Rank)? NumberOfGhostZones : 0;
@@ -95,6 +128,9 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
 	              + SendOffset[dim];
     }
  
+    if (MyProcessorNumber == ROOT_PROCESSOR) 
+      NewGrid->WriteMCTP("ComCombine_NewGrid_A3"); //DEBUG
+    
     //Sometimes E isn't created by the time this code is run.Ensure it is.
 
     if(UseMHDCT == TRUE  && MyProcessorNumber == OldGrid->ReturnProcessorNumber() ){
@@ -119,6 +155,10 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
 			      StartIndex, TempDims, FALSE) == FAIL) {
 	ENZO_FAIL("Error in grid->CommunicationReceiveRegion.\n");
       }
+    
+    if (MyProcessorNumber == ROOT_PROCESSOR) 
+      NewGrid->WriteMCTP("ComCombine_NewGrid_A4"); //DEBUG
+  
 
     /* Copy interpolated (particle) regions */
 
@@ -136,6 +176,9 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
 	ENZO_FAIL("Error in grid->CommunicationReceiveRegion.\n");
       }
     }
+
+    if (MyProcessorNumber == ROOT_PROCESSOR) 
+      NewGrid->WriteMCTP("ComCombine_NewGrid_A5"); //DEBUG    
  
     /* Copy particles. */
  
@@ -147,27 +190,43 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
             NewGrid, NewProc, false) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendActiveParticles.\n");
     }
+
+    OldGrid->WriteMCTP("ComCombine_PreMoveCellZero"); //DEBUG
+
     if (OldGrid->MoveMonteCarloTracerParticlesToCellZero() == FAIL) {
       ENZO_FAIL("Error in grid->MoveMonteCarloTracerParticlesToCellZero.\n");
     }
+
+
+    OldGrid->WriteMCTP("ComCombine_OldGrid_PreSend"); //DEBUG
+    if (MyProcessorNumber == ROOT_PROCESSOR) 
+      NewGrid->WriteMCTP("ComCombine_NewGrid_PreSend"); //DEBUG
+
     /* Send Monte Carlo Tracer Particles to new grid but keep particles in OldGrid */
     if (OldGrid->CommunicationSendMonteCarloTracerParticles(
             NewGrid, NewProc, 0) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendMonteCarloTracerParticles.\n");
-    }   
+    }
+
+    OldGrid->WriteMCTP("ComCombine_OldGrid_PostSend"); //DEBUG
+    if (MyProcessorNumber == ROOT_PROCESSOR) 
+      NewGrid->WriteMCTP("ComCombine_NewGrid_PostSend"); //DEBUG
+
     if (OldGrid->DistributeMonteCarloTracerParticles() == FAIL) {
       ENZO_FAIL("Error in grid->DistributeMonteCarloTracerParticles.\n");
     } 
-    if (NewGrid->DistributeMonteCarloTracerParticles() == FAIL) {
-      ENZO_FAIL("Error in grid->DistributeMonteCarloTracerParticles.\n");
-    }     
+
+    // if (NewGrid->DistributeMonteCarloTracerParticles() == FAIL) {
+    //   ENZO_FAIL("Error in grid->DistributeMonteCarloTracerParticles.\n");
+    // }     
  
+    OldGrid->WriteMCTP("ComCombine_OldGrid_PostDistribute"); //DEBUG
+    if (MyProcessorNumber == ROOT_PROCESSOR) 
+      NewGrid->WriteMCTP("ComCombine_NewGrid_PostDistribute"); //DEBUG
     /* Next Grid */
  
     Temp = Temp->NextGridThisLevel;
   }
-
-  /*** Need to distribute particles in NewGrid ***
 
 //  printf("(%"ISYM"): done\n", MyProcessorNumber);
  
