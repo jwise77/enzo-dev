@@ -43,7 +43,7 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node);
 
 /* Send particle from this grid to ToGrid on processor ToProcessor. */
 
-int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor, bool DeleteParticles)
+int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor, bool DeleteParticles, bool COM_COMBINE)
 {
 
   int i, j, k, n,dim, index, TransferSize;
@@ -79,7 +79,9 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
   if (MyProcessorNumber == ProcessorNumber) {
     printf("\nproc%d: CommSendMC: package buffer and delete", MyProcessorNumber);      
     fflush(stdout);
+    this->WriteMCTP("ComSend_this_B0");
     this->MonteCarloTracerParticles[0]->MonteCarloTracerParticleListToBuffer(buffer, NumberOfMonteCarloTracerParticles);
+    this->WriteMCTP("ComSend_this_B1");
     if (DeleteParticles)
       DeleteMonteCarloTracerParticleList(this->MonteCarloTracerParticles[0]);
   }
@@ -153,7 +155,8 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
 
 #endif /* USE_MPI */
 
-  /* If this is the to processor, unpack fields. */
+  /* If this is the to processor, unpack fields. */ 
+
 
   if (MyProcessorNumber == ToProcessor &&
       (CommunicationDirection == COMMUNICATION_SEND_RECEIVE ||
@@ -182,42 +185,20 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       mctp = MonteCarloTracerParticleBufferToList(buffer[n]);
       mctp->CurrentGrid = ToGrid;
       
-      /* Find which cell this particle belongs in */
-      // for (dim = 0; dim < GridRank; dim++) {
-      //   index_ijk[dim] = (int) (ToGridActiveDim[dim] * 
-      //                           (mctp->Position[dim] - ToGrid->GridLeftEdge[dim]) /
-      //                           (ToGrid->GridRightEdge[dim] - ToGrid->GridLeftEdge[dim])) 
-      //                         + NumberOfGhostZones;
-
-      //   if (index_ijk[dim] < ToGrid->GridStartIndex[dim]){
-      //     // FOR DEBUGGING
-      //     printf("index[%d] = %d, GridStartIndex[%d] = %d, MP-P %d-%d", dim, index_ijk[dim], dim, ToGrid->GridStartIndex[dim], MyProcessorNumber, ProcessorNumber);
-      //     fflush(stdout);
-      //   }                              
-      // }
-      // index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]); 
-      // InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);
-
-      //i = int((mctp->Position[0] - GridLeftEdge[0]) / CellWidth[0][0]);
-      //j = int((mctp->Position[1] - GridLeftEdge[1]) / CellWidth[1][0]);
-      //k = int((mctp->Position[2] - GridLeftEdge[2]) / CellWidth[2][0]);
-
       i = int((mctp->Position[0] - ToGrid->GridLeftEdge[0]) / ToGrid->CellWidth[0][0]);
       j = int((mctp->Position[1] - ToGrid->GridLeftEdge[1]) / ToGrid->CellWidth[1][0]);
       k = int((mctp->Position[2] - ToGrid->GridLeftEdge[2]) / ToGrid->CellWidth[2][0]);
+      
+      index = ((k + ToGrid->GridStartIndex[2]) * ToGrid->GridDimension[1] + (j + ToGrid->GridStartIndex[1])) * ToGrid->GridDimension[0] + (i + ToGrid->GridStartIndex[0]);
+      //index = GRIDINDEX(i,j,k);
 
-      // if (i < ToGrid->GridStartIndex[0] || i > ToGrid->GridEndIndex[0] ||
-      //     j < ToGrid->GridStartIndex[1] || j > ToGrid->GridEndIndex[1] ||
-      //     k < ToGrid->GridStartIndex[2] || k > ToGrid->GridEndIndex[2]){
-      //   printf("\nINGZ000");
-      //   fflush(stdout);
-      // }
+      if (COM_COMBINE)
+        printf("\nCOMSEND_INDEX, proc%d, thisProc%d, ToProc%d: (%d, %d, %d), pos (%.4f, %.4f, %.4f)", MyProcessorNumber, ProcessorNumber, ToGrid->ProcessorNumber, i, j, k, mctp->Position[0], mctp->Position[1], mctp->Position[2]);
 
-      index = GRIDINDEX(i,j,k);      
       InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);        
     }
 
-    ToGrid->WriteMCTP("ComSend_ToGrid_A1"); //DEBUG    
+    ToGrid->WriteMCTP("ComSend_ToGrid_A1"); //DEBUG      
 
 
     printf("\nproc%d: CommSendMCTP: Inserted %d MCTPs from buffer into ToGrid. ToProcessor %d", MyProcessorNumber, TransferSize, ToProcessor);

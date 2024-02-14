@@ -195,7 +195,7 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
 
     if (OldGrid->MoveMonteCarloTracerParticlesToCellZero() == FAIL) {
       ENZO_FAIL("Error in grid->MoveMonteCarloTracerParticlesToCellZero.\n");
-    }
+    } 
 
 
     OldGrid->WriteMCTP("ComCombine_OldGrid_PreSend"); //DEBUG
@@ -204,7 +204,7 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
 
     /* Send Monte Carlo Tracer Particles to new grid but keep particles in OldGrid */
     if (OldGrid->CommunicationSendMonteCarloTracerParticles(
-            NewGrid, NewProc, 0) == FAIL) {
+            NewGrid, NewProc, 0, 1) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendMonteCarloTracerParticles.\n");
     }
 
