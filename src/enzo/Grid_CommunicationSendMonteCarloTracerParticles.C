@@ -43,7 +43,7 @@ void DeleteMonteCarloTracerParticleList(MonteCarloTracerParticle * &Node);
 
 /* Send particle from this grid to ToGrid on processor ToProcessor. */
 
-int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor, bool DeleteParticles, bool COM_COMBINE)
+int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor, int NumberOfParticlesToTransfer, bool DeleteParticles, bool COM_COMBINE)
 {
 
   int i, j, k, n,dim, index, TransferSize;
@@ -58,7 +58,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
     return SUCCESS;
   }
 
-  TransferSize = NumberOfMonteCarloTracerParticles;
+  TransferSize = NumberOfParticlesToTransfer;
   if (COM_COMBINE){
     printf("\nCOMSEND_TRANSFER: proc%d, ToProc%d: CommSendMCTP: TransferSize (NumberOfMonteCarloTracerParticles) %d", MyProcessorNumber, ToProcessor, TransferSize);
     fflush(stdout);   
@@ -84,7 +84,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
   if (MyProcessorNumber == ProcessorNumber) {
     //printf("\nproc%d: CommSendMC: package buffer and delete", MyProcessorNumber);      
     this->WriteMCTP("ComSend_this_B0");
-    this->MonteCarloTracerParticles[0]->MonteCarloTracerParticleListToBuffer(buffer, NumberOfMonteCarloTracerParticles);
+    this->MonteCarloTracerParticles[0]->MonteCarloTracerParticleListToBuffer(buffer, TransferSize);
     this->WriteMCTP("ComSend_this_B1");
     if (DeleteParticles)
       DeleteMonteCarloTracerParticleList(this->MonteCarloTracerParticles[0]);
@@ -137,7 +137,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       	CommunicationReceiveGridOne[CommunicationReceiveIndex] = this;
       	CommunicationReceiveGridTwo[CommunicationReceiveIndex] = ToGrid;
       	CommunicationReceiveCallType[CommunicationReceiveIndex] = 23;
-      	CommunicationReceiveArgumentInt[0][CommunicationReceiveIndex] = NumberOfMonteCarloTracerParticles;
+      	CommunicationReceiveArgumentInt[0][CommunicationReceiveIndex] = TransferSize;
 
       	CommunicationReceiveBuffer[CommunicationReceiveIndex] = (float *) buffer;
       	CommunicationReceiveDependsOn[CommunicationReceiveIndex] = CommunicationReceiveCurrentDependsOn;

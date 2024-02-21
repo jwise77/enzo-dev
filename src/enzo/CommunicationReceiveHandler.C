@@ -55,7 +55,7 @@ int CommunicationReceiveHandler(fluxes **SubgridFluxesEstimate[],
 
   MPI_Arg NumberOfCompleteRequests, TotalReceives;
   int ReceivesCompletedToDate = 0, index, index2, errcode, SUBling, level,
-    igrid, isubgrid, dim, FromStart, FromNumber, ToStart, ToNumber;
+    igrid, isubgrid, dim, FromStart, FromNumber, ToStart, ToNumber, NumberToSend;
   int GridDimension[MAX_DIMENSION];
   FLOAT EdgeOffset[MAX_DIMENSION];
   grid *grid_one, *grid_two, *temp_grid;
@@ -306,8 +306,9 @@ int CommunicationReceiveHandler(fluxes **SubgridFluxesEstimate[],
 
 	case 23:
 		printf("\n\nCommReceiveHandler: MCTP\n\n");
+		NumberToSend = CommunicationReceiveArgumentInt[0][index];
 	  errcode = grid_one->CommunicationSendMonteCarloTracerParticles
-	    (grid_two, MyProcessorNumber);
+	    (grid_two, MyProcessorNumber, NumberToSend);
 	  break;	  
 
 	default:

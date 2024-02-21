@@ -47,6 +47,6 @@ int grid::CountMonteCarloTracerParticles()
       mc = mc->NextParticle;
     }
   }
-  this->NumberOfMonteCarloTracerParticles = N;
+  //this->NumberOfMonteCarloTracerParticles = N;
   return N;
 }

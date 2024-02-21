@@ -1002,7 +1002,7 @@ int Group_WriteAllData(char *basename, int filenumber,
 
   TIMER_STOP("Group_WriteAllData"); 
 
-  ENZO_FAIL("INTENTIONAL HALT")//DEBUG
+  //ENZO_FAIL("INTENTIONAL HALT")//DEBUG
 
   return SUCCESS;
 }

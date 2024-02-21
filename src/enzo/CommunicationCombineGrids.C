@@ -207,7 +207,7 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
          MyProcessorNumber, OldGrid->ReturnProcessorNumber(), NewGrid->ReturnProcessorNumber(), NewProc, OldGrid, NewGrid);
     fflush(stdout); //DEBUG
     if (OldGrid->CommunicationSendMonteCarloTracerParticles(
-            NewGrid, NewProc, 0, 1) == FAIL) {
+            NewGrid, NewProc, OldGrid->GetNumberOfMonteCarloTracerParticles(), 0, 1) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendMonteCarloTracerParticles.\n");
     }
 

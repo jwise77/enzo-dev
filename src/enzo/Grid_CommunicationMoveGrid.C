@@ -94,7 +94,7 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
     
     if (MoveParticles == TRUE){
       printf("\nTHREE PRESEND pid%d, ToProc%d: ComMovGrid: this->NMCTP %d, this->CountNMCTP %d", MyProcessorNumber, ToProcessor, this->GetNumberOfMonteCarloTracerParticles(), this->CountMonteCarloTracerParticles());
-      this->CommunicationSendMonteCarloTracerParticles(this, ToProcessor);   
+      this->CommunicationSendMonteCarloTracerParticles(this, ToProcessor, NumberOfMonteCarloTracerParticles);   
       printf("\nFOUR  POSTSEND pid%d, ToProc%d: ComMovGrid: this->NMCTP %d, this->CountNMCTP %d", MyProcessorNumber, ToProcessor, this->GetNumberOfMonteCarloTracerParticles(), this->CountMonteCarloTracerParticles());      
     }
     strcpy(filename, "Post_ComSend_in_ComMov_ToProc");

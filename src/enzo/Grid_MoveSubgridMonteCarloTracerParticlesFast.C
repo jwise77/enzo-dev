@@ -223,7 +223,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
       if (ParticlesToMove[subgrid] != 0) {
         printf("\nMoveSubgridMCTPsFast calling CommSendMCTPs: proc%d, this->ProcessorNumber %d, ToGrids->ProcessorNumber: %d\n", MyProcessorNumber, this->ProcessorNumber, ToGrids[subgrid]->ProcessorNumber);
         fflush(stdout);
-        if (this->CommunicationSendMonteCarloTracerParticles(ToGrids[subgrid], ToGrids[subgrid]->ProcessorNumber)
+        if (this->CommunicationSendMonteCarloTracerParticles(ToGrids[subgrid], ToGrids[subgrid]->ProcessorNumber, ParticlesToMove[subgrid])
             == FAIL) {
           ENZO_FAIL("Error in grid->CommunicationSendParticles.\n");
         }

@@ -1759,7 +1759,7 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
                                        int &StartIndex, int &EndIndex,
                                        mc_tracer_data* &List, int CopyDirection);
   //int CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor, bool DeleteParticles = 1);
-  int CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor, bool DeleteParticles = 1, bool COM_COMBINE = 0);
+  int CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcessor, int NumberOfParticlesToTransfer, bool DeleteParticles = 1, bool COM_COMBINE = 0);
   int CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int NumberOfGrids,
                                                      int ThisGridNum, int TopGridDims[],
                                                      int *&NumberToMove,
