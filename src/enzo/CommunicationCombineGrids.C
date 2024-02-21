@@ -203,6 +203,9 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
       NewGrid->WriteMCTP("ComCombine_NewGrid_PreSend"); //DEBUG
 
     /* Send Monte Carlo Tracer Particles to new grid but keep particles in OldGrid */
+    printf("\nCOM_COMBINE: proc%d, OldGridProc%d, NewGridProc%d, NewProc %d, OldGrid %p, NewGrid %p",
+         MyProcessorNumber, OldGrid->ReturnProcessorNumber(), NewGrid->ReturnProcessorNumber(), NewProc, OldGrid, NewGrid);
+    fflush(stdout); //DEBUG
     if (OldGrid->CommunicationSendMonteCarloTracerParticles(
             NewGrid, NewProc, 0, 1) == FAIL) {
       ENZO_FAIL("Error in grid->CommunicationSendMonteCarloTracerParticles.\n");

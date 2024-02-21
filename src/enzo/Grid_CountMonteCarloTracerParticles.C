@@ -33,7 +33,7 @@ int grid::CountMonteCarloTracerParticles()
   MonteCarloTracerParticle *mc;
 
   if (MonteCarloTracerParticles == NULL) {
-    printf("\nproc%0d: CountMCTP: MonteCarloTracerParticles not allocated on grid %d, ProcessorNumber %d\n", MyProcessorNumber, this->ID, ProcessorNumber);
+    //printf("\nproc%0d: CountMCTP: MonteCarloTracerParticles not allocated on grid %d, ProcessorNumber %d\n", MyProcessorNumber, this->ID, ProcessorNumber);
     return 0;
   }
 
