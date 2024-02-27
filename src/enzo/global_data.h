@@ -114,7 +114,8 @@ EXTERN hydro_method HydroMethod;
 /* Large and small numbers (i.e. compared to any real quantity).  This may
    be machine and problem dependent. */
 
-EXTERN float huge_number, tiny_number;
+EXTERN float huge_number;
+EXTERN float tiny_number;
 
 /* Gamma: Ideal gas law constant. */
 
@@ -131,6 +132,10 @@ EXTERN int QuantumPressure;
 /* FDM: Parameter for FDM Mass, in unit of 1e-22 eV */
 
 EXTERN float FDMMass;
+
+/* FDM: Whether Adding Absorbing Boundary in FDMCollapse */
+
+EXTERN int FDMCollapseAbsorbingBoundary;
 
 /* Factor to refine by */
 
@@ -235,7 +240,8 @@ EXTERN int NumberOfBufferZones;
 
 /* The left and right boundaries of the entire computational domain. */
 
-EXTERN FLOAT DomainLeftEdge[MAX_DIMENSION], DomainRightEdge[MAX_DIMENSION];
+EXTERN FLOAT DomainLeftEdge[MAX_DIMENSION];
+EXTERN FLOAT DomainRightEdge[MAX_DIMENSION];
 
 /* Velocity of entire computational domain. */
 
@@ -243,19 +249,20 @@ EXTERN float GridVelocity[MAX_DIMENSION];
 
 /* HDF names for labels and scales. */
 
-EXTERN char *DimUnits[MAX_DIMENSION], *DimLabels[MAX_DIMENSION];
+EXTERN char *DimUnits[MAX_DIMENSION];
+EXTERN char *DimLabels[MAX_DIMENSION];
 EXTERN char *DataLabel[MAX_NUMBER_OF_BARYON_FIELDS];
 EXTERN char *DataUnits[MAX_NUMBER_OF_BARYON_FIELDS];
 
 /* Region in which refinement is allowed (in problem space). */
 
-EXTERN FLOAT RefineRegionLeftEdge[MAX_DIMENSION], 
-             RefineRegionRightEdge[MAX_DIMENSION];
+EXTERN FLOAT RefineRegionLeftEdge[MAX_DIMENSION];
+EXTERN FLOAT RefineRegionRightEdge[MAX_DIMENSION];
 EXTERN int RefineRegionAutoAdjust;
 
 EXTERN int MultiRefineRegion;
-EXTERN FLOAT MultiRefineRegionLeftEdge[MAX_STATIC_REGIONS][MAX_DIMENSION], 
-             MultiRefineRegionRightEdge[MAX_STATIC_REGIONS][MAX_DIMENSION];
+EXTERN FLOAT MultiRefineRegionLeftEdge[MAX_STATIC_REGIONS][MAX_DIMENSION];
+EXTERN FLOAT MultiRefineRegionRightEdge[MAX_STATIC_REGIONS][MAX_DIMENSION];
 EXTERN int MultiRefineRegionGeometry[MAX_STATIC_REGIONS];
 EXTERN FLOAT MultiRefineRegionCenter[MAX_STATIC_REGIONS][MAX_DIMENSION];
 EXTERN FLOAT MultiRefineRegionOrientation[MAX_STATIC_REGIONS][MAX_DIMENSION];
@@ -269,7 +276,8 @@ EXTERN FLOAT MultiRefineRegionStaggeredRefinement[MAX_STATIC_REGIONS];
 
 /* Uniform gravity: on/off flag, direction, and strength. */
 
-EXTERN int UniformGravity, UniformGravityDirection;
+EXTERN int UniformGravity;
+EXTERN int UniformGravityDirection;
 EXTERN float UniformGravityConstant;
 
 /* point source gravity: on/off flag position, and strength. */
@@ -281,15 +289,19 @@ EXTERN float PointSourceGravityCoreRadius;
 
 /* disk gravity */
 EXTERN int DiskGravity;
-EXTERN FLOAT DiskGravityPosition[MAX_DIMENSION],
-             DiskGravityAngularMomentum[MAX_DIMENSION];
-EXTERN float DiskGravityStellarDiskMass;
-EXTERN float DiskGravityStellarDiskScaleHeightR;
-EXTERN float DiskGravityStellarDiskScaleHeightz;
-EXTERN float DiskGravityStellarBulgeMass;
-EXTERN float DiskGravityStellarBulgeR;
-EXTERN float DiskGravityDarkMatterR;
-EXTERN float DiskGravityDarkMatterDensity;
+EXTERN FLOAT DiskGravityPosition[MAX_DIMENSION];
+EXTERN FLOAT DiskGravityAngularMomentum[MAX_DIMENSION];
+EXTERN double DiskGravityStellarDiskMass;
+EXTERN double DiskGravityStellarDiskScaleHeightR;
+EXTERN double DiskGravityStellarDiskScaleHeightz;
+EXTERN double DiskGravityStellarBulgeMass;
+EXTERN double DiskGravityStellarBulgeR;
+EXTERN int DiskGravityDarkMatterUseNFW;
+EXTERN double DiskGravityDarkMatterMass;
+EXTERN double DiskGravityDarkMatterConcentration;
+EXTERN int DiskGravityDarkMatterUseB95;
+EXTERN double DiskGravityDarkMatterR;
+EXTERN double DiskGravityDarkMatterDensity;
 
 /* SelfGravity (TRUE or FALSE) */
 
@@ -363,6 +375,10 @@ EXTERN int use_grackle;
 
 EXTERN CloudyCoolingDataType CloudyCoolingData;
 
+/* Table of equilibrium chem values for initialization */
+
+EXTERN EquilibriumTableType EquilibriumTable;
+
 /* Gadget Equilibrium cooling on/off flag */
 
 EXTERN int GadgetEquilibriumCooling;
@@ -424,16 +440,24 @@ EXTERN int MultiMetals;
  * 1: On, (two fluid model)
  */
 EXTERN int CRModel;
+
 /* Cosmic Ray Diffusion
  * 0: Off - default
  * 1: On, CRkappa is constant across grid
+ * 2: On, anisotropic diffusion with constant CRkappa
  */
 EXTERN int CRDiffusion;
+
 /* Cosmic Ray Feedback
  *    0.0 -- No CR feedback
  *    1.0 -- All feedback into CR field
  */
 EXTERN float CRFeedback;
+
+EXTERN int CRHeating; // 0 is off, 1 is on
+EXTERN int CRStreaming; // 0 is off, 1 is on 
+EXTERN float CRStreamVelocityFactor;
+EXTERN float CRStreamStabilityFactor;
 EXTERN float CRkappa;
 EXTERN float CRCourantSafetyNumber;
 EXTERN float CRdensFloor;
@@ -623,7 +647,8 @@ EXTERN float DepositPositionsParticleSmoothRadius;
    The minimum pressure jump required to be a shock.
    The minimum internal/total energy ratio for a shock. */
 
-EXTERN float MinimumPressureJumpForRefinement, MinimumEnergyRatioForRefinement;
+EXTERN float MinimumPressureJumpForRefinement;
+EXTERN float MinimumEnergyRatioForRefinement;
 
 /* For CellFlaggingMethod = 6,
    The number of cells by which the Jeans length should be resolved. */
@@ -653,8 +678,8 @@ EXTERN float MustRefineParticlesMinimumMass;
 /* For CellFlaggingMethod = 8,
    region in which particles are flagged as MustRefine particles */
 
-EXTERN FLOAT MustRefineParticlesLeftEdge[MAX_DIMENSION], 
-             MustRefineParticlesRightEdge[MAX_DIMENSION];
+EXTERN FLOAT MustRefineParticlesLeftEdge[MAX_DIMENSION];
+EXTERN FLOAT MustRefineParticlesRightEdge[MAX_DIMENSION];
 
 /* For CellFlaggingMethod = 8,
    binary switch that allows must refine particles to be created by the 
@@ -780,10 +805,17 @@ EXTERN double timer[MAX_COUNTERS];
 EXTERN int counter[MAX_COUNTERS];
 EXTERN FILE *filePtr;
 EXTERN char tracename[MAX_NAME_LENGTH];
-EXTERN double starttime, endtime;
-EXTERN double Start_Wall_Time, End_Wall_Time, WallTime;
-EXTERN int flagging_count, in_count, out_count, moving_count;
-EXTERN float flagging_pct, moving_pct;
+EXTERN double starttime;
+EXTERN double endtime;
+EXTERN double Start_Wall_Time;
+EXTERN double End_Wall_Time;
+EXTERN double WallTime;
+EXTERN int flagging_count;
+EXTERN int in_count;
+EXTERN int out_count;
+EXTERN int moving_count;
+EXTERN float flagging_pct;
+EXTERN float moving_pct;
 #endif /* MPI_INSTRUMENTATION */
 EXTERN char name[MAX_NAME_LENGTH];
 EXTERN FILE *tracePtr;
@@ -804,7 +836,8 @@ EXTERN char *NewMovieName;
 EXTERN int NewMovieDumpNumber;
 EXTERN int NewMovieParticleOn;
 EXTERN FLOAT *StarParticlesOnProcOnLvl_Position[128][3]; 
-EXTERN float *StarParticlesOnProcOnLvl_Velocity[128][3], *StarParticlesOnProcOnLvl_Mass[128];
+EXTERN float *StarParticlesOnProcOnLvl_Velocity[128][3];
+EXTERN float *StarParticlesOnProcOnLvl_Mass[128];
 EXTERN float *StarParticlesOnProcOnLvl_Attr[128][MAX_NUMBER_OF_PARTICLE_ATTRIBUTES];
 EXTERN int *StarParticlesOnProcOnLvl_Type[128];
 EXTERN PINT *StarParticlesOnProcOnLvl_Number[128];
@@ -835,6 +868,7 @@ EXTERN int iS1;
 EXTERN int iS2;
 EXTERN int iS3;
 EXTERN int iEint;
+EXTERN int iCR;
 EXTERN float SmallRho;
 EXTERN float SmallP;
 EXTERN float SmallEint;
@@ -1162,6 +1196,7 @@ class ActiveParticleType_info;
 EXTERN ActiveParticleType_info *EnabledActiveParticles[MAX_ACTIVE_PARTICLE_TYPES];
 EXTERN int EnabledActiveParticlesCount;
 EXTERN float ActiveParticleDensityThreshold;
+EXTERN int SmartStarAccretion;
 EXTERN int SmartStarFeedback;
 EXTERN int SmartStarEddingtonCap;
 EXTERN int SmartStarBHFeedback;
@@ -1203,5 +1238,8 @@ EXTERN int UseMagneticSupernovaFeedback;
 EXTERN float MagneticSupernovaRadius;
 EXTERN float MagneticSupernovaDuration;
 EXTERN float MagneticSupernovaEnergy;
+
+/* Rotating Pop III Stars Model */
+EXTERN int PopIIIRotating;
 
 #endif
