@@ -1750,6 +1750,14 @@ int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
                      int CopyDirection,
                      int IncludeGhostZones = FALSE,
                      int CountOnly = FALSE);
+
+int TransferSubgridMonteCarloTracerParticles(grid* Subgrids[], int NumberOfSubgrids,
+                     int* &NumberToMove, int StartIndex,
+                     int EndIndex, mc_tracer_data* &List,
+                     bool KeepLocal, bool ParticlesAreLocal,
+                     int CopyDirection,
+                     int IncludeGhostZones = FALSE,
+                     int CountOnly = FALSE);
 // -------------------------------------------------------------------------
 // Functions for use with Monte Carlo tracer particles.
 //

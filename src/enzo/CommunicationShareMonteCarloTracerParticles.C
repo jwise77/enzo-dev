@@ -53,6 +53,8 @@ int CommunicationShareMonteCarloTracerParticles(int *NumberToMove, mc_tracer_dat
 
   SharedList = NULL;
 
+  printf("\nCOMSHARE TotalNumberToMove %d", TotalNumberToMove); //DEBUG
+    
 #ifdef USE_MPI
   MPI_Datatype DataType = (sizeof(float) == 4) ? MPI_FLOAT : MPI_DOUBLE;
   MPI_Datatype DataTypeInt = (sizeof(int) == 4) ? MPI_INT : MPI_LONG_LONG_INT;

@@ -676,6 +676,7 @@ OBJS_CONFIG_LIB = \
         Grid_TransferSubgridActiveParticles.o \
         Grid_TransferSubgridParticles.o \
         Grid_TransferSubgridStars.o \
+        Grid_TransferSubgridMonteCarloTracerParticles.o \
         Grid_TriggeredStarFormationInitializeGrid.o \
         Grid_TurbulenceSimulationInitialize.o \
         Grid_UpdateParticlePosition.o \

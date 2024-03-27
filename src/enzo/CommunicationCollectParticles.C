@@ -137,6 +137,7 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
       delete [] NumberToMove;
       delete [] StarsToMove;
       delete [] APNumberToMove;
+      delete [] MCTPNumberToMove;
       return SUCCESS;
     }
 
@@ -146,20 +147,22 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 #ifdef DEBUG_CCP
     for (i = 0; i < NumberOfGrids; i++)
       printf("CCP[P%"ISYM"B]: grid %"ISYM", %"ISYM" proc, %"ISYM" particles, "
-             "%"ISYM" stars, %"ISYM" active particles\n",
+             "%"ISYM" stars, %"ISYM" active particles, %"ISYM" Monte Carlo tracer particles\n",
              MyProcessorNumber, i,
              GridHierarchyPointer[i]->GridData->ReturnProcessorNumber(),
              GridHierarchyPointer[i]->GridData->ReturnNumberOfParticles(),
              GridHierarchyPointer[i]->GridData->ReturnNumberOfStars(),
-             GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles());
+             GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles(),
+             GridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
     for (i = 0; i < NumberOfSubgrids; i++)
       printf("CCP[P%"ISYM"B]: subgrid %"ISYM", %"ISYM" proc, %"ISYM" particles, "
-             "%"ISYM" stars, %"ISYM" active particles\n",
+             "%"ISYM" stars, %"ISYM" active particles, %"ISYM" Monte Carlo tracer particles\n",
              MyProcessorNumber, i,
              SubgridHierarchyPointer[i]->GridData->ReturnProcessorNumber(),
              SubgridHierarchyPointer[i]->GridData->ReturnNumberOfParticles(),
              SubgridHierarchyPointer[i]->GridData->ReturnNumberOfStars(),
-             SubgridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles());
+             SubgridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles(),
+             SubgridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
 #endif /* DEBUG_CCP */
 
     for (i = 0; i < NumberOfProcessors; i++) {
@@ -183,7 +186,8 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 
         if (GridHierarchyPointer[j]->GridData->ReturnNumberOfParticles() == 0 &&
             GridHierarchyPointer[j]->GridData->ReturnNumberOfStars() == 0 &&
-            GridHierarchyPointer[j]->GridData->ReturnNumberOfActiveParticles() == 0)
+            GridHierarchyPointer[j]->GridData->ReturnNumberOfActiveParticles() == 0 &&
+            GridHierarchyPointer[j]->GridData->GetNumberOfMonteCarloTracerParticles() == 0)
           continue;
 
         GridHierarchyPointer[j]->GridData->
@@ -214,6 +218,12 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
         GridHierarchyPointer[j]->GridData->TransferSubgridParticles
           (SubgridPointers, NumberOfSubgrids, NumberToMove, Zero, Zero, 
            SendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, TRUE);
+
+        GridHierarchyPointer[j]->GridData->TransferSubgridMonteCarloTracerParticles
+          (SubgridPointers, NumberOfSubgrids, MCTPNumberToMove, Zero, Zero, 
+           MCTPSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, TRUE, TRUE);  // Include Ghost zones       
+
+
         
       } // ENDIF subgrids exist
     
@@ -225,19 +235,23 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
       TotalNumber += NumberToMove[j];
       TotalStars += StarsToMove[j];
       APTotalNumber += APNumberToMove[j];
+      MCTPTotalNumber += MCTPNumberToMove[j];
       NumberToMove[j] = 0;  // Zero-out to use in the next step
       StarsToMove[j]  = 0;  // Zero-out to use in the next step
       APNumberToMove[j] = 0;
+      MCTPNumberToMove[j] = 0;
     }
     SendList = new particle_data[TotalNumber];
     StarSendList = new star_data[TotalStars];
+    MCTPSendList = new mc_tracer_data[MCTPTotalNumber];
 
     for (j = 0; j < NumberOfGrids; j++)
       if (GridHierarchyPointer[j]->NextGridNextLevel != NULL) {
 
 	if (GridHierarchyPointer[j]->GridData->ReturnNumberOfParticles() == 0 &&
 	    GridHierarchyPointer[j]->GridData->ReturnNumberOfStars() == 0 &&
-        GridHierarchyPointer[j]->GridData->ReturnNumberOfActiveParticles() == 0)
+        GridHierarchyPointer[j]->GridData->ReturnNumberOfActiveParticles() == 0 &&
+        GridHierarchyPointer[j]->GridData->GetNumberOfMonteCarloTracerParticles() == 0)
 	  continue;
 
 
@@ -245,13 +259,17 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
             (SubgridPointers, NumberOfSubgrids, StarsToMove, Zero, Zero,
              StarSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, FALSE);
 
-    GridHierarchyPointer[j]->GridData->TransferSubgridActiveParticles
-        (SubgridPointers, NumberOfSubgrids, APNumberToMove, Zero, Zero,
-         APSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, FALSE);
-    
-	GridHierarchyPointer[j]->GridData->TransferSubgridParticles
-	    (SubgridPointers, NumberOfSubgrids, NumberToMove, Zero, Zero, 
-	     SendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, FALSE);
+        GridHierarchyPointer[j]->GridData->TransferSubgridActiveParticles
+            (SubgridPointers, NumberOfSubgrids, APNumberToMove, Zero, Zero,
+             APSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, FALSE);
+        
+      	GridHierarchyPointer[j]->GridData->TransferSubgridParticles
+      	    (SubgridPointers, NumberOfSubgrids, NumberToMove, Zero, Zero, 
+      	     SendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, FALSE);
+
+        GridHierarchyPointer[j]->GridData->TransferSubgridMonteCarloTracerParticles
+            (SubgridPointers, NumberOfSubgrids, MCTPNumberToMove, Zero, Zero, 
+             MCTPSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, FALSE); 
  
       } // ENDIF subgrids exist
 
@@ -287,6 +305,13 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
       APNumberOfReceives = APNumberToMove[MyProcessorNumber];
       APSharedList.sort_grid(0, APNumberOfReceives);
 
+      /* Monte Carlo tracer particles fourth */
+    
+      MCTPSharedList = MCTPSendList;
+      MCTPNumberOfReceives = MCTPNumberToMove[MyProcessorNumber];
+      std::sort(MCTPSharedList, MCTPSharedList+MCTPNumberOfReceives,
+                cmp_mc_tracer_grid());    
+
     } // ENDIF local
     else {
 
@@ -298,7 +323,12 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
       CommunicationShareActiveParticles(
           APNumberToMove, APSendList, APNumberOfReceives, APSharedList);
 
+      CommunicationShareMonteCarloTracerParticles(
+          MCTPNumberToMove, MCTPSendList, MCTPNumberOfReceives, MCTPSharedList);      
+
     } // ENDELSE local
+
+
 
     /*******************************************************************/
     /****************** Copy particles back to grids. ******************/
@@ -377,6 +407,29 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 
         jstart = jend;
       } // ENDFOR grids
+
+    /*******************************************************************/
+    /******** Copy Monte Carlo tracer particles back to grids. *********/
+    /*******************************************************************/
+
+    jstart = 0;
+    jend = 0;
+
+    // Copy shared stars to grids, if any
+
+    if (MCTPNumberOfReceives > 0)
+      for (j = 0; j < NumberOfSubgrids && jend < MCTPNumberOfReceives; j++) {
+        while (MCTPSharedList[jend].grid <= j) {
+          jend++;
+          if (jend == MCTPNumberOfReceives) break;
+        }
+
+    SubgridPointers[j]->TransferSubgridMonteCarloTracerParticles
+    (SubgridPointers, NumberOfSubgrids, MCTPNumberToMove, jstart, jend, 
+     MCTPSharedList, KeepLocal, ParticlesAreLocal, COPY_IN);
+
+    jstart = jend;
+      } // ENDFOR grids     
     
     /************************************************************************
        If the particles and stars are only on the grid's host
@@ -394,20 +447,23 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 #ifdef DEBUG_CCP
     for (i = 0; i < NumberOfGrids; i++)
       printf("CCP[P%"ISYM"A]: grid %"ISYM", %"ISYM" proc, %"ISYM" particles, "
-             "%"ISYM" stars, %"ISYM" active particles\n",
+             "%"ISYM" stars, %"ISYM" active particles, %"ISYM" Monte Carlo tracer particles \n",
              MyProcessorNumber, i,
              GridHierarchyPointer[i]->GridData->ReturnProcessorNumber(),
              GridHierarchyPointer[i]->GridData->ReturnNumberOfParticles(),
              GridHierarchyPointer[i]->GridData->ReturnNumberOfStars(),
-             GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles());
+             GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles(),
+             GridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
+
     for (i = 0; i < NumberOfSubgrids; i++)
       printf("CCP[P%"ISYM"A]: subgrid %"ISYM", %"ISYM" proc, %"ISYM" particles, "
-             "%"ISYM" stars, %"ISYM" active particles\n",
+             "%"ISYM" stars, %"ISYM" active particles, %"ISYM" Monte Carlo tracer particles \n",
              MyProcessorNumber, i,
              SubgridHierarchyPointer[i]->GridData->ReturnProcessorNumber(),
              SubgridHierarchyPointer[i]->GridData->ReturnNumberOfParticles(),
              SubgridHierarchyPointer[i]->GridData->ReturnNumberOfStars(),
-             SubgridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles());
+             SubgridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles(),
+             SubgridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
 #endif /* DEBUG_CCP */
 
 #ifdef DEBUG_AP
@@ -425,12 +481,17 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
     if (StarSendList != StarSharedList)
       delete [] StarSendList;
     delete [] StarSharedList;
+    if (MCTPSendList != MCTPSharedList)
+      delete [] MCTPSendList;
+    delete [] MCTPSharedList;    
     delete [] SubgridPointers;
 
     SendList = NULL;
     SharedList = NULL;
     StarSendList = NULL;
     StarSharedList = NULL;
+    MCTPSendList = NULL;
+    MCTPSharedList = NULL;    
 
   } // ENDIF subgrid mode
 
@@ -489,8 +550,10 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 	    ReturnNumberOfStars();
       TotalActiveParticlesToMove += GridHierarchyPointer[i]->GridData->
         ReturnNumberOfActiveParticles();
+      // TotalMonteCarloTracerParticlesToMove += GridHierarchyPointer[i]->GridData->
+      //   CountMonteCarloTracerParticlesInFirstGhostCells();  
       TotalMonteCarloTracerParticlesToMove += GridHierarchyPointer[i]->GridData->
-        CountMonteCarloTracerParticlesInFirstGhostCells();        
+        GetNumberOfMonteCarloTracerParticles();              
 	}
 
       AllMovedParticles = TotalNumberToMove;
@@ -514,16 +577,19 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 
 #ifdef DEBUG_CCP
       printf("CCP[%d]: Collecting a total of %"ISYM" (%"ISYM" local) "
-	     "particles and %"ISYM" active particles over grids %"ISYM"->%"ISYM".\n", 
+	     "particles and %"ISYM" active particles and %"ISYM" Monte Carlo Tracer particles over grids %"ISYM"->%"ISYM".\n", 
          MyProcessorNumber, AllMovedParticles, TotalNumberToMove, TotalActiveParticlesToMove,
+         TotalMonteCarloTracerParticlesToMove,
 	     StartGrid, EndGrid-1);  
 
     for (i = StartGrid; i < EndGrid; i++)
-      printf("CCP[P%"ISYM"BB]: grid %"ISYM", %"ISYM" proc, %"ISYM" particles, %"ISYM" active particles\n",
+      printf("CCP[P%"ISYM"BB]: grid %"ISYM", %"ISYM" proc, %"ISYM" particles, %"ISYM" active particles,
+        %"ISYM" Monte Carlo tracer particles\n",
 	     MyProcessorNumber, i,
 	     GridHierarchyPointer[i]->GridData->ReturnProcessorNumber(),
          GridHierarchyPointer[i]->GridData->ReturnNumberOfParticles(),
-         GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles());
+         GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles(),
+         GridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
 #endif /* DEBUG_CCP */
 
     /* Count the number of particles needed to move */
@@ -603,11 +669,12 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 
 #ifdef DEBUG_CCP
     for (i = StartGrid; i < EndGrid; i++)
-      printf("CCP[P%"ISYM"CC]: grid %"ISYM", %"ISYM" proc, %"ISYM" particles, %"ISYM" active particles\n",
+      printf("CCP[P%"ISYM"CC]: grid %"ISYM", %"ISYM" proc, %"ISYM" particles, %"ISYM" active particles, %"ISYM" Monte Carlo tracer particles\n",
              MyProcessorNumber, i,
              GridHierarchyPointer[i]->GridData->ReturnProcessorNumber(),
              GridHierarchyPointer[i]->GridData->ReturnNumberOfParticles(),
-             GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles());
+             GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles(),
+             GridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
 #endif /* DEBUG_CCP */
 
     /*******************************************************************/
@@ -680,11 +747,12 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
     
 #ifdef DEBUG_CCP
     for (i = StartGrid; i < EndGrid; i++)
-      printf("CCP[P%"ISYM"DD]: grid %"ISYM", %"ISYM" proc, %"ISYM" particles, %"ISYM" active particles\n",
+      printf("CCP[P%"ISYM"DD]: grid %"ISYM", %"ISYM" proc, %"ISYM" particles, %"ISYM" active particles, %"ISYM" Monte Carlo tracer particles\n",
              MyProcessorNumber, i,
              GridHierarchyPointer[i]->GridData->ReturnProcessorNumber(),
              GridHierarchyPointer[i]->GridData->ReturnNumberOfParticles(),
-             GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles());
+             GridHierarchyPointer[i]->GridData->ReturnNumberOfActiveParticles(),
+             GridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
 #endif /* DEBUG_CCP */
 
     /* Cleanup. */
@@ -706,9 +774,6 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
     /************************************************************************
        If the particles and stars are only on the grid's host
        processor, set number of particles so everybody agrees.
-       Note: This isn't necessary for Monte Carlo tacer particles
-       because we don't keep a record of the number of particles 
-       on a grid.
     ************************************************************************/
 
     if (SyncNumberOfParticles)
@@ -721,6 +786,7 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
           if (MoveStars)
             GridHierarchyPointer[i]->GridData->SetNumberOfStars(0);
           GridHierarchyPointer[i]->GridData->SetNumberOfActiveParticles(0);
+          GridHierarchyPointer[i]->GridData->SetNumberOfMonteCarloTracerParticles(0);
         }
     }
 

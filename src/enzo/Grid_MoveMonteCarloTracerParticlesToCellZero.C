@@ -80,7 +80,7 @@ int grid::MoveMonteCarloTracerParticlesToCellZero()
         } // end: loop over i
       } // end: loop over j
     } // end: loop over k
-    this->WriteMCTP("MoveMCTP_A1");
+    //this->WriteMCTP("MoveMCTP_A1");
     
   }
   return SUCCESS;

@@ -31,7 +31,8 @@ class MonteCarloTracerParticle
 
  private:
 
-  grid      *CurrentGrid;                  
+  grid      *CurrentGrid;
+  int        GridID;                  
   PINT       UniqueID;
   PINT       GroupID;
   int        Level;
@@ -82,6 +83,13 @@ class MonteCarloTracerParticle
   // getters
   
   // setters
+  void AdjustMassByFactor(double factor) { Mass *= factor; };
+  void AssignCurrentGrid(grid *a) { this->CurrentGrid = a; };
+  void IncreaseLevel(void) { Level++; };
+  void ReduceLevel(void) { Level--; };
+  void ReduceLevel(int x) { Level -= x; }  
+  void SetGridID(int i) { GridID = i; };
+
   
 };
 

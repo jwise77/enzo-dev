@@ -854,6 +854,7 @@ int RebuildHierarchy(TopGridData *MetaData,
         Temp->GridData->SetNumberOfParticles(0);
         Temp->GridData->SetNumberOfStars(0);
         Temp->GridData->SetNumberOfActiveParticles(0);
+        Temp->GridData->SetNumberOfMonteCarloTracerParticles(0);
       }
 
   /* The dynamic grids should be distributed enough to store the
@@ -1375,6 +1376,10 @@ int RebuildHierarchy(TopGridData *MetaData,
     if (GridHierarchyPointer[j]->GridData->MoveSubgridParticlesFast(
          subgrids, ToGrids, FALSE) == FAIL)
       ENZO_FAIL("Error in grid->MoveSubgridParticlesFast.");
+
+    if (GridHierarchyPointer[j]->GridData->MoveSubgridMonteCarloTracerParticlesFast(
+         subgrids, ToGrids, FALSE) == FAIL)
+      ENZO_FAIL("Error in grid->MoveSubgridMonteCarloTracerParticlesFast.");
   }
 
  

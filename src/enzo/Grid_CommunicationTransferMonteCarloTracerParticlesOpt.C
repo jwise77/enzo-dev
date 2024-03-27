@@ -9,7 +9,7 @@
 /  modified2:  May, 2009 by John Wise: optimized version to transfer
 /                particles in one sweep with collective calls.
 /  modified3:  July, 2009 by John Wise: adapted for stars
-/  modified4:  December, 2021 by Corey Brummel-Smith: adapted for 
+/  modified4:  December, 2024 by Corey Brummel-Smith: adapted for 
                  Monte Carlo tracer particles
 /
 /  PURPOSE:
@@ -48,8 +48,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
  
   /* Declarations. */
  
-  int i, j, k, dim, grid, proc, grid_num, width, bin, CenterIndex, index,
-      NumberOfMCTPInCellZero;
+  int i, j, k, dim, grid, proc, grid_num, width, bin, CenterIndex, index;
   int GridPosition[MAX_DIMENSION], index_ijk[MAX_DIMENSION];
   int ActiveDim[MAX_DIMENSION];
   float DomainWidth[MAX_DIMENSION], DomainWidthInv[MAX_DIMENSION];  
@@ -69,18 +68,11 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
  
   if (CopyDirection == COPY_OUT) {
 
-    /* Count the number of Monte Carlo Tracer particles to move. 
-       All the MC tracers to move are now stored in the grid cell 0.
-       This was done in 
-       CommunicationCollectMonteCarloTracerParticles(COPY_IN) */
-
-    NumberOfMCTPInCellZero = this->CountMonteCarloTracerParticlesInCellZero();
-
-    printf("\nMP%d-GP%d GID%d, NMCTPcz %d", MyProcessorNumber, ProcessorNumber, ID, NumberOfMCTPInCellZero);
+    printf("\nMP%d-GP%d GID%d, NMCTP %d", MyProcessorNumber, ProcessorNumber, ID, NumberOfMonteCarloTracerParticles);
 
     /* If there are no Monte Carlo tracer particles to move, we're done. */
 
-    if (NumberOfMCTPInCellZero == 0)
+    if (NumberOfMonteCarloTracerParticles == 0)
       return SUCCESS;
  
     /* Count the number of Monte Carlo tracer particles already moved */
@@ -89,10 +81,13 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
     for (i = 0; i < NumberOfProcessors; i++)
       PreviousTotalToMove += NumberToMove[i];
 
+    /* Move particles to cell zero */
+    MoveMonteCarloTracerParticlesToCellZero();
+
     /* Count Monte Carlo tracer particles to move.  
        Apply perioidic wrap to the Monte Carlo tracer particles. */
  
-    ToGrid = new int[NumberOfMCTPInCellZero];
+    ToGrid = new int[NumberOfMonteCarloTracerParticles];
 
     // Periodic boundaries
     for (dim = 0; dim < GridRank; dim++) 
@@ -158,6 +153,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
 
       mctp = MonteCarloTracerParticles[0];
       MonteCarloTracerParticles[0] = NULL;
+      NumberOfMonteCarloTracerParticles = 0;
 
       i = 0;
       while (mctp != NULL) {
@@ -177,19 +173,20 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       	// Particle already in this grid (Only move from cell 0 to the correct cell)
       	else {
           for (dim = 0; dim < GridRank; dim++) {
-            index_ijk[dim] = (int) (ActiveDim[dim] * 
-                                    (MoveMCTP->Position[dim] - GridLeftEdge[dim]) /
-                                    (GridRightEdge[dim] - GridLeftEdge[dim])) 
-                                  + NumberOfGhostZones;
-              // index_ijk[dim] = (int) (GridDimension[dim] * 
-              //                         (MoveMCTP->Position[dim] - GridLeftEdge[dim][dim])) 
-              //                         + NumberOfGhostZones - 1;
-          }
-          index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
-      	  InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticles[index], MoveMCTP);
-      	}
-      	i++;
 
+            i = int((MoveMCTP->Position[0] - GridLeftEdge[0]) / CellWidth[0][0]);
+            j = int((MoveMCTP->Position[1] - GridLeftEdge[1]) / CellWidth[1][0]);
+            k = int((MoveMCTP->Position[2] - GridLeftEdge[2]) / CellWidth[2][0]);
+            
+            index = ((k + GridStartIndex[2])  * GridDimension[1] +
+                     (j + GridStartIndex[1])) * GridDimension[0] +
+                     (i + GridStartIndex[0]);
+
+      	    InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticles[index], MoveMCTP);
+            NumberOfMonteCarloTracerParticles++;
+      	  }
+        }
+        i++;
       } // ENDWHILE Monte Carlo tracer particles
       
     } // ENDIF TotalToMove > PreviousTotalToMove
@@ -221,18 +218,20 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       	MoveMCTP = MonteCarloTracerParticleBufferToList(List[i].data);
       	MoveMCTP->CurrentGrid = this;
 
-        for (dim = 0; dim < GridRank; dim++) {
-            index_ijk[dim] = (int) (ActiveDim[dim] * 
-                                    (MoveMCTP->Position[dim] - GridLeftEdge[dim]) /
-                                    (GridRightEdge[dim] - GridLeftEdge[dim])) 
-                                  + NumberOfGhostZones;
-            // index_ijk[dim] = (int) (GridDimension[dim] * 
-            //                         (MoveMCTP->Position[dim] - DomainLeftEdge[dim]) *
-            //                         DomainWidthInv[dim]);
-        }
-        index = GetIndex(index_ijk[0], index_ijk[1], index_ijk[2]);
+        i = int((MoveMCTP->Position[0] - GridLeftEdge[0]) / CellWidth[0][0]);
+        j = int((MoveMCTP->Position[1] - GridLeftEdge[1]) / CellWidth[1][0]);
+        k = int((MoveMCTP->Position[2] - GridLeftEdge[2]) / CellWidth[2][0]);
+        
+        index = ((k + GridStartIndex[2])  * GridDimension[1] +
+                 (j + GridStartIndex[1])) * GridDimension[0] +
+                 (i + GridStartIndex[0]);
+                 
       	InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[index], MoveMCTP);
       } // ENDFOR Monte Carlo tracer particles
+
+    /* Set new number of stars in this grid. */
+ 
+    NumberOfMonteCarloTracerParticles = TotalNumberOfMonteCarloTracerParticles;
 
     printf("\nMP%d-GP%d GID%d, Exit CommTransferMCTP(COPY_IN)", MyProcessorNumber, ProcessorNumber, ID);
   } // end: if (COPY_IN)

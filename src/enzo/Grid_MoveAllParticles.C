@@ -29,6 +29,10 @@
 #include "Grid.h"
 #include "ActiveParticle.h"
 
+void InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticle * &Node, MonteCarloTracerParticle * &NewNode);
+MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle * &Node); 
+
+
 int grid::MoveAllParticles(int NumberOfGrids, grid* FromGrid[])
 {
 
@@ -40,8 +44,10 @@ int grid::MoveAllParticles(int NumberOfGrids, grid* FromGrid[])
 
   int NumberOfSubgridParticles = 0;
   int NumberOfSubgridActiveParticles = 0;
+  int NumberOfSubgridMonteCarloTracerParticles = 0;
   int TotalNumberOfParticles = NumberOfParticles;
   int TotalNumberOfActiveParticles = NumberOfActiveParticles;
+  int TotalNumberOfMonteCarloTracerParticles = NumberOfMonteCarloTracerParticles;
   int i, j, grid, dim, *Type;
   PINT *Number;
  
@@ -49,20 +55,23 @@ int grid::MoveAllParticles(int NumberOfGrids, grid* FromGrid[])
     if (MyProcessorNumber == FromGrid[grid]->ProcessorNumber) {
       NumberOfSubgridParticles += FromGrid[grid]->NumberOfParticles;
       NumberOfSubgridActiveParticles += FromGrid[grid]->NumberOfActiveParticles;
+      NumberOfSubgridMonteCarloTracerParticles += FromGrid[grid]->NumberOfMonteCarloTracerParticles;
     }
-  if (NumberOfSubgridParticles + NumberOfSubgridActiveParticles == 0) 
+  if (NumberOfSubgridParticles + NumberOfSubgridActiveParticles + NumberOfSubgridMonteCarloTracerParticles == 0) 
     return SUCCESS;
   
   TotalNumberOfParticles += NumberOfSubgridParticles;
   TotalNumberOfActiveParticles += NumberOfSubgridActiveParticles;
- 
+  TotalNumberOfMonteCarloTracerParticles += NumberOfSubgridMonteCarloTracerParticles;
+  
   /* Debugging info. */
 
   if (debug1)
     printf("MoveAllParticles: %"ISYM",%"ISYM
-           " (before: ThisGrid = %"ISYM",%"ISYM").\n",
+           " (before: ThisGrid = %"ISYM",%"ISYM",%"ISYM").\n",
            TotalNumberOfParticles, TotalNumberOfActiveParticles,
-           NumberOfParticles, NumberOfActiveParticles);
+           NumberOfParticles, NumberOfActiveParticles,
+           NumberOfMonteCarloTracerParticles);
  
   /* Allocate space for the particles. */
  
@@ -174,6 +183,43 @@ int grid::MoveAllParticles(int NumberOfGrids, grid* FromGrid[])
   }
 
   this->AddActiveParticles(MoveParticles, 0, NumberOfSubgridActiveParticles);
+
+  /******************** MONTE CARLO TRACER PARTICLE ********************/  
+
+  MonteCarloTracerParticle *MoveMCTP, *mctp;
+
+  for (grid = 0; grid < NumberOfGrids; grid++) {
+    // for (i = 0; i < FromGrid[grid]->NumberOfActiveParticles; i++) {
+    //   FromGrid[grid]->ActiveParticles[i]->AdjustMassByFactor(MassDecrease);
+    //   FromGrid[grid]->ActiveParticles[i]->ReduceLevel(dlevel);
+    //   FromGrid[grid]->ActiveParticles[i]->AssignCurrentGrid(this);
+    //   FromGrid[grid]->ActiveParticles[i]->SetGridID(this->ID);
+    //   MoveParticles.copy_and_insert(*(FromGrid[grid]->ActiveParticles[i]));
+    // }
+    // FromGrid[grid]->DeleteActiveParticles();
+
+    FromGrid[grid]->MoveMonteCarloTracerParticlesToCellZero(); // This also sets the particle position
+    mctp = FromGrid[grid]->MonteCarloTracerParticles[0]; 
+    while (mctp != NULL) {
+
+      /* Pop particle from this cell and insert it into cell 0 */
+      MoveMCTP = PopMonteCarloTracerParticle(mctp);  // also advances mctp to NextParticle
+      MoveMCTP->AdjustMassByFactor(MassDecrease);
+      MoveMCTP->ReduceLevel(dlevel);
+      MoveMCTP->AssignCurrentGrid(this);
+      MoveMCTP->SetGridID(this->ID);
+      InsertMonteCarloTracerParticleAfter(this->MonteCarloTracerParticles[0], MoveMCTP);
+      this->NumberOfMonteCarloTracerParticles++;
+    }
+    FromGrid[grid]->DeleteMonteCarloTracerParticleData();
+  }
+
+  for (grid = 0; grid < NumberOfGrids; grid++) {
+    FromGrid[grid]->SetNumberOfMonteCarloTracerParticles(0);
+  }  
+  NumberOfMonteCarloTracerParticles = TotalNumberOfMonteCarloTracerParticles;
+
+  this->DistributeMonteCarloTracerParticles();
  
   return SUCCESS;
 }

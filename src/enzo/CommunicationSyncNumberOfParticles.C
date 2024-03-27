@@ -36,7 +36,7 @@ int CommunicationSyncNumberOfParticles(HierarchyEntry *GridHierarchyPointer[],
 {
 
   int i, j, idx;
-  int stride = NUMBER_ENZO_PARTICLE_TYPES + MAX_ACTIVE_PARTICLE_TYPES;
+  int stride = NUMBER_ENZO_PARTICLE_TYPES + MAX_ACTIVE_PARTICLE_TYPES + 1;
   int *buffer = new int[NumberOfGrids * stride];
 
   for (i = 0, idx = 0; i < NumberOfGrids; i++, idx += stride)
@@ -52,6 +52,8 @@ int CommunicationSyncNumberOfParticles(HierarchyEntry *GridHierarchyPointer[],
           buffer[idx+3+j] = 0.;
         }
       }
+      buffer[idx+3+j] = GridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles();
+
     } else {
       buffer[idx] = 0;
       buffer[idx+1] = 0;
@@ -59,6 +61,7 @@ int CommunicationSyncNumberOfParticles(HierarchyEntry *GridHierarchyPointer[],
       for (j = 0; j < MAX_ACTIVE_PARTICLE_TYPES; j++) {
         buffer[idx+3+j] = 0;
       }
+      buffer[idx+3+j] = 0;
     }
 
 #ifdef USE_MPI
@@ -73,6 +76,7 @@ int CommunicationSyncNumberOfParticles(HierarchyEntry *GridHierarchyPointer[],
       GridHierarchyPointer[i]->GridData->SetActiveParticleTypeCounts(j,
         buffer[idx+3+j]);
     }
+    GridHierarchyPointer[i]->GridData->SetNumberOfMonteCarloTracerParticles(buffer[idx+3+j]);
   }
 
   delete [] buffer;

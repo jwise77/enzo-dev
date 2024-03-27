@@ -52,13 +52,15 @@ int CommunicationShareStars(int *NumberToMove, star_data* &SendList,
 int CommunicationShareActiveParticles(int *NumberToMove,
         ActiveParticleList<ActiveParticleType> &SendList, int &NumberOfReceives,
         ActiveParticleList<ActiveParticleType> &SharedList);
+int CommunicationShareMonteCarloTracerParticles(int *NumberToMove, mc_tracer_data* &SendList,
+          int &NumberOfReceives, mc_tracer_data* &SharedList);
 
 int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
 					  TopGridData *MetaData, int level)
 {
 
-  int proc, i, j, k, jstart, jend, TotalNumber, TotalStars, APTotalNumber;
-  int particle_data_size, star_data_size;
+  int proc, i, j, k, jstart, jend, TotalNumber, TotalStars, APTotalNumber, MCTPTotalNumber;
+  int particle_data_size, star_data_size, mc_tracer_data_size;
   int Zero = 0;
 
   HierarchyEntry **Grids;
@@ -75,11 +77,14 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   star_data *StarSharedList = NULL;
   ActiveParticleList<ActiveParticleType> APSendList;
   ActiveParticleList<ActiveParticleType> APSharedList;
+  mc_tracer_data *MCTPSendList = NULL;
+  mc_tracer_data *MCTPSharedList = NULL;  
 
-  int NumberOfReceives=0, StarNumberOfReceives=0, APNumberOfReceives=0;
+  int NumberOfReceives=0, StarNumberOfReceives=0, APNumberOfReceives=0, MCTPNumberOfReceives=0;
   int *NumberToMove = new int[NumberOfProcessors];
   int *StarsToMove = new int[NumberOfProcessors];
   int *APNumberToMove = new int[NumberOfProcessors];
+  int *MCTPNumberToMove = new int[NumberOfProcessors];
 
   // Needed for TransferSubgridParticles.  This means that the
   // particles can be transferred to grids on other processors.
@@ -92,6 +97,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
     NumberToMove[i] = 0;
     StarsToMove[i] = 0;
     APNumberToMove[i] = 0;
+    MCTPNumberToMove[i] = 0;
   }
 
   /* Generate array of all grids on this level */
@@ -169,6 +175,10 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
       (GridPointers, NumberOfGrids, NumberToMove, Zero, Zero, 
        SendList, KeepLocal, ParticlesAreLocal, COPY_OUT, TRUE, TRUE);
 
+    Grids[grid1]->GridData->TransferSubgridMonteCarloTracerParticles
+      (GridPointers, NumberOfGrids, MCTPNumberToMove, Zero, Zero, 
+       MCTPSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, TRUE, TRUE);      
+
     delete [] SiblingList.GridList;
 
   } // ENDFOR grid1
@@ -178,16 +188,20 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   TotalNumber = 0;
   TotalStars  = 0;
   APTotalNumber = 0;
+  MCTPTotalNumber = 0;
   for (j = 0; j < NumberOfProcessors; j++) {
     TotalNumber += NumberToMove[j];
     TotalStars  += StarsToMove[j];
     APTotalNumber += APNumberToMove[j];
+    MCTPTotalNumber += MCTPNumberToMove[j];    
     NumberToMove[j] = 0;  // Zero-out to use in the next step
     StarsToMove[j]  = 0;
     APNumberToMove[j] = 0;
+    MCTPNumberToMove[j] = 0;
   }
   SendList = new particle_data[TotalNumber];
   StarSendList = new star_data[TotalStars];
+  MCTPSendList = new mc_tracer_data[MCTPTotalNumber];
 
   for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
 
@@ -203,6 +217,10 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
       (GridPointers, NumberOfGrids, NumberToMove, Zero, Zero, 
        SendList, KeepLocal, ParticlesAreLocal, COPY_OUT, TRUE, FALSE);
 
+    Grids[grid1]->GridData->TransferSubgridMonteCarloTracerParticles
+      (GridPointers, NumberOfGrids, MCTPNumberToMove, Zero, Zero, 
+       MCTPSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, TRUE, FALSE);      
+
   } // ENDFOR grid1
 
   FastSiblingLocatorFinalize(&ChainingMesh);
@@ -216,18 +234,24 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
 			  StarSharedList);
   CommunicationShareActiveParticles(APNumberToMove, APSendList, APNumberOfReceives,
                                     APSharedList);
+  CommunicationShareMonteCarloTracerParticles(MCTPNumberToMove, MCTPSendList, MCTPNumberOfReceives,
+                                    MCTPSharedList);  
 
   int TotalNumberOfReceives = NumberOfReceives;
   int TotalStarNumberOfReceives = StarNumberOfReceives;
   int TotalAPNumberOfReceives = APNumberOfReceives;
+  int TotalMCTPNumberOfReceives = MCTPNumberOfReceives;  
   CommunicationSumValues(&TotalNumberOfReceives, 1);
   CommunicationSumValues(&TotalStarNumberOfReceives, 1);
   CommunicationSumValues(&TotalAPNumberOfReceives, 1);
+  CommunicationSumValues(&TotalMCTPNumberOfReceives, 1);
 
   if (debug)
     printf("TransferSubgridParticles[%"ISYM"]: Moved %"ISYM" particles, "
-	   "%"ISYM" stars, %"ISYM" active particles.\n", level, TotalNumberOfReceives,
-           TotalStarNumberOfReceives, TotalAPNumberOfReceives);
+	   "%"ISYM" stars, %"ISYM" active particles, %"ISYM" Monte Carlo tracer particles.\n",
+           level, TotalNumberOfReceives,
+           TotalStarNumberOfReceives, TotalAPNumberOfReceives,
+           TotalMCTPNumberOfReceives);
 	   
 
   /*******************************************************************/
@@ -305,6 +329,29 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
       
       jstart = jend;
     } // ENDFOR grids
+
+  /*******************************************************************/
+  /******** Copy Monte Carlo Tracer Particles back to grids. *********/
+  /*******************************************************************/
+
+  jstart = 0;
+  jend = 0;
+
+  // Copy shared stars to grids, if any
+
+  if (MCTPNumberOfReceives > 0)
+    for (j = 0; j < NumberOfGrids && jend < MCTPNumberOfReceives; j++) {
+      while (MCTPSharedList[jend].grid <= j) {
+        jend++;
+        if (jend == MCTPNumberOfReceives) break;
+      }
+      
+      GridPointers[j]->TransferSubgridMonteCarloTracerParticles
+                    (GridPointers, NumberOfGrids, MCTPNumberToMove, jstart, jend,
+                     MCTPSharedList, KeepLocal, ParticlesAreLocal, COPY_IN, TRUE);
+      
+      jstart = jend;
+    } // ENDFOR grids    
   
 
   /************************************************************************
@@ -322,6 +369,9 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   if (StarSendList != StarSharedList)
     delete [] StarSendList;
   delete [] StarSharedList;
+  if (MCTPSendList != MCTPSharedList)
+    delete [] MCTPSendList;
+  delete [] MCTPSharedList;  
 
   delete [] Grids;
   delete [] GridPointers;
@@ -329,6 +379,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   delete [] NumberToMove;
   delete [] StarsToMove;
   delete [] APNumberToMove;
+  delete [] MCTPNumberToMove;
   return SUCCESS;
 }
 
