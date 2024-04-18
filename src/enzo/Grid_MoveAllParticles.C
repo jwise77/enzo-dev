@@ -35,7 +35,7 @@ MonteCarloTracerParticle *PopMonteCarloTracerParticle(MonteCarloTracerParticle *
 
 int grid::MoveAllParticles(int NumberOfGrids, grid* FromGrid[])
 {
-
+  printf("\nInMoveAllParticles"); // DEBUG
   if (NumberOfGrids < 1) {
     ENZO_VFAIL("NumberOfGrids(%"ISYM") must be > 0.\n", NumberOfGrids)
   }

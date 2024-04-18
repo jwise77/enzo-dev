@@ -83,9 +83,9 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
 
   if (MyProcessorNumber == ProcessorNumber) {
     //printf("\nproc%d: CommSendMC: package buffer and delete", MyProcessorNumber);      
-    this->WriteMCTP("ComSend_this_B0");
+    //this->WriteMCTP("ComSend_this_B0");
     this->MonteCarloTracerParticles[0]->MonteCarloTracerParticleListToBuffer(buffer, TransferSize);
-    this->WriteMCTP("ComSend_this_B1");
+    //this->WriteMCTP("ComSend_this_B1");
     if (DeleteParticles)
       DeleteMonteCarloTracerParticleList(this->MonteCarloTracerParticles[0]);
 
@@ -185,7 +185,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
                MyProcessorNumber, ProcessorNumber, ToProcessor, this, ToGrid);
     fflush(stdout);
 
-    ToGrid->WriteMCTP("ComSend_ToGrid_A0"); //DEBUG    
+    //ToGrid->WriteMCTP("ComSend_ToGrid_A0"); //DEBUG    
 
     // printf("COMSEND_INFO: proc%d, thisGridProc%d, ToGridProc%d, this %p, ToGrid %p, thisDims %d %d %d, ToGridDism %d %d %d, thisLE %.2f %.2f %.2f, ToGridLE %.2f %.2f %.2f, thisRE %.2f %.2f %.2f, ToGridRE %.2f %.2f %.2f \n",
     // MyProcessorNumber, ProcessorNumber, ToProcessor, this, ToGrid, 
@@ -215,7 +215,7 @@ int grid::CommunicationSendMonteCarloTracerParticles(grid *ToGrid, int ToProcess
       InsertMonteCarloTracerParticleAfter(ToGrid->MonteCarloTracerParticles[index], mctp);        
     }
 
-    ToGrid->WriteMCTP("ComSend_ToGrid_A1"); //DEBUG      
+    //ToGrid->WriteMCTP("ComSend_ToGrid_A1"); //DEBUG      
 
 
     printf("\nproc%d: CommSendMCTP: Inserted %d MCTPs from buffer into ToGrid. ToProcessor %d", MyProcessorNumber, TransferSize, ToProcessor);

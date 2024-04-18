@@ -140,7 +140,7 @@ int CommunicationTransferMonteCarloTracerParticles(grid *GridPointer[], int Numb
     NumberToMove[i] = 0;
  
   /* Generate the list of Monte Carlo tracer particle moves. */
-
+  printf("\nComTrans");
   int Zero = 0;
   for (grid = 0; grid < NumberOfGrids; grid++)
     GridPointer[grid]->CommunicationTransferMonteCarloTracerParticles

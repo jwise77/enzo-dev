@@ -68,8 +68,10 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
  
   if (CopyDirection == COPY_OUT) {
 
-    printf("\nMP%d-GP%d GID%d, NMCTP %d", MyProcessorNumber, ProcessorNumber, ID, NumberOfMonteCarloTracerParticles);
 
+
+    printf("\nGCTO pid%d gpid%d gid%d, NMCTP %d", MyProcessorNumber, ProcessorNumber, ID, NumberOfMonteCarloTracerParticles);
+    this->WriteMCTP("gComTrans_");
     /* If there are no Monte Carlo tracer particles to move, we're done. */
 
     if (NumberOfMonteCarloTracerParticles == 0)
@@ -78,8 +80,10 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
     /* Count the number of Monte Carlo tracer particles already moved */
 
     int PreviousTotalToMove = 0;
-    for (i = 0; i < NumberOfProcessors; i++)
+    for (i = 0; i < NumberOfProcessors; i++){
       PreviousTotalToMove += NumberToMove[i];
+      printf("\nn2Move %d i %d", NumberToMove[i], i);
+    }
 
     /* Move particles to cell zero */
     MoveMonteCarloTracerParticlesToCellZero();
@@ -117,16 +121,17 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       	    search_lower_bound(GStartIndex[dim], CenterIndex, 0, Layout[dim],
       			       Layout[dim]);
       	  GridPosition[dim] = min(GridPosition[dim], Layout[dim]-1);
-
       	} // ENDELSE Layout
 
       } // ENDFOR dim
 
       grid_num = GridPosition[0] + Layout[0] * (GridPosition[1] + Layout[1]*GridPosition[2]);
       grid = GridMap[grid_num];
+      printf("\nEQ__ grid ThisGridNum %d %d", grid, ThisGridNum);
       if (grid != ThisGridNum) {
       	proc = Grids[grid]->ReturnProcessorNumber();
       	NumberToMove[proc]++;
+        printf("\ngridThisGrid %d %d", grid, ThisGridNum);
       }
       ToGrid[i] = grid;
 

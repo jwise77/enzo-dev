@@ -131,7 +131,7 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
   if (MyProcessorNumber == ProcessorNumber) {  
 
     // **** DEBUG *** //
-    this->WriteMCTP("MovSubgridMCTPFast_thisGrid_PREMOVE");    
+    //this->WriteMCTP("MovSubgridMCTPFast_thisGrid_PREMOVE");    
     // **** DEBUG *** //
     
     /* Loop over particles and move them to the appropriate ToGrid, depending
@@ -193,13 +193,13 @@ int grid::MoveSubgridMonteCarloTracerParticlesFast(int NumberOfSubgrids, grid* T
     //** DEBUG **
     char ToGridSubgrid[1];
     char *filename = new char[MAX_LINE_LENGTH];
-    this->WriteMCTP("MovSubgridMCTPFast_thisGrid_POSTMOVE");
+    //this->WriteMCTP("MovSubgridMCTPFast_thisGrid_POSTMOVE");
     for (subgrid = 0; subgrid < NumberOfSubgrids; subgrid++) {
         printf("\nMovSubgridMCTPFast: proc%d, this->ProcessorNumber: %d, ToGrids[%d]->ProcessorNumber: %d WriteMCTP subgrid %d", MyProcessorNumber, this->ProcessorNumber, subgrid, ToGrids[subgrid]->ProcessorNumber, subgrid);
         sprintf(ToGridSubgrid, "%d", subgrid);  
         strcpy(filename, "MoveSubgridMCTPFast_PREDISTRIBUTE_ToGrids");
         strcat(filename, ToGridSubgrid);
-        ToGrids[subgrid]->WriteMCTP(filename);
+        //ToGrids[subgrid]->WriteMCTP(filename);
     }
     delete filename;
     //** END DEBUG **

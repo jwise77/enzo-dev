@@ -89,7 +89,7 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
     sprintf(ToProcessorStr, "%d", ToProcessor);  
     strcpy(filename, "Pre_ComSend_in_ComMov_ToProc");
     strcat(filename, ToProcessorStr);
-    this->WriteMCTP(filename);
+    //this->WriteMCTP(filename);
     //** END DEBUG **
     
     if (MoveParticles == TRUE){
@@ -99,7 +99,7 @@ int grid::CommunicationMoveGrid(int ToProcessor, int MoveParticles,
     }
     strcpy(filename, "Post_ComSend_in_ComMov_ToProc");
     strcat(filename, ToProcessorStr);       
-    this->WriteMCTP(filename);
+    //this->WriteMCTP(filename);
     delete filename;
 
     /* Copy photon packages */

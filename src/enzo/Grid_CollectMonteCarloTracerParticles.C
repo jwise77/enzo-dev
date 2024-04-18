@@ -43,7 +43,7 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
     size *= GridDimension[dim];  
 
   /* ----------------------------------------------------------------- */
-  /* Copy star out of grid. */
+  /* Copy particle out of grid. */
 
   if (CopyDirection == COPY_OUT) {
 
@@ -54,14 +54,21 @@ int grid::CollectMonteCarloTracerParticles(int GridNum, int* &NumberToMove,
 
     /* If there are no particles, we're done. */
 
-    if (NumberOfMonteCarloTracerParticles == 0)
+    //if (NumberOfMonteCarloTracerParticles == 0)
+    int ZZZ = this->CountMonteCarloTracerParticles();
+    printf("ZZZ %d", ZZZ);
+    if (ZZZ == 0)
       return SUCCESS;      
 
     /* Add to the MC particle count to move */
 
     // NumberOfMonteCarloTracerParticles is still the number of local particles to COPY_OUT, not the
     // global total!
-    NumberToMove[ProcessorNumber] += NumberOfMonteCarloTracerParticles;
+    //NumberToMove[ProcessorNumber] += NumberOfMonteCarloTracerParticles;
+    NumberToMove[ProcessorNumber] += ZZZ;
+
+    //printf("\nColMCTP pid%d %d", MyProcessorNumber, NumberOfMonteCarloTracerParticles);
+    printf("\nColMCTP pid%d %d", MyProcessorNumber, ZZZ);
  
     /* Move MC tracers to buffer then delete from the grid of linked lists */
     nmc = StartIndex;

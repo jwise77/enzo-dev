@@ -43,7 +43,7 @@ int grid::MoveMonteCarloTracerParticlesToCellZero()
     if (this->MonteCarloTracerParticles == NULL)
       ENZO_FAIL("\nMoveMonteCarloTracerParticlesToCellZero: Attempting to Move Monte Carlo Tracer particles in a grid that has not been initialized with Monte Carlo Tracer particles.\n");
  
-    this->WriteMCTP("MoveMCTP_A0");
+    //this->WriteMCTP("MoveMCTP_A0");
     /* Loop over all cells and move particles in each cell to cell 0 */
     int count = 0;
     for (k0 = GridStartIndex[2]; k0 <= GridEndIndex[2]; k0++) {

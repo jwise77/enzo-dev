@@ -176,6 +176,8 @@ void grid::WriteMCTP(char* prename)
   strcat(groupfilename, pid);
   strcat(groupfilename, ".gpid");
   strcat(groupfilename, gpid);
+  strcat(groupfilename, ".");
+  strcat(groupfilename, id);
 
  
   char *name = new char[MAX_LINE_LENGTH];
@@ -194,12 +196,10 @@ void grid::WriteMCTP(char* prename)
    size = 1;
  
    for (dim = 0; dim < GridRank; dim++) size *= GridDimension[dim];
- 
-   /* create temporary buffer */
- 
-   temp = new float[size];
 
    int NumberOfMCTracers = this->CountMonteCarloTracerParticles();
+   //int NumberOfMCTracers = GetNumberOfMonteCarloTracerParticles();
+   printf("\nWMC pid%s gpid%s NMC %d\n", pid, gpid, NumberOfMCTracers);
 
     if (NumberOfMCTracers > 0) {
 
@@ -225,6 +225,8 @@ void grid::WriteMCTP(char* prename)
 
     for (dim = 0; dim < GridRank; dim++)
       size *= GridDimension[dim];   
+
+   /* create temporary buffer */
 
     temp = new float[size];
     float NumberOfMCTracersPerCell[size]; /* float because write_dataset needs HDF5_REAL for 3d 
@@ -317,6 +319,7 @@ void grid::WriteMCTP(char* prename)
   if( h5_status == h5_error ){my_exit(EXIT_FAILURE);} 
   h5_status = H5Fclose(file_id);
   if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
+
 }
 
 

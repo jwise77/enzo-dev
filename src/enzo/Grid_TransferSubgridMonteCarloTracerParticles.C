@@ -46,6 +46,8 @@ int grid::TransferSubgridMonteCarloTracerParticles(grid* Subgrids[], int NumberO
   int i0, j0, k0;
   FLOAT pos[3];
   MonteCarloTracerParticle *mctp, *MoveMCTP;
+  
+  //IncludeGhostZones = 1;//****DEBUG****
 
   /* ----------------------------------------------------------------- */
   /* Copy Monte Carlo tracer particles out of grid. */

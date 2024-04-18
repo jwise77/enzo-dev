@@ -125,11 +125,21 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
   int particle_data_size, star_data_size, activepart_data_size;
   int Zero = 0;
 
+  printf("\nInComColPart0");
+  // for (i = 0; i < NumberOfGrids; i++){ // DEBUG
+  //   printf("\nComPartSet iA%d NMCTP %d", i, GridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
+  //   GridHierarchyPointer[i]->GridData->SetNumberOfMonteCarloTracerParticles(GridHierarchyPointer[i]->GridData->CountMonteCarloTracerParticles());
+  //   printf("\nComPartSet iB%d NMCTP %d", i, GridHierarchyPointer[i]->GridData->GetNumberOfMonteCarloTracerParticles());
+  // }
+
   /*********************************************************************/
   // First move all particles that exist in new subgrids
 
   if (CollectMode == SUBGRIDS_LOCAL || CollectMode == SUBGRIDS_GLOBAL ||
       CollectMode == ALLGRIDS) {
+
+    printf("\nInComColPartSUB");
+
 
     // Nothing to do, but still sync number of particles in grids.
     if (NumberOfSubgrids == 0) {
@@ -221,7 +231,7 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
 
         GridHierarchyPointer[j]->GridData->TransferSubgridMonteCarloTracerParticles
           (SubgridPointers, NumberOfSubgrids, MCTPNumberToMove, Zero, Zero, 
-           MCTPSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, TRUE, TRUE);  // Include Ghost zones       
+           MCTPSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, TRUE);  // Include Ghost zones       
 
 
         
@@ -505,6 +515,8 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
   if ((CollectMode == SIBLINGS_ONLY || CollectMode == ALLGRIDS) &&
       NumberOfProcessors > 1) {
 
+    printf("\nComColPart SIB_ONLY");
+
     int StartGrid, EndGrid, StartNum, TotalNumberToMove, AllMovedParticles;
     int TotalStarsToMove, AllMovedStars;
     int TotalActiveParticlesToMove, AllMovedActiveParticles;
@@ -541,6 +553,7 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
       TotalNumberToMove = 0;
       TotalStarsToMove = 0;
       TotalActiveParticlesToMove = 0;
+      TotalMonteCarloTracerParticlesToMove = 0;
       for (i = StartGrid; i < EndGrid; i++)
 	if (GridHierarchyPointer[i]->GridData->ReturnProcessorNumber() != 
 	    MyProcessorNumber) {
@@ -553,13 +566,15 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
       // TotalMonteCarloTracerParticlesToMove += GridHierarchyPointer[i]->GridData->
       //   CountMonteCarloTracerParticlesInFirstGhostCells();  
       TotalMonteCarloTracerParticlesToMove += GridHierarchyPointer[i]->GridData->
-        GetNumberOfMonteCarloTracerParticles();              
+        GetNumberOfMonteCarloTracerParticles();            
+        printf("\nCOMSIB PID%d, GPID%d, TotMCTP2Move %d", MyProcessorNumber, GridHierarchyPointer[i]->GridData->ReturnProcessorNumber(), TotalMonteCarloTracerParticlesToMove);  
 	}
 
       AllMovedParticles = TotalNumberToMove;
       AllMovedStars = TotalStarsToMove;
       AllMovedActiveParticles = TotalActiveParticlesToMove;
       AllMovedMonteCarloTracerParticles = TotalMonteCarloTracerParticlesToMove;
+
 #ifdef USE_MPI
       int ibuffer[4];
       if (NumberOfProcessors > 1) {

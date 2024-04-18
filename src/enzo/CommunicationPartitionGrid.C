@@ -608,9 +608,9 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum)
 
   if (MyProcessorNumber == NewGrid->ReturnProcessorNumber() && NewGrid->ReturnProcessorNumber() == NewProc) {
     printf("\nproc%d: CommPartitionGrid: Calling DistributeMonteCarloTracerParticles: ProcessorNumber %d, ToProcessor  %d", MyProcessorNumber, NewGrid->ReturnProcessorNumber(), NewProc);
-    NewGrid->WriteMCTP("ComPartGrid_PreDistribute");
+    //NewGrid->WriteMCTP("ComPartGrid_PreDistribute");
     NewGrid->DistributeMonteCarloTracerParticles();
-    NewGrid->WriteMCTP("ComPartGrid_PostDistribute");
+    //NewGrid->WriteMCTP("ComPartGrid_PostDistribute");
   }
 
 // some debug output
