@@ -269,7 +269,7 @@ void ActiveParticleType_SmartStar::SmartMerge(ActiveParticleType_SmartStar *a)
   if (Mass < a->Mass) {
     oldmass = a->oldmass;
     TimeIndex = a->TimeIndex;
-    for (int i = 0; i < NTIMES; i++) {
+    for (int i = 0; i < NTIMES; i++)
       {
 	AccretionRateTime[i] = a->AccretionRateTime[i];
 	AccretionRate[i] = a->AccretionRate[i];	

@@ -302,7 +302,6 @@ int ActiveParticleType_SmartStar::EvaluateFormation
   if (CalculatePotential || PotentialField == NULL) {
 	  PotentialField = new float[size];
 	  thisGrid->CalculatePotentialField(PotentialField, data.DensNum, data.DensityUnits, data.TimeUnits,data.LengthUnits);
-	}
 
 #if SSDEBUG
         fprintf(stdout, "%s: Calculate Gravitational Potential\n", __FUNCTION__);
