@@ -31,6 +31,7 @@
 int CommunicationBufferedSend(void *buffer, int size, MPI_Datatype Type, int Target,
 			      int Tag, MPI_Comm CommWorld, int BufferSize);
 MPI_Arg Return_MPI_Tag(int grid_num, int proc);
+MPI_Arg Return_MPI_Tag(int grid_num, int proc);
 #endif /* USE_MPI */
 
 /* The following is defined in Grid_DepositParticlePositions.C. */

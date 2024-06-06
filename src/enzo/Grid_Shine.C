@@ -147,11 +147,11 @@ int grid::Shine(RadiationSourceEntry *RadiationSource)
       {if (MYPROC && DEBUG) fprintf(stdout, "\n"); continue;}
     /* If we are doing simple H2I, H2II and HM rates continue here. */
     if(RS->Energy[ebin] <= 13.6 && RadiativeTransferOpticallyThinH2 == 1)
-      {if (MYPROC && DEBUG) fprintf(stdout, "\n"); continue;}
+      continue;
     
-    /* If we slected no ionising radiation */
+    /* If we selected no ionising radiation */
     if(RadiativeTransferNoIonisingRadiation == 1 && RS->Energy[ebin] >= 13.6)
-      {if (MYPROC && DEBUG) fprintf(stdout, "\n"); continue;}
+      continue;
 
     photons_per_package = RampPercent * RS->Luminosity * 
       RS->SED[ebin] * dtPhoton / float(BasePackages);

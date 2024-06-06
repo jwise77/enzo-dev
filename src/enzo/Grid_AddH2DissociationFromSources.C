@@ -5,6 +5,7 @@
 /***********************************************************************
 /
 /  ADD H2 DISSOCIATION EMISSION FROM SHINING PARTICLES
+/  H2 Shielding is on here always. 
 /
 /  written by: John Wise
 /  date:       March, 2006
@@ -183,6 +184,7 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 	double colden = 0.0, shield = 1.0, b = 0.0, b5 = 0.0, XN = 0.0;
 	double H2mass = mh*2.0, alpha = 1.1;
 	double kph_hm = 0.0, kdiss_H2II = 0.0;
+#if JEANS_LENGTH	
 	int TemperatureField = 0;
 	/* Pre-compute some quantities to speed things up */
 	if (RadiativeTransferH2ShieldType > 0) {
@@ -355,6 +357,7 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 	double colden = 0.0, shield = 1.0, b = 0.0, b5 = 0.0, XN = 0.0;
 	double H2mass = mh*2.0, alpha = 1.1;
 	double kph_hm = 0.0, kdiss_H2II = 0.0;
+#if(JEANS_LENGTH)
 	int TemperatureField = 0;
 	/* Pre-compute some quantities to speed things up */
 	if (RadiativeTransferH2ShieldType > 0) {
