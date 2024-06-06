@@ -187,32 +187,32 @@ int RadiativeTransferInitialize(char *ParameterFile,
       TypesToAdd[FieldsToAdd++] = kphHI;
       TypesToAdd[FieldsToAdd++] = PhotoGamma;
       if (RadiativeTransferHydrogenOnly == FALSE) {
-	TypesToAdd[FieldsToAdd++] = kphHeI;
-	TypesToAdd[FieldsToAdd++] = kphHeII;
+        TypesToAdd[FieldsToAdd++] = kphHeI;
+        TypesToAdd[FieldsToAdd++] = kphHeII;
       }
       if (MultiSpecies > 1) {
-	TypesToAdd[FieldsToAdd++] = kdissH2I;
-	TypesToAdd[FieldsToAdd++] = kphHM;
-	TypesToAdd[FieldsToAdd++] = kdissH2II;
+        TypesToAdd[FieldsToAdd++] = kdissH2I;
+        TypesToAdd[FieldsToAdd++] = kphHM;
+        TypesToAdd[FieldsToAdd++] = kdissH2II;
       }
       if (RadiationPressure)
-	for (i = RadPressure0; i <= RadPressure2; i++)
-	  TypesToAdd[FieldsToAdd++] = i;
+        for (i = RadPressure0; i <= RadPressure2; i++)
+          TypesToAdd[FieldsToAdd++] = i;
       if (PopIIISupernovaUseColour)
-	TypesToAdd[FieldsToAdd++] = SNColour;
+        TypesToAdd[FieldsToAdd++] = SNColour;
       if (StarClusterUseMetalField &&
-	  StarParticleFeedback > 0 &&
-	  StarParticleFeedback != (1 << POP3_STAR)) {
-	TypesToAdd[FieldsToAdd++] = Metallicity;
-	AddedMetallicity = true;
+          StarParticleFeedback > 0 &&
+          StarParticleFeedback != (1 << POP3_STAR)) {
+        TypesToAdd[FieldsToAdd++] = Metallicity;
+        AddedMetallicity = true;
       }
       if (RadiativeTransferLoadBalance)
-	TypesToAdd[FieldsToAdd++] = RaySegments;
+        TypesToAdd[FieldsToAdd++] = RaySegments;
     }
     // Add metallicity if Pop II star feedback
     if (StarParticleFeedback > 0 && 
-	StarParticleFeedback != (1 << POP3_STAR) && 
-	!AddedMetallicity)
+        StarParticleFeedback != (1 << POP3_STAR) && 
+        !AddedMetallicity)
       TypesToAdd[FieldsToAdd++] = Metallicity;      //#####
 
     if (StarMakerTypeIaSNe && StarParticleFeedback > 0)
@@ -228,12 +228,12 @@ int RadiativeTransferInitialize(char *ParameterFile,
 
     for (i = 0; i < FieldsToAdd; i++)
       for (j = 0; j < OldNumberOfBaryonFields; j++)
-	if (TypesToAdd[i] == ExistingTypes[j]) {
-	  for (k = i; k < FieldsToAdd; k++)
-	    TypesToAdd[k] = TypesToAdd[k+1];
-	  i--;
-	  break;
-	} // ENDIF matching type
+        if (TypesToAdd[i] == ExistingTypes[j]) {
+          for (k = i; k < FieldsToAdd; k++)
+            TypesToAdd[k] = TypesToAdd[k+1];
+          i--;
+          break;
+        } // ENDIF matching type
     FieldsToAdd = 0;
     while (TypesToAdd[FieldsToAdd] != FieldUndefined)
       FieldsToAdd++;
@@ -245,13 +245,13 @@ int RadiativeTransferInitialize(char *ParameterFile,
       TypesToAdd[FieldsToAdd++] = kphHI;
       TypesToAdd[FieldsToAdd++] = PhotoGamma;
       if (RadiativeTransferHydrogenOnly == FALSE) {
-	TypesToAdd[FieldsToAdd++] = kphHeI;
-	TypesToAdd[FieldsToAdd++] = kphHeII;
+        TypesToAdd[FieldsToAdd++] = kphHeI;
+        TypesToAdd[FieldsToAdd++] = kphHeII;
       }
       if (MultiSpecies > 1) {
-	TypesToAdd[FieldsToAdd++] = kdissH2I;
-	TypesToAdd[FieldsToAdd++] = kphHM;
-	TypesToAdd[FieldsToAdd++] = kdissH2II;
+        TypesToAdd[FieldsToAdd++] = kdissH2I;
+        TypesToAdd[FieldsToAdd++] = kphHM;
+        TypesToAdd[FieldsToAdd++] = kdissH2II;
       }
     }
 
@@ -265,12 +265,12 @@ int RadiativeTransferInitialize(char *ParameterFile,
     LevelArray[0]->GridData->ReturnFieldType(ExistingTypes);
     for (i = 0; i < FieldsToAdd; i++)
       for (j = 0; j < OldNumberOfBaryonFields; j++)
-	if (TypesToAdd[i] == ExistingTypes[j]) {
-	  for (k = i; k < FieldsToAdd; k++)
-	    TypesToAdd[k] = TypesToAdd[k+1];
-	  i--;
-	  break;
-	} // ENDIF matching type
+        if (TypesToAdd[i] == ExistingTypes[j]) {
+          for (k = i; k < FieldsToAdd; k++)
+            TypesToAdd[k] = TypesToAdd[k+1];
+          i--;
+          break;
+        } // ENDIF matching type
     FieldsToAdd = 0;
     while (TypesToAdd[FieldsToAdd] != FieldUndefined)
       FieldsToAdd++;
