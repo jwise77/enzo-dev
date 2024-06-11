@@ -9,7 +9,7 @@
 
 #include "ActiveParticle_SmartStar.h"
 #include "phys_constants.h"
-#define SSDEBUG 1
+#define SSDEBUG 0
 #define SSDEBUG_TOTALMASS 0
 
 #define DYNAMIC_ACCRETION_RADIUS 0
@@ -830,7 +830,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
     ActiveParticleList<ActiveParticleType>& ParticleList,
     LevelHierarchyEntry *LevelArray[], int ThisLevel)
 {
-  int SSparticles[MAX_NUMBER_NEW_APS];  /* Assuming no more than 100 new particles per cycle */
+  int *SSparticles = new int[nParticles];
   float StellarMasstoRemove = 0.0, CellDensityAfterFormation = 0.0;
   FLOAT Time = LevelArray[ThisLevel]->GridData->ReturnTime();
   float DensityUnits, LengthUnits, TemperatureUnits, TimeUnits,
@@ -1094,6 +1094,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
        printf("MassEnclosed = %e Msolar\n", MassEnclosed); fflush(stdout);
        if (MassEnclosed == 0) {
 	 IsSphereContained = false;
+   delete [] SSparticles;
 	 return SUCCESS;
        }
        
@@ -1267,7 +1268,8 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
    } /*This Processor */
   
   } /* End loop over APs */
- 
+
+  delete [] SSparticles;
   return SUCCESS;
 }
 int ActiveParticleType_SmartStar::Accrete(int nParticles, 
