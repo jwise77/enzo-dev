@@ -18,7 +18,7 @@
 #define CALCDIRECTPOTENTIAL 0
 #define JEANSREFINEMENT  1
 #define GRAVENERGY 0
-#define MASSTHRESHOLDCHECK 0
+#define MASSTHRESHOLDCHECK 1
 #define JEANSLENGTHCALC    1
 #define MASSTHRESHOLD      0.1                       //Msolar in grid
 #define COOLING_TIME       0

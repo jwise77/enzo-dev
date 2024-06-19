@@ -161,9 +161,6 @@ void ActiveParticleFindAll(
     
     if (*GlobalNumberOfActiveParticles > 0) {
 
-      Eint32 *displace = new Eint32[NumberOfProcessors];
-      Eint32 *all_buffer_sizes = new Eint32[NumberOfProcessors];
-
       GlobalList.reserve(*GlobalNumberOfActiveParticles);
 
       if (NumberOfProcessors > 1) {
@@ -172,6 +169,10 @@ void ActiveParticleFindAll(
 	/* Construct the MPI packed  buffer from the list of local particles*/
 	Eint32 total_buffer_size=0, local_buffer_size, position = 0;
 	char *send_buffer = NULL, *recv_buffer = NULL;
+
+	Eint32 *displace = new Eint32[NumberOfProcessors];
+	Eint32 *all_buffer_sizes = new Eint32[NumberOfProcessors];
+
 	element_size = ap_info->ReturnElementSize();
 	
 	for (i = 0; i < NumberOfProcessors; i++) {
