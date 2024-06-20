@@ -417,7 +417,7 @@ static struct treenode *BuildTree(FLOAT *x, int nidx, int *idxlist,
   int i, n, nodes, leaves, curnode;
   int splitptr=0, splitidx;
   FLOAT width;
-  struct treenode *tree;
+  struct treenode *tree = NULL;
 
   /* First figure out how many nodes we need and allocate */
   for (n=nidx, nodes=1, leaves=1; n>=leafsize; n=n>>1) {

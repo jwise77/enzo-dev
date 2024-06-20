@@ -841,7 +841,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
   MassUnits = DensityUnits * POW(LengthUnits,3);
 
   float tdyn_code = StarClusterMinDynamicalTime/(TimeUnits/yr_s);
-  for (int i = 0; i < MAX_NUMBER_NEW_APS; i++)
+  for (int i = 0; i < nParticles; i++)
     SSparticles[i] = -1;
   /*
    * Order particles in order of SMS, PopIII, PopII

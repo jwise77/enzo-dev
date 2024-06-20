@@ -2055,7 +2055,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
   }
 
   //  if (WritePotential && ComovingCoordinates && SelfGravity) {
-  if (WritePotential && SelfGravity) {
+  if ((WritePotential || ComputePotential) && SelfGravity) {
     CopyGravPotential = TRUE;
   }
 
