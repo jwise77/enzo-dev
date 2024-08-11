@@ -386,10 +386,11 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	int stellar_type = -99999;
 	//if(shu_collapse == 1)
 	//  continue;
-	if(ProblemType == 27) { //collapse test 
-	  stellar_type = POPIII;
-	}
-	else if(HasMetalField &&    data.TotalMetals[index] > PopIIIMetalCriticalFraction) {
+	//if(ProblemType == 27) { //collapse test 
+	//  stellar_type = POPIII;
+	//}
+	//else
+  if(HasMetalField &&    data.TotalMetals[index] > PopIIIMetalCriticalFraction) {
 	  stellar_type = POPII;
 	}
 	else if((accrate*3.154e7*ConverttoSolar/data.TimeUnits > CRITICAL_ACCRETION_RATE*10.0)
@@ -1374,7 +1375,7 @@ int ActiveParticleType_SmartStar::Accrete(int nParticles,
     if (MyProcessorNumber == FeedbackZone->ReturnProcessorNumber()) {
 
       float AccretionRate = 0;
-      printf("%s: pclass = %d\t. Calculate accretion rate\n", __FUNCTION__, pclass);
+      //printf("%s: pclass = %d\t. Calculate accretion rate\n", __FUNCTION__, pclass);
       if (FeedbackZone->AccreteOntoSmartStarParticle(ParticleList[i],
 			      AccretionRadius, &AccretionRate) == FAIL)
 	return FAIL;
@@ -1637,9 +1638,9 @@ int ActiveParticleType_SmartStar::UpdateAccretionRateStats(int nParticles,
 	SS->AccretionRateTime[timeindex] = ctime;
 	SS->oldmass = cmass;
 	SS->TimeIndex = timeindex;
-	fprintf(stdout, "old_mass = %e Msolar\t cmass = (%e code) %e Msolar\n", omass*MassConversion,
+	fprintf(stdout, "SS[%d]: old_mass = %e Msolar\t cmass = (%e code) %e Msolar\n", SS->Identifier, omass*MassConversion,
 		cmass, cmass*MassConversion);
-	fprintf(stdout, "accrate = %1.2e Msolar/yr\t deltatime = %3.3f kyrs\t index = %d\t Particle Mass = %1.2e Msolar\t (code mass: %e) Age = %1.3f Myr\t Lifetime = %1.2f Myr\t Class = %d\n",
+	fprintf(stdout, "SS[%d]: accrate = %1.2e Msolar/yr\t deltatime = %3.3f kyrs\t index = %d\t Particle Mass = %1.2e Msolar\t (code mass: %e) Age = %1.3f Myr\t Lifetime = %1.2f Myr\t Class = %d\n", SS->Identifier,
 		(SS->AccretionRate[timeindex]*MassUnits/TimeUnits)*yr_s/SolarMass,
 		deltatime*TimeUnits*1000.0/Myr_s,
 		SS->TimeIndex,
