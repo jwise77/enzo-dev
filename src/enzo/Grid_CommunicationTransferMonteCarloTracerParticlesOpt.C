@@ -143,7 +143,7 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
     for (proc = 0; proc < NumberOfProcessors; proc++)
       TotalToMove += NumberToMove[proc];
 
-    if (TotalToMove > PreviousTotalToMove) {
+    if (TotalToMove > PreviousTotalToMove || MonteCarloTracerParticles[0] != NULL) {
  
       /* Move Monte Carlo tracer particles into list */
 
@@ -160,11 +160,11 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
       MonteCarloTracerParticles[0] = NULL;
       NumberOfMonteCarloTracerParticles = 0;
 
-      i = 0;
+      int gid = 0;
       while (mctp != NULL) {
 
 	      MoveMCTP = PopMonteCarloTracerParticle(mctp);  // also advances to NextParticle
-	      grid = ToGrid[i];
+	      grid = ToGrid[gid];
 
       	if (grid != ThisGridNum) {
           // MoveMCTP->Position was previously set in Grid_CollectMonteCarloTracerParticles
@@ -177,7 +177,6 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
 
       	// Particle already in this grid (Only move from cell 0 to the correct cell)
       	else {
-          for (dim = 0; dim < GridRank; dim++) {
 
             i = int((MoveMCTP->Position[0] - GridLeftEdge[0]) / CellWidth[0][0]);
             j = int((MoveMCTP->Position[1] - GridLeftEdge[1]) / CellWidth[1][0]);
@@ -189,9 +188,8 @@ int grid::CommunicationTransferMonteCarloTracerParticles(grid* Grids[], int Numb
 
       	    InsertMonteCarloTracerParticleAfter(MonteCarloTracerParticles[index], MoveMCTP);
             NumberOfMonteCarloTracerParticles++;
-      	  }
         }
-        i++;
+        gid++;
       } // ENDWHILE Monte Carlo tracer particles
       
     } // ENDIF TotalToMove > PreviousTotalToMove
