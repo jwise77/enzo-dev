@@ -1353,14 +1353,28 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 		  &ParticleSplitterMustRefine);
     if (sscanf(line, "ParticleSplitterMustRefineIDFile = %s", dummy) == 1)
       ParticleSplitterMustRefineIDFile = dummy;
-    ret += sscanf(line, "ParticleSplitterFraction    = %"FSYM" %"FSYM" %"FSYM" %"FSYM"",
-                  ParticleSplitterFraction+0, ParticleSplitterFraction+1, ParticleSplitterFraction+2,
-                  ParticleSplitterFraction+3);
+    if (sscanf(line, "ParticleSplitterFraction[%"ISYM"] = ", &dim) == 1) {
+      ret += sscanf(line, "ParticleSplitterFraction[%"ISYM"] = %"FSYM" %"FSYM" %"FSYM" %"FSYM, 
+        &dim, ParticleSplitterFraction[dim]+0, ParticleSplitterFraction[dim]+1, ParticleSplitterFraction[dim]+2,
+        ParticleSplitterFraction[dim]+3);
+    }
     ret += sscanf(line, "ParticleSplitterCenter    = %"PSYM" %"PSYM" %"PSYM"",
                   ParticleSplitterCenter+0, ParticleSplitterCenter+1, ParticleSplitterCenter+2);
-    ret += sscanf(line, "ParticleSplitterCenterRegion  = %"FSYM" %"FSYM" %"FSYM" %"FSYM"",
-                  ParticleSplitterCenterRegion+0, ParticleSplitterCenterRegion+1,
-		  ParticleSplitterCenterRegion+2, ParticleSplitterCenterRegion+3);
+    // Old format, no [] given: cubic region -- one width
+    if (sscanf(line, "ParticleSplitterCenterRegion = ") == 1) {
+      ret += sscanf(line, "ParticleSplitterCenterRegion = %"FSYM" %"FSYM" %"FSYM" %"FSYM, 
+        ParticleSplitterCenterRegion[0]+0, ParticleSplitterCenterRegion[0]+1, ParticleSplitterCenterRegion[0]+2,
+        ParticleSplitterCenterRegion[0]+3);
+      for (int i = 1; i < MAX_SPLIT_ITERATIONS; i++) {
+        ParticleSplitterCenterRegion[1][i] = ParticleSplitterCenterRegion[0][i]; // y
+        ParticleSplitterCenterRegion[2][i] = ParticleSplitterCenterRegion[0][i]; // z
+      }
+    }
+    if (sscanf(line, "ParticleSplitterCenterRegion[%"ISYM"] = ", &dim) == 1) {
+      ret += sscanf(line, "ParticleSplitterCenterRegion[%"ISYM"] = %"FSYM" %"FSYM" %"FSYM" %"FSYM, 
+        &dim, ParticleSplitterCenterRegion[dim]+0, ParticleSplitterCenterRegion[dim]+1, ParticleSplitterCenterRegion[dim]+2,
+        ParticleSplitterCenterRegion[dim]+3);
+    }
     ret += sscanf(line, "ResetMagneticField = %"ISYM,
 		  &ResetMagneticField);
     ret += sscanf(line, "ResetMagneticFieldAmplitude  =  %"GSYM" %"GSYM" %"GSYM,

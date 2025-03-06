@@ -1021,8 +1021,9 @@ int SetDefaultGlobalValues(TopGridData &MetaData)
     ParticleSplitterFraction[i] = 1.0;
   for(int i = 0; i < MAX_DIMENSION; i++)
     ParticleSplitterCenter[i] = -1.0;
-  for(int i = 0; i < MAX_SPLIT_ITERATIONS; i++)
-    ParticleSplitterCenterRegion[i] = -1.0;
+  for (int dim = 0; dim < MAX_DIMENSION; dim++)
+    for(int i = 0; i < MAX_SPLIT_ITERATIONS; i++)
+    ParticleSplitterCenterRegion[dim][i] = -1.0;
 
   /* Magnetic Field Resetter */
 

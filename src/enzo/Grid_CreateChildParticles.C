@@ -104,11 +104,11 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
       }
     }
   /* Centre particle refinement region around a specific point */
-  if(ParticleSplitterCenter[0] > 0.0 && ParticleSplitterCenterRegion[iter] > 0.0) {
+  if(ParticleSplitterCenter[0] > 0.0 && ParticleSplitterCenterRegion[0][iter] > 0.0) {
     fprintf(stderr, "Setting Particle Refinement around point.\n");
     for (i = 0; i < 3; i++) {
       midpoint[i] = ParticleSplitterCenter[i];
-      newsep[i] = ParticleSplitterCenterRegion[iter]/2.0;
+      newsep[i] = ParticleSplitterCenterRegion[i][iter]/2.0;
       LeftEdge[i] = midpoint[i] - newsep[i];
       RightEdge[i] = midpoint[i] + newsep[i];
       if(LeftEdge[i] < RefineRegionLeftEdge[i])

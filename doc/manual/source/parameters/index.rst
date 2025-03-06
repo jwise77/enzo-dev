@@ -2037,22 +2037,24 @@ Particle Parameters
 ``ParticleSplitterFraction`` (external)
     An array of four values that represent the width of the splitting
     region in units of the original refine region set by
-    ``RefineRegionLeftEdge`` and ``RefineRegionRightEdge``.  The
-    splitting region is centered on the refine region center.  Each
-    successive value represents the next nested split region.  Valid
-    up to ``ParticleSplitterIterations`` times.  Cannot be used with
-    ``ParticleSplitterCenterRegion``.  Default: 1.0 (all 4 values)
+    ``RefineRegionLeftEdge`` and ``RefineRegionRightEdge``.  The splitting region is centered on 
+    the refine region center.  Each successive value represents the next
+    nested split region.  Valid up to ``ParticleSplitterIterations`` times.
+    Cannot be used with ``ParticleSplitterCenterRegion``.  Default: 1.0
+    (all 4 values)
+
 ``ParticleSplitterCenter`` (external)
     The center of split region in code units.  Specify if the split
     region does not correspond to the center of the refine region.
     Not used if negative. Default: -1.0 -1.0 -1.0
-``ParticleSplitterCenterRegion`` (external)
-    The width of the split region in code units.  Must be used in
+``ParticleSplitterCenterRegion[dim]`` (external)
+    The width of the split region in code units in the dimension 
+    `dim` (i.e. 0=x, 1=y, 2=z).  Must be used in
     conjunction with ``ParticleSplitterCenter``.  Each successive
     value represents the next nested split region.  Cannot be used
     with ``ParticleSplitterFraction``. Valid up to
     ``ParticleSplitterIterations`` times.  Not used if
-    negative. Default: -1.0 (all 4 values)
+    negative. Default: -1.0 (all 4 values for each dimension)
 ``ParticleSplitterChildrenParticleSeparation`` (external)
     This is the spacing between the child particles placed on a
     hexagonal close-packed (HCP) array. In units of a cell size which

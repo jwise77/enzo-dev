@@ -671,12 +671,14 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
 	  ParticleSplitterRandomSeed);
   fprintf(fptr, "ParticleSplitterChildrenParticleSeparation     = %"FSYM"\n",
 	  ParticleSplitterChildrenParticleSeparation);
-  fprintf(fptr, "ParticleSplitterFraction         =  ");
+  fprintf(fptr, "ParticleSplitterFraction         = ");
   WriteListOfFloats(fptr, MAX_SPLIT_ITERATIONS, ParticleSplitterFraction);
   fprintf(fptr, "ParticleSplitterCenter         =  ");
-  WriteListOfFloats(fptr, 3, ParticleSplitterCenter);
-  fprintf(fptr, "ParticleSplitterCenterRegion         =  ");
-  WriteListOfFloats(fptr, MAX_SPLIT_ITERATIONS, ParticleSplitterCenterRegion);
+  WriteListOfFloats(fptr, MAX_DIMENSION, ParticleSplitterCenter);
+  for (int dim = 0; dim < MAX_DIMENSION; dim++) {
+    fprintf(fptr, "ParticleSplitterCenterRegion[%"ISYM"]      =  ", dim);
+    WriteListOfFloats(fptr, MAX_SPLIT_ITERATIONS, ParticleSplitterCenterRegion[dim]);
+}
   fprintf(fptr, "ParticleSplitterMustRefine       = %"ISYM"\n",
 	  ParticleSplitterMustRefine);
   fprintf(fptr, "ParticleSplitterMustRefineIDFile = %s\n",
