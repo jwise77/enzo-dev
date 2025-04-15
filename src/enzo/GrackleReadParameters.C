@@ -142,6 +142,8 @@ int GrackleReadParameters(FILE *fptr, FLOAT InitTime)
 
     ret += sscanf(line, "dust_chemistry = %d",
                   &grackle_data->dust_chemistry);
+    ret += sscanf(line, "grackle_max_iterations = %d",
+                  &grackle_data->max_iterations);
 
     /* functionality for below two are not yet implemented but are
        involved in options for other Grackle settings. Read in
@@ -150,7 +152,7 @@ int GrackleReadParameters(FILE *fptr, FLOAT InitTime)
                   &grackle_data->use_isrf_field);
     ret += sscanf(line, "use_dust_density_field = %d",
                   &grackle_data->use_dust_density_field);
-
+  
     /* If the dummy char space was used, then make another. */
     if (*dummy != 0) {
       dummy = new char[MAX_LINE_LENGTH];
