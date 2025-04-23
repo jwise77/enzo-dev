@@ -66,7 +66,6 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
   float TestStarParticleBField[3]   = {0.0, 0.0, 0.0};
   float TestStarParticleStarMass    = 100.0;
   int   TestStarParticleUseSmartStar = 0;
-  float TestStarParticleSmartStarMass = 100;  // Msun
   float TestStarParticleStartStarAge = 0.0;   // years
   int TestProblemUseMetallicityField = 1;
   float TestProblemInitialMetallicityFraction = 2e-3; // 0.1 Zsun
@@ -103,8 +102,6 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
 		  &TestStarParticleStarPosition[2]);
     ret += sscanf(line, "TestStarParticleUseSmartStar = %"ISYM,
         &TestStarParticleUseSmartStar);
-    ret += sscanf(line, "TestStarParticleSmartStarMass = %"FSYM,
-          &TestStarParticleSmartStarMass);
     ret += sscanf(line, "TestStarParticleSmartStarAge = %"FSYM,
             &TestStarParticleSmartStarAge);
   
@@ -142,7 +139,9 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
       TestStarParticleInitializeGrid(TestStarParticleStarMass,
 				     Initialdt, 
 				     TestStarParticleStarVelocity,
-				     TestStarParticleStarPosition) == FAIL)
+				     TestStarParticleStarPosition,
+             TestStarParticleUseSmartStar,
+             TestStarParticleSmartStarAge) == FAIL)
   ENZO_FAIL("Error in TestStarParticleInitializeGrid.\n");
 
   /* set up field names and units */

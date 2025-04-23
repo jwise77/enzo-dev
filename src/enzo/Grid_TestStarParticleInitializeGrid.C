@@ -32,7 +32,10 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
 int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass, 
 					 float *Initialdt,
 					 FLOAT TestStarParticleStarVelocity[],
-					 FLOAT TestStarParticleStarPosition[])
+           FLOAT TestStarParticleStarPosition[],
+           int TestStarParticleUseSmartStar,
+           float TestStarParticleSmartStarMass,
+           float TestStarParticleSmartStarAge)
 {
   /* declarations */
 
@@ -64,36 +67,43 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
 
   /* Set number of particles for this grid and allocate space. */
 
-  NumberOfParticles = 1;
-  NumberOfParticleAttributes = 4;
-  this->AllocateNewParticles(NumberOfParticles);
-  printf("Allocated %d particles\n", NumberOfParticles);
+  if (TestStarParticleUseSmartStar == 0) {
+    NumberOfParticles = 1;
+    NumberOfParticleAttributes = 4;
+    this->AllocateNewParticles(NumberOfParticles);
+    printf("Allocated %d particles\n", NumberOfParticles);
 
-  /* Set particle IDs and types */
+    /* Set particle IDs and types */
 
-  for (i = 0; i < NumberOfParticles; i++) {
-    ParticleNumber[i] = i;
-    ParticleType[i] = PARTICLE_TYPE_STAR;
+    for (i = 0; i < NumberOfParticles; i++) {
+      ParticleNumber[i] = i;
+      ParticleType[i] = PARTICLE_TYPE_STAR;
+    }
+
+    /* Set central particle. */ 
+    for (dim = 0; dim < GridRank; dim++) {
+      ParticlePosition[dim][0] = TestStarParticleStarPosition[dim]*
+        (DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
+      ParticleVelocity[dim][0] = TestStarParticleStarVelocity[dim]*1e5*TimeUnits/LengthUnits;
+    }
+    ParticleMass[0] = CentralMass;
+    ParticleAttribute[0][0] = Time+1e-7;
+
+    if (STARFEED_METHOD(UNIGRID_STAR)) ParticleAttribute[1][0] = 10.0 * Myr_s/TimeUnits;
+    if (STARFEED_METHOD(MOM_STAR))
+      if(StarMakerExplosionDelayTime >= 0.0)
+        ParticleAttribute[1][0] = 1.0;
+      else
+        ParticleAttribute[1][0] = 10.0 * Myr_s/TimeUnits;
+    
+    ParticleAttribute[2][0] = 0.0;  // Metal fraction
+    ParticleAttribute[3][0] = 0.0;  // metalfSNIa
+
+  } else {
+    /* Smart Star creation */
+    NumberOfActiveParticles = 1;
+
   }
-
-  /* Set central particle. */ 
-  for (dim = 0; dim < GridRank; dim++) {
-    ParticlePosition[dim][0] = TestStarParticleStarPosition[dim]*
-      (DomainLeftEdge[dim]+DomainRightEdge[dim]) + 0.5*CellWidth[0][0];
-    ParticleVelocity[dim][0] = TestStarParticleStarVelocity[dim]*1e5*TimeUnits/LengthUnits;
-  }
-  ParticleMass[0] = CentralMass;
-  ParticleAttribute[0][0] = Time+1e-7;
-
-  if (STARFEED_METHOD(UNIGRID_STAR)) ParticleAttribute[1][0] = 10.0 * Myr_s/TimeUnits;
-  if (STARFEED_METHOD(MOM_STAR))
-    if(StarMakerExplosionDelayTime >= 0.0)
-      ParticleAttribute[1][0] = 1.0;
-    else
-      ParticleAttribute[1][0] = 10.0 * Myr_s/TimeUnits;
-  
-  ParticleAttribute[2][0] = 0.0;  // Metal fraction
-  ParticleAttribute[3][0] = 0.0;  // metalfSNIa
 
   return SUCCESS;
 }
