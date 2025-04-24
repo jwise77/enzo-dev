@@ -12,18 +12,17 @@
 /
 ************************************************************************/
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#include "preincludes.h"
 #include "ErrorExceptions.h"
 #include "macros_and_parameters.h"
 #include "typedefs.h"
 #include "global_data.h"
 #include "Fluxes.h"
 #include "GridList.h"
+#include "phys_constants.h"
 #include "ExternalBoundary.h"
 #include "Grid.h"
-#include "phys_constants.h"
+#include "ActiveParticle.h"
 #include "ActiveParticle_SmartStar.h"
 
 int GetUnits(float *DensityUnits, float *LengthUnits,

@@ -66,7 +66,7 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
   float TestStarParticleBField[3]   = {0.0, 0.0, 0.0};
   float TestStarParticleStarMass    = 100.0;
   int   TestStarParticleUseSmartStar = 0;
-  float TestStarParticleStartStarAge = 0.0;   // years
+  float TestStarParticleSmartStarAge = 0.0;   // years
   int TestProblemUseMetallicityField = 1;
   float TestProblemInitialMetallicityFraction = 2e-3; // 0.1 Zsun
 
