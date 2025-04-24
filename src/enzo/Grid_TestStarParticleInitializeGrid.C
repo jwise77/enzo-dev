@@ -24,6 +24,7 @@
 #include "ExternalBoundary.h"
 #include "Grid.h"
 #include "phys_constants.h"
+#include "ActiveParticle_SmartStar.h"
 
 int GetUnits(float *DensityUnits, float *LengthUnits,
 	     float *TemperatureUnits, float *TimeUnits,
@@ -34,7 +35,6 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
 					 FLOAT TestStarParticleStarVelocity[],
            FLOAT TestStarParticleStarPosition[],
            int TestStarParticleUseSmartStar,
-           float TestStarParticleSmartStarMass,
            float TestStarParticleSmartStarAge)
 {
   /* declarations */
@@ -101,7 +101,35 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
 
   } else {
     /* Smart Star creation */
-    NumberOfActiveParticles = 1;
+
+    
+    float AccretionRadius = 3.0;  // in cell widths
+
+    /* Create SmartStar and set all initial properties */
+    ActiveParticleType_SmartStar *np = new ActiveParticleType_SmartStar();
+    np->level = 0;
+    np->GridID = 0;
+    np->CurrentGrid = this;
+    np->Mass = CentralMass;
+    np->BirthTime = Time;
+    np->DynamicalTime = 0.0;
+    np->type = np->GetEnabledParticleID();
+    np->Metallicity = 0.0;
+    for (dim = 0; dim < GridRank; dim++) {
+      np->pos[dim] = TestStarParticleStarPosition[dim] * (DomainLeftEdge[dim]+DomainRightEdge[dim]) + 
+        0.5*CellWidth[0][0];
+      np->vel[dim] = TestStarParticleStarVelocity[dim]*1e5*TimeUnits/LengthUnits;
+    }
+    np->AccretionRadius = AccretionRadius * CellWidth[0][0];
+    np->StellarAge = TestStarParticleSmartStarAge * Myr_s / TimeUnits;
+    np->NotEjectedMass = 0.0;
+    np->AccretionRate[0] = 0.0;
+    np->AccretionRateTime[0] = Time;
+    np->RadiationLifetime = 20 * Myr_s / TimeUnits;  // 20 Myr
+
+    // Add SmartStar to grid AP list
+    this->AddActiveParticle(np);
+    delete np;  // AddActiveParticle copies it to the grid, so we delete this copy
 
   }
 
