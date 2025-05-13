@@ -34,8 +34,8 @@
 #define ACCRETIONRADIUS  4
 #define NUMRADIATIONBINS 5
 #define CRITICAL_ACCRETION_RATE 0.005 //Msolar/yr (Haemerlee et al (2018))
-#define TIMEGAP            1000   // * timestep
-#define POPIII_RESOLUTION  0.001 //pc
+#define TIMEGAP            1   // * timestep
+#define POPIII_RESOLUTION  0.1 //pc
 #define SMS_RESOLUTION     1.0   //pc
 /* Prototypes */
 

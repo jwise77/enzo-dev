@@ -110,6 +110,7 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
     np->GridID = 0;
     np->CurrentGrid = this;
     np->Mass = CentralMass;
+    np->oldmass = CentralMass;
     np->BirthTime = Time;
     np->DynamicalTime = 0.0;
     np->type = np->GetEnabledParticleID();
@@ -122,8 +123,11 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
     np->AccretionRadius = AccretionRadius * CellWidth[0][0];
     np->StellarAge = TestStarParticleSmartStarAge * Myr_s / TimeUnits;
     np->NotEjectedMass = 0.0;
-    np->AccretionRate[0] = 0.0;
-    np->AccretionRateTime[0] = Time;
+    for (i = 0; i < 2; i++) {
+      np->AccretionRate[i] = 0.0;
+      np->AccretionRateTime[i] = Time + i*1e-6;
+    }
+    np->TimeIndex = 1;
     np->RadiationLifetime = 20 * Myr_s / TimeUnits;  // 20 Myr
 
     // Add SmartStar to grid AP list

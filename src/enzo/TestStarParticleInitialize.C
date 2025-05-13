@@ -126,6 +126,16 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
 
   } // end input from parameter file
 
+  /* If using SmartStars, add it to the list */
+
+  if (TestStarParticleUseSmartStar) {
+    char *ss_name = "SmartStar";
+    fprintf(stdout, "Enabling active particle type %s\n", ss_name);
+    EnableActiveParticleType(ss_name);
+    ActiveParticleDensityThreshold = 4*TestStarParticleDensity;  // 4 times ambient density
+    NumberOfActiveParticles = 1;
+  }
+
   /* set up uniform grid as of before explosion */
 
   if (TopGrid.GridData->InitializeUniformGrid(TestStarParticleDensity, 
