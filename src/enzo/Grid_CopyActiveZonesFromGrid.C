@@ -62,7 +62,7 @@ int grid::CopyActiveZonesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSIO
   if (NumberOfBaryonFields == 0)
     return SUCCESS;
 
-  if (this->GetCellWidth(0,0) != OtherGrid->GetCellWidth(0,0))
+  if (fabs(this->GetCellWidth(0,0) - OtherGrid->GetCellWidth(0,0)) / this->GetCellWidth(0,0) > 1e-3)
     return SUCCESS;
 
   /* Compute the left and right edges of this grid (including ghost zones). */

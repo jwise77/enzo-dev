@@ -25,7 +25,7 @@
 #include "ActiveParticle.h"
 
 
-#define NO_DEBUG_AP
+#define DEBUG_AP
 
 float bondi_alpha(float x);
 
