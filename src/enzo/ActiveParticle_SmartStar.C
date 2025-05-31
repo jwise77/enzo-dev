@@ -500,7 +500,7 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
 {
 
   /* Feedback not handled here */
-  return SUCCESS; 
+  //return SUCCESS; 
   
   SmartStarGrid *thisGrid =
     static_cast<SmartStarGrid *>(thisgrid_orig);
@@ -660,14 +660,12 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
 				      LThisTimestep + sn_nrg_thistimestep)/density[DistIndex];
 	    //printf("%s: Accretion Energy added = %e [code energy]\n", __FUNCTION__, LThisTimestep*(StarMass*SolarMass));
 	    //printf("%s: Supernova Energy added = %e [code energy]\n", __FUNCTION__, sn_nrg_thistimestep*(StarMass*SolarMass));
-	    //printf("%s: Fractional Energy increase = %e\n", __FUNCTION__,
-	    // (totalenergy[DistIndex] - energybefore)/energybefore);
+	    //printf("%s: Fractional Energy increase = %e\n", __FUNCTION__, (totalenergy[DistIndex] - energybefore)/energybefore);
 	    if (DualEnergyFormalism == 1) {
 	      float energybefore = gasenergy[DistIndex];
 	      gasenergy[DistIndex] = ((gasenergy[DistIndex]*density[DistIndex]) + 
 				      LThisTimestep)/density[DistIndex];
-	      //printf("%s: Fractional Gas Energy increase = %e\n", __FUNCTION__,
-	      //   (gasenergy[DistIndex] - energybefore)/energybefore);
+	      //printf("%s: Fractional Gas Energy increase = %e\n", __FUNCTION__, (gasenergy[DistIndex] - energybefore)/energybefore);
 	    }
 	  }
 	}
@@ -745,8 +743,11 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
 	  continue; //No stellar radiative feedback
 	dx = LevelArray[ThisParticle->level]->GridData->GetCellWidth(0,0);
 	MassConversion = (double) (dx*dx*dx * mfactor); //Converts to Solar Masses
-	source = ThisParticle->RadiationSourceInitialize();
 	double PMass = ThisParticle->Mass*MassConversion;
+  if (PMass * ThisParticle->LuminosityPerSolarMass * LConv < tiny_number)
+      continue;
+
+	source = ThisParticle->RadiationSourceInitialize();
 
 	/* JR: I got rid of this restriction and instead restrict feedback to below 13.6 eV */
 	//if(ThisParticle->ParticleClass == POPIII && PMass > 500.0)
@@ -758,7 +759,7 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
 	float ramptime = 0.0;
 	if(POPIII == ThisParticle->ParticleClass ||
 	   SMS == ThisParticle->ParticleClass) {
-	  ramptime = yr_s * 1e4 / TimeUnits;
+	  ramptime = yr_s * 1e5 / TimeUnits;
 	}
 	if(POPII == ThisParticle->ParticleClass) {
 	  ramptime = yr_s * StarClusterMinDynamicalTime / TimeUnits;

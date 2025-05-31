@@ -1463,6 +1463,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     if (strstr(line, "MustRefine") ) ret++;
     if (strstr(line, "AccretionKernal")     ) ret++;
     if (strstr(line, "PopIII")              ) ret++;
+    if (strstr(line, "TestStar")            ) ret++;
 #ifdef TRANSFER
     if (strstr(line, "Radiative")           ) ret++;
     if (strstr(line, "PhotonTest")          ) ret++;
@@ -1839,8 +1840,8 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 
   /* Set some star feedback parameters. */
 
-  if ((STARFEED_METHOD(NORMAL_STAR) || STARFEED_METHOD(UNIGRID_STAR)) || 
-      (STARFEED_METHOD(SINGLE_SUPERNOVA) ) &&
+  if ((STARFEED_METHOD(NORMAL_STAR) || STARFEED_METHOD(UNIGRID_STAR) || 
+      STARFEED_METHOD(SINGLE_SUPERNOVA) || SmartStarFeedback > 0) &&
       (StarFeedbackDistRadius > 0)) {
 
     // Calculate number of cells in the shape over which to distribute feedback.
