@@ -25,6 +25,7 @@
 #include "ActiveParticle.h"
 #include "ActiveParticle_SmartStar.h"
 
+int FindField(int field, int farray[], int numfields);
 int GetUnits(float *DensityUnits, float *LengthUnits,
 	     float *TemperatureUnits, float *TimeUnits,
 	     float *VelocityUnits, double *MassUnits, FLOAT Time);
@@ -33,6 +34,7 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
 					 float *Initialdt,
 					 FLOAT TestStarParticleStarVelocity[],
            FLOAT TestStarParticleStarPosition[],
+           int TestStarParticleIsothermalSphere,
            int TestStarParticleUseSmartStar,
            float TestStarParticleSmartStarAge)
 {
@@ -57,6 +59,42 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
 	       &TimeUnits, &VelocityUnits, &MassUnits, Time) == FAIL) {
     ENZO_FAIL("Error in GetUnits.\n");
   }
+
+  /* Set isothermal sphere density profile.  Default diameter of the box size. */
+
+  if (TestStarParticleIsothermalSphere) {
+    const float SphereRadius = 0.5;
+    const float min_r2 = 0.25*CellWidth[0][0]*CellWidth[0][0];
+    const float max_r2 = 0.25*(DomainRightEdge[0] - DomainLeftEdge[0])*(DomainRightEdge[0] - DomainLeftEdge[0]);
+    int i, j, k, index, DensNum, field;
+    index = GRIDINDEX(0,0,0);
+    DensNum = FindField(Density, this->FieldType, this->NumberOfBaryonFields);
+    const float BackgroundDensity = BaryonField[DensNum][index];
+    float dx, dy, dz, dx2, dy2, dz2, dr2, dr2_0, factor;
+    for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
+      dz = TestStarParticleStarPosition[2] - (CellLeftEdge[2][k] + 0.5*CellWidth[2][k]);
+      dz2 = dz*dz;
+      for (j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
+        dy = TestStarParticleStarPosition[1] - (CellLeftEdge[1][j] + 0.5*CellWidth[1][j]);
+        dy2 = dy*dy;
+        dr2_0 = dy2 + dz2;
+        index = GRIDINDEX_NOGHOST(GridStartIndex[0], j, k);
+        for (i = GridStartIndex[0]; i <= GridEndIndex[0]; i++, index++) {
+          dx = TestStarParticleStarPosition[0] - (CellLeftEdge[0][i] + 0.5*CellWidth[0][i]);
+          dx2 = dx*dx;
+          dr2 = max(dr2_0 + dx2, min_r2);
+          if (dr2 < max_r2) {
+            factor = max_r2/dr2;
+            for (field = 0; field < NumberOfBaryonFields; field++) {
+              if (FieldTypeIsDensity(field)) {
+                BaryonField[field][index] *= factor;
+              }
+            }
+          }
+        } // ENDFOR i
+      } // ENDFOR j
+    } // ENDFOR k
+  } // ENDIF isothermal sphere
 
   /* Set Central Mass in simulation units */
 

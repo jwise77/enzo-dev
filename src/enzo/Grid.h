@@ -2135,6 +2135,7 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
 				     float *Initialdt,
 				     FLOAT TestStarParticleStarVelocity[],
 				     FLOAT TestStarParticleStarPosition[],
+                 int TestStarParticleIsothermalSphere,
                  int TestStarParticleUseSmartStar,
                  float TestStarParticleSmartStarAge);
 

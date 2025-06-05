@@ -78,6 +78,7 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
   float TestStarParticleStarMass    = 100.0;
   int   TestStarParticleUseSmartStar = 0;
   float TestStarParticleSmartStarAge = 0.0;   // years
+  int TestStarParticleIsothermalSphere = 0;
   int TestProblemUseMetallicityField = 1;
   float TestProblemInitialMetallicityFraction = 2e-3; // 0.1 Zsun
 
@@ -117,6 +118,8 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
         &TestStarParticleUseSmartStar);
     ret += sscanf(line, "TestStarParticleSmartStarAge = %"FSYM,
             &TestStarParticleSmartStarAge);
+    ret += sscanf(line, "TestStarParticleIsothermalSphere = %"ISYM,
+            &TestStarParticleIsothermalSphere);
   
         
 
@@ -150,7 +153,8 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
     char *ss_name = "SmartStar";
     fprintf(stdout, "Enabling active particle type %s\n", ss_name);
     EnableActiveParticleType(ss_name);
-    ActiveParticleDensityThreshold = 4*TestStarParticleDensity*DensityUnits/mh;  // 4 times ambient density
+    //ActiveParticleDensityThreshold = 4*TestStarParticleDensity*DensityUnits/mh;  // 4 times ambient density
+    ActiveParticleDensityThreshold = huge_number;  // effectively turn off formation
     NumberOfActiveParticles = 1;
   }
 
@@ -174,6 +178,7 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
 				     Initialdt, 
 				     TestStarParticleStarVelocity,
 				     TestStarParticleStarPosition,
+             TestStarParticleIsothermalSphere,
              TestStarParticleUseSmartStar,
              TestStarParticleSmartStarAge) == FAIL)
   ENZO_FAIL("Error in TestStarParticleInitializeGrid.\n");
