@@ -50,7 +50,7 @@ static double JeansLength(float T, float dens, float density_units);
 static void UpdateAccretionRadius(ActiveParticleType*  ThisParticle, float newmass,
 				  FLOAT AccretionRadius, FLOAT dx, float avgtemp,
 				  float mass_units, float length_units);
-static float GetStellarRadius(float cmass, float accrate);
+float GetStellarRadius(float cmass, float accrate);
 int SmartStarPopIII_IMFInitialize(void);
 int ActiveParticleType_SmartStar::InitializeParticleType()
 {
@@ -500,7 +500,7 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
 {
 
   /* Feedback not handled here */
-  //return SUCCESS; 
+  return SUCCESS; 
   
   SmartStarGrid *thisGrid =
     static_cast<SmartStarGrid *>(thisgrid_orig);
@@ -673,7 +673,7 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
     }
 
   }
-  
+;  
   return SUCCESS;
 }
 
@@ -744,6 +744,12 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
 	dx = LevelArray[ThisParticle->level]->GridData->GetCellWidth(0,0);
 	MassConversion = (double) (dx*dx*dx * mfactor); //Converts to Solar Masses
 	double PMass = ThisParticle->Mass*MassConversion;
+	/* Call Function to return SED parameters */
+	if(ThisParticle->DetermineSEDParameters(Time, dx) == FAIL)
+	  return FAIL;
+#ifdef SSDEBUG
+  printf("SS-RT: Lion = %g cgs = %g code\n", PMass * ThisParticle->LuminosityPerSolarMass, PMass * ThisParticle->LuminosityPerSolarMass * LConv);
+#endif
   if (PMass * ThisParticle->LuminosityPerSolarMass * LConv < tiny_number)
       continue;
 
@@ -759,15 +765,11 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
 	float ramptime = 0.0;
 	if(POPIII == ThisParticle->ParticleClass ||
 	   SMS == ThisParticle->ParticleClass) {
-	  ramptime = yr_s * 1e5 / TimeUnits;
+	  ramptime = yr_s * 1e4 / TimeUnits;
 	}
 	if(POPII == ThisParticle->ParticleClass) {
 	  ramptime = yr_s * StarClusterMinDynamicalTime / TimeUnits;
 	}
-
-	/* Call Function to return SED parameters */
-	if(ThisParticle->DetermineSEDParameters(Time, dx) == FAIL)
-	  return FAIL;
 
 	source->LifeTime       = ThisParticle->RadiationLifetime; 
 	source->Luminosity = (ThisParticle->LuminosityPerSolarMass * LConv) * min(PMass, 100000.0);
@@ -1684,7 +1686,7 @@ int ActiveParticleType_SmartStar::UpdateAccretionRateStats(int nParticles,
      }
   }
 #if SSDEBUG
-  printf("Done in %s\n", __FUNCTION__);
+  ;printf("Done in %s\n", __FUNCTION__);
 #endif
   return SUCCESS;
 }
@@ -1732,7 +1734,7 @@ int ActiveParticleType_SmartStar::UpdateRadiationLifetimes(int nParticles,
 }
 
 /* Find the stellar radius of the sink particle using the SAM from Smith et al. (2011) */
-static float GetStellarRadius(float cmass, float accrate)
+float GetStellarRadius(float cmass, float accrate)
 {
   float p1 = 0, p2 = 0;
   float A1 = 1.0, A2 = 1.0;

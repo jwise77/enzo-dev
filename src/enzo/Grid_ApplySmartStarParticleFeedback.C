@@ -32,6 +32,7 @@
 #include "phys_constants.h"
 #include "ActiveParticle_SmartStar.h"
 
+#define SSDEBUG 1
 #define SSFEED_DEBUG 1
 #define MAX_TEMPERATURE 1e8
 #define RAMPTIME 100000.0 //yrs
@@ -41,6 +42,7 @@
 #define THRESHOLDFRACTION 1   //Solarmasses ejected per jet event
 #define OPENING_ANGLE pi/360.0  //pi/3.9
 
+float GetStellarRadius(float cmass, float accrate);
 int search_lower_bound(float *arr, float value, int low, int high, 
 		       int total);
 
@@ -124,10 +126,52 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
   float ionizedFraction = 0.999;  // Assume supernova is ionized
   FLOAT Time = this->ReturnTime();
   float Age = Time - SS->BirthTime;
+  const double LumConvert = POW(LengthUnits,2)/POW(TimeUnits,3);
+  
+  /* Protostellar feedback from accretion luminosity for Pop III and SMS */
+
+  const float ProtostellarLifetime = 1e5;  // yr
+  if ((SS->ParticleClass == SMS || SS->ParticleClass == POPIII) && (Age < ProtostellarLifetime*yr_s/TimeUnits)) {
+	double StellarMass;
+	float AccretionRate, StarRadius, SpecificL, LThisTimestep;
+    StellarMass = SS->Mass*MassConversion/SolarMass; /* In Msolar */
+	AccretionRate = SS->AccretionRate[SS->TimeIndex]*MassUnits/(SolarMass*TimeUnits);
+	AccretionRate = max(AccretionRate, tiny_number);
+    if (SS->ParticleClass == SMS) {
+      // Hosokawa+ (2011) in Rsun for SMSs
+      StarRadius = 2600 * sqrt(StellarMass / 100);
+    } else {
+      // Smith+ (2011) in Rsun for normal protostars
+      StarRadius = GetStellarRadius(StellarMass, AccretionRate);
+    }
+	SpecificL = GravConst * AccretionRate * SolarMass / (StarRadius * SolarRadius);
+    SpecificL = SpecificL/LumConvert;  /* Convert (specific) Luminosity to code units */
+#if SSDEBUG
+    printf("%s: dx = %e\t MassConversion = %e\n", __FUNCTION__, dx, MassConversion);
+    printf("%s: AccretionRate = %e Msolar/yr (Code = %e)\n", __FUNCTION__,
+    AccretionRate*yr_s, SS->AccretionRate[SS->TimeIndex]);
+    printf("%s: Mass = %e Msolar\n", __FUNCTION__, StellarMass);
+    printf("%s: Radius = %e Rsolar\n", __FUNCTION__, StarRadius);
+    printf("%s: SpecificL Total = %e Lsolar\n", __FUNCTION__, SpecificL*LumConvert * StellarMass * SolarMass/SolarLuminosity);
+	printf("%s: EjectaThermalEnergy = %e code\n", __FUNCTION__, SpecificL*dt);
+    printf("%s: dt = %e yrs\n", __FUNCTION__,
+    dt*TimeUnits/yr_s);
+    printf("%s: L Total = %e Lsolar [ergs]\n", __FUNCTION__,
+    SpecificL*dt*(StellarMass * SolarMass));
+    printf("%s: Star Age = %e yrs\n", __FUNCTION__, Age*TimeUnits/yr_s);
+    printf("%s: Radiation Lifetime =  %e yrs\n", __FUNCTION__, SS->RadiationLifetime*TimeUnits/yr_s);
+    printf("%s: Particle Class = %d\t POPIII = %d\n", __FUNCTION__, SS->ParticleClass, POPIII);
+#endif
+    float EjectaMetalDensity = 0.0, EjectaDensity = 0.0;
+	float EjectaThermalEnergy = SpecificL*dt;
+    this->ApplySphericalFeedbackToGrid(ThisParticle, EjectaDensity, EjectaThermalEnergy, EjectaMetalDensity);
+	return SUCCESS;
+  }
+
   /* 
    * SMS don't go supernova they just directly collapse into BHs (of the same mass)
    */
-  if(SS->ParticleClass == SMS) {
+  else if(SS->ParticleClass == SMS) {
    
     if(Age > SS->RadiationLifetime && Age*TimeUnits/Myr_s > 1e-3) {/* SMS converts directly into DCBH */
       SS->ParticleClass = BH;
@@ -216,20 +260,23 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 	  
 	}
     }
-    else if(StellarMass > 500.0) //PopIII star that is very massive (> 500 Msolar)
+	//PopIII star that is very massive (> 500 Msolar) -- thermal feedback if no RT
+    else if(StellarMass > 500.0 && SmartStarStellarRadiativeFeedback == FALSE) 
       {
 	FLOAT EjectaMetalDensity = 0.0, EjectaThermalEnergy = 0.0, EjectaDensity = 0.0;
 	printf("%s:!!!!!!!Using Stellar Thermal Feedback Mode\n", __FUNCTION__); fflush(stdout);
 	printf("%s: StellarMass = %lf\n", __FUNCTION__, StellarMass);
 	/* For this case we simply assume a Stroemgren sphere that ionises the nearby gas */
-	float StellarTemperature = 1e5;
+	float hii_region_temp = 3e4;
 	
-	/* Convert StellarTemperature to total gas energy energy in cgs*/
-	EjectaThermalEnergy = kboltz * StellarTemperature / ((Gamma-1.0) * 0.6 * mh);
+	/* Convert StellarTemperature to total gas energy in cgs*/
+	EjectaThermalEnergy = kboltz * hii_region_temp / ((Gamma-1.0) * 0.6 * mh);
 	printf("%s: Energy Release as specific thermal feedback = %e ergs\n", __FUNCTION__, 
 	       EjectaThermalEnergy);
 	/* Convert to code units */
-	EjectaThermalEnergy /=  (VelocityUnits*VelocityUnits); 
+	EjectaThermalEnergy /=  (VelocityUnits*VelocityUnits);
+	// Negative number indicates to replace the sphere with this temperature and not add thermal energy to the existing
+	EjectaThermalEnergy *= -1;
 	/* Pass EjectaThermalEnergy in as specific energy. */
 	this->ApplySphericalFeedbackToGrid(ThisParticle, EjectaDensity, EjectaThermalEnergy,
 					   EjectaMetalDensity);

@@ -1,4 +1,4 @@
-#define DEBUG 1
+#define DEBUG 0
 #define MYPROC MyProcessorNumber == ProcessorNumber
 /***********************************************************************
 /
@@ -121,7 +121,8 @@ int grid::Shine(RadiationSourceEntry *RadiationSource)
     ShakeSource[dim] = 0.0;
   //ShakeSource[dim] = (-0.01 + 0.02*float(rand())/RAND_MAX) * CellWidth[dim][0];
 
-  if (MYPROC && DEBUG)
+  //if (MYPROC && DEBUG)
+  if (MYPROC)
     printf("Shine: ramp = %lf, lapsed = %lf/%"FSYM", L = %"GSYM"\n", RampPercent, 
 	   PhotonTime-RS->CreationTime+dtPhoton, RS->LifeTime, 
 	   RS->Luminosity);

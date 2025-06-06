@@ -110,10 +110,15 @@ int grid::ApplySphericalFeedbackToGrid(ActiveParticleType** ThisParticle,
 		       ramp * factor * EjectaThermalEnergy * EjectaDensity)
 		/ BaryonField[DensNum][index] ;
 	      }
-	      else if (EjectaDensity == 0.0) { /* Thermal energy due to stellar luminosity */
+	      else if (abs(EjectaDensity) < tiny_number) { /* Thermal energy due to stellar luminosity */
 		/* Thermal energy dump with no ejecta */
 		/* For this case the EjectaThermalEnergy is passed in as simply an energy  */
-		newGE = EjectaThermalEnergy;
+			// Negative value indicates replace the GE with the energy
+			if (EjectaThermalEnergy < 0) {
+				newGE = -EjectaThermalEnergy;
+			} else {
+				newGE = (BaryonField[DensNum][index] * this->BaryonField[GENum][index] + EjectaThermalEnergy) / BaryonField[DensNum][index];
+			}
 	      }
 	      else if (EjectaDensity < 0.0) {
 		/* Black Hole accretion Thermal feedback */
