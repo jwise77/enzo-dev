@@ -130,7 +130,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
   
   /* Protostellar feedback from accretion luminosity for Pop III and SMS */
 
-  const float ProtostellarLifetime = 1e5;  // yr
+  const float ProtostellarLifetime = 1e4;  // yr
   if ((SS->ParticleClass == SMS || SS->ParticleClass == POPIII) && (Age < ProtostellarLifetime*yr_s/TimeUnits)) {
 	double StellarMass;
 	float AccretionRate, StarRadius, SpecificL, LThisTimestep;
