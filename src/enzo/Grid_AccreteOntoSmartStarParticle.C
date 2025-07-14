@@ -26,7 +26,7 @@
 #include "ActiveParticle_SmartStar.h"
 
 #define NO_DEBUG_AP
-#define ACCRETE_DEBUG 0
+#define ACCRETE_DEBUG 1
 #define NO_ACCRETION 0
 
 int GetUnits(float *DensityUnits, float *LengthUnits,
@@ -115,7 +115,6 @@ int grid::AccreteOntoSmartStarParticle(
    * the grid) can then be much less than found from the mass flux for example but 
    * is closer to what the black hole would actually accrete. 
    */
- 
   RemoveMassFromGrid(ThisParticle,AccretionRadius, *AccretionRate,
 		     &AccretedMass, delta_vpart,
 		     KernelRadius, SumOfWeights, MaxAccretionRate);

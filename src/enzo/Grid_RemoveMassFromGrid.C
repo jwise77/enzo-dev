@@ -57,6 +57,7 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
   double TotalLinearMomentumBefore[3] = {0.0, 0.0, 0.0}, TotalLinearMomentumAfter[3] = {0.0, 0.0, 0.0};
   float AveragedVelocity[3] = {0.0, 0.0, 0.0};
   double totalmass_before = 0.0, totalmass_after = 0.0;
+  double totalweight = 0.0;
   FLOAT xpos = 0.0, ypos = 0.0, zpos = 0.0;
   int offset[] =
     {1, GridDimension[0], GridDimension[0]*GridDimension[1]};
@@ -186,6 +187,7 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 	
 	  // Calculate mass we need to subtract from this cell
 	  maccreted =  this->dtFixed * AccretionRate * Weight;
+	  totalweight += Weight;
 #if ANGULAR_MOMENTUM_ACCRETION
 	  if(reduceaccby != 1.0) {
 	    //printf("%s: !!!!!!!Reduce accreted mass by %e\n", __FUNCTION__, reduceaccby);
@@ -463,7 +465,7 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
   
   //getchar();
 #endif
-  
+  printf("totalweight = %f, SumOfWeights = %f\n", totalweight, SumOfWeights);
 
   return SUCCESS;
 }

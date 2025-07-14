@@ -26,6 +26,7 @@
 #include "ActiveParticle_SmartStar.h"
 #include "CosmologyParameters.h"
 
+#define DEBUG_AP
 #define USEBOUNDEDNESS      0
 #define TINY_NUMBER         1e-20
 #define SMALL_NUMBER         1e-6
@@ -160,11 +161,13 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
     }
   }
   delete [] Temperature;
-  Weight = 1.0/numcells;
+  Weight /= numcells;
   AverageT *= Weight;
   if(AverageT <= 0.0)
     AverageT = Temperature[cgindex];
   AverageDensity = WeightedSum / (*SumOfWeights);
+  // For later usage when removing mass, must normalize SumOfWeights
+  //*SumOfWeights /= numcells;
 #ifdef DEBUG_AP
   printf("AverageDensity = %g\n", AverageDensity);
 #endif
