@@ -137,7 +137,7 @@ int grid::AccreteOntoSmartStarParticle(
     (Vel[2]+delta_vpart[2]/smoothingzone)
     };
 
-  ThisParticle->SetVelocity(NewVelocity);
+  SS->SetVelocity(NewVelocity);
 
   /* 
    * This value is the actual accretion rate onto the SmartStar. It was initially
@@ -225,7 +225,7 @@ int grid::AccreteOntoSmartStarParticle(
   }
   
   AccretedMass = (*AccretionRate)*this->dtFixed;
-  ThisParticle->AddMass(AccretedMass);
+  SS->AddMass(AccretedMass);
 #if  ACCRETE_DEBUG
   printf("%s: AccretedMass = %e Msolar\n", __FUNCTION__, AccretedMass*MassConversion/SolarMass);
   printf("%s: PrevMass = %e Msolar\t NewMass = %e Msolar\n", __FUNCTION__,

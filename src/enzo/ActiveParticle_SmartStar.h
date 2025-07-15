@@ -206,6 +206,7 @@ public:
   float AccretionRateTime[NTIMES];
   int TimeIndex;
   float oldmass; //To calculate accmass do accmass = mass - oldmass; oldmass = mass;
+  void  AddMass(double dM) { oldmass = Mass; Mass += dM; };  // override inherited function to record oldmass
   static int FeedbackDistTotalCells, FeedbackDistRadius, FeedbackDistCellStep;
   float NotEjectedMass, eta_disk, mass_in_accretion_sphere, MassToBeEjected;
   float beta_jet, epsilon_deltat;
