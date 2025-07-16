@@ -115,17 +115,22 @@ int grid::AccreteOntoSmartStarParticle(
    * the grid) can then be much less than found from the mass flux for example but 
    * is closer to what the black hole would actually accrete. 
    */
-  int i;
+  int i, j, k, index;
   int size = this->GetGridSize();
   float *Temperature = new float[size]();
   this->ComputeTemperatureField(Temperature);
   float minT = 1e20, maxT = -1e20, sumT = 0.0, sumT2 = 0.0;
   float meanT, stdT;
-  for (i = 0; i < size; i++) {
-    minT = min(minT, Temperature[i]);
-    maxT = max(maxT, Temperature[i]);
-    sumT += Temperature[i];
-    sumT2 += Temperature[i] * Temperature[i];
+  for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
+    for (j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
+      index = GRIDINDEX_NOGHOST(GridStartIndex[0], j, k);
+      for (i = GridStartIndex[0]; i <= GridEndIndex[0]; i++, index++) {
+        minT = min(minT, Temperature[index]);
+        maxT = max(maxT, Temperature[index]);
+        sumT += Temperature[index];
+        sumT2 += Temperature[index] * Temperature[i];
+      }
+    }
   }
   meanT = sumT / size;
   stdT = sqrt(sumT2 / size - meanT * meanT);
@@ -142,12 +147,16 @@ int grid::AccreteOntoSmartStarParticle(
   maxT = -1e20;
   sumT = 0.0;
   sumT2 = 0.0;
-  float mean, variance;
-  for (i = 0; i < size; i++) {
-    minT = min(minT, Temperature[i]);
-    maxT = max(maxT, Temperature[i]);
-    sumT += Temperature[i];
-    sumT2 += Temperature[i] * Temperature[i];
+  for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
+    for (j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
+      index = GRIDINDEX_NOGHOST(GridStartIndex[0], j, k);
+      for (i = GridStartIndex[0]; i <= GridEndIndex[0]; i++, index++) {
+        minT = min(minT, Temperature[index]);
+        maxT = max(maxT, Temperature[index]);
+        sumT += Temperature[index];
+        sumT2 += Temperature[index] * Temperature[i];
+      }
+    }
   }
   meanT = sumT / size;
   stdT = sqrt(sumT2 / size - meanT * meanT);
