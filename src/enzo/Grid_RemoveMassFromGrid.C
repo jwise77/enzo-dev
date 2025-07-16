@@ -27,7 +27,7 @@
 #include "ActiveParticle_SmartStar.h"
 #define TINY_NUMBER         1e-20
 #define SMALL_NUMBER         1e-6
-#define ACCRETION_LIMIT     1e-1
+#define ACCRETION_LIMIT     0.5
 #define N 8
 #define ANGULAR_MOMENTUM_ACCRETION 0
 #define DEBUG_AP 0
@@ -37,7 +37,7 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
 int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 			     FLOAT AccretionRadius, float AccretionRate,
 			     float *AccretedMass, float *DeltaV,
-			     FLOAT KernelRadius, FLOAT SumOfWeights,
+			     FLOAT KernelRadius, FLOAT KernelNormalization,
 			     float MaxAccretionRate)
 {
 
@@ -137,7 +137,7 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 	}
 	else
 	  ENZO_FAIL("AccretingParticle does not support RK Hydro or RK MHD");
-	Weight = exp(-radius2/(KernelRadius*KernelRadius))/SumOfWeights;
+	Weight = exp(-radius2/(KernelRadius*KernelRadius)) * KernelNormalization;
 
 	if ((AccretionRadius) < radius || Weight < SMALL_NUMBER) {
 	  // outside the accretion radius
@@ -196,15 +196,15 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 #endif
 #if DEBUG_AP
 	  //maccreted = 0.1*mcell;
-	  //printf("Index %d: mcell: %g\t maccreted: %g\t  maccreted/mcell = %g\n", index,
-	  // 		 mcell, maccreted, maccreted/mcell);
+	  printf("Index %d (r/rk=%g): mcell: %g\t maccreted: %g\t  maccreted/mcell = %g, Weight = %g\n", index, radius/KernelRadius,
+	   		 mcell, maccreted, maccreted/mcell, Weight);
 #endif
 
 	  if (maccreted > ACCRETION_LIMIT*mcell) {
-	    //#if DEBUG_AP
-	    // printf("Index %d: accretion rate capped - old maccreted = %g new maccreted = %g\n",
-	    //	   index, maccreted, ACCRETION_LIMIT*mcell);
-	    //#endif
+#if DEBUG_AP
+	    printf("Index %d: accretion rate capped - old maccreted = %g new maccreted = %g\n", 
+			index, maccreted, ACCRETION_LIMIT*mcell);
+#endif
 	    maccreted = ACCRETION_LIMIT*mcell;
 	  }
 	  // Keep cell mass well above density floor
@@ -465,7 +465,7 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
   
   //getchar();
 #endif
-  printf("totalweight = %f, SumOfWeights = %f\n", totalweight, SumOfWeights);
+  printf("totalweight = %f, KernelNorm = %f, maccreted = %g\n", totalweight, KernelNormalization, maccreted);
 
   return SUCCESS;
 }

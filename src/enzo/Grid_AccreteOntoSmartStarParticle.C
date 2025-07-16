@@ -81,9 +81,9 @@ int grid::AccreteOntoSmartStarParticle(
   MassUnits = DensityUnits * POW(LengthUnits,3);
   float mparticle = SS->ReturnMass()*CellVolume; //code mass
   float MassConversion = (float) (dx*dx*dx * double(MassUnits));  //convert to g
-  FLOAT KernelRadius = 0.0, SumOfWeights = 0.0; /*Required for weighting cells for accretion */
+  FLOAT KernelRadius = 0.0, KernelNormalization = 0.0; /*Required for weighting cells for accretion */
   *AccretionRate = CalculateSmartStarAccretionRate(ThisParticle, AccretionRadius,
-						   &KernelRadius, &SumOfWeights);
+						   &KernelRadius, &KernelNormalization);
 #if NO_ACCRETION
   *AccretionRate = 0.0;
 #endif
@@ -115,10 +115,46 @@ int grid::AccreteOntoSmartStarParticle(
    * the grid) can then be much less than found from the mass flux for example but 
    * is closer to what the black hole would actually accrete. 
    */
+  int i;
+  int size = this->GetGridSize();
+  float *Temperature = new float[size]();
+  this->ComputeTemperatureField(Temperature);
+  float minT = 1e20, maxT = -1e20, sumT = 0.0, sumT2 = 0.0;
+  float meanT, stdT;
+  for (i = 0; i < size; i++) {
+    minT = min(minT, Temperature[i]);
+    maxT = max(maxT, Temperature[i]);
+    sumT += Temperature[i];
+    sumT2 += Temperature[i] * Temperature[i];
+  }
+  meanT = sumT / size;
+  stdT = sqrt(sumT2 / size - meanT * meanT);
+  printf("T-stats (mean min max std) before RemoveMassFromGrid:\n"
+    "\t %g %g %g %g\n", meanT, minT, maxT, stdT);
+
   RemoveMassFromGrid(ThisParticle,AccretionRadius, *AccretionRate,
 		     &AccretedMass, delta_vpart,
-		     KernelRadius, SumOfWeights, MaxAccretionRate);
-#if  ACCRETE_DEBUG
+		     KernelRadius, KernelNormalization, MaxAccretionRate);
+
+  
+  this->ComputeTemperatureField(Temperature);
+  minT = 1e20;
+  maxT = -1e20;
+  sumT = 0.0;
+  sumT2 = 0.0;
+  float mean, variance;
+  for (i = 0; i < size; i++) {
+    minT = min(minT, Temperature[i]);
+    maxT = max(maxT, Temperature[i]);
+    sumT += Temperature[i];
+    sumT2 += Temperature[i] * Temperature[i];
+  }
+  meanT = sumT / size;
+  stdT = sqrt(sumT2 / size - meanT * meanT);
+  printf("T-stats (mean min max std) after RemoveMassFromGrid:\n"
+    "\t %g %g %g %g\n", meanT, minT, maxT, stdT);
+
+  #if  ACCRETE_DEBUG
   printf("%s: DeltaV = %e %e %e\n", __FUNCTION__,
 	 delta_vpart[0], delta_vpart[1], delta_vpart[2]);
   printf("%s: AccretedMass = %e\n", __FUNCTION__, AccretedMass);

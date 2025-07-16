@@ -41,7 +41,7 @@ int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
  
 float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle, 
 					    FLOAT AccretionRadius, FLOAT *KernelRadius,
-					    FLOAT *SumOfWeights)
+					    FLOAT *KernelNormalization)
 {
   /* Return if this doesn't concern us. */
  
@@ -71,7 +71,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
   SS = static_cast<ActiveParticleType_SmartStar*>(ThisParticle);
   SS->mass_in_accretion_sphere = 0.0;
 
-  float WeightedSum = 0, AverageDensity = 0, RhoInfinity = 0.0;
+  float WeightedSum = 0, AverageDensity = 0, RhoInfinity = 0.0, SumOfWeights = 0.0;
   float AverageT=0, TotalGasMass = 0;
   float lambda_c = 0.25*exp(1.5);
   FLOAT radius2 = 0.0;
@@ -118,23 +118,19 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
 			 pow(vparticle[2] - BaryonField[Vel3Num][cgindex],2));
 
   //float CellTemperature = Temperature[cgindex];
-  float CellTemperature = FindAverageTemperatureinRegion(Temperature, xparticle, 2.0*AccretionRadius);
-  if (JeansRefinementColdTemperature > 0)
-    CellTemperature = JeansRefinementColdTemperature;
-  float Gcode = GravConst*DensityUnits*TimeUnits*TimeUnits;
-  float cInfinity = sqrt(Gamma * kboltz * CellTemperature / (Mu * mh)) /
-    LengthUnits*TimeUnits;
-  FLOAT BondiHoyleRadius = CalculateBondiHoyleRadius(mparticle, vparticle, Temperature); 
+  float CellTemperature = FindAverageTemperatureinRegion(Temperature, xparticle, AccretionRadius);
+  FLOAT BondiHoyleRadius = CalculateBondiHoyleRadius(mparticle, vparticle, 
+    CellTemperature);
  
-  //printf("%s:  BondiHoyleRadius = %e pc\n", __FUNCTION__,  BondiHoyleRadius*LengthUnits/pc_cm);
-  //printf("%s:  AccretionRadius = %e pc\n", __FUNCTION__,  AccretionRadius*LengthUnits/pc_cm);
+  printf("%s:  BondiHoyleRadius = %e pc\n", __FUNCTION__,  BondiHoyleRadius*LengthUnits/pc_cm);
+  printf("%s:  AccretionRadius = %e pc\n", __FUNCTION__,  AccretionRadius*LengthUnits/pc_cm);
   /* Impose a kernel radius that regulates the weighting cells get as a function of radius */
-  if (BondiHoyleRadius < CellWidth[0][0]/4.0) {  /* For BHs whose Bondi radius is not resolved */
-    //printf("%s: Setting kernel radius to CellWidth, BH not resolved\n", __FUNCTION__);
-    *KernelRadius = CellWidth[0][0]*2.0;
+  if (BondiHoyleRadius < CellWidth[0][0]*4.0) {  /* For BHs whose Bondi radius is not resolved */
+    printf("%s: Setting kernel radius to CellWidth, BH not resolved\n", __FUNCTION__);
+    *KernelRadius = CellWidth[0][0];
   }
   else { /*Accrete out to the BH radius */
-    //printf("%s: Setting kernel radius to BondiHoyleRadius\n", __FUNCTION__);
+    printf("%s: Setting kernel radius to BondiHoyleRadius\n", __FUNCTION__);
     *KernelRadius = max(BondiHoyleRadius, AccretionRadius);
   }
 
@@ -150,10 +146,10 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
 	
 	if ((AccretionRadius*AccretionRadius) > radius2) {
 	  //printf("Grid:index = %d\n", index);
-	  WeightedSum += BaryonField[DensNum][index]*
-	    exp(-radius2/((*KernelRadius)*(*KernelRadius)));
-	  (*SumOfWeights) += exp(-radius2/((*KernelRadius)*(*KernelRadius)));
-	  AverageT += Temperature[index];
+    Weight = exp(-radius2/((*KernelRadius)*(*KernelRadius)));
+	  WeightedSum += BaryonField[DensNum][index] * Weight;
+	  AverageT += Temperature[index] * Weight;
+	  SumOfWeights += Weight;
 	  TotalGasMass += BaryonField[DensNum][index]*CellVolume;
 	  numcells++;
 	}
@@ -161,19 +157,24 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
     }
   }
   delete [] Temperature;
-  Weight /= numcells;
-  AverageT *= Weight;
+  AverageDensity = WeightedSum / SumOfWeights;
+  // Weighted inverse cell mass
+  *KernelNormalization = 1.0 / (WeightedSum * CellVolume);
+  AverageT /= SumOfWeights;
   if(AverageT <= 0.0)
     AverageT = Temperature[cgindex];
-  AverageDensity = WeightedSum / (*SumOfWeights);
-  // For later usage when removing mass, must normalize SumOfWeights
-  //*SumOfWeights /= numcells;
 #ifdef DEBUG_AP
   printf("AverageDensity = %g\n", AverageDensity);
+  printf("AverageTemp    = %g\n", AverageT);
 #endif
   /* Calculate the accretion rate based on prescription specified */
   float AccretionRate = 0.0;
   SS->mass_in_accretion_sphere = TotalGasMass/CellVolume; //convert to density for consistency
+
+  // Constant values needed in some methods below
+  float cInfinity = sqrt(Gamma * kboltz * CellTemperature / (Mu * mh)) /
+    LengthUnits*TimeUnits;
+  float Gcode = GravConst*DensityUnits*TimeUnits*TimeUnits;
 
   /* 
    * Traditional Bondi-Hoyle Prescription using the formalism
@@ -282,14 +283,18 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
 #ifdef DEBUG_AP
     printf("Doing CONVERGING_MASS_FLOW, SmartStarAccretion = %d\n", SmartStarAccretion);
 #endif
-    AccretionRate = ConvergentMassFlow(DensNum, Vel1Num, AccretionRadius, xparticle, vparticle, 
-				       mparticle, Gcode, GENum);
+    AccretionRate = ConvergentMassFlow(DensNum, Vel1Num, AccretionRadius, xparticle, vparticle, mparticle, Gcode, GENum);
+    // Limit to a fraction (half) of the available gas
+    AccretionRate = min(AccretionRate,
+      0.5 * SS->mass_in_accretion_sphere * CellVolume / dtFixed);
 #ifdef DEBUG_AP
     printf("%s: Calculated (mass flux) accretion rate is %e Msolar/yr\n", __FUNCTION__, 
 	   AccretionRate*3.154e7*MassUnits/(SolarMass*TimeUnits));
 #endif
   }
-  
+
+  // Force dM from sphere to be exactly mdot * dt by scaling everything evenly.
+  *KernelNormalization *= AccretionRate * dtFixed;
   return AccretionRate;
 }
 
@@ -486,6 +491,7 @@ float grid::ConvergentMassFlow(int DensNum, int Vel1Num, FLOAT AccretionRadius,
   int numincells = 0, numoutcells = 0;
   float mdot = 0.0;
   float epsilon = AccretionRadius*0.1;
+  //float epsilon = 0.866 * CellWidth[0][0]; // sqrt(3)/2 -- half a cell diagonal
   float *density = BaryonField[DensNum];
   float *gasvelx = BaryonField[Vel1Num];
   float *gasvely = BaryonField[Vel1Num++];
@@ -513,8 +519,12 @@ float grid::ConvergentMassFlow(int DensNum, int Vel1Num, FLOAT AccretionRadius,
 	FLOAT rely = pos[1] - (CellLeftEdge[1][j] + 0.5*CellWidth[1][j]);
 	FLOAT relz = pos[2] - (CellLeftEdge[2][k] + 0.5*CellWidth[2][k]);
 	FLOAT radius2 = POW(relx,2) + POW(rely,2) + POW(relz,2);
-	if ((AccretionRadius*AccretionRadius) > radius2 &&
-	    ((AccretionRadius-epsilon)*(AccretionRadius-epsilon)) < radius2) {
+  FLOAT rinner = AccretionRadius - epsilon;
+  FLOAT router = AccretionRadius;
+  // FLOAT rinner = AccretionRadius - 0.5*epsilon;
+  // FLOAT router = AccretionRadius + 0.5*epsilon;
+	if ((router*router) > radius2 &&
+	    (rinner*rinner) < radius2) {
 	  FLOAT relposmag = sqrt(radius2);
 	  FLOAT relpos[3] = { relx/relposmag, rely/relposmag, relz/relposmag};
 	  FLOAT vrel[3] = {vel[0] - gasvelx[index],
@@ -552,7 +562,9 @@ float grid::ConvergentMassFlow(int DensNum, int Vel1Num, FLOAT AccretionRadius,
     }
   }
   // mdot = -4*pi*rho*R^2*V_radial
-  mdot = fabs(4*M_PI*mdot); //return the accretion rate as a positive quantity
+  // will be average over whole sphere, so divide by total number of cells
+  // return the accretion rate as a positive quantity
+  mdot = fabs(4*M_PI*mdot) / (numincells + numoutcells); 
 #ifdef DEBUG_AP
   printf("%s: Num InFlow cells = %d\t Num OutflowCells = %d\t mdot = %e\n", __FUNCTION__, numincells,
 	 numoutcells, mdot);
@@ -616,7 +628,7 @@ float grid::CalculateCirculisationSpeed(int Vel1Num, FLOAT AccretionRadius,
 }
 
 
-FLOAT grid::CalculateBondiHoyleRadius(float mparticle, float *vparticle, float *Temperature)
+FLOAT grid::CalculateBondiHoyleRadius(float mparticle, float *vparticle, float CellTemperature)
 {
 
   int cindex = (GridEndIndex[0] - GridStartIndex[0])/2 + GridStartIndex[0];
@@ -648,7 +660,6 @@ FLOAT grid::CalculateBondiHoyleRadius(float mparticle, float *vparticle, float *
 			 pow(vparticle[1] - BaryonField[Vel2Num][cgindex],2) +
 			 pow(vparticle[2] - BaryonField[Vel3Num][cgindex],2));
 
-  float CellTemperature = Temperature[cgindex];
   if (JeansRefinementColdTemperature > 0)
     CellTemperature = JeansRefinementColdTemperature;
 

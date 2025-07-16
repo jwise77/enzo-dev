@@ -2951,14 +2951,14 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
   float CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
 					FLOAT AccretionRadius, 
 					FLOAT *KernelRadius,
-					FLOAT *SumOfWeights);
+					FLOAT *KernelNormalization);
   int CalculateSpecificQuantities(FLOAT *SinkParticlePos, FLOAT *CLEdge,
 				  float *vgas, float msink,  
 				  float *vsink, int *numpoints);
   int RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 			 FLOAT AccretionRadius, float AccretionRate,
 			 float *AccretedMass, float *DeltaV,
-			 FLOAT KernelRadius, FLOAT SumOfWeights, float MaxAccretionRate);
+			 FLOAT KernelRadius, FLOAT KernelNormalization, float MaxAccretionRate);
 
   int RemoveMassFromGridAfterFormation(FLOAT* starpos, int ParticleClass,
 				       FLOAT AccretionRadius,
@@ -2974,7 +2974,7 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
 			   FLOAT *pos, float *vel, float SSmass, float Gcode, int GENum);
   float CalculateCirculisationSpeed(int Vel1Num, FLOAT AccretionRadius,
 				    FLOAT *pos, float *vel);
-  FLOAT CalculateBondiHoyleRadius(float mparticle, float *vparticle, float *Temperature);
+  FLOAT CalculateBondiHoyleRadius(float mparticle, float *vparticle, float CellTemperature);
   int AddMassAndMomentumToAccretingParticle(float GlobalSubtractedMass,
 					    float GlobalSubtractedMomentum[], 
 					    ActiveParticleType* ThisParticle,
