@@ -41,7 +41,7 @@
 #define MAX_HEALPIX_LEVEL 29
 #define MAX_COLUMN_DENSITY 1e25
 #define MIN_TAU_IFRONT 0.1
-#define TAU_DELETE_PHOTON 10.0
+#define TAU_DELETE_PHOTON 100.0
 #define GEO_CORRECTION
 #define H_SPECIES           3         //Includes HI, HeI, HeII
 #define ALLSPECIES          6         //includes HI, HeI, HeII, H2I, H2II and HM

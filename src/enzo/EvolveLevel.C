@@ -459,6 +459,8 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     EvolvePhotons(MetaData, LevelArray, AllStars, GridTime, level);
     TIMER_START(level_name);
  
+    EXTRA_OUTPUT_MACRO(78, "After EvolvePhotons")
+
 #endif /* TRANSFER */
 
     /* trying to clear Emissivity here after FLD uses it, doesn't work */
@@ -568,7 +570,9 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
          */
            
 
-     if( UseHydro) {
+      EXTRA_OUTPUT_MACRO(81, "Before Hydro")
+
+      if( UseHydro) {
         if( HydroMethod != HD_RK && HydroMethod != MHD_RK ){
             Grids[grid1]->GridData->SolveHydroEquations(LevelCycleCount[level],
                     NumberOfSubgrids[grid1], SubgridFluxesEstimate[grid1], level);
@@ -661,8 +665,12 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     
       /* Solve the cooling and species rate equations. */
  
-    for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
+      EXTRA_OUTPUT_MACRO(82, "Before Chemistry")
+
+      for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
       Grids[grid1]->GridData->MultiSpeciesHandler();
+
+      EXTRA_OUTPUT_MACRO(83, "After Chemistry")
 
       /* Update particle positions (if present). */
  
@@ -691,9 +699,13 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       Grids[grid1]->GridData->StarParticleHandler
 	(Grids[grid1]->NextGridNextLevel, level ,dtLevelAbove, TopGridTimeStep);
 
+      EXTRA_OUTPUT_MACRO(79, "Before APHandler")
+
       Grids[grid1]->GridData->ActiveParticleHandler
         (Grids[grid1]->NextGridNextLevel, level ,dtLevelAbove,
          NumberOfNewActiveParticles[grid1]);
+
+      EXTRA_OUTPUT_MACRO(80, "After APHandler")
 
       /* Include shock-finding */
 
@@ -754,6 +766,8 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       if (UseMagneticSupernovaFeedback)
 	Grids[grid1]->GridData->MagneticSupernovaList.clear(); 
     } //end loop over grids
+
+    EXTRA_OUTPUT_MACRO(77,"Before ActiveParticleFinalize")
 
     /* Finalize (accretion, feedback etc) for Active particles. */
     ActiveParticleFinalize(Grids, MetaData, NumberOfGrids, LevelArray,

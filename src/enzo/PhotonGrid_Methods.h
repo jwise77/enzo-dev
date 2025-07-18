@@ -153,7 +153,7 @@ float LookUpCrossSectionH2II(float hnu, float T);
 
 /* Transport Photon Packages */ 
 
-int TransportPhotonPackages(int level, int finest_level,
+int TransportPhotonPackages(int level, int finest_level, float MinDensity,
 			    ListOfPhotonsToMove **PhotonsToMove, 
 			    int GridNum, grid **Grids0, int nGrids0, 
 			    grid *ParentGrid, grid *CurrentGrid);

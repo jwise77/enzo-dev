@@ -44,6 +44,7 @@
 
 /* function prototypes */
 void my_exit(int status);
+int FindField(int field, int farray[], int numfields);
 int RadiationFieldCalculateRates(FLOAT Time);
 int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
 				 bool local_transport,
@@ -369,7 +370,6 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     //	  ENZO_FAIL("Error in grid->AllocateInterpolatedRadiation.\n");
     //	}
 
-
     /* Evolve all photons by fixed timestep. */
   
     ListOfPhotonsToMove *PhotonsToMove = new ListOfPhotonsToMove;
@@ -386,6 +386,22 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     grid **Grids0 = new grid*[nGrids0];
     for (i = 0; i < nGrids0; i++)
       Grids0[i] = Temp0[i]->GridData;
+
+    /* If static grid, need the minimum density to calculate the photon flux threshold when a ray is deleted. With AMR, one can estimate it with the number of levels. */
+
+    float this_min, local_min;
+    float MinDensity = huge_number;
+    int FieldTypes[MAX_NUMBER_OF_BARYON_FIELDS];
+    if (MetaData->StaticHierarchy == TRUE) {
+      int NumberOfBaryonFields = Grids0[0]->ReturnNumberOfBaryonFields();
+      Grids0[0]->ReturnFieldType(FieldTypes);
+      int DensNum = FindField(Density, FieldTypes, NumberOfBaryonFields);
+      for (i = 0; i < nGrids0; i++) {
+        this_min = Grids0[i]->MinValue(DensNum);
+        local_min = min(local_min, this_min);
+      }
+      MinDensity = CommunicationMinValue(this_min);
+    }
 
     /* Initialize nonblocking communication */
 
@@ -435,8 +451,7 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 	  Temp->GridData->PhotonSortLinkedLists();
 #endif
 	  Temp->GridData->TransportPhotonPackages
-	    (lvl, level, &PhotonsToMove, GridNum, Grids0, nGrids0, Helper, 
-	     Temp->GridData);
+	    (lvl, level, MinDensity, &PhotonsToMove, GridNum, Grids0, nGrids0, Helper, Temp->GridData);
 
 	} // ENDFOR grids
 

@@ -33,12 +33,11 @@
 void InsertPhotonAfter(PhotonPackageEntry * &Node, PhotonPackageEntry * &NewNode);
 PhotonPackageEntry *PopPhoton(PhotonPackageEntry * &Node);
 PhotonPackageEntry *DeletePhotonPackage(PhotonPackageEntry *PP);
-int FindField(int field, int farray[], int numfields);
 int GetUnits(float *DensityUnits, float *LengthUnits,
 	     float *TemperatureUnits, float *TimeUnits,
 	     float *VelocityUnits, FLOAT Time);
 
-int grid::TransportPhotonPackages(int level, int finest_level, 
+int grid::TransportPhotonPackages(int level, int finest_level, float MinDensity,
 				  ListOfPhotonsToMove **PhotonsToMove, 
 				  int GridNum, grid **Grids0, int nGrids0, 
 				  grid *ParentGrid, grid *CurrentGrid)
@@ -122,20 +121,28 @@ int grid::TransportPhotonPackages(int level, int finest_level,
   const double alphaB = 2.6e-13;
   float MinimumPhotonFlux, RecombinationTime;
   int gmethod = INT_UNDEFINED;
-  for (i = 0; i < MAX_FLAGGING_METHODS; i++)
-    if (CellFlaggingMethod[i] == 2) gmethod = i;
-  if (gmethod == INT_UNDEFINED)
-    MinimumPhotonFlux = POW(TopGridDx[0], GridRank) * POW(RefineBy, level); // estimate
-  else
-    MinimumPhotonFlux = MinimumMassForRefinement[gmethod] * 
-      POW(RefineBy, level*MinimumMassForRefinementLevelExponent[gmethod]);
+  // If AMR, estimate min density in whole domain. If static, use min density.
+  MinimumPhotonFlux = POW(TopGridDx[0], GridRank);  // dV on level 0
+  if (MinDensity < 0) {  // set to FLOAT_UNDEFINED if AMR
+    for (i = 0; i < MAX_FLAGGING_METHODS; i++)
+      if (CellFlaggingMethod[i] == 2) gmethod = i;
+    if (gmethod == INT_UNDEFINED) {
+      MinimumPhotonFlux *= POW(RefineBy, level); // estimate (1 instead of default of 1.5 to be conservative)
+    } else {
+      MinimumPhotonFlux *= MinimumMassForRefinement[gmethod] * 
+        POW(RefineBy, level*MinimumMassForRefinementLevelExponent[gmethod]);
+    }
+  } else { // ENDIF MinDensity < 0
+      MinimumPhotonFlux *= MinDensity; // 1/density goes into recombination time
+  }
+
   if (ComovingCoordinates)
     MinimumPhotonFlux *= (float) ((RT_Units / TimeUnits) * (MassUnits / mh) * dtPhoton / 
 				  (PhotonTime * RadiativeTransferHubbleTimeFraction));
   else {
     RecombinationTime = 1.0 / (alphaB * DensityUnits / mh) / TimeUnits;
     MinimumPhotonFlux *= (float) ((RT_Units / TimeUnits) * (MassUnits / mh) * dtPhoton / 
-				  (10*RecombinationTime));
+				  (100*RecombinationTime));
   }
   
   count = 0;

@@ -2862,6 +2862,28 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
     return TRUE;
   }
 
+  inline float MinValue(int field) {
+   int size = 1;
+   float result = huge_number;
+   for (int dim = 0; dim < GridRank; dim++) {
+      size *= GridDimension[dim];
+   }
+   for (int i; i < size; i++)
+      result = min(result, BaryonField[field][i]);
+   return result;
+  }
+
+  inline float MaxValue(int field) {
+   int size = 1;
+   float result = -huge_number;
+   for (int dim = 0; dim < GridRank; dim++) {
+      size *= GridDimension[dim];
+   }
+   for (int i; i < size; i++)
+      result = max(result, BaryonField[field][i]);
+   return result;
+  }
+
   // Flags a 3D array where the grid overlaps.
   // Very similar to the FastSib stuff. (I think.)
   void FlagGridArray( HierarchyEntry ***GridArray, int *dx,
