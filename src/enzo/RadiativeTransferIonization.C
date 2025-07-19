@@ -25,7 +25,7 @@
 #include "Grid.h"
 #include "CosmologyParameters.h"
 
-#define DEVCODE 1
+#define DEVCODE 0
 int grid::RadiativeTransferIonization(PhotonPackageEntry **PP, FLOAT *dPi, int cellindex, 
 				      int species, float tau, FLOAT photonrate, 
 				      FLOAT *excessrate, float geo_correction,
