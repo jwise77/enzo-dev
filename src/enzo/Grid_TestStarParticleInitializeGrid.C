@@ -159,6 +159,7 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
       np->vel[dim] = TestStarParticleStarVelocity[dim]*1e5*TimeUnits/LengthUnits;
     }
     np->AccretionRadius = AccretionRadius * CellWidth[0][0];
+    np->InfluenceRadius = AccretionRadius * CellWidth[0][0];
     np->StellarAge = TestStarParticleSmartStarAge * Myr_s / TimeUnits;
     np->NotEjectedMass = 0.0;
     for (i = 0; i < 2; i++) {

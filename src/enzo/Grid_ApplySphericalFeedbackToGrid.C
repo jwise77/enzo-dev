@@ -64,15 +64,19 @@ int grid::ApplySphericalFeedbackToGrid(ActiveParticleType** ThisParticle,
   ActiveParticleType_SmartStar *SS = static_cast<ActiveParticleType_SmartStar*>(* ThisParticle);
 
 
-  /* Do I need to worry here about exceeding the grid boundary? */
-  FLOAT GridWidth = DomainRightEdge[0] - DomainLeftEdge[0];
+  /* Do I need to worry here about exceeding the domain boundary? */
+  FLOAT DistanceToBoundary = huge_number;
+  FLOAT *pos = SS->ReturnPosition();
+  for (int dim = 0; dim < GridRank; dim++) {
+	DistanceToBoundary = min(DistanceToBoundary,
+		min(DomainRightEdge[dim] - pos[dim], pos[dim] - DomainLeftEdge[dim]));
+  }
   /* Limits the initial feedback to within this grid */
-  FLOAT radius = max(GridWidth/2.0, SS->InfluenceRadius);
+  FLOAT radius = min(DistanceToBoundary, SS->InfluenceRadius);
   //printf("%s: radius (in cellwidths) = %f\n", __FUNCTION__, radius/this->CellWidth[0][0]);
   float MetalRadius = 1.0;
   FLOAT MetalRadius2 = radius * radius * MetalRadius * MetalRadius;
   float dx = float(this->CellWidth[0][0]);
-  FLOAT *pos = SS->ReturnPosition();
   FLOAT outerRadius2 = POW(1.2*radius, 2.0);
   float maxGE = MAX_TEMPERATURE / (TemperatureUnits * (Gamma-1.0) * 0.6);
   float delta_fz = 0.0;
@@ -117,13 +121,13 @@ int grid::ApplySphericalFeedbackToGrid(ActiveParticleType** ThisParticle,
 			if (EjectaThermalEnergy < 0) {
 				newGE = -EjectaThermalEnergy;
 			} else {
-				newGE = (BaryonField[DensNum][index] * this->BaryonField[GENum][index] + EjectaThermalEnergy) / BaryonField[DensNum][index];
+				newGE = (BaryonField[DensNum][index] * this->BaryonField[GENum][index] + ramp * factor * EjectaThermalEnergy) / BaryonField[DensNum][index];
 			}
 	      }
 	      else if (EjectaDensity < 0.0) {
 		/* Black Hole accretion Thermal feedback */
 		float cellmass = this->BaryonField[DensNum][index]*dx*dx*dx;
-		newGE = this->BaryonField[GENum][index] + EjectaThermalEnergy / cellmass;
+		newGE = this->BaryonField[GENum][index] + ramp * factor * EjectaThermalEnergy / cellmass;
 	      }
 
 
@@ -150,12 +154,12 @@ int grid::ApplySphericalFeedbackToGrid(ActiveParticleType** ThisParticle,
 		  BaryonField[DensNum][index];
 	      }
 	      else if (EjectaDensity == 0.0) { /* Thermal energy from luminosity */
-		newGE = EjectaThermalEnergy;
+		newGE = ramp * factor * EjectaThermalEnergy;
 	      }
 	      else if (EjectaDensity < 0.0) {
 		/* Black Hole accretion Thermal feedback */
 		float cellmass = this->BaryonField[DensNum][index]*dx*dx*dx;
-		newGE = this->BaryonField[GENum][index] + EjectaThermalEnergy / cellmass;
+		newGE = this->BaryonField[GENum][index] + ramp * factor * EjectaThermalEnergy / cellmass;
 	      }
 	      newGE = min(newGE, maxGE);  
 	      this->BaryonField[TENum][index] = newGE;

@@ -162,6 +162,7 @@ int grid::AccreteOntoSmartStarParticle(
   stdT = sqrt(sumT2 / size - meanT * meanT);
   printf("T-stats (mean min max std) after RemoveMassFromGrid:\n"
     "\t %g %g %g %g\n", meanT, minT, maxT, stdT);
+  delete [] Temperature;
 
   #if  ACCRETE_DEBUG
   printf("%s: DeltaV = %e %e %e\n", __FUNCTION__,

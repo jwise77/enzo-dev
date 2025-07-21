@@ -164,7 +164,53 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 #endif
     float EjectaMetalDensity = 0.0, EjectaDensity = 0.0;
 	float EjectaThermalEnergy = SpecificL*dt;
-    this->ApplySphericalFeedbackToGrid(ThisParticle, EjectaDensity, EjectaThermalEnergy, EjectaMetalDensity);
+
+	int i, j, k, index;
+	int size = this->GetGridSize();
+	float *Temperature = new float[size]();
+	this->ComputeTemperatureField(Temperature);
+	float minT = 1e20, maxT = -1e20, sumT = 0.0, sumT2 = 0.0;
+	float meanT, stdT;
+	for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
+		for (j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
+		index = GRIDINDEX_NOGHOST(GridStartIndex[0], j, k);
+		for (i = GridStartIndex[0]; i <= GridEndIndex[0]; i++, index++) {
+			minT = min(minT, Temperature[index]);
+			maxT = max(maxT, Temperature[index]);
+			sumT += Temperature[index];
+			sumT2 += Temperature[index] * Temperature[i];
+		}
+		}
+	}
+	meanT = sumT / size;
+	stdT = sqrt(sumT2 / size - meanT * meanT);
+	printf("T-stats (mean min max std) before ApplySphereicalFeedbackToGrid:\n"
+		"\t %g %g %g %g\n", meanT, minT, maxT, stdT);
+
+
+	this->ApplySphericalFeedbackToGrid(ThisParticle, EjectaDensity, EjectaThermalEnergy, EjectaMetalDensity);
+
+	this->ComputeTemperatureField(Temperature);
+	minT = 1e20;
+	maxT = -1e20;
+	sumT = 0.0;
+	sumT2 = 0.0;
+	for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
+		for (j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
+		index = GRIDINDEX_NOGHOST(GridStartIndex[0], j, k);
+		for (i = GridStartIndex[0]; i <= GridEndIndex[0]; i++, index++) {
+			minT = min(minT, Temperature[index]);
+			maxT = max(maxT, Temperature[index]);
+			sumT += Temperature[index];
+			sumT2 += Temperature[index] * Temperature[i];
+		}
+		}
+	}
+	meanT = sumT / size;
+	stdT = sqrt(sumT2 / size - meanT * meanT);
+	printf("T-stats (mean min max std) after ApplySphereicalFeedbackToGrid:\n"
+		"\t %g %g %g %g\n", meanT, minT, maxT, stdT);
+
 	return SUCCESS;
   }
 
