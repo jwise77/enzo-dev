@@ -184,7 +184,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 	}
 	meanT = sumT / size;
 	stdT = sqrt(sumT2 / size - meanT * meanT);
-	printf("T-stats (mean min max std) before ApplySphereicalFeedbackToGrid:\n"
+	printf("T-stats (mean min max std) before ApplySphericalFeedbackToGrid:\n"
 		"\t %g %g %g %g\n", meanT, minT, maxT, stdT);
 
 
@@ -208,7 +208,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 	}
 	meanT = sumT / size;
 	stdT = sqrt(sumT2 / size - meanT * meanT);
-	printf("T-stats (mean min max std) after ApplySphereicalFeedbackToGrid:\n"
+	printf("T-stats (mean min max std) after ApplySphericalFeedbackToGrid:\n"
 		"\t %g %g %g %g\n", meanT, minT, maxT, stdT);
 
 	return SUCCESS;

@@ -366,9 +366,10 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	 * accretion rate onto the protostar (cell) is above a critical value
 	 * 
 	 */
+  float accrate;
 	float *cellvel = new float[MAX_DIMENSION];
 	cellvel[0] = velx[index]; cellvel[1] = vely[index]; cellvel[2] = velz[index];
-	float accrate	= thisGrid->ConvergentMassFlow(data.DensNum, data.Vel1Num,
+	accrate	= thisGrid->ConvergentMassFlowGauss(data.DensNum, data.Vel1Num,
 					     dx*ACCRETIONRADIUS, centralpos,
 					     cellvel, -1, -1, -1);
 	ExtraDensity = density[index] - DensityThreshold;

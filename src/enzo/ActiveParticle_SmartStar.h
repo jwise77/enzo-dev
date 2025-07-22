@@ -59,6 +59,7 @@ static float R_ISCO(float a);
 #define VISCOUS_ANGULAR_MOMENTUM_TRANSPORT 6
 #define ALPHA_DISK_CEN_2012 7
 #define CONVERGING_MASS_FLOW 8
+#define CONVERGING_MASS_FLOW_GAUSS 9
 
 class ActiveParticleType_SmartStar : public ActiveParticleType
 {

@@ -2992,7 +2992,9 @@ int zEulerSweep(int j, int NumberOfSubgrids, fluxes *SubgridFluxes[],
   int GetVorticityComponent(FLOAT *pos, FLOAT *vorticity);
   float CenAccretionRate(float density, FLOAT AccretionRadius,
 			 FLOAT *pos, float *vel, float mparticle);
-  float ConvergentMassFlow(int DensNum, int Vel1Num, FLOAT AccretionRadius,
+  float ConvergentMassFlowSurface(int DensNum, int Vel1Num, FLOAT AccretionRadius,
+			   FLOAT *pos, float *vel, float SSmass, float Gcode, int GENum);
+  float ConvergentMassFlowGauss(int DensNum, int Vel1Num, FLOAT AccretionRadius,
 			   FLOAT *pos, float *vel, float SSmass, float Gcode, int GENum);
   float CalculateCirculisationSpeed(int Vel1Num, FLOAT AccretionRadius,
 				    FLOAT *pos, float *vel);

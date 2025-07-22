@@ -279,14 +279,18 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
    * calculate the mass inflow rate. 
    *
    */
-  if(SmartStarAccretion ==  CONVERGING_MASS_FLOW) {
+  if(SmartStarAccretion == CONVERGING_MASS_FLOW || SmartStarAccretion == CONVERGING_MASS_FLOW_GAUSS) {
 #ifdef DEBUG_AP
     printf("Doing CONVERGING_MASS_FLOW, SmartStarAccretion = %d\n", SmartStarAccretion);
 #endif
-    AccretionRate = ConvergentMassFlow(DensNum, Vel1Num, AccretionRadius, xparticle, vparticle, mparticle, Gcode, GENum);
-    // Limit to a fraction (half) of the available gas
-    AccretionRate = min(AccretionRate,
-      0.5 * SS->mass_in_accretion_sphere * CellVolume / dtFixed);
+    if (SmartStarAccretion == CONVERGING_MASS_FLOW) {
+      AccretionRate = ConvergentMassFlowSurface(DensNum, Vel1Num, AccretionRadius, xparticle, vparticle, mparticle, Gcode, GENum);
+    } else if (SmartStarAccretion == CONVERGING_MASS_FLOW_GAUSS) {
+       AccretionRate = ConvergentMassFlowGauss(DensNum, Vel1Num, AccretionRadius, xparticle, vparticle, mparticle, Gcode, GENum);
+    }
+    // Limit to a fraction (half) of the available gas and positive
+    AccretionRate = max(min(AccretionRate,
+      0.5 * SS->mass_in_accretion_sphere * CellVolume / dtFixed), 0);
 #ifdef DEBUG_AP
     printf("%s: Calculated (mass flux) accretion rate is %e Msolar/yr\n", __FUNCTION__, 
 	   AccretionRate*3.154e7*MassUnits/(SolarMass*TimeUnits));
@@ -485,7 +489,7 @@ float grid::CenAccretionRate(float density, FLOAT AccretionRadius,
  * We just calculate the mass flux through the accretion radius of the black hole
  * This follows prescriptions used by other authors e.g. Bleuer et al. 2015
  */
-float grid::ConvergentMassFlow(int DensNum, int Vel1Num, FLOAT AccretionRadius,
+float grid::ConvergentMassFlowSurface(int DensNum, int Vel1Num, FLOAT AccretionRadius,
 			       FLOAT *pos, float *vel, float SSmass, float Gcode, int GENum)
 {
   int numincells = 0, numoutcells = 0;
@@ -565,6 +569,76 @@ float grid::ConvergentMassFlow(int DensNum, int Vel1Num, FLOAT AccretionRadius,
   // will be average over whole sphere, so divide by total number of cells
   // return the accretion rate as a positive quantity
   mdot = fabs(4*M_PI*mdot) / (numincells + numoutcells); 
+#ifdef DEBUG_AP
+  printf("%s: Num InFlow cells = %d\t Num OutflowCells = %d\t mdot = %e\n", __FUNCTION__, numincells,
+	 numoutcells, mdot);
+#endif
+  return mdot;
+}
+
+/* 
+ * Similar to ConvergentMassFlowSurface, this computing the flux using Gauss' divergence theorem 
+ * instead of the surface integral. This follows prescriptions used by other authors 
+ * e.g. Bleuer et al. 2015
+ */
+float grid::ConvergentMassFlowGauss(int DensNum, int Vel1Num, FLOAT AccretionRadius,
+			       FLOAT *pos, float *vel, float SSmass, float Gcode, int GENum)
+{
+  int numincells = 0, numoutcells = 0;
+  FLOAT relx, rely, relz;
+  float mdot = 0.0;
+  float twodx_inv = 1.0 / (2.0 * CellWidth[0][0]);
+  float CellVolume = POW(CellWidth[0][0], 3);
+  float divrhov, divrhov_i[3], dvp, dvm;
+  float raccr2 = AccretionRadius * AccretionRadius;
+  float *density = BaryonField[DensNum];
+  float *gasvelx = BaryonField[Vel1Num];
+  float *gasvely = BaryonField[Vel1Num+1];
+  float *gasvelz = BaryonField[Vel1Num+2];
+  const int offset[] = {1, GridDimension[0], GridDimension[0]*GridDimension[1]};
+  for (int k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
+    relz = pos[2] - (CellLeftEdge[2][k] + 0.5*CellWidth[2][k]);
+    for (int j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
+      rely = pos[1] - (CellLeftEdge[1][j] + 0.5*CellWidth[1][j]);
+      int index = GRIDINDEX_NOGHOST(GridStartIndex[0],j,k);
+      for (int i = GridStartIndex[0]; i <= GridEndIndex[0]; i++, index++) {
+
+        relx = pos[0] - (CellLeftEdge[0][i] + 0.5*CellWidth[0][i]);
+        FLOAT radius2 = POW(relx,2) + POW(rely,2) + POW(relz,2);
+        if (radius2 < raccr2) {
+          FLOAT relposmag = sqrt(radius2);
+          FLOAT relpos[3] = { relx/relposmag, rely/relposmag, relz/relposmag};
+          FLOAT vrel[3] = {vel[0] - gasvelx[index],
+                vel[1] - gasvely[index],
+                vel[2] - gasvelz[index]};
+
+          /* 
+          Divergence theorem for mass flux.
+          Mdot = -\int \nabla \cdot (\rho * (v_gas - v_particle)) dV
+          Use central differencing. dF/dx = (F_{i+1} - F_{i-1}) / (2*dx)
+          */
+
+          divrhov = 0.0;
+          for (int dim = 0; dim < GridRank; dim++) {
+            dvm = BaryonField[Vel1Num+dim][index - offset[dim]] - vel[dim];
+            dvp = BaryonField[Vel1Num+dim][index + offset[dim]] - vel[dim];
+            divrhov_i[dim] = density[index + offset[dim]] * dvp - 
+              density[index - offset[dim]] * dvm;
+            divrhov += divrhov_i[dim];
+          }
+          divrhov *= twodx_inv;  // = 1/(2*dx) assumes uniform cubic cells
+          mdot -= divrhov;  // accretion rate is negative (inward) flux
+          //printf("MdotGauss[%d %d %d] r=%8.3g, rho=%8.3g, mdot = %8.3g, divrhov = %8.3g (%8.3g %8.3g %8.3g)\n", i, j, k, sqrt(radius2), density[index], mdot, divrhov, divrhov_i[0], divrhov_i[1], divrhov_i[2]);
+
+	        numincells++;
+        } else {
+	        numoutcells++;
+        }
+      }
+    }
+  }
+
+  mdot *= CellVolume * numincells;  // multiply by dV to finalize integral
 #ifdef DEBUG_AP
   printf("%s: Num InFlow cells = %d\t Num OutflowCells = %d\t mdot = %e\n", __FUNCTION__, numincells,
 	 numoutcells, mdot);
