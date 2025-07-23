@@ -26,7 +26,7 @@
 #include "ActiveParticle_SmartStar.h"
 #include "CosmologyParameters.h"
 
-#define DEBUG_AP
+#define NO_DEBUG_AP
 #define USEBOUNDEDNESS      0
 #define TINY_NUMBER         1e-20
 #define SMALL_NUMBER         1e-6
@@ -122,15 +122,17 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
   FLOAT BondiHoyleRadius = CalculateBondiHoyleRadius(mparticle, vparticle, 
     CellTemperature);
  
+#ifdef DEBUG_AP  
   printf("%s:  BondiHoyleRadius = %e pc\n", __FUNCTION__,  BondiHoyleRadius*LengthUnits/pc_cm);
   printf("%s:  AccretionRadius = %e pc\n", __FUNCTION__,  AccretionRadius*LengthUnits/pc_cm);
+#endif /* DEBUG_AP */
   /* Impose a kernel radius that regulates the weighting cells get as a function of radius */
   if (BondiHoyleRadius < CellWidth[0][0]*4.0) {  /* For BHs whose Bondi radius is not resolved */
-    printf("%s: Setting kernel radius to CellWidth, BH not resolved\n", __FUNCTION__);
+    //printf("%s: Setting kernel radius to CellWidth, BH not resolved\n", __FUNCTION__);
     *KernelRadius = CellWidth[0][0];
   }
   else { /*Accrete out to the BH radius */
-    printf("%s: Setting kernel radius to BondiHoyleRadius\n", __FUNCTION__);
+    //printf("%s: Setting kernel radius to BondiHoyleRadius\n", __FUNCTION__);
     *KernelRadius = max(BondiHoyleRadius, AccretionRadius);
   }
 

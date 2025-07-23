@@ -26,7 +26,7 @@
 #include "ActiveParticle_SmartStar.h"
 
 #define NO_DEBUG_AP
-#define ACCRETE_DEBUG 1
+#define ACCRETE_DEBUG 0
 #define NO_ACCRETION 0
 
 int GetUnits(float *DensityUnits, float *LengthUnits,
@@ -115,6 +115,8 @@ int grid::AccreteOntoSmartStarParticle(
    * the grid) can then be much less than found from the mass flux for example but 
    * is closer to what the black hole would actually accrete. 
    */
+
+#ifdef DEBUG_AP  
   int i, j, k, index;
   int size = this->GetGridSize();
   float *Temperature = new float[size]();
@@ -136,12 +138,13 @@ int grid::AccreteOntoSmartStarParticle(
   stdT = sqrt(sumT2 / size - meanT * meanT);
   printf("T-stats (mean min max std) before RemoveMassFromGrid:\n"
     "\t %g %g %g %g\n", meanT, minT, maxT, stdT);
+#endif /* DEBUG_AP */
 
   RemoveMassFromGrid(ThisParticle,AccretionRadius, *AccretionRate,
 		     &AccretedMass, delta_vpart,
 		     KernelRadius, KernelNormalization, MaxAccretionRate);
 
-  
+#ifdef DEBUG_AP  
   this->ComputeTemperatureField(Temperature);
   minT = 1e20;
   maxT = -1e20;
@@ -163,6 +166,7 @@ int grid::AccreteOntoSmartStarParticle(
   printf("T-stats (mean min max std) after RemoveMassFromGrid:\n"
     "\t %g %g %g %g\n", meanT, minT, maxT, stdT);
   delete [] Temperature;
+#endif /* DEBUG_AP */
 
   #if  ACCRETE_DEBUG
   printf("%s: DeltaV = %e %e %e\n", __FUNCTION__,

@@ -512,7 +512,9 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
   
   //getchar();
 #endif
+#if DEBUG_AP
   printf("totalweight = %f, KernelNorm = %f, maccreted = %g\n", totalweight, KernelNormalization, maccreted);
+#endif
 
   return SUCCESS;
 }

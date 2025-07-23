@@ -9,7 +9,7 @@
 
 #include "ActiveParticle_SmartStar.h"
 #include "phys_constants.h"
-#define SSDEBUG 1
+#define SSDEBUG 0
 #define SSDEBUG_TOTALMASS 0
 
 #define DYNAMIC_ACCRETION_RADIUS 0
