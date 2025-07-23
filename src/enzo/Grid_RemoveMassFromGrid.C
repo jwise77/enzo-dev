@@ -48,6 +48,7 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
     vgas[3], etot, eint, ke,  etotnew, rhonew, eintnew,
     kenew;
   double maccreted = 0, mnew = 0.0, cumulative_accreted_mass = 0.0;
+  float density_change;
   double GasAngularMomentumBefore[3] = {0.0, 0.0, 0.0}, GasAngularMomentumAfter[3] = {0.0, 0.0, 0.0};
   double GasLinearMomentumBefore[3] = {0.0, 0.0, 0.0}, GasLinearMomentumAfter[3] = {0.0, 0.0, 0.0};
  
@@ -71,6 +72,26 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 	       &TimeUnits, &VelocityUnits, Time) == FAIL) {
         ENZO_FAIL("Error in GetUnits.");
   }
+
+  int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
+      DINum, DIINum, HDINum;
+  if (MultiSpecies) 
+    if (this->IdentifySpeciesFields(DeNum, HINum, HIINum, HeINum, HeIINum, 
+				    HeIIINum, HMNum, H2INum, H2IINum, DINum, 
+				    DIINum, HDINum) == FAIL) {
+        ENZO_FAIL("Error in grid->IdentifySpeciesFields.");
+    }
+  int SNColourNum, Metal2Num, MBHColourNum, Galaxy1ColourNum, 
+    Galaxy2ColourNum, MetalIaNum, MetalIINum;
+
+  if (this->IdentifyColourFields(SNColourNum, Metal2Num, MetalIaNum, 
+				 MetalIINum, MBHColourNum, Galaxy1ColourNum, 
+				 Galaxy2ColourNum) == FAIL)
+    ENZO_FAIL("Error in grid->IdentifyColourFields.\n");
+
+  const int ncolour = 7;
+  const int colour_fields[ncolour] = {SNColourNum, Metal2Num, MetalIaNum, MetalIINum, MBHColourNum, Galaxy1ColourNum, Galaxy2ColourNum};
+
   MassUnits = DensityUnits * POW(LengthUnits,3);
   /* Calculate cell volume */
   for (int dim = 0; dim < GridRank; dim++)
@@ -222,6 +243,7 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 
 	  mnew = mcell - maccreted;
 	  maccreted = mcell - mnew;
+	  density_change = mnew / mcell;
 	  rhonew = mnew/CellVolume;
 	  
 	  // Calculate angular momentum of cell before
@@ -247,7 +269,32 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 	  
 	  // Update the densities
 	  BaryonField[DensNum][index] -= maccreted/CellVolume;
-	  
+
+	  // Update the species (keep fraction unchanged)
+      if (MultiSpecies) {
+      	BaryonField[DeNum][index] *= density_change;
+      	BaryonField[HINum][index] *= density_change;
+      	BaryonField[HIINum][index] *= density_change;
+      	BaryonField[HeINum][index] *= density_change;
+      	BaryonField[HeIINum][index] *= density_change;
+      	BaryonField[HeIIINum][index] *= density_change;
+      }
+      if (MultiSpecies > 1) {
+      	BaryonField[HMNum][index] *= density_change;
+      	BaryonField[H2INum][index] *= density_change;
+      	BaryonField[H2IINum][index] *= density_change;
+      }
+      if (MultiSpecies > 2) {
+      	BaryonField[DINum][index] *= density_change;
+      	BaryonField[DIINum][index] *= density_change;
+      	BaryonField[HDINum][index] *= density_change;
+      }
+      // Update colours
+      for (int colour = 0; colour < ncolour; colour++) {
+      	if (colour_fields[colour] >= 0) {
+      		BaryonField[colour_fields[colour]][index] *= density_change;
+      	}
+      }
 					   
 	  // Update the energies
 	  if (HydroMethod == PPM_DirectEuler) {
