@@ -67,6 +67,7 @@ int grid::ApplySphericalFeedbackToGrid(ActiveParticleType** ThisParticle,
   /* Do I need to worry here about exceeding the domain boundary? */
   FLOAT DistanceToBoundary = huge_number;
   FLOAT *pos = SS->ReturnPosition();
+  float average_density = SS->mass_in_accretion_sphere;  // mass stored as density
   for (int dim = 0; dim < GridRank; dim++) {
 	DistanceToBoundary = min(DistanceToBoundary,
 		min(DomainRightEdge[dim] - pos[dim], pos[dim] - DomainLeftEdge[dim]));
@@ -80,6 +81,7 @@ int grid::ApplySphericalFeedbackToGrid(ActiveParticleType** ThisParticle,
   FLOAT outerRadius2 = POW(1.2*radius, 2.0);
   float maxGE = MAX_TEMPERATURE / (TemperatureUnits * (Gamma-1.0) * 0.6);
   float delta_fz = 0.0;
+  float rho_scaling;
   for (int k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
     for (int j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
       int index = GRIDINDEX_NOGHOST(GridStartIndex[0],j,k);
@@ -116,12 +118,14 @@ int grid::ApplySphericalFeedbackToGrid(ActiveParticleType** ThisParticle,
 	      }
 	      else if (abs(EjectaDensity) < tiny_number) { /* Thermal energy due to stellar luminosity */
 		/* Thermal energy dump with no ejecta */
+		/* Inject energy equally per unit mass, not per unit volume.  Multiply by rho / avgrho */
 		/* For this case the EjectaThermalEnergy is passed in as simply an energy  */
 			// Negative value indicates replace the GE with the energy
 			if (EjectaThermalEnergy < 0) {
 				newGE = -EjectaThermalEnergy;
 			} else {
-				newGE = (BaryonField[DensNum][index] * this->BaryonField[GENum][index] + ramp * factor * EjectaThermalEnergy) / BaryonField[DensNum][index];
+				rho_scaling = BaryonField[DensNum][index] / average_density;
+				newGE = (BaryonField[DensNum][index] * this->BaryonField[GENum][index] + ramp * factor * rho_scaling * EjectaThermalEnergy) / BaryonField[DensNum][index];
 			}
 	      }
 	      else if (EjectaDensity < 0.0) {
