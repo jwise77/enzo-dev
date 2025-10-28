@@ -858,12 +858,28 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
    */
   int k = 0, num_new_sms_stars = 0, num_new_popiii_stars = 0, num_new_popii_stars = 0;
 
+  /* Identify new stars */
+
+  int *SSnew = new int[MAX_NUMBER_NEW_APS];
   for (int i = 0; i < nParticles; i++) {
     grid* APGrid = ParticleList[i]->ReturnCurrentGrid();
     if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
       ActiveParticleType_SmartStar* SS;
       SS = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i]);
-      if(SS->ParticleClass == SMS && SS->TimeIndex == 0) {
+      // 10*(machine precision) to give some tolerance
+      SSnew[i] = ((Time - SS->BirthTime) < 10*BFLOAT_EPSILON) ? TRUE : FALSE;
+    }
+  }
+  for (int i = nParticles; i < MAX_NUMBER_NEW_APS; i++) {
+    SSnew[i] = FALSE;
+  }
+
+  for (int i = 0; i < nParticles; i++) {
+    grid* APGrid = ParticleList[i]->ReturnCurrentGrid();
+    if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
+      ActiveParticleType_SmartStar* SS;
+      SS = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i]);
+      if(SS->ParticleClass == SMS && SSnew[i] == TRUE) {
 	SSparticles[k++] = i;
 	num_new_sms_stars++;
       }
@@ -874,7 +890,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
     if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
       ActiveParticleType_SmartStar* SS;
       SS = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i]);
-      if(SS->ParticleClass == POPIII && SS->TimeIndex == 0) {
+      if(SS->ParticleClass == POPIII && SSnew[i] == TRUE) {
 	SSparticles[k++] = i;
 	num_new_popiii_stars++;
       }
@@ -885,7 +901,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
     if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
       ActiveParticleType_SmartStar* SS;
       SS = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i]);
-      if(SS->ParticleClass == POPII && SS->TimeIndex == 0) {
+      if(SS->ParticleClass == POPII && SSnew[i] == TRUE) {
 	SSparticles[k++] = i;
 	num_new_popii_stars++;
       }
@@ -893,8 +909,11 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
   }
 
   int num_new_stars = num_new_sms_stars + num_new_popiii_stars + num_new_popii_stars;
-  if(num_new_stars == 0)
+  if(num_new_stars == 0) {
+    delete [] SSparticles;
+    delete [] SSnew;
     return SUCCESS;
+  }
 
   for (int k = 0; k < num_new_stars; k++) {
     int pindex = SSparticles[k];
@@ -906,7 +925,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
      /*
       * Only interested in newly formed particles
       */
-     if(SS->TimeIndex != 0)
+     if(SSnew[k] == FALSE)
        continue;
 
      FLOAT dx = APGrid->CellWidth[0][0];
@@ -1102,7 +1121,8 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
        printf("MassEnclosed = %e Msolar\n", MassEnclosed); fflush(stdout);
        if (MassEnclosed == 0) {
 	 IsSphereContained = false;
-   delete [] SSparticles;
+	 delete [] SSparticles;
+	 delete [] SSnew;
 	 return SUCCESS;
        }
        
@@ -1278,6 +1298,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
   } /* End loop over APs */
 
   delete [] SSparticles;
+  delete [] SSnew;
   return SUCCESS;
 }
 int ActiveParticleType_SmartStar::Accrete(int nParticles, 
