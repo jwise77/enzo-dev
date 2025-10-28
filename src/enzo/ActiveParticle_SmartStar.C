@@ -9,6 +9,9 @@
 
 #include "ActiveParticle_SmartStar.h"
 #include "phys_constants.h"
+#include "global_data.h"  //added
+#include <stdlib.h> //added
+#include <time.h> //added
 #define SSDEBUG 0
 #define SSDEBUG_TOTALMASS 0
 
@@ -54,7 +57,7 @@ float GetStellarRadius(float cmass, float accrate);
 int SmartStarPopIII_IMFInitialize(void);
 int ActiveParticleType_SmartStar::InitializeParticleType()
 {
-
+  srand(time(NULL) + MyProcessorNumber); //added
   EjectedMassThreshold = 1.0;
   RadiationSEDNumberOfBins = NUMRADIATIONBINS;
   RadiationEnergyBins = new float[RadiationSEDNumberOfBins];
@@ -263,9 +266,9 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 
 	/* We now need to define a control volume - this is the region within 
 	   an accretion radius of the cell identified */
-	centralpos[0] = thisGrid->CellLeftEdge[0][i] + 0.5*thisGrid->CellWidth[0][i];
-	centralpos[1] = thisGrid->CellLeftEdge[1][j] + 0.5*thisGrid->CellWidth[1][j];
-	centralpos[2] = thisGrid->CellLeftEdge[2][k] + 0.5*thisGrid->CellWidth[2][k];
+	centralpos[0] = thisGrid->CellLeftEdge[0][i] + ((float)rand() / RAND_MAX)*thisGrid->CellWidth[0][i] * 0.5;
+	centralpos[1] = thisGrid->CellLeftEdge[1][j] + ((float)rand() / RAND_MAX)*thisGrid->CellWidth[1][j] * 0.5;
+	centralpos[2] = thisGrid->CellLeftEdge[2][k] + ((float)rand() / RAND_MAX)*thisGrid->CellWidth[2][k] * 0.5;
 
 #if COOLING_TIME
 #if SSDEBUG
@@ -950,7 +953,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
      }
 #endif
 
-     float ParticleDensity = density[cellindex] - DensityThreshold;
+     float ParticleDensity = max(0.01*density[cellindex], min(density[cellindex] - DensityThreshold, 0.5*density[cellindex]));
      float newcelldensity = density[cellindex] - ParticleDensity;
      
      if(SMS == SS->ParticleClass) {
