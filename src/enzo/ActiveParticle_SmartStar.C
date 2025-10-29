@@ -1637,7 +1637,7 @@ int ActiveParticleType_SmartStar::UpdateAccretionRateStats(int nParticles,
       if( (ctime - SS->AccretionRateTime[SS->TimeIndex] > (TIMEGAP*APGrid->ReturnTimeStep()))
 	  || (SS->TimeIndex == 0)) {
 	float omass = SS->oldmass;
-	float cmass = ParticleList[i]->ReturnMass();
+	float cmass = SS->Mass;
 	if(cmass < 1e-10) { //massless particles need to be deleted
 	  printf("%s: cmass = %e\n", __FUNCTION__, cmass);
 	  printf("%s: ParticleList[i]->ShouldDelete() = %d\n", __FUNCTION__, SS->ShouldDelete());
@@ -1648,6 +1648,7 @@ int ActiveParticleType_SmartStar::UpdateAccretionRateStats(int nParticles,
 	if(cmass - omass < -1e-10) { //Can happen after a restart due to rounding
 	  printf("Updating masses....\n");
 	  printf("cmass = %e\t omass = %e\n", cmass, omass);
+    SS->Mass = omass;
 	  cmass = omass;
 	}
 	SS->TimeIndex++;
