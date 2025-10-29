@@ -258,7 +258,7 @@ void ActiveParticleType_SmartStar::SmartMerge(ActiveParticleType_SmartStar *a)
     vel[dim] = ratio1 * vel[dim] + ratio2 * a->vel[dim];
   }
 
-  if (a->BirthTime < BirthTime) {
+  if (a->BirthTime < BirthTime && a->BirthTime >= 0.0) {
     BirthTime = a->BirthTime;
     // Swap IDs because particles with the same IDs will cause problems during communication and particle counting. It doesn't matter because the "a" particle will be deleted
     temp_id = Identifier;
