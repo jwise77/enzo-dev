@@ -860,7 +860,7 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
 
   /* Identify new stars */
 
-  int *SSnew = new int[MAX_NUMBER_NEW_APS];
+  int *SSnew = new int[nParticles];
   for (int i = 0; i < nParticles; i++) {
     grid* APGrid = ParticleList[i]->ReturnCurrentGrid();
     if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
@@ -870,38 +870,41 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
       SSnew[i] = ((Time - SS->BirthTime) < 10*BFLOAT_EPSILON) ? TRUE : FALSE;
     }
   }
-  for (int i = nParticles; i < MAX_NUMBER_NEW_APS; i++) {
-    SSnew[i] = FALSE;
-  }
 
   for (int i = 0; i < nParticles; i++) {
+    if (SSnew[i] == FALSE)
+      continue;
     grid* APGrid = ParticleList[i]->ReturnCurrentGrid();
     if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
       ActiveParticleType_SmartStar* SS;
       SS = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i]);
-      if(SS->ParticleClass == SMS && SSnew[i] == TRUE) {
+      if(SS->ParticleClass == SMS) {
 	SSparticles[k++] = i;
 	num_new_sms_stars++;
       }
     }
   }
   for (int i = 0; i < nParticles; i++) {
+    if (SSnew[i] == FALSE)
+      continue;
     grid* APGrid = ParticleList[i]->ReturnCurrentGrid();
     if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
       ActiveParticleType_SmartStar* SS;
       SS = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i]);
-      if(SS->ParticleClass == POPIII && SSnew[i] == TRUE) {
+      if(SS->ParticleClass == POPIII) {
 	SSparticles[k++] = i;
 	num_new_popiii_stars++;
       }
     }
   }
   for (int i = 0; i < nParticles; i++) {
+    if (SSnew[i] == FALSE)
+      continue;
     grid* APGrid = ParticleList[i]->ReturnCurrentGrid();
     if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
       ActiveParticleType_SmartStar* SS;
       SS = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i]);
-      if(SS->ParticleClass == POPII && SSnew[i] == TRUE) {
+      if(SS->ParticleClass == POPII) {
 	SSparticles[k++] = i;
 	num_new_popii_stars++;
       }
