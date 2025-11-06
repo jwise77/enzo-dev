@@ -266,17 +266,28 @@ void ActiveParticleType_SmartStar::SmartMerge(ActiveParticleType_SmartStar *a)
     a->Identifier = temp_id;
   }
 
+  ActiveParticleType_SmartStar *least_massive;
+  ActiveParticleType_SmartStar *most_massive;
   if (Mass < a->Mass) {
-    oldmass = a->oldmass;
-    TimeIndex = a->TimeIndex;
-    for (int i = 0; i < NTIMES; i++)
-      {
-	AccretionRateTime[i] = a->AccretionRateTime[i];
-	AccretionRate[i] = a->AccretionRate[i];	
-      }
-    RadiationLifetime = max(RadiationLifetime, a->RadiationLifetime);
-    StellarAge = a->StellarAge;
+    least_massive = this;
+    most_massive = a;
+  } else {
+    least_massive = a;
+    most_massive = this;
   }
+  oldmass = max(oldmass,0) + max(a->oldmass,0);  // oldmass equals -1 if just created
+  TimeIndex = most_massive->TimeIndex;
+  double last_accretion_rate = least_massive->AccretionRate[least_massive->TimeIndex];
+  for (int i = 0; i < NTIMES; i++) {
+    AccretionRateTime[i] = most_massive->AccretionRateTime[i];
+    AccretionRate[i] = most_massive->AccretionRate[i];
+  }
+  // Add the last AccretionRate from the  particle
+  if (last_accretion_rate > 0) {
+    AccretionRate[TimeIndex] += last_accretion_rate;
+  }
+  StellarAge = most_massive->StellarAge;
+  RadiationLifetime = most_massive->RadiationLifetime;
   NotEjectedMass += a->NotEjectedMass;
 
   /*

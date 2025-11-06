@@ -404,8 +404,8 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	   * ensures we get regions of truly high accretion
 	   */
 	  stellar_type = SMS;
-	  printf("!!!!!!!!SMS Formed\t accrate = %e Msolar/yr",
-		 accrate*3.154e7*ConverttoSolar/data.TimeUnits);
+	  //printf("!!!!!!!!SMS Formed\t accrate = %e Msolar/yr",
+		 //accrate*3.154e7*ConverttoSolar/data.TimeUnits);
 	}
 	else if(data.H2Fraction[index] >  PopIIIH2CriticalFraction) {
           stellar_type = POPIII;
