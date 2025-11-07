@@ -866,8 +866,13 @@ int ActiveParticleType_SmartStar::RemoveMassFromGridAfterFormation(int nParticle
     if (MyProcessorNumber == APGrid->ReturnProcessorNumber()) {
       ActiveParticleType_SmartStar* SS;
       SS = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i]);
-      // 10*(machine precision) to give some tolerance
-      SSnew[i] = ((Time - SS->BirthTime) < 10*BFLOAT_EPSILON) ? TRUE : FALSE;
+      if (SS->BirthTime < 0.0) {
+        // Initially set to -1.0 when created
+        SSnew[i] = TRUE;
+      } else {
+        // 10*(machine precision) to give some tolerance
+        SSnew[i] = ((Time - SS->BirthTime) < 10*BFLOAT_EPSILON) ? TRUE : FALSE;
+      }
     }
   }
 
@@ -1755,8 +1760,14 @@ int ActiveParticleType_SmartStar::UpdateRadiationLifetimes(int nParticles,
 	SS->RadiationLifetime = POW(10.0, (9.785 - 3.759*logm + 1.413*logm*logm - 
 					   0.186*logm*logm*logm)) / (TimeUnits/yr_s);
 	SS->StellarAge = SS->RadiationLifetime; //update stellar age too
-      }
+      } else if (SMS == SS->ParticleClass) {
+      /* 
+       * For SMSs we use a fixed lifetime of 1.5 Myr. Reset just in case we need to recalculate.
+       */
+      SS->RadiationLifetime =  1.5e6*yr_s/TimeUnits; //Woods et al. 2020
+    	SS->StellarAge = SS->RadiationLifetime; //update stellar age too
     }
+  }
   }
 
   return SUCCESS;
