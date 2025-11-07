@@ -751,7 +751,7 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
 	/* Call Function to return SED parameters */
 	if(ThisParticle->DetermineSEDParameters(Time, dx) == FAIL)
 	  return FAIL;
-#ifdef SSDEBUG
+#if SSDEBUG
   printf("SS-RT: Lion = %g cgs = %g code\n", PMass * ThisParticle->LuminosityPerSolarMass, PMass * ThisParticle->LuminosityPerSolarMass * LConv);
 #endif
   if (PMass * ThisParticle->LuminosityPerSolarMass * LConv < tiny_number)
