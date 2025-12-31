@@ -71,6 +71,8 @@ int RadiativeTransferWriteParameters(FILE *fptr)
 	  RadiativeTransferInterpolateField);
   fprintf(fptr, "RadiativeTransferSourceClustering         = %"ISYM"\n", 
 	  RadiativeTransferSourceClustering);
+  fprintf(fptr, "RadiativeTransferOpticallyThinSourceClustering = %"ISYM"\n", 
+	  RadiativeTransferOpticallyThinSourceClustering);
   fprintf(fptr, "RadiativeTransferPhotonMergeRadius        = %"FSYM"\n", 
 	  RadiativeTransferPhotonMergeRadius);
   fprintf(fptr, "RadiativeTransferSourceBeamAngle          = %"FSYM"\n", 
