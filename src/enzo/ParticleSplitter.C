@@ -61,13 +61,15 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
   HierarchyEntry **Grids;
   int NumberOfGrids;
 
-  /* Rebuild hierarchy and return if this does not concern us */
+  /* Rebuild hierarchy to move particles into their correct grids */
+
+  RebuildHierarchy(MetaData, LevelArray, 0);  
+
+  /* Return if this does not concern us */
 
   if (ParticleSplitterIterations <= 0 || 
-      ParticleSplitterChildrenParticleSeparation <=0) {
-    RebuildHierarchy(MetaData, LevelArray, 0);  
+      ParticleSplitterChildrenParticleSeparation <= 0)
     return SUCCESS;
-  }
 
   if(ParticleSplitterIterations > MAX_SPLIT_ITERATIONS) {
     fprintf(stderr, "WARNING: Splitting iterations exceeds maximum allowed\n" \
