@@ -877,7 +877,7 @@ c -------------------------------------------------------------------
 !   of temperature.
 
       subroutine lookup_cool_rates1d(temstart, temend, nratec, j, k,
-     &                is, ie, ijk, iradtype, iradshield, ithreebody,
+     &                is, ie, imax, iradtype, iradshield, ithreebody,
      &                in, jn, kn, ispecies, idust, tgas1d, d, HI, HII, 
      &                HeI, HeII, H2I, tdust, metallicity, 
      &                k1a, k2a, k3a, k4a, k5a, k6a, k7a, k8a, k9a, k10a,
@@ -909,7 +909,7 @@ c -------------------------------------------------------------------
       R_PREC temstart, temend, tgas1d(in), dom,
      &        dtemstart, dtemend
       real*8 coolunit, tbase1, xbase1, dx_cgs
-      LOGIC_PREC itmask(ijk)
+      LOGIC_PREC itmask(imax)
 
 !     Chemistry rates as a function of temperature
 
@@ -936,15 +936,15 @@ c -------------------------------------------------------------------
 
 !     Returned rate values
 
-      R_PREC k1 (ijk), k2 (ijk), k3 (ijk), k4 (ijk), k5 (ijk),
-     &     k6 (ijk), k7 (ijk), k8 (ijk), k9 (ijk), k10(ijk),
-     &     k11(ijk), k12(ijk), k13(ijk), k14(ijk), k15(ijk),
-     &     k16(ijk), k17(ijk), k18(ijk), k19(ijk), k22(ijk),
-     &     k50(ijk), k51(ijk), k52(ijk), k53(ijk), k54(ijk),
-     &     k55(ijk), k56(ijk), k13dd(ijk, 7), h2dust(ijk), 
-     &     ncrn(ijk), ncrd1(ijk), ncrd2(ijk),
-     &     k24shield(ijk), k25shield(ijk), k26shield(ijk),
-     &     k31shield(ijk)
+      R_PREC k1 (imax), k2 (imax), k3 (imax), k4 (imax), k5 (imax),
+     &     k6 (imax), k7 (imax), k8 (imax), k9 (imax), k10(imax),
+     &     k11(imax), k12(imax), k13(imax), k14(imax), k15(imax),
+     &     k16(imax), k17(imax), k18(imax), k19(imax), k22(imax),
+     &     k50(imax), k51(imax), k52(imax), k53(imax), k54(imax),
+     &     k55(imax), k56(imax), k13dd(imax, 7), h2dust(imax), 
+     &     ncrn(imax), ncrd1(imax), ncrd2(imax),
+     &     k24shield(imax), k25shield(imax), k26shield(imax),
+     &     k31shield(imax)
 
 !     1D temporaries (passed in)
 
@@ -954,9 +954,9 @@ c -------------------------------------------------------------------
 
 !     1D temporaries (not passed in)
 
-      INTG_PREC d_indixe(ijk)
-      R_PREC d_t1(ijk), d_t2(ijk), d_logtem(ijk), d_tdef(ijk),
-     &     dusti1(ijk), dusti2(ijk), divrhoa(6)
+      INTG_PREC d_indixe(imax)
+      R_PREC d_t1(imax), d_t2(imax), d_logtem(imax), d_tdef(imax),
+     &     dusti1(imax), dusti2(imax), divrhoa(6)
 
 !     Parameters
 

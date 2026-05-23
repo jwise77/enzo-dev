@@ -57,7 +57,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
 					  TopGridData *MetaData, int level)
 {
 
-  int proc, i, j, k, jstart, jend, TotalNumber, TotalStars, APTotalNumber;
+  int proc, i, j, k, TotalNumber, TotalStars, APTotalNumber;
   int particle_data_size, star_data_size;
   int Zero = 0;
 
@@ -339,23 +339,23 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   /************** Copy Active Particles back to grids. ***************/
   /*******************************************************************/
 
-  jstart = 0;
-  jend = 0;
+  jstart[0] = 0;
+  jend[0] = 0;
 
   // Copy shared stars to grids, if any
 
   if (APNumberOfReceives > 0)
-    for (j = 0; j < NumberOfGrids && jend < APNumberOfReceives; j++) {
-      while (APSharedList[jend]->ReturnGridID() <= j) {
-        jend++;
-        if (jend == APNumberOfReceives) break;
+    for (j = 0; j < NumberOfGrids && jend[0] < APNumberOfReceives; j++) {
+      while (APSharedList[jend[0]]->ReturnGridID() <= j) {
+        jend[0]++;
+        if (jend[0] == APNumberOfReceives) break;
       }
       
       GridPointers[j]->TransferSubgridActiveParticles
-                    (GridPointers, NumberOfGrids, APNumberToMove, jstart, jend,
+                    (GridPointers, NumberOfGrids, APNumberToMove, jstart[0], jend[0],
                      APSharedList, KeepLocal, ParticlesAreLocal, COPY_IN, TRUE);
       
-      jstart = jend;
+      jstart[0] = jend[0];
     } // ENDFOR grids
   
 

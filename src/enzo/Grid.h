@@ -215,6 +215,14 @@ class grid
   float **freefall_pressure;
 
 //
+// Performance counters for load balancing
+//
+  float ParentCostPerCell[MAX_COMPUTE_TIMERS];
+  float ParentEstimatedCostPerCell[MAX_COMPUTE_TIMERS];
+  float ObservedCost[MAX_COMPUTE_TIMERS];
+  float EstimatedCost[MAX_COMPUTE_TIMERS];
+
+//
 // Friends
 //
   friend int ExternalBoundary::Prepare(grid *TopGrid);

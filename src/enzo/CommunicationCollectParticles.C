@@ -229,7 +229,7 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
     SendList = new particle_data[TotalNumber];
     StarSendList = new star_data[TotalStars];
 
- ParticleCounter = 0;
+int ParticleCounter = 0;
 //printf("Particle Counter reset 1\n");
 #pragma omp parallel for default(shared)
     for (j = 0; j < NumberOfGrids; j++)

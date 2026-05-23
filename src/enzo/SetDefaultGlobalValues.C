@@ -582,6 +582,7 @@ int SetDefaultGlobalValues(TopGridData &MetaData)
   StarParticleCreation             = FALSE;
   StarParticleFeedback             = FALSE;
   StarParticleRadiativeFeedback    = FALSE;
+  StarMakerUsePhysicalDensityThreshold = FALSE;
   BigStarFormation                 = FALSE;
   BigStarFormationDone             = FALSE;
   BigStarSeparation                = 0.25;

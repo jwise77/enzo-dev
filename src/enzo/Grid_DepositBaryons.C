@@ -39,7 +39,7 @@ int CommunicationBufferedSend(void *buffer, int size, MPI_Datatype Type, int Tar
 #endif /* USE_MPI */
  
 extern "C" void FORTRAN_NAME(dep_grid_cic)(
-			       float *source, float *dest,
+			       float *source, float *dest, float *temp,
 			       float *velx, float *vely, float *velz,
 			       float *dt, float *rfield, int *ndim,
                                    hydro_method *ihydro,
@@ -205,6 +205,10 @@ int grid::DepositBaryons(grid *TargetGrid, FLOAT DepositTime)
     for (dim = 0; dim < GridRank; dim++)
       dxfloat[dim] = float(CellWidth[dim][0]);
  
+    /* Allocate a density and velocity mesh for this grid. */
+ 
+    float *vel_field = new float[size*4];
+
     /* Generate the density field advanced by dt using smoothed
        velocity field. */
  
@@ -260,7 +264,8 @@ int grid::DepositBaryons(grid *TargetGrid, FLOAT DepositTime)
     //    printf("DepositBaryons, %i\n", RK2SecondStepBaryonDeposit);
 
     if (DepositGridCIC == TRUE)
-      FORTRAN_NAME(dep_grid_cic)(input_density, dens_field, vel_field,
+      FORTRAN_NAME(dep_grid_cic)(input_density, dens_field,
+         vel_field,
 				 input_velx, input_vely, input_velz,
 				 &dt,
 				 BaryonField[NumberOfBaryonFields], &GridRank,
@@ -273,7 +278,8 @@ int grid::DepositBaryons(grid *TargetGrid, FLOAT DepositTime)
 				 RegionDim, RegionDim+1, RegionDim+2,
 				 Refinement, Refinement+1, Refinement+2);
     else
-      FORTRAN_NAME(dep_grid_ngp)(input_density, dens_field, vel_field,
+      FORTRAN_NAME(dep_grid_ngp)(input_density, dens_field,
+         vel_field,
 				 input_velx, input_vely, input_velz,
 				 &dt,
 				 BaryonField[NumberOfBaryonFields], &GridRank,
@@ -286,6 +292,7 @@ int grid::DepositBaryons(grid *TargetGrid, FLOAT DepositTime)
 				 RegionDim, RegionDim+1, RegionDim+2,
 				 Refinement, Refinement+1, Refinement+2);    
  
+    delete [] vel_field;
     if ( RK2SecondStepBaryonDeposit ) 
       if (OldBaryonField[DensNum] != NULL) 
 	delete [] av_dens;

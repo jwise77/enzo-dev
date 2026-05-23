@@ -740,6 +740,7 @@ EXTERN int   BigStarFormationDone;
 EXTERN float BigStarSeparation;
 EXTERN double SimpleQ;
 EXTERN float SimpleRampTime;
+EXTERN int   StarMakerUsePhysicalDensityThreshold;
 
 /* Set this flag to allow star formation only once per root grid time
    step (at the beginning) and with a SFR proportional to the full

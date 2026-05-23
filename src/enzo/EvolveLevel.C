@@ -386,10 +386,10 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   } else {
 
 #pragma omp parallel for if(thread_grid_loop) schedule(dynamic)
-    for (grid1 = 0; grid1 < NumberOfGrids; grid1++)
+    for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
       Grids[grid1]->GridData->ClearBoundaryFluxes();
       if ( level > 0 )
-      Grids[grid1]->GridData->ClearAvgElectricField();
+        Grids[grid1]->GridData->ClearAvgElectricField();
     }
 
   }
