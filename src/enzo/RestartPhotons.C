@@ -175,7 +175,7 @@ int RestartPhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   if (AllStars == NULL)
     return SUCCESS;
 
-  int NumberOfSources = 0;
+  NumberOfSources = 0;
   Star *cstar = AllStars->NextStar;
   while (cstar != NULL) {
     cstar = cstar->NextStar;

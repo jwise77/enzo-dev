@@ -55,6 +55,8 @@ int grid::TransportPhotonPackages(int level, int finest_level,
 {
 
   int i,j,k, dim, index, count;
+  grid *MoveToGrid;
+  ListOfPhotonsToMove *ThreadedMoveList;
 
   if (MyProcessorNumber != ProcessorNumber)
     return SUCCESS;

@@ -67,10 +67,10 @@ int grid::AddXraysFromSources(Star *AllStars)
 
   /* Get photo-ionization fields */
 
-  int kphHINum, kphHeINum, kphHeIINum, kdissH2INum;
+  int kphHINum, kphHeINum, kphHeIINum, kdissH2INum, kphHMNum, kdissH2IINum;
   int gammaNum;
   IdentifyRadiativeTransferFields(kphHINum, gammaNum, kphHeINum, kphHeIINum, 
-				  kdissH2INum);
+				  kdissH2INum, kphHMNum, kdissH2IINum);
   const int kphNum[] = {kphHINum, kphHeINum, kphHeIINum};
 
   /* If using cosmology, get units. */
@@ -191,7 +191,7 @@ int grid::AddXraysFromSources(Star *AllStars)
       
       /* Get energy bins and SED */
 
-      if (cstar->ComputePhotonRates(nbins, energies, Luminosity) == FAIL) {
+      if (cstar->ComputePhotonRates(TimeUnits, nbins, energies, Luminosity) == FAIL) {
 	ENZO_FAIL("Error in ComputePhotonRates.\n");
       }
 

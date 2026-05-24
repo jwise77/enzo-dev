@@ -48,6 +48,7 @@ int grid::Shine(RadiationSourceEntry *RadiationSource)
   double vec[3];
   long long BasePackages = 0, NumberOfNewPhotonPackages = 0;
   int dim = 0;
+  int ipix, base_ipix, mod_ipix;
   int64_t ray = 0;
   int count = 0;
   int min_level = RadiativeTransferInitialHEALPixLevel;
@@ -57,7 +58,7 @@ int grid::Shine(RadiationSourceEntry *RadiationSource)
      photon packages per source */
 
   BasePackages = 12*(int)pow(4,min_level);
-  PackagesPerThread = nint(ceil(float(BasePackages) / NumberOfThreads));
+  int PackagesPerThread = nint(ceil(float(BasePackages) / NumberOfThreads));
 
   /* If using a beamed source, calculate the minimum z-component of
      the ray normal (always beamed in the polar coordinate). */
@@ -200,8 +201,8 @@ int grid::Shine(RadiationSourceEntry *RadiationSource)
       // Distribute pixel numbers by number of threads for better
       // OpenMP load balancing
       // e.g. 0, 4, 8, 1, 5, 9, 2, 6, 10, 3, 7, 11
-      base_ipix = (j % PackagesPerThread) * NumberOfThreads;
-      mod_ipix = j / PackagesPerThread;
+      base_ipix = (ray % PackagesPerThread) * NumberOfThreads;
+      mod_ipix = ray / PackagesPerThread;
       ipix = base_ipix + mod_ipix;
 
       if (RS->Type == Beamed) {
