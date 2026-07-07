@@ -589,7 +589,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 
     /* Open the active particles group */
 
-    hid_t ActiveParticleGroupID = H5Gopen(group_id, "ActiveParticles");
+    hid_t ActiveParticleGroupID = H5Gopen(group_id, "Active Particles");
 
     /* Loop over enabled active particle types */
 

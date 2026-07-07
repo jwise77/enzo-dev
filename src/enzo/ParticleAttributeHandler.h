@@ -37,7 +37,6 @@ class ParticleAttributeHandler
     hid_t hdf5type;
     int element_size;
     int offset;
-    int data_dims, dim1, dim2;
 
     virtual void SetAttribute(char **buffer, ActiveParticleType *pp) = 0;
 
@@ -55,9 +54,6 @@ class Handler : public ParticleAttributeHandler
     Handler(std::string name, int offset = 0) {
         this->name = name;
         this->offset = offset;
-        this->data_dims = 0;
-        this->dim1 = 0;
-        this->dim2 = 0;
 
         /* Can't use a switch */
         if (typeid(Type) == typeid(int)) {
@@ -116,9 +112,6 @@ class ArrayHandler : public ParticleAttributeHandler
     ArrayHandler(std::string name, int offset = 0) {
         this->name = name;
         this->offset = offset;
-        this->data_dims = 1;
-        this->dim1 = N;
-        this->dim2 = 0;
 
         /* Can't use a switch */
         if (typeid(Type) == typeid(int)) {

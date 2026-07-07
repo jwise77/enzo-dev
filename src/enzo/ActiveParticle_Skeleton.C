@@ -54,8 +54,7 @@ int ActiveParticleType_Skeleton::InitializeParticleType() {
   return SUCCESS;
 }
 
-int ActiveParticleType_Skeleton::EvaluateFormation
-    (grid *thisgrid_orig, TopGridData *MetaData, ActiveParticleFormationData &data)
+int ActiveParticleType_Skeleton::EvaluateFormation(grid *thisgrid_orig, ActiveParticleFormationData &data)
 {
   // Create a 'friend' grid alias that we can use to access private grid data.
   SkeletonGrid *thisGrid =
