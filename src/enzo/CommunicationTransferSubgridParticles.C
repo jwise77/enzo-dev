@@ -125,7 +125,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   int ParticleCounter2 = 0;
 #pragma omp parallel
 {
-#pragma omp for reduction(+:NumberToMove[:NumberOfProcessors], StarsToMove[:NumberOfProcessors]) private(ID, grid2, SiblingList)
+#pragma omp for reduction(+:NumberToMove[:NumberOfProcessors], StarsToMove[:NumberOfProcessors], APNumberToMove[:NumberOfProcessors]) private(ID, grid2, SiblingList)
   for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
 
     /* Get a list of possible siblings from the chaining mesh */
@@ -203,7 +203,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
 
 }// end omp single
  
-#pragma omp for reduction(+:NumberToMove[:NumberOfProcessors])
+#pragma omp for reduction(+:NumberToMove[:NumberOfProcessors], StarsToMove[:NumberOfProcessors], APNumberToMove[:NumberOfProcessors])
   for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
 
     Grids[grid1]->GridData->TransferSubgridStars
@@ -297,7 +297,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   ParticleCounter2 = 0;
 #pragma omp parallel
 {
-#pragma omp for reduction(+:NumberToMove[:NumberOfProcessors])
+#pragma omp for reduction(+:NumberToMove[:NumberOfProcessors], StarsToMove[:NumberOfProcessors], APNumberToMove[:NumberOfProcessors])
     for (j = 0; j < ParticleIterations; j++) {
 
       
@@ -319,7 +319,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   /*******************************************************************/
 
   // Copy shared stars to grids, if any
-#pragma omp for reduction(+:StarsToMove[:NumberOfProcessors])
+#pragma omp for reduction(+:NumberToMove[:NumberOfProcessors], StarsToMove[:NumberOfProcessors], APNumberToMove[:NumberOfProcessors])
     for (k = 0; k < StarParticleIterations; k++) {
 
 /*      printf("--> k =%d, StarParticleIterations= %d, kstart =%d, kend =%d, NumberOfGrids =%d, " 
@@ -334,6 +334,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
       
       //jstart = jend;
     } // ENDFOR grids
+} // end omp parallel
 
   /*******************************************************************/
   /************** Copy Active Particles back to grids. ***************/
@@ -357,9 +358,6 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
       
       jstart[0] = jend[0];
     } // ENDFOR grids
-  
-
-} // end omp parallel
   /************************************************************************
      Since the particles and stars are only on the grid's host
      processor, set number of particles so everybody agrees.

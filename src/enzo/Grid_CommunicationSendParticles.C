@@ -145,7 +145,7 @@ int grid::CommunicationSendParticles(grid *ToGrid, int ToProcessor,
 
       #pragma omp parallel private(dim,j)
     {
-      #pragma omp for nowait schedule(static)
+      #pragma omp for schedule(static)
       for (i = 0; i < ToGrid->NumberOfParticles; i++) {
 	ToGrid->ParticleNumber[i] = TempNumber[i];
 	ToGrid->ParticleMass[i]   = TempMass[i];
@@ -153,14 +153,14 @@ int grid::CommunicationSendParticles(grid *ToGrid, int ToProcessor,
       }
 
       for (dim = 0; dim < GridRank; dim++)
-	#pragma omp for nowait schedule(static)
+	#pragma omp for schedule(static)
 	for (i = 0; i < ToGrid->NumberOfParticles; i++) {
 	  ToGrid->ParticlePosition[dim][i] = TempPos[dim][i];
 	  ToGrid->ParticleVelocity[dim][i] = TempVel[dim][i];
 	}
 
       for (j = 0; j < NumberOfParticleAttributes; j++)
-	#pragma omp for nowait schedule(static)
+	#pragma omp for schedule(static)
 	for (i = 0; i < ToGrid->NumberOfParticles; i++)
 	  ToGrid->ParticleAttribute[j][i] = TempAttribute[j][i];
 
@@ -263,7 +263,7 @@ int grid::CommunicationSendParticles(grid *ToGrid, int ToProcessor,
 #pragma omp parallel private(dim,j)
  {
 
-#pragma omp for nowait schedule(static) private(index)
+#pragma omp for schedule(static) private(index)
     for (i = ToStart; i < ToEnd; i++) {
       index = i-ToStart;
       ToGrid->ParticleMass[i] = buffer[index].mass;
@@ -272,7 +272,7 @@ int grid::CommunicationSendParticles(grid *ToGrid, int ToProcessor,
     }
 
     for (dim = 0; dim < GridRank; dim++) {
-#pragma omp for nowait schedule(static) private(index)
+#pragma omp for schedule(static) private(index)
       for (i = ToStart; i < ToEnd; i++) {
 	index = i-ToStart;
 	ToGrid->ParticlePosition[dim][i] = buffer[index].pos[dim];
@@ -281,7 +281,7 @@ int grid::CommunicationSendParticles(grid *ToGrid, int ToProcessor,
     }
 
     for (j = 0; j < NumberOfParticleAttributes; j++) {
-#pragma omp for nowait schedule(static) private(index)
+#pragma omp for schedule(static) private(index)
       for (i = ToStart; i < ToEnd; i++) {
 	index = i-ToStart;
 	ToGrid->ParticleAttribute[j][i] = buffer[index].attribute[j];

@@ -128,7 +128,7 @@ int grid::CollectParticles(int GridNum, int* &NumberToMove,
 
 #pragma omp parallel private(dim,j)
       {
-#pragma omp for nowait schedule(static)
+#pragma omp for schedule(static)
       for (i = 0; i < NumberOfParticles; i++) {
 	Mass[i] = ParticleMass[i];
 	Number[i] = ParticleNumber[i];
@@ -136,20 +136,20 @@ int grid::CollectParticles(int GridNum, int* &NumberToMove,
       }
 
       for (dim = 0; dim < GridRank; dim++)
-#pragma omp for nowait schedule(static)
+#pragma omp for schedule(static)
 	for (i = 0; i < NumberOfParticles; i++) {
 	  Position[dim][i] = ParticlePosition[dim][i];
 	  Velocity[dim][i] = ParticleVelocity[dim][i];
 	}
 	
       for (j = 0; j < NumberOfParticleAttributes; j++)
-#pragma omp for nowait schedule(static)
+#pragma omp for schedule(static)
 	for (i = 0; i < NumberOfParticles; i++)
 	  Attribute[j][i] = ParticleAttribute[j][i];
  
       /* Copy new particles */
 
-#pragma omp for nowait schedule(static) private(n)
+#pragma omp for schedule(static) private(n)
       for (i = StartIndex; i < EndIndex; i++) {
 	n = NumberOfParticles + i - StartIndex;
 	Mass[n] = List[i].mass;
@@ -158,7 +158,7 @@ int grid::CollectParticles(int GridNum, int* &NumberToMove,
       }
 
       for (dim = 0; dim < GridRank; dim++) {
-#pragma omp for nowait schedule(static) private(n)
+#pragma omp for schedule(static) private(n)
 	for (i = StartIndex; i < EndIndex; i++) {
 	  n = NumberOfParticles + i - StartIndex;
 	  Position[dim][n] = List[i].pos[dim];
@@ -167,7 +167,7 @@ int grid::CollectParticles(int GridNum, int* &NumberToMove,
       }
       
       for (j = 0; j < NumberOfParticleAttributes; j++) {
-#pragma omp for nowait schedule(static) private(n)
+#pragma omp for schedule(static) private(n)
 	for (i = StartIndex; i < EndIndex; i++) {
 	  n = NumberOfParticles + i - StartIndex;
 	  Attribute[j][n] = List[i].attribute[j];
