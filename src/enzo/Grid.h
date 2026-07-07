@@ -49,6 +49,10 @@ struct HierarchyEntry;
 #include "ProblemType.h"
 #endif
 
+#ifdef USE_LIBYT
+struct yt_grid;
+#endif
+
 //extern int CommunicationDirection;
 
 //struct ParticleEntry {
@@ -2896,6 +2900,9 @@ int inteuler(int idim,
     void ConvertToNumpy(int GridID, PyArrayObject *container[],
                         int ParentID, int level, FLOAT WriteTime);
 #endif
+#ifdef USE_LIBYT
+    void ConvertToLibyt(int LocalGridID, int GlobalGridID, int ParentID, int level, yt_grid &GridInfo);
+#endif 
 //------------------------------------------------------------------------
 // Methods for star formation
 //------------------------------------------------------------------------
