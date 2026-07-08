@@ -39,7 +39,7 @@ int CommunicationBufferedSend(void *buffer, int size, MPI_Datatype Type, int Tar
 #endif /* USE_MPI */
  
 extern "C" void FORTRAN_NAME(dep_grid_cic)(
-			       float *source, float *dest, float *temp,
+			       float *source, float *dest,
 			       float *velx, float *vely, float *velz,
 			       float *dt, float *rfield, int *ndim,
                                    hydro_method *ihydro,
@@ -265,7 +265,6 @@ int grid::DepositBaryons(grid *TargetGrid, FLOAT DepositTime)
 
     if (DepositGridCIC == TRUE)
       FORTRAN_NAME(dep_grid_cic)(input_density, dens_field,
-         vel_field,
 				 input_velx, input_vely, input_velz,
 				 &dt,
 				 BaryonField[NumberOfBaryonFields], &GridRank,

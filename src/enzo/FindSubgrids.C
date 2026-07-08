@@ -12,6 +12,7 @@
  
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 #include "ErrorExceptions.h"
 #include "macros_and_parameters.h"
 #include "typedefs.h"
@@ -29,7 +30,7 @@
 int IdentifyNewSubgridsBySignature(ProtoSubgrid *SubgridList[],
 				   int &NumberOfSubgrids);
  
-int FindSubgrids(HierarchyEntry *Grid, ProtoSubgrid *SubgridList[],
+int FindSubgrids(HierarchyEntry *Grid,
 		 int level, int &TotalFlaggedCells, int &FlaggedGrids)
 {
  
@@ -108,6 +109,7 @@ int FindSubgrids(HierarchyEntry *Grid, ProtoSubgrid *SubgridList[],
  
     /* Create the base ProtoSubgrid which contains the whole grid. */
  
+    std::vector<ProtoSubgrid*> SubgridList(MAX_NUMBER_OF_SUBGRIDS);
     int NumberOfSubgrids = 1;
     SubgridList[0] = new ProtoSubgrid;
     
@@ -122,8 +124,7 @@ int FindSubgrids(HierarchyEntry *Grid, ProtoSubgrid *SubgridList[],
     /* Recursively break up this ProtoSubgrid and add new ones based on the
        flagged cells. */
  
-#pragma omp critical 
-    IdentifyNewSubgridsBySignature(SubgridList, NumberOfSubgrids);
+    IdentifyNewSubgridsBySignature(SubgridList.data(), NumberOfSubgrids);
  
     /* For each subgrid, create a new grid based on the current grid (i.e.
        same parameters, etc.) */

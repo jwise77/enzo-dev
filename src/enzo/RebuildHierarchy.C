@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <vector>
 
 #include "EnzoTiming.h" 
 #include "ErrorExceptions.h"
@@ -41,7 +42,7 @@
  
 void AddLevel(LevelHierarchyEntry *LevelArray[], HierarchyEntry *Grid,
 	      int level);
-int FindSubgrids(HierarchyEntry *Grid, ProtoSubgrid *SubgridList[],
+int FindSubgrids(HierarchyEntry *Grid,
 		 int level, int &TotalFlaggedCells, int &FlaggedGrids);
 void WriteListOfInts(FILE *fptr, int N, int nums[]);
 int ReportMemoryUsage(char *header = NULL);
@@ -155,11 +156,15 @@ int RebuildHierarchy(TopGridData *MetaData,
   /* For each grid on this level collect all the particles below it.
      Notice that this must be done even for static hierarchy's.  */
  
-  static HierarchyEntry *GridParent[MAX_NUMBER_OF_SUBGRIDS];
-  static grid           *GridPointer[MAX_NUMBER_OF_SUBGRIDS];
-  static grid           *ContigiousGridList[MAX_NUMBER_OF_SUBGRIDS];
-  static ProtoSubgrid   *SubgridList[MAX_NUMBER_OF_SUBGRIDS];
-  static grid           *ToGrids[MAX_NUMBER_OF_SUBGRIDS/10];
+  std::vector<HierarchyEntry*> GridParent_vec(MAX_NUMBER_OF_SUBGRIDS);
+  std::vector<grid*> GridPointer_vec(MAX_NUMBER_OF_SUBGRIDS);
+  std::vector<grid*> ContigiousGridList_vec(MAX_NUMBER_OF_SUBGRIDS);
+  std::vector<grid*> ToGrids_vec(MAX_NUMBER_OF_SUBGRIDS);
+
+  HierarchyEntry **GridParent = GridParent_vec.data();
+  grid **GridPointer = GridPointer_vec.data();
+  grid **ContigiousGridList = ContigiousGridList_vec.data();
+  grid **ToGrids = ToGrids_vec.data();
 
   /* Because we're storing particles in "empty" grids that are local
      to the subgrid, keep track of the number of particles stored
@@ -423,10 +428,10 @@ int RebuildHierarchy(TopGridData *MetaData,
 
       tt0 = ReturnWallTime();
       TotalFlaggedCells = FlaggedGrids = 0;
-#pragma omp parallel for schedule(guided) private(SubgridList)	\
+#pragma omp parallel for schedule(guided) \
   reduction(+:TotalFlaggedCells, FlaggedGrids)
       for (j = 0; j < grids; j++)
-	FindSubgrids(GridHierarchyPointer[j], SubgridList, i,
+	FindSubgrids(GridHierarchyPointer[j], i,
 		     TotalFlaggedCells, FlaggedGrids);
       CommunicationSumValues(&TotalFlaggedCells, 1);
       CommunicationSumValues(&FlaggedGrids, 1);

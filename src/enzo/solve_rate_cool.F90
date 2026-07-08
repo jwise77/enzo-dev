@@ -11,7 +11,7 @@
        in, jn, kn, nratec, iexpand, imethod, &
        idual, ispecies, imetal, imcool, idust, idim, &
        is, js, ks, ie, je, ke, imax, ih2co, ipiht, igammah, &
-       dt, aye, redshift, temstart, temend, &
+       dx, dt, aye, redshift, temstart, temend, &
        utem, uxyz, uaye, urho, utim, &
        eta1, eta2, gamma, fh, dtoh, z_solar, &
        k1a, k2a, k3a, k4a, k5a, k6a, k7a, k8a, k9a, k10a, &
@@ -134,6 +134,7 @@
          iradcoupled, iradstep, n_xe, imcool, idust, irt_honly, &
          igammah, ih2optical, iciecool, ithreebody, imax, &
          ndratec
+    R_PREC, intent(in) :: dx(*)
     R_PREC, intent(in) :: dt, aye, temstart, temend, eta1, eta2, gamma, &
          utim, uxyz, uaye, urho, utem, fh, dtoh, xe_start, xe_end, &
          dtemstart, dtemend, z_solar, redshift
@@ -205,7 +206,7 @@
 
     INTG_PREC :: i, j, k, iter
     INTG_PREC :: clGridDim1, clGridDim2, clGridDim3, clGridDim4, clGridDim5
-    R_PREC :: ttmin, dom, energy, comp1, comp2, olddtit
+    R_PREC :: ttmin, dom, energy, comp1, comp2, olddtit, dx_cgs
     real*8 :: coolunit, dbase1, tbase1, xbase1, chunit, uvel
     real*8 :: heq1, heq2, eqk221, eqk222, eqk131, eqk132, &
          eqt1, eqt2, eqtdef, dheq, heq, dlogtem
@@ -222,7 +223,7 @@
     R_PREC, dimension(:), allocatable :: &
          HIp, HIIp, HeIp, HeIIp, HeIIIp, HMp, H2Ip, H2IIp, dep, &
          dedot, HIdot, dedot_prev, DIp, DIIp, HDIp, HIdot_prev, &
-         k24shield, k25shield, k26shield, &
+         k24shield, k25shield, k26shield, k31shield, &
          h2dust, ncrn, ncrd1, ncrd2
     R_PREC, dimension(:), allocatable :: &
          k1 , k2 , k3 , k4 , k5 , k6 , k7 , k8 , k9 , k10, k11, &
@@ -276,6 +277,7 @@
     allocate(k24shield(imax))
     allocate(k25shield(imax))
     allocate(k26shield(imax))
+    allocate(k31shield(imax))
     allocate(k1(imax))
     allocate(k2(imax))
     allocate(k3(imax))
@@ -348,6 +350,7 @@
       dom      = urho*(aye**3)/mh
       tbase1   = utim
       xbase1   = uxyz/(aye*uaye)    ! uxyz is [x]*a      = [x]*[a]*a'        '
+      dx_cgs   = dx(is+1) * xbase1
       dbase1   = urho*(aye*uaye)**3 ! urho is [dens]/a^3 = [dens]/([a]*a')^3 '
       coolunit = (uaye**5 * xbase1**2 * mh**2) / (tbase1**3 * dbase1)
       uvel     = uxyz / utim
@@ -460,7 +463,7 @@
             call lookup_cool_rates1d(temstart, temend, nratec, j, k, &
                  is, ie, imax, iradtype, iradshield, ithreebody,     &
                  in, jn, kn, ispecies, idust,                        &
-                 tgas, HI, HII, HeI, HeII, tdust, metallicity,       &
+                 tgas, d, HI, HII, HeI, HeII, H2I, tdust, metallicity, &
                  k1a, k2a, k3a, k4a, k5a, k6a, k7a, k8a, k9a, k10a,  &
                  k11a, k12a, k13a, k13dda, k14a, k15a, k16a,         &
                  k17a, k18a, k19a, k22a,                             &
@@ -470,12 +473,13 @@
                  avgsighp, avgsighep, avgsighe2p, piHI, piHeI,       &
                  k1, k2, k3, k4, k5, k6, k7, k8, k9, k10,            &
                  k11, k12, k13, k14, k15, k16, k17, k18,             &
-                 k19, k22, k24, k25, k26,                            &
+                 k19, k22, k24, k25, k26, k31,                       &
                  k50, k51, k52, k53, k54, k55,                       &
                  k56, k13dd, k24shield, k25shield, k26shield,        &
-                 h2dust, ncrn, ncrd1, ncrd2,                         &
+                 k31shield, h2dust, ncrn, ncrd1, ncrd2,              &
                  t1, t2, tdef, logtem, indixe,                       &
-                 dom, coolunit, tbase1, itmask)
+                 dom, coolunit, tbase1, xbase1, dx_cgs, iradtrans,   &
+                 kdissH2I, itmask)
 
 !           Compute dedot and HIdot, the rates of change of de and HI
 !             (should add itmask to this call)
@@ -486,12 +490,12 @@
                  in, jn, kn, is, ie, j, k,                     &
                  k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, &
                  k12, k13, k14, k15, k16, k17, k18, k19, k22,  &
-                 k24, k25, k26, k27, k28, k29, k30, k31,       &
+                 k24, k25, k26, k27, k28, k29, k30,            &
                  k50, k51, k52, k53, k54, k55, k56,            &
                  h2dust, ncrn, ncrd1, ncrd2, rhoH,             &
-                 k24shield, k25shield, k26shield,              &
+                 k24shield, k25shield, k26shield, k31shield,   &
                  iradtrans, irt_honly, kphHI, kphHeI, kphHeII, &
-                 kdissH2I, itmask, edot, chunit, dom)
+                 itmask, edot, chunit, dom)
 
 !           Find timestep that keeps relative chemical changes below 10%
 
@@ -718,15 +722,15 @@
                  in, jn, kn, is, ie, j, k, ispecies, idust,    &
                  k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, &
                  k12, k13, k14, k15, k16, k17, k18, k19, k22,  &
-                 k24, k25, k26, k27, k28, k29, k30, k31,       &
+                 k24, k25, k26, k27, k28, k29, k30,            &
                  k50, k51, k52, k53, k54, k55, k56,            &
                  h2dust, rhoH,                                 &
-                 k24shield, k25shield, k26shield,              &
+                 k24shield, k25shield, k26shield, k31shield,   &
                  HIp, HIIp, HeIp, HeIIp, HeIIIp, dep,          &
                  HMp, H2Ip, H2IIp, DIp, DIIp, HDIp,            &
                  dedot_prev, HIdot_prev,                       &
                  iradtrans, irt_honly, kphHI, kphHeI, kphHeII, &
-                 kdissH2I, itmask)
+                 itmask)
 
 !           Add the timestep to the elapsed time for each cell and find
 !            minimum elapsed time step in this row
@@ -820,6 +824,7 @@
       deallocate(k24shield)
       deallocate(k25shield)
       deallocate(k26shield)
+      deallocate(k31shield)
       deallocate(k1)
       deallocate(k2)
       deallocate(k3)
