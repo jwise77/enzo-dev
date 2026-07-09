@@ -327,8 +327,7 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   if (HybridParallelRootGridSplit)
     thread_grid_loop = true;
   else
-    thread_grid_loop = (level > 0) && 
-      (NumberOfGrids > NumberOfProcessors*omp_get_num_threads());
+    thread_grid_loop = (level > 0) && (NumberOfGrids > 1);
 #endif
 
   /* Create a SUBling list of the subgrids */
@@ -701,7 +700,10 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     
       /* Solve the cooling and species rate equations. */
  
+    int loop_status = SUCCESS;
+#pragma omp parallel for if(thread_grid_loop) schedule(dynamic)
     for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
+      if (loop_status == FAIL) continue;
       Grids[grid1]->GridData->MultiSpeciesHandler();
 
       /* Update particle positions (if present). */
@@ -742,7 +744,9 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       /* Compute and apply thermal conduction. */
       if(IsotropicConduction || AnisotropicConduction){
 	if(Grids[grid1]->GridData->ConductHeat() == FAIL){
-	  ENZO_FAIL("Error in grid->ConductHeat.\n");
+	  fprintf(stderr, "Error in grid->ConductHeat.\n");
+#pragma omp atomic write
+          loop_status = FAIL;
 	}
       }
 
@@ -751,19 +755,22 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
         if(CRDiffusion == 1){ // isotropic diffusion                                                                               
           if(Grids[grid1]->GridData->ComputeCRDiffusion() == FAIL){
             fprintf(stderr, "Error in grid->ComputeExplicitIsotropicCRDiffusion.\n");
-            return FAIL;
+#pragma omp atomic write
+            loop_status = FAIL;
           }
         }
         else if(CRDiffusion == 2){ // anisotripic diffusion                                                                        
           if(Grids[grid1]->GridData->ComputeAnisotropicCRDiffusion() == FAIL){
             fprintf(stderr, "Error in grid->ComputeAnisotropicCRDiffusion .\n");
-            return FAIL;
+#pragma omp atomic write
+            loop_status = FAIL;
           }
         }
         if(CRStreaming){ // cosmic ray streaming                                                                                   
           if(Grids[grid1]->GridData->ComputeCRStreaming() == FAIL){
             fprintf(stderr, "Error in grid->ComputeCRStreaming .\n");
-            return FAIL;
+#pragma omp atomic write
+            loop_status = FAIL;
           }
         }
       }// end CRModel if 
@@ -797,7 +804,11 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 	Grids[grid1]->GridData->MagneticSupernovaList.clear(); 
 
     } //end loop over grids
-
+ 
+    if (loop_status == FAIL) {
+      return FAIL;
+    }
+ 
     ActiveParticleFinalize(Grids, MetaData, NumberOfGrids, LevelArray,
                            level, NumberOfNewActiveParticles);
     /* Finalize (accretion, feedback, etc.) star particles */
