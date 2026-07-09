@@ -323,6 +323,13 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   RunEventHooks("EvolveLevelTop", Grids, *MetaData);
 
   bool thread_grid_loop = false;
+#ifdef _OPENMP
+  if (HybridParallelRootGridSplit)
+    thread_grid_loop = true;
+  else
+    thread_grid_loop = (level > 0) && 
+      (NumberOfGrids > NumberOfProcessors*omp_get_num_threads());
+#endif
 
   /* Create a SUBling list of the subgrids */
   LevelHierarchyEntry **SUBlingList;
