@@ -55,8 +55,6 @@ int grid::TransportPhotonPackages(int level, int finest_level,
 {
 
   int i,j,k, dim, index, count;
-  grid *MoveToGrid;
-  ListOfPhotonsToMove *ThreadedMoveList;
 
   if (MyProcessorNumber != ProcessorNumber)
     return SUCCESS;
@@ -167,7 +165,13 @@ int grid::TransportPhotonPackages(int level, int finest_level,
 
 #pragma omp parallel private(PP, FPP, PausedPP, SavedPP)
   {
-
+    grid *MoveToGrid;
+    ListOfPhotonsToMove *ThreadedMoveList = new ListOfPhotonsToMove;
+    ThreadedMoveList->NextPackageToMove = NULL;
+    ThreadedMoveList->PhotonPackage = NULL;
+    ThreadedMoveList->FromGrid = NULL;
+    ThreadedMoveList->ToGrid = NULL;
+ 
   int ii, pstart, pend, photons_per_thread;
   int CoresPerProcess = NumberOfCores / NumberOfProcessors;
   int ThreadNum = 0;
