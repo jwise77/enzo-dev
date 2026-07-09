@@ -163,7 +163,7 @@ int PrepareDensityField(LevelHierarchyEntry *LevelArray[],
 
     CommunicationDirection = COMMUNICATION_SEND;
 	//this is where we want to place the OMP parallel region: FINDME
-#pragma omp parallel for
+#pragma omp parallel for if(NumberOfProcessors == 1)
     for (grid1 = StartGrid; grid1 < EndGrid; grid1++)
       DepositParticleMassField(Grids[grid1], EvaluateTime);
 
@@ -259,12 +259,12 @@ int PrepareDensityField(LevelHierarchyEntry *LevelArray[],
 
     CommunicationDirection = COMMUNICATION_SEND;
 #ifdef FAST_SIB
-#pragma omp parallel for 
+#pragma omp parallel for if(NumberOfProcessors == 1)
     for (grid1 = StartGrid; grid1 < EndGrid; grid1++)
       PrepareGravitatingMassField2a(Grids[grid1], grid1, SiblingList,
 				   MetaData, level, When);
 #else
-#pragma omp parallel for 
+#pragma omp parallel for if(NumberOfProcessors == 1)
     for (grid1 = StartGrid; grid1 < EndGrid; grid1++)
       PrepareGravitatingMassField2a(Grids[grid1], MetaData, LevelArray,
 				   level, When);
