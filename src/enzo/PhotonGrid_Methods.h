@@ -31,11 +31,11 @@ void DeleteSubgridMarker() { delete [] SubgridMarker; SubgridMarker = NULL; };
 
 /* Photons: return PhotonPackage pointer. */
 
-   PhotonPackageEntry *ReturnPhotonPackagePointer(void) 
-   {return PhotonPackages;};
+   PhotonPackageSoA *ReturnPhotonPackagePointer(void) 
+   {return &PhotonPackages;};
 
-   PhotonPackageEntry *ReturnPausedPackagePointer(void) 
-   {return PausedPhotonPackages;};
+   PhotonPackageSoA *ReturnPausedPackagePointer(void) 
+   {return &PausedPhotonPackages;};
 
 /* Photons: set number of photons. */
 
@@ -147,7 +147,7 @@ float LookUpCrossSectionH2II(float hnu, float T);
 
   int CommunicationSendPhotonPackages(grid *ToGrid, int ToProcessor,
 				      int ToNumber, int FromNumber, 
-				      PhotonPackageEntry **ToPP);
+				      PhotonPackageSoA *ToPP);
 
   int CommunicationSendSubgridMarker(grid *ToGrid, int ToProcessor);
 
@@ -163,58 +163,37 @@ int RadiationPresent(void) { return HasRadiation; }
 void SetRadiation(char value) { HasRadiation = value; }
 
 void InitializePhotonPackages(void) {
-  if (PhotonPackages == NULL) {
-    PhotonPackages = new PhotonPackageEntry;
-    PhotonPackages->NextPackage     = NULL;
-    PhotonPackages->PreviousPackage = NULL;
-  }
-  if (FinishedPhotonPackages == NULL) {
-    FinishedPhotonPackages = new PhotonPackageEntry;
-    FinishedPhotonPackages->NextPackage = NULL;
-    FinishedPhotonPackages->PreviousPackage = NULL;
-  }    
-  if (PausedPhotonPackages == NULL) {
-    PausedPhotonPackages = new PhotonPackageEntry;
-    PausedPhotonPackages->NextPackage = NULL;
-    PausedPhotonPackages->PreviousPackage = NULL;
-  }
+  PhotonPackages.initialize();
+  FinishedPhotonPackages.initialize();
+  PausedPhotonPackages.initialize();
   return;
 }
 
 void ResetPhotonPackagePointer(void) {
-  PhotonPackages->NextPackage     = NULL;
-  PhotonPackages->PreviousPackage = NULL;
-  PhotonPackages->Photons         = 1.;
-  PhotonPackages->Type            = 0;          
-  PhotonPackages->Energy          = 0.;        
-  PhotonPackages->EmissionTimeInterval= 0.;      
-  PhotonPackages->EmissionTime    = 0.;  
-  PhotonPackages->CurrentTime     = 0.;   
-  PhotonPackages->Radius          = 0.;        
-  PhotonPackages->ipix            = 0;         
-  PhotonPackages->level           = 0;        
+  PhotonPackages.free_arrays();
   return;
 }
 
 int MoveFinishedPhotonsBack(void) {
-
-  PhotonPackageEntry *FPP = FinishedPhotonPackages->NextPackage;
-
-  if (FPP != NULL) {
-
-    // Find the end of the PhotonPackages list
-    PhotonPackageEntry *PP = PhotonPackages;
-    while (PP->NextPackage != NULL)
-      PP = PP->NextPackage;
-
-    FPP->PreviousPackage = PP;
-    PP->NextPackage = FPP;
-
+  for (int i = 0; i < FinishedPhotonPackages.numPackages; i++) {
+    PhotonPackages.append(FinishedPhotonPackages.Flux[i],
+                          FinishedPhotonPackages.Type[i],
+                          FinishedPhotonPackages.Energy[i],
+                          FinishedPhotonPackages.CrossSection[i],
+                          FinishedPhotonPackages.TimeInterval[i],
+                          FinishedPhotonPackages.EmissionTime[i],
+                          FinishedPhotonPackages.CurrentTime[i],
+                          FinishedPhotonPackages.Radius[i],
+                          FinishedPhotonPackages.ColumnDensity[i],
+                          FinishedPhotonPackages.PixelNum[i],
+                          FinishedPhotonPackages.Level[i],
+                          FinishedPhotonPackages.SourceX[i],
+                          FinishedPhotonPackages.SourceY[i],
+                          FinishedPhotonPackages.SourceZ[i],
+                          FinishedPhotonPackages.SourcePositionDiff[i],
+                          FinishedPhotonPackages.CurrentSource[i]);
   }
-
-  FinishedPhotonPackages->PreviousPackage = NULL;
-  FinishedPhotonPackages->NextPackage = NULL;
-
+  FinishedPhotonPackages.free_arrays();
   return SUCCESS;
 }
 
@@ -236,22 +215,21 @@ float ReturnTotalNumberOfRaySegments(int RaySegNum) {
 #define NO_DEBUG
 #ifdef DEBUG
 int ErrorCheckSource(void) {
-  PhotonPackageEntry *PP;
-  for (PP = PhotonPackages->NextPackage; PP; PP = PP->NextPackage) {
-    if (PP->CurrentSource != NULL) {
-      if ((PP->CurrentSource->LeafID < 0 ||
-	   PP->CurrentSource->LeafID > 10000) &&
-	  PP->CurrentSource->LeafID != INT_UNDEFINED) {
+  for (int i = 0; i < PhotonPackages.numPackages; i++) {
+    if (PhotonPackages.CurrentSource[i] != NULL) {
+      if ((PhotonPackages.CurrentSource[i]->LeafID < 0 ||
+	   PhotonPackages.CurrentSource[i]->LeafID > 10000) &&
+	  PhotonPackages.CurrentSource[i]->LeafID != INT_UNDEFINED) {
 	printf("Bad merge...\n");
 	return FAIL;
       }
     }
   }
-  for (PP = FinishedPhotonPackages->NextPackage; PP; PP = PP->NextPackage) {
-    if (PP->CurrentSource != NULL) {
-      if ((PP->CurrentSource->LeafID < 0 ||
-	   PP->CurrentSource->LeafID > 10000) &&
-	  PP->CurrentSource->LeafID != INT_UNDEFINED) {
+  for (int i = 0; i < FinishedPhotonPackages.numPackages; i++) {
+    if (FinishedPhotonPackages.CurrentSource[i] != NULL) {
+      if ((FinishedPhotonPackages.CurrentSource[i]->LeafID < 0 ||
+	   FinishedPhotonPackages.CurrentSource[i]->LeafID > 10000) &&
+	  FinishedPhotonPackages.CurrentSource[i]->LeafID != INT_UNDEFINED) {
 	printf("Bad merge...\n");
 	return FAIL;
       }
@@ -263,12 +241,8 @@ int ErrorCheckSource(void) {
 int ErrorCheckPhotonNumber(int level) {
   if (MyProcessorNumber != ProcessorNumber)
     return SUCCESS;
-  int count = 0, fcount = 0;
-  PhotonPackageEntry *PP;
-  for (PP = PhotonPackages->NextPackage; PP; PP = PP->NextPackage)
-    count++;
-  for (PP = FinishedPhotonPackages->NextPackage; PP; PP = PP->NextPackage)
-    fcount++;
+  int count = PhotonPackages.numPackages;
+  int fcount = FinishedPhotonPackages.numPackages;
   if (count+fcount != NumberOfPhotonPackages) {
     printf("level %"ISYM", grid %"ISYM" (%x)\n", level, this->ID, this);
     printf("-> Mismatch between photon count (%"ISYM", %"ISYM") and "
@@ -280,32 +254,15 @@ int ErrorCheckPhotonNumber(int level) {
 }
 
 int ReturnFinishedPhotonCount(void) {
-  int result = 0;
   if (MyProcessorNumber != ProcessorNumber)
-    return result;
-  PhotonPackageEntry *PP = FinishedPhotonPackages->NextPackage;
-  while (PP != NULL) {
-    result++;
-    PP = PP->NextPackage;
-  }
-  return result;
+    return 0;
+  return FinishedPhotonPackages.numPackages;
 }
 
 int ReturnRealPhotonCount(void) {
-  int result = 0;
   if (MyProcessorNumber != ProcessorNumber)
-    return result;
-  PhotonPackageEntry *PP = PhotonPackages->NextPackage;
-  while (PP != NULL) {
-    result++;
-    PP = PP->NextPackage;
-  }
-  PP = FinishedPhotonPackages->NextPackage;
-  while (PP != NULL) {
-    result++;
-    PP = PP->NextPackage;
-  }
-  return result;
+    return 0;
+  return PhotonPackages.numPackages + FinishedPhotonPackages.numPackages;
 }
 #endif /* DEBUG */
 /************************************************************************
@@ -317,14 +274,7 @@ int CountPhotonNumber(void) {
   if (MyProcessorNumber != ProcessorNumber)
     return 0;
 
-  int nphotons = 0;
-  PhotonPackageEntry *PP = PhotonPackages->NextPackage;
-  while (PP != NULL) {
-    nphotons++;
-    PP = PP->NextPackage;
-  }
-
-  return nphotons;
+  return PhotonPackages.numPackages;
 
 }
 

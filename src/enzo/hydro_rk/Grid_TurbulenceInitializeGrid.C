@@ -113,9 +113,7 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
       FieldType[RPresNum3 = NumberOfBaryonFields++] = RadPressure2;
     }
     
-    NumberOfPhotonPackages = 0;
-    PhotonPackages-> NextPackage= NULL;
-    
+    PhotonPackages.free_arrays();
   }
 #endif
 

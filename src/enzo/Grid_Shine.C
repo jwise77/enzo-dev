@@ -209,69 +209,49 @@ int grid::Shine(RadiationSourceEntry *RadiationSource)
       //      for (j=0; j<1; j++) {
       //	if (photons_per_package>tiny_number) { //removed and changed to below by Ji-hoon Kim in Sep.2009
       if (!isnan(photons_per_package) && photons_per_package > 0) { 
-	PhotonPackageEntry *NewPack = new PhotonPackageEntry;
-	NewPack->NextPackage = PhotonPackages->NextPackage;
-	PhotonPackages->NextPackage = NewPack;
-	NewPack->PreviousPackage = PhotonPackages;
-	if (NewPack->NextPackage != NULL) 
-	  NewPack->NextPackage->PreviousPackage  = NewPack;
-	NewPack->Photons = photons_per_package;
-	NewPack->Type = this_type;
+        int p_type = this_type;
 
 	// Type 6 = tracing spectrum (check Grid_WalkPhotonPackage)
-	if (RadiativeTransferTraceSpectrum) NewPack->Type = TRACINGSPECTRUM;
+	if (RadiativeTransferTraceSpectrum) p_type = TRACINGSPECTRUM;
 
 	// Override if we're only doing hydrogen ionization
-	if (RadiativeTransferHydrogenOnly) NewPack->Type = 0;
+	if (RadiativeTransferHydrogenOnly) p_type = 0;
 
-	NewPack->EmissionTimeInterval = dtPhoton;
-	NewPack->EmissionTime = PhotonTime;
-	NewPack->CurrentTime  = PhotonTime;
-	NewPack->ColumnDensity = 0;
-	NewPack->Radius = 0.;
-	NewPack->ipix = ray;
-	NewPack->level = min_level;
-	NewPack->Energy = RS->Energy[ebin];
-	NewPack->CrossSection = 0.0;
+	FLOAT time_interval = dtPhoton;
+	FLOAT emission_time = PhotonTime;
+	FLOAT current_time  = PhotonTime;
+	float column_density = 0;
+	FLOAT radius = 0.;
+	int64_t ipix = ray;
+	int level = min_level;
+	float energy = RS->Energy[ebin];
+	double cross_section = 0.0;
 	double dir_vec[3];
-	pix2vec_nest64((int64_t) (1 << NewPack->level), NewPack->ipix, dir_vec);
+	pix2vec_nest64((int64_t) (1 << level), ipix, dir_vec);
 	/* Find the cross section for each radiation type */
-	if (NewPack->Type < 4)
-	  NewPack->CrossSection = 
-	    FindCrossSection(NewPack->Type, NewPack->Energy);
+	if (p_type < 4)
+	  cross_section = FindCrossSection(p_type, energy);
 	else
-	  NewPack->CrossSection = tiny_number;
+	  cross_section = tiny_number;
 	/* Set the photon origin to the source radius (0 = point src) */
 
-	NewPack->SourcePositionDiff = 0.0;
+	float source_pos_diff = 0.0;
+        FLOAT source_position[3];
 
 	for (dim = 0; dim < MAX_DIMENSION; dim++) {
 	  FuzzyLength = RadiativeTransferSourceRadius * dir_vec[dim] * 
 	    AllCellWidth[dim] + ShakeSource[dim];
-	  NewPack->SourcePosition[dim] = RS->Position[dim] + FuzzyLength;
-	  NewPack->SourcePositionDiff += FuzzyLength * FuzzyLength;
+	  source_position[dim] = RS->Position[dim] + FuzzyLength;
+	  source_pos_diff += FuzzyLength * FuzzyLength;
 	}
-	NewPack->SourcePositionDiff = sqrt(NewPack->SourcePositionDiff);
-	NewPack->CurrentSource = RS->SuperSource;
+	source_pos_diff = sqrt(source_pos_diff);
+	SuperSourceEntry *curr_source = RS->SuperSource;
 
-	/* Consider the first super source with a leaf size greater
-	   than the cell size. */
-
-#define NO_PRE_MERGE
-#ifdef PRE_MERGE
-	while (NewPack->CurrentSource != NULL &&
-	       RadiativeTransferPhotonMergeRadius * 
-	       NewPack->CurrentSource->ClusteringRadius < CellWidth[0][0])
-	  NewPack->CurrentSource = NewPack->CurrentSource->ParentSource;
-#endif
-	if(MYPROC && DEBUG == 2)  //Dumps info on 
-	  NewPack->PrintInfo();
-
-//	if (DEBUG) {
-//	  printf("Shine: MBH = %d, RS->Type = %d, E=%g, NewPack->Type = %d\n", 
-//	         MBH, RS->Type, RS->Energy[ebin], NewPack->Type);  
-//	  NewPack->PrintInfo();
-//	}
+	PhotonPackages.append(photons_per_package, p_type, energy, cross_section,
+                              time_interval, emission_time, current_time, radius,
+                              column_density, ipix, level,
+                              source_position[0], source_position[1], source_position[2],
+                              source_pos_diff, curr_source);
 
 	count++;
       } // if enough photons
@@ -284,19 +264,9 @@ int grid::Shine(RadiationSourceEntry *RadiationSource)
 
   if (MYPROC && DEBUG) {
     printf("Shine: created %"ISYM" packages \n", count);
-    PhotonPackageEntry *PP;
-    PP = PhotonPackages;
-    count = 0;
-    while ((PP->NextPackage) != NULL) {
-      count++;
-      PP = PP->NextPackage;
-    }
     if (DEBUG) fprintf(stdout,"Shine: done.\n");
-    if (DEBUG) fprintf(stdout,"counted %"ISYM" packages\n", count);
+    if (DEBUG) fprintf(stdout,"counted %d packages\n", PhotonPackages.numPackages);
   }
-
-  if (DEBUG) fprintf(stdout, "Shine: PhotonPackages : %p   NextPackage  %p\n", 
-		     PhotonPackages, PhotonPackages->NextPackage);
   
   return SUCCESS;
-};
+}

@@ -52,8 +52,6 @@ int grid::MoveAllPhotonPackages(int NumberOfGrids, grid* FromGrid[])
 //	    TotalNumberOfPackages, NumberOfPhotonPackages);
 
   // go to end of List
-  PhotonPackageEntry *PP = PhotonPackages->NextPackage;
-
   /* Error check number of photons.  If a bad value, reset photons */
 
   if (NumberOfPhotonPackages < 0) {
@@ -61,21 +59,14 @@ int grid::MoveAllPhotonPackages(int NumberOfGrids, grid* FromGrid[])
 	   "NumberOfPhotons = %"ISYM"\n", NumberOfPhotonPackages);
     NumberOfPhotonPackages = 0;
     TotalNumberOfPackages = 0;
-    while (PP != NULL) {
-      PP = DeletePhotonPackage(PP);
-      PP = PP->NextPackage;
-      TotalNumberOfPackages++;
-    }
-    printf("MoveAllPackages: deleted %"ISYM" photons\n", TotalNumberOfPackages);
+    PhotonPackages.free_arrays();
+    printf("MoveAllPackages: deleted photons\n");
     return SUCCESS;
   }
 
-  /* Connect linked lists of FromGrids' PhotonPackages to this list */
-
-  PP = PhotonPackages;
+  /* Connect lists of FromGrids' PhotonPackages to this list */
 
   int count = NumberOfPhotonPackages;
-  int fromcount;
 
   for (gridcount = 0; gridcount < NumberOfGrids; gridcount++) {
 
@@ -83,55 +74,18 @@ int grid::MoveAllPhotonPackages(int NumberOfGrids, grid* FromGrid[])
 
     if (MyProcessorNumber == ProcessorNumber &&
         MyProcessorNumber == FromGrid[gridcount]->ProcessorNumber) {
-      PhotonPackageEntry *FGPP = 
-	(FromGrid[gridcount]->ReturnPhotonPackagePointer())->NextPackage;
-
-      PhotonPackageEntry *NextFGPP = FGPP;
-
-      fromcount = 0;
-
-      while (FGPP != NULL) {
-
-	// Get next package in from grid before transferring
-	NextFGPP = FGPP->NextPackage;
-
-	if (PP == NULL)
-	  fprintf(stdout, "PP undefined.\n");
-	FGPP->NextPackage = PP->NextPackage;
-	if (PP->NextPackage != NULL)
-	  PP->NextPackage->PreviousPackage = FGPP;
-	PP->NextPackage = FGPP;
-	FGPP->PreviousPackage = PP;
-
-	FGPP = NextFGPP;
-
-	fromcount++;
-	count++;
-
-	if (fromcount > FromGrid[gridcount]->ReturnNumberOfPhotonPackages()) {
-	  printf("MoveAllPackages[P%"ISYM"]: WARNING! fromcount > #ph - %"ISYM" %"ISYM"\n",
-		 MyProcessorNumber, fromcount,
-		 FromGrid[gridcount]->ReturnNumberOfPhotonPackages());
-	  printf("--> Ignoring the rest.\n");
-	  NextFGPP = NULL;
-	}
-
-//	FGPP->PreviousPackage = PP;
-//	PP->NextPackage = FGPP;
-//	count++;
-//	while (((PP->NextPackage)->NextPackage) != NULL) { 
-//	  count++;
-//	  PP=PP->NextPackage;
-//	}
-
-      } /* ENDWHILE FGPP != NULL */
-
-      if (DEBUG)
-	if (fromcount)
-	  printf("MoveAllPackages[P%"ISYM"]: (LOCAL) counted %"ISYM" PhotonPackages. "
-		 "grid #%"ISYM" of %"ISYM".\n", MyProcessorNumber, fromcount, gridcount, 
-		 NumberOfGrids);
-
+      PhotonPackageSoA *fromSoA = FromGrid[gridcount]->ReturnPhotonPackagePointer();
+      for (int i = 0; i < fromSoA->numPackages; i++) {
+        PhotonPackages.append(fromSoA->Flux[i], fromSoA->Type[i], fromSoA->Energy[i],
+                              fromSoA->CrossSection[i], fromSoA->TimeInterval[i],
+                              fromSoA->EmissionTime[i], fromSoA->CurrentTime[i],
+                              fromSoA->Radius[i], fromSoA->ColumnDensity[i],
+                              fromSoA->PixelNum[i], fromSoA->Level[i],
+                              fromSoA->SourceX[i], fromSoA->SourceY[i],
+                              fromSoA->SourceZ[i], fromSoA->SourcePositionDiff[i],
+                              fromSoA->CurrentSource[i]);
+      }
+      fromSoA->free_arrays();
     }
     /* Otherwise, communicate. */
     
@@ -145,14 +99,9 @@ int grid::MoveAllPhotonPackages(int NumberOfGrids, grid* FromGrid[])
 		 gridcount, NumberOfGrids);      
 	if (FromGrid[gridcount]->CommunicationSendPhotonPackages(this, 
 	       ProcessorNumber, NumberOfPhotonPackages, 
-               FromGrid[gridcount]->NumberOfPhotonPackages, &PP) == FAIL) {
+               FromGrid[gridcount]->NumberOfPhotonPackages, &PhotonPackages) == FAIL) {
 	  ENZO_FAIL("Error in grid->CommunicationSendPhotonPackages.\n");
 	}
-	count += FromGrid[gridcount]->ReturnNumberOfPhotonPackages();
-	if (DEBUG)
-
-	  printf("MoveAllPackages: (COMM) counted %"ISYM" PhotonPackages. "
-		 "grid #%"ISYM" of %"ISYM".\n", count, gridcount, NumberOfGrids);      
       }
     }
 

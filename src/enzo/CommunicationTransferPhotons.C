@@ -78,14 +78,9 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
       Mover->FromGrid->SetNumberOfPhotonPackages(FromGridNumber-1);
 
       if (Mover->PausedPhoton == FALSE)
-	ToGridPackages = Mover->ToGrid->ReturnPhotonPackagePointer();
+	Mover->ToGrid->ReturnPhotonPackagePointer()->append(*(Mover->PhotonPackage));
       else
-	ToGridPackages = Mover->ToGrid->ReturnPausedPackagePointer();
-      Mover->PhotonPackage->NextPackage = ToGridPackages->NextPackage;
-      if (ToGridPackages->NextPackage != NULL) 
-	ToGridPackages->NextPackage->PreviousPackage = Mover->PhotonPackage;
-      ToGridPackages->NextPackage = Mover->PhotonPackage;
-      Mover->PhotonPackage->PreviousPackage = ToGridPackages;
+	Mover->ToGrid->ReturnPausedPackagePointer()->append(*(Mover->PhotonPackage));
       Mover = Mover->NextPackageToMove;                // next one
 
     } // end      while Mover != Null 
@@ -93,6 +88,7 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
     Mover = (*AllPhotons)->NextPackageToMove;
     while (Mover != NULL) {  // free memory
       Destroyer = Mover;
+      delete Mover->PhotonPackage;
       Mover = Mover->NextPackageToMove;                // next one	
       delete Destroyer;
     }
@@ -188,14 +184,9 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
       Mover->FromGrid->SetNumberOfPhotonPackages(FromGridNumber-1);
 
       if (Mover->PausedPhoton == FALSE)
-	ToGridPackages = Mover->ToGrid->ReturnPhotonPackagePointer();
+	Mover->ToGrid->ReturnPhotonPackagePointer()->append(*(Mover->PhotonPackage));
       else
-	ToGridPackages = Mover->ToGrid->ReturnPausedPackagePointer();
-      Mover->PhotonPackage->NextPackage = ToGridPackages->NextPackage;
-      if (ToGridPackages->NextPackage != NULL) 
-	ToGridPackages->NextPackage->PreviousPackage = Mover->PhotonPackage;
-      ToGridPackages->NextPackage = Mover->PhotonPackage;
-      Mover->PhotonPackage->PreviousPackage = ToGridPackages;
+	Mover->ToGrid->ReturnPausedPackagePointer()->append(*(Mover->PhotonPackage));
 
       localCounter++;
 
@@ -286,12 +277,7 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
   Mover = (*AllPhotons)->NextPackageToMove;
   while (Mover != NULL) {
     Destroyer = Mover;
-    dummy = Mover->PhotonPackage;
-
-    // Only delete the photon if it's being transferred to another processor
-    if (Mover->ToProcessor != MyProcessorNumber)
-      delete dummy;
-
+    delete Mover->PhotonPackage;
     Mover = Mover->NextPackageToMove;                // next one
     delete Destroyer;
   }

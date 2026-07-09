@@ -155,8 +155,7 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
     FieldType[RPresNum3 = NumberOfBaryonFields++] = RadPressure2;
   }
 
-  NumberOfPhotonPackages = 0;
-  PhotonPackages-> NextPackage= NULL;
+  PhotonPackages.free_arrays();
 
   /* Return if this doesn't concern us. */
 

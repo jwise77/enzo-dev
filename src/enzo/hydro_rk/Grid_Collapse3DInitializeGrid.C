@@ -97,8 +97,7 @@ int grid::Collapse3DInitializeGrid(int n_sphere,
     FieldType[RPresNum2 = NumberOfBaryonFields++] = RadPressure1;
     FieldType[RPresNum3 = NumberOfBaryonFields++] = RadPressure2;
   }
-  NumberOfPhotonPackages = 0;
-  PhotonPackages-> NextPackage= NULL;
+  PhotonPackages.free_arrays();
 #endif
 
 

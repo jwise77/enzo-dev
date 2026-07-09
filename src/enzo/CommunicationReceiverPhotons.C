@@ -62,7 +62,8 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
   MPI_Arg TotalReceives = PH_CommunicationReceiveMaxIndex;
   int TotalReceivedPhotons = 0;
   bool *CompletedRequests = NULL;
-  PhotonPackageEntry *NewPack, *ToPP;
+  PhotonPackageEntry *NewPack;
+  PhotonPackageSoA *ToPP;
   int lvl, gi, dim, i, count, NumberOfActiveRequests;
   grid *ToGrid;
   int ret, level;
@@ -189,55 +190,31 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
       else
 	ToPP	 = ToGrid->ReturnPausedPackagePointer();
 
-      NewPack = new PhotonPackageEntry;
-      NewPack->Photons		= RecvBuffer[i].buffer.Photons;
-      NewPack->Type			= RecvBuffer[i].buffer.Type;
-      NewPack->Energy		= RecvBuffer[i].buffer.Energy;
-      NewPack->EmissionTimeInterval = 
-	RecvBuffer[i].buffer.EmissionTimeInterval;
-      NewPack->EmissionTime		= RecvBuffer[i].buffer.EmissionTime;
-      NewPack->CurrentTime		= RecvBuffer[i].buffer.CurrentTime;
-      NewPack->ColumnDensity	= RecvBuffer[i].buffer.ColumnDensity;
-      NewPack->CrossSection		= RecvBuffer[i].buffer.CrossSection;
-      NewPack->Radius		= RecvBuffer[i].buffer.Radius;
-      NewPack->ipix			= RecvBuffer[i].buffer.ipix;
-      NewPack->level		= RecvBuffer[i].buffer.level;
+      ToPP->append(RecvBuffer[i].buffer.Photons, RecvBuffer[i].buffer.Type,
+                   RecvBuffer[i].buffer.Energy, RecvBuffer[i].buffer.CrossSection,
+                   RecvBuffer[i].buffer.EmissionTimeInterval, RecvBuffer[i].buffer.EmissionTime,
+                   RecvBuffer[i].buffer.CurrentTime, RecvBuffer[i].buffer.Radius,
+                   RecvBuffer[i].buffer.ColumnDensity, RecvBuffer[i].buffer.ipix,
+                   RecvBuffer[i].buffer.level, RecvBuffer[i].buffer.SourcePosition[0],
+                   RecvBuffer[i].buffer.SourcePosition[1], RecvBuffer[i].buffer.SourcePosition[2],
+                   RecvBuffer[i].buffer.SourcePositionDiff, NULL);
 
-      for (dim = 0; dim < MAX_DIMENSION; dim++)
-	NewPack->SourcePosition[dim] = 
-	  RecvBuffer[i].buffer.SourcePosition[dim];
-
-      NewPack->SourcePositionDiff = RecvBuffer[i].buffer.SourcePositionDiff;
-
-      /* Search for the corresponding SuperSource, given a source ID
-	 on the tree */
-
-#ifdef DEBUG_CRP2
-      printf("CTPhR(P%"ISYM"): Photon %"ISYM" :: lvl %"ISYM", grid %"ISYM
-	     ", srcid=%"ISYM", L = %"GSYM"\n",
-	     MyProcessorNumber, i, lvl, gi, 
-	     RecvBuffer[i].buffer.SuperSourceID, NewPack->Photons);
-#endif
-
-      if (RadiativeTransferSourceClustering)
-	FindSuperSource(&NewPack, RecvBuffer[i].buffer.SuperSourceID);
-      else
-	NewPack->CurrentSource = NULL;
-
-      InsertPhotonAfter(ToPP, NewPack);
+      int idx = ToPP->numPackages - 1;
+      if (RadiativeTransferSourceClustering) {
+        PhotonPackageEntry *tempPP = new PhotonPackageEntry;
+        int leafID = RecvBuffer[i].buffer.SuperSourceID;
+        FindSuperSource(&tempPP, leafID);
+        ToPP->CurrentSource[idx] = tempPP->CurrentSource;
+        delete tempPP;
+      } else {
+        ToPP->CurrentSource[idx] = NULL;
+      }
 
       /* Update photon count */
 
       ToCount = ToGrid->ReturnNumberOfPhotonPackages();
       ToGrid->SetNumberOfPhotonPackages(ToCount+1);
 
-#ifdef DEBUG_CRP2
-      printf("CTPhR(P%"ISYM"): Photon %"ISYM" :: lvl %"ISYM", grid %"ISYM
-	     ", srcid=%"ISYM", L = %"GSYM" (%"GSYM")\n",
-	     MyProcessorNumber, i, lvl, gi, 
-	     RecvBuffer[i].buffer.SuperSourceID, NewPack->Photons,
-	     ToPP->NextPackage->Photons);
-#endif
 
     } // ENDFOR transferred photons (i)
 

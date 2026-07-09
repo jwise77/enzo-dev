@@ -47,11 +47,10 @@ void InsertPhotonAfter(PhotonPackageEntry * &Node, PhotonPackageEntry * &NewNode
 
 int grid::CommunicationSendPhotonPackages(grid *ToGrid, int ToProcessor,
 					  int ToNumber, int FromNumber, 
-					  PhotonPackageEntry **ToPP)
+					  PhotonPackageSoA *ToPP)
 {
 
   int index, dim, temp_int;
-  PhotonPackageEntry *PP;
 
   if (CommunicationShouldExit(ProcessorNumber, ToProcessor))
     return SUCCESS;
@@ -77,54 +76,43 @@ int grid::CommunicationSendPhotonPackages(grid *ToGrid, int ToProcessor,
   /* If this is from processor, pack photons */
 
   if (MyProcessorNumber == ProcessorNumber) {
-    index = 0;
-    PP = PhotonPackages->NextPackage;
-
-    while (PP != NULL) {
-      buffer[index].Photons		 = PP->Photons;
-      buffer[index].Type		 = PP->Type;
-      buffer[index].Energy		 = PP->Energy;
-      buffer[index].EmissionTimeInterval = PP->EmissionTimeInterval;
-      buffer[index].EmissionTime	 = PP->EmissionTime;
-      buffer[index].CurrentTime          = PP->CurrentTime;
-      buffer[index].ColumnDensity        = PP->ColumnDensity;
-      buffer[index].CrossSection         = PP->CrossSection;
-      buffer[index].Radius		 = PP->Radius;
-      buffer[index].ipix		 = PP->ipix;
-      buffer[index].level		 = PP->level;
+    for (index = 0; index < PhotonPackages.numPackages; index++) {
+      buffer[index].Photons		 = PhotonPackages.Flux[index];
+      buffer[index].Type		 = PhotonPackages.Type[index];
+      buffer[index].Energy		 = PhotonPackages.Energy[index];
+      buffer[index].EmissionTimeInterval = PhotonPackages.TimeInterval[index];
+      buffer[index].EmissionTime	 = PhotonPackages.EmissionTime[index];
+      buffer[index].CurrentTime          = PhotonPackages.CurrentTime[index];
+      buffer[index].ColumnDensity        = PhotonPackages.ColumnDensity[index];
+      buffer[index].CrossSection         = PhotonPackages.CrossSection[index];
+      buffer[index].Radius		 = PhotonPackages.Radius[index];
+      buffer[index].ipix		 = PhotonPackages.PixelNum[index];
+      buffer[index].level		 = PhotonPackages.Level[index];
       for (dim = 0; dim < GridRank; dim++)
-	buffer[index].SourcePosition[dim] = PP->SourcePosition[dim];
-      buffer[index].SourcePositionDiff   = PP->SourcePositionDiff;
+	buffer[index].SourcePosition[dim] = (dim == 0) ? PhotonPackages.SourceX[index] :
+                                            ((dim == 1) ? PhotonPackages.SourceY[index] :
+                                             PhotonPackages.SourceZ[index]);
+      buffer[index].SourcePositionDiff   = PhotonPackages.SourcePositionDiff[index];
 
-      if (PP->CurrentSource != NULL)
-	buffer[index].SuperSourceID = PP->CurrentSource->LeafID;
+      if (PhotonPackages.CurrentSource[index] != NULL)
+	buffer[index].SuperSourceID = PhotonPackages.CurrentSource[index]->LeafID;
       else
 	buffer[index].SuperSourceID = -1;
       
-      if (PP->CurrentTime < 0 || PP->CurrentTime > 1e10) {
+      if (PhotonPackages.CurrentTime[index] < 0 || PhotonPackages.CurrentTime[index] > 1e10) {
 	ENZO_VFAIL("CTPhotons[0][P%"ISYM"->P%"ISYM"]: "
 		"(%"ISYM" of %"ISYM") Bad photon time %"GSYM"\n",
 		ProcessorNumber, ToProcessor, index, NumberOfPhotonPackages, 
-		PP->CurrentTime)
+		PhotonPackages.CurrentTime[index])
       }
-
-      // Next photon
-      PP = PP->NextPackage;
-      index++;
-
-    }  /* ENDWHILE PP != NULL */
+    }
 
     if (DEBUG)
       printf("CommSendPhotons(P%"ISYM"): Counted %"ISYM" photons.\n", MyProcessorNumber,
 	     index);
 
     /* Now that we're done packing the photons, delete them */
-    
-    PP = PhotonPackages->NextPackage;
-    while (PP != NULL) {
-      PP = DeletePhotonPackage(PP);
-      PP = PP->NextPackage;
-    }
+    PhotonPackages.free_arrays();
 
     /* Check if we packed all of the photons */
 
@@ -214,56 +202,40 @@ int grid::CommunicationSendPhotonPackages(grid *ToGrid, int ToProcessor,
 
   /* If this is the to processor, unpack fields */
 
-  PhotonPackageEntry *NewPP;
-
   if (MyProcessorNumber == ToProcessor && 
       (CommunicationDirection == COMMUNICATION_SEND_RECEIVE ||
        CommunicationDirection == COMMUNICATION_RECEIVE)) {
 
     for (index = 0; index < FromNumber; index++) {
 
-      NewPP = new PhotonPackageEntry;
+      ToPP->append(buffer[index].Photons, buffer[index].Type,
+                   buffer[index].Energy, buffer[index].CrossSection,
+                   buffer[index].EmissionTimeInterval, buffer[index].EmissionTime,
+                   buffer[index].CurrentTime, buffer[index].Radius,
+                   buffer[index].ColumnDensity, buffer[index].ipix,
+                   buffer[index].level, buffer[index].SourcePosition[0],
+                   buffer[index].SourcePosition[1], buffer[index].SourcePosition[2],
+                   buffer[index].SourcePositionDiff, NULL);
 
-      // insert pointer in list after ToPP
-      NewPP->NextPackage = (*ToPP)->NextPackage;
-      (*ToPP)->NextPackage = NewPP;
-      NewPP->PreviousPackage = *ToPP;
-      if (NewPP->NextPackage != NULL)
-	NewPP->NextPackage->PreviousPackage = NewPP;
+      int idx = ToPP->numPackages - 1;
 
-      // Unpack photons
-      NewPP->Photons		  = buffer[index].Photons;
-      NewPP->Type		  = buffer[index].Type;
-      NewPP->EmissionTimeInterval = buffer[index].EmissionTimeInterval;
-      NewPP->EmissionTime	  = buffer[index].EmissionTime;
-      NewPP->CurrentTime	  = buffer[index].CurrentTime;
-      NewPP->ColumnDensity	  = buffer[index].ColumnDensity;
-      NewPP->CrossSection	  = buffer[index].CrossSection;
-      NewPP->Radius		  = buffer[index].Radius;
-      NewPP->ipix		  = buffer[index].ipix;
-      NewPP->level		  = buffer[index].level;
-      NewPP->Energy		  = buffer[index].Energy;
-      for (int dim = 0; dim < GridRank; dim++) 
-	NewPP->SourcePosition[dim]  = buffer[index].SourcePosition[dim];
-      NewPP->SourcePositionDiff   = buffer[index].SourcePositionDiff;
-
-      if (NewPP->CurrentTime < 0 || NewPP->CurrentTime > 1e10) {
+      if (buffer[index].CurrentTime < 0 || buffer[index].CurrentTime > 1e10) {
 	ENZO_VFAIL("CTPhotons[1][P%"ISYM"->P%"ISYM"]: "
 		"(%"ISYM" of %"ISYM") Bad photon time %"GSYM"\n",
 		ProcessorNumber, ToProcessor, index, FromNumber, 
-		NewPP->CurrentTime)
+		buffer[index].CurrentTime)
       }
 
       if (RadiativeTransferSourceClustering) {
-	if (FindSuperSource(&NewPP, buffer[index].SuperSourceID) == FAIL) {
+	PhotonPackageEntry *tempPP = new PhotonPackageEntry;
+	int leafID = buffer[index].SuperSourceID;
+	if (FindSuperSource(&tempPP, leafID) == FAIL) {
 	  ENZO_FAIL("Error in FindSuperSource.\n");
-
 	}
+	ToPP->CurrentSource[idx] = tempPP->CurrentSource;
+	delete tempPP;
       } else
-	NewPP->CurrentSource = NULL;
-
-      // Move pointer to the next photon
-      //      *ToPP = (*ToPP)->NextPackage;
+	ToPP->CurrentSource[idx] = NULL;
 
     } /* ENDFOR index */
 

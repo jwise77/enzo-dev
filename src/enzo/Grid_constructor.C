@@ -139,27 +139,9 @@ grid::grid()
 
 #ifdef TRANSFER
   NumberOfPhotonPackages = 0;
-  PhotonPackages = new PhotonPackageEntry;
-  PhotonPackages->NextPackage     = NULL;
-  PhotonPackages->PreviousPackage = NULL;
-
-  FinishedPhotonPackages = new PhotonPackageEntry;
-  FinishedPhotonPackages->NextPackage = NULL;
-  FinishedPhotonPackages->PreviousPackage = NULL;
-
-  PausedPhotonPackages = new PhotonPackageEntry;
-  PausedPhotonPackages->NextPackage = NULL;
-  PausedPhotonPackages->PreviousPackage = NULL;
- 
-  PhotonPackages->Photons         = 1.;
-  PhotonPackages->Type            = 0;          
-  PhotonPackages->Energy          = 0.;        
-  PhotonPackages->EmissionTimeInterval= 0.;      
-  PhotonPackages->EmissionTime    = 0.;  
-  PhotonPackages->CurrentTime     = 0.;   
-  PhotonPackages->Radius          = 0.;        
-  PhotonPackages->ipix            = 0;         
-  PhotonPackages->level           = 0;        
+  PhotonPackages.initialize(128);
+  FinishedPhotonPackages.initialize(32);
+  PausedPhotonPackages.initialize(32);
 
   sfSeed                          = 0;
   ID                              = 0;

@@ -66,4 +66,45 @@ public:
   };
 
 };
+
+class PhotonPackageSoA
+{
+public:
+  int numPackages;
+  int capacity;
+
+  float            *Flux;
+  int              *Type;
+  float            *Energy;
+  double           *CrossSection;
+  FLOAT            *TimeInterval;
+  FLOAT            *EmissionTime;
+  FLOAT            *CurrentTime;
+  FLOAT            *Radius;
+  float            *ColumnDensity;
+  int64_t          *PixelNum;
+  int              *Level;
+  FLOAT            *SourceX;
+  FLOAT            *SourceY;
+  FLOAT            *SourceZ;
+  float            *SourcePositionDiff;
+  SuperSourceEntry **CurrentSource;
+
+  PhotonPackageSoA(void);
+  ~PhotonPackageSoA(void);
+
+  void initialize(int initial_capacity = 0);
+  void free_arrays(void);
+  void resize(int new_capacity);
+  void append(const PhotonPackageEntry &PP);
+  void append(float flux, int type, float energy, double cross_section,
+              FLOAT time_interval, FLOAT emission_time, FLOAT current_time,
+              FLOAT radius, float column_density, int64_t pixel_num, int level,
+              FLOAT source_x, FLOAT source_y, FLOAT source_z, float source_pos_diff,
+              SuperSourceEntry *source);
+  void DeletePackage(int idx);
+  void print_info(int idx);
+};
+
 #endif /* PHOTONPACKAGE_H */
+

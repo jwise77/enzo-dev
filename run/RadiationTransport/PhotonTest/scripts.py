@@ -20,12 +20,12 @@ def _MyRadius(field, data):
     dy = data["y"] - center[1]
     dz = data["z"] - center[2]
     return np.sqrt(dx*dx + dy*dy + dz*dz)
-yt.add_field("Radius", function=_MyRadius, take_log=False, units='')
+yt.add_field(("gas", "Radius"), function=_MyRadius, take_log=False, units='', sampling_type="cell")
 
 def _MyNeutralFrac(field, data):
     return data['H_p0_fraction'] / 0.75908798
-yt.add_field("Neutral_Fraction", function=_MyNeutralFrac, take_log=False,
-          units='')
+yt.add_field(("gas", "Neutral_Fraction"), function=_MyNeutralFrac, take_log=False,
+             units='', sampling_type="cell")
 
 center = [1e-3]*3
 time = []
@@ -38,7 +38,7 @@ for i in range(first, last+1):
     x_bins_1d = 32
     r_min = pf.index.get_smallest_dx()
     r_max = pf.arr(1.0 - 1.0/64, 'code_length')
-    sphere = pf.h.sphere(center, r_max)
+    sphere = pf.sphere(center, r_max)
     xvals = np.linspace(r_min, r_max)
     #print("xvals = ", xvals)
     prof1d = yt.create_profile(sphere, 'radius', "Neutral_Fraction", n_bins=32,
@@ -111,17 +111,20 @@ r_max = pf.quan(r_max, 'cm')
 r_max = r_max.in_units('code_length')
 #print("r_max = ", r_max)
 r_max = 100*r_min
-sphere = pf.h.sphere(center, r_max)
+sphere = pf.sphere(center, r_max)
 
-prof1d = yt.create_profile(sphere, "radius", fields=["HI_kph"])
+prof1d = yt.create_profile(sphere, ("index", "radius"), fields=[("enzo", "HI_kph")])
+x_data = prof1d.x.value[:-1]
+y_data = prof1d[("enzo", "HI_kph")].value[:-1]
+valid = (x_data > 0) & (y_data > 0)
 coeff, residual, tr1, tr2, tr3 = \
-       np.polyfit(np.log(prof1d.x.value[:-1]),
-                  np.log(prof1d['HI_kph'][:-1]), 1, full=True)
+       np.polyfit(np.log(x_data[valid]),
+                  np.log(y_data[valid]), 1, full=True)
 
 print("="*72)
 print("Maximum error in ionization front radius = %g (at %f Myr)" % \
-      (error.max(), time[imax]/Myr))
+      (error.max(), float(time[imax[0]]/Myr)))
 print("Average error in ionization front radius = %g" % (error.mean()))
 print("Inside 2*r_anyl: Radiation field slope = %f +/- %g" % \
-      (coeff[0], residual))
+      (coeff[0], float(residual[0]) if len(residual) > 0 else 0.0))
 print("="*72)

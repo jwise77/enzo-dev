@@ -63,7 +63,7 @@ int CommunicationReceiveHandler(fluxes **SubgridFluxesEstimate[],
   int gCSAPs_count, gCSAPs_done;
   int SendField;
 #ifdef TRANSFER
-  PhotonPackageEntry *PP;
+  PhotonPackageSoA *PP;
 #endif
 
   /* Define a temporary flux holder for the refined fluxes. */
@@ -262,7 +262,7 @@ int CommunicationReceiveHandler(fluxes **SubgridFluxesEstimate[],
 	  PP = grid_one->ReturnPhotonPackagePointer();
 	  errcode = grid_one->CommunicationSendPhotonPackages
 	    (grid_two, MyProcessorNumber, ToNumber, FromNumber,
-	     &PP);
+	     PP);
 	  break;
 #endif /* TRANSFER */
 

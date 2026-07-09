@@ -138,11 +138,6 @@ grid::~grid()
   DeleteStarList(Stars);
 
 #ifdef TRANSFER
-  delete PhotonPackages;
-  if (FinishedPhotonPackages != NULL)
-    delete FinishedPhotonPackages;
-  if (PausedPhotonPackages != NULL)
-    delete PausedPhotonPackages;
   delete [] SubgridMarker;
 #endif
 

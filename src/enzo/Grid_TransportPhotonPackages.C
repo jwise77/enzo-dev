@@ -60,7 +60,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
     ENZO_FAIL("Transfer in less than 3D is not implemented!\n");
   }
 
-  if (PhotonPackages->NextPackage == NULL)
+  if (PhotonPackages.numPackages == 0)
     return SUCCESS;
 
   /* Get units. */
@@ -93,17 +93,9 @@ int grid::TransportPhotonPackages(int level, int finest_level,
   // if (DEBUG) fprintf(stdout,"TransportPhotonPackage: %"ISYM" %"ISYM" .\n",
   // 		     GridStartIndex[0], GridEndIndex[0]);
 
-  PhotonPackageEntry *PP, *FPP, *SavedPP, *PausedPP;
-  PP = PhotonPackages;
-
   if (DEBUG) {
-    count = 0;
-    while ((PP->NextPackage) != NULL) { 
-      count++;
-      PP=PP->NextPackage;
-    }
     fprintf(stdout, "TransportPhotonPackage: done initializing.\n");
-    fprintf(stdout, "[%d] counted %"ISYM" packages\n", this->ID, count);
+    fprintf(stdout, "[%d] counted %"ISYM" packages\n", this->ID, PhotonPackages.numPackages);
   }
 
   /* If requested, make vertex centered field (only when it doesn't
@@ -138,177 +130,169 @@ int grid::TransportPhotonPackages(int level, int finest_level,
 				  (10*RecombinationTime));
   }
   
-  count = 0;
-  PP = PhotonPackages->NextPackage;
-  FPP = this->FinishedPhotonPackages;
-  PausedPP = this->PausedPhotonPackages;
-  
   int dcount = 0;
   int tcount = 0;
   int pcount = 0;
   int trcount = 0;
-  int AdvancePhotonPointer;
   int DeleteMe, DeltaLevel, PauseMe;
   int prev_type = -1;
   float LightCrossingTime = RadiativeTransferRayMaximumLength * (VelocityUnits) /
     (clight * RadiativeTransferPropagationSpeedFraction); 
   FLOAT EndTime;
- if (MYPROC && DEBUG) {
-   printf("RadiativeTransferRayMaximumLength = %g\t  RadiativeTransferPropagationSpeedFraction= %g\n",  RadiativeTransferRayMaximumLength, RadiativeTransferPropagationSpeedFraction);
-   printf("LightCrossingTime = %f\n", LightCrossingTime);
- }
+  if (MYPROC && DEBUG) {
+    printf("RadiativeTransferRayMaximumLength = %g\t  RadiativeTransferPropagationSpeedFraction= %g\n",  RadiativeTransferRayMaximumLength, RadiativeTransferPropagationSpeedFraction);
+    printf("LightCrossingTime = %f\n", LightCrossingTime);
+  }
   if (RadiativeTransferAdaptiveTimestep)
     EndTime = PhotonTime+LightCrossingTime;
   else
     EndTime = PhotonTime+dtPhoton-PFLOAT_EPSILON;
 
-  while (PP != NULL) {
+  for (int idx = 0; idx < PhotonPackages.numPackages; idx++) {
+    // Create temporary PhotonPackageEntry to bridge with the existing WalkPhotonPackage
+    PhotonPackageEntry *tempPP = new PhotonPackageEntry;
+    tempPP->Photons = PhotonPackages.Flux[idx];
+    tempPP->Type = PhotonPackages.Type[idx];
+    tempPP->Energy = PhotonPackages.Energy[idx];
+    tempPP->CrossSection = PhotonPackages.CrossSection[idx];
+    tempPP->EmissionTimeInterval = PhotonPackages.TimeInterval[idx];
+    tempPP->EmissionTime = PhotonPackages.EmissionTime[idx];
+    tempPP->CurrentTime = PhotonPackages.CurrentTime[idx];
+    tempPP->Radius = PhotonPackages.Radius[idx];
+    tempPP->ColumnDensity = PhotonPackages.ColumnDensity[idx];
+    tempPP->ipix = PhotonPackages.PixelNum[idx];
+    tempPP->level = PhotonPackages.Level[idx];
+    tempPP->SourcePosition[0] = PhotonPackages.SourceX[idx];
+    tempPP->SourcePosition[1] = PhotonPackages.SourceY[idx];
+    tempPP->SourcePosition[2] = PhotonPackages.SourceZ[idx];
+    tempPP->SourcePositionDiff = PhotonPackages.SourcePositionDiff[idx];
+    tempPP->CurrentSource = PhotonPackages.CurrentSource[idx];
+    
+    // Set dummy PreviousPackage/NextPackage to satisfy internal linked list validation in WalkPhotonPackage
+    PhotonPackageEntry *dummyPrev = new PhotonPackageEntry;
+    PhotonPackageEntry *dummyNext = new PhotonPackageEntry;
+    tempPP->PreviousPackage = dummyPrev;
+    tempPP->NextPackage = dummyNext;
+    dummyPrev->NextPackage = tempPP;
+    dummyNext->PreviousPackage = tempPP;
+
     int retval = 0;
-    if (PP->PreviousPackage == NULL)
-      printf("Bad package.\n");
     DeleteMe = FALSE;
     PauseMe = FALSE;
     MoveToGrid = NULL;
-    AdvancePhotonPointer = TRUE;
+
     if (MYPROC && DEBUG) {
-      if(prev_type != PP->Type) {
-	fprintf(stdout, "%s: Radiation type = %ld\n", __FUNCTION__, PP->Type);
-	prev_type = PP->Type;
+      if (prev_type != tempPP->Type) {
+	fprintf(stdout, "%s: Radiation type = %d\n", __FUNCTION__, tempPP->Type);
+	prev_type = tempPP->Type;
       }
     }
-    if ((PP->CurrentTime) < EndTime) {
-      retval = WalkPhotonPackage(&PP,
+
+    if (tempPP->CurrentTime < EndTime) {
+      retval = WalkPhotonPackage(&tempPP,
 				 &MoveToGrid, ParentGrid, CurrentGrid, Grids0, nGrids0,
 				 DeleteMe, PauseMe, DeltaLevel, LightCrossingTime,
 				 LightSpeed, level, MinimumPhotonFlux);
       tcount++;
     } else {
-
-      /* If all work is finished, store in FinishedPhotonPackages and
-	 don't check for work until next timestep */
-
-      SavedPP = PopPhoton(PP);
-      PP = PP->NextPackage;
-      InsertPhotonAfter(FPP, SavedPP);
-      AdvancePhotonPointer = FALSE;
-
+      /* If all work is finished, store in FinishedPhotonPackages and remove from active */
+      FinishedPhotonPackages.append(*tempPP);
+      DeleteMe = TRUE;
     }
 
-    if (DEBUG > 1) 
-      fprintf(stdout, "photon #%"ISYM" %x %x %x\n",
-	      tcount,  PP,  PhotonPackages, 
-	      MoveToGrid); 
-
     if (PauseMe == TRUE) {
-      if (DEBUG > 1) fprintf(stdout, "paused photon %x\n", PP);
-      this->RegridPausedPhotonPackage(&PP, ParentGrid, &MoveToGrid, DeltaLevel,
+      if (DEBUG > 1) fprintf(stdout, "paused photon\n");
+      this->RegridPausedPhotonPackage(&tempPP, ParentGrid, &MoveToGrid, DeltaLevel,
 				      DeleteMe, DomainWidth, LightSpeed);
 
       // Insert in paused photon list if it belongs in this grid.
       if (MoveToGrid == NULL && DeleteMe == FALSE) {
-	SavedPP = PopPhoton(PP);
-	PP = PP->NextPackage;
-	InsertPhotonAfter(PausedPP, SavedPP);
-	AdvancePhotonPointer = FALSE;
+	PausedPhotonPackages.append(*tempPP);
+	DeleteMe = TRUE;
       }
       pcount++;
     }
 
-    if (DeleteMe == TRUE) {
-      if (DEBUG > 1) fprintf(stdout, "delete photon %x\n", PP);
-      dcount++;
-      PP = DeletePhotonPackage(PP);
-      MoveToGrid = NULL;
-    } 
-
     if (MoveToGrid != NULL) {
       if (DEBUG > 1) {
-	fprintf(stdout, "moving photon from %x to %x\n", 
-		 CurrentGrid,  MoveToGrid);
-	fprintf(stdout, "moving photon %x %x %x %x\n", 
-		 PP,  PP->PreviousPackage, 
-		 PP->NextPackage,  PhotonPackages);
+	fprintf(stdout, "moving photon from %p to %p\n", CurrentGrid, MoveToGrid);
       }
       ListOfPhotonsToMove *NewEntry = new ListOfPhotonsToMove;
       NewEntry->NextPackageToMove = (*PhotonsToMove)->NextPackageToMove;
       (*PhotonsToMove)->NextPackageToMove = NewEntry;
-      NewEntry->PhotonPackage = PP;
+      
+      // We must copy the ray to a standalone package to put in the move list
+      PhotonPackageEntry *movedPP = new PhotonPackageEntry(*tempPP);
+      movedPP->PreviousPackage = NULL;
+      movedPP->NextPackage = NULL;
+      
+      NewEntry->PhotonPackage = movedPP;
       NewEntry->FromGrid = CurrentGrid;
       NewEntry->ToGrid   = MoveToGrid;
       NewEntry->ToGridNum= MoveToGrid->GetGridID();
       NewEntry->ToLevel  = level + DeltaLevel;
       NewEntry->ToProcessor = MoveToGrid->ReturnProcessorNumber();
-      if (PauseMe)
-	NewEntry->PausedPhoton = TRUE;
-      else
-	NewEntry->PausedPhoton = FALSE;
+      NewEntry->PausedPhoton = PauseMe ? TRUE : FALSE;
+      
       if (NewEntry->ToProcessor >= NumberOfProcessors ||
 	  NewEntry->ToProcessor < 0) {
-	PP->PrintInfo();
+	tempPP->PrintInfo();
 	ENZO_VFAIL("Grid %d, Invalid ToProcessor P%d", GridNum, 
 		   NewEntry->ToProcessor)
       }
-
-      if (PP->PreviousPackage != NULL) 
-	PP->PreviousPackage->NextPackage = PP->NextPackage;
-      if (PP->NextPackage != NULL) 
-	PP->NextPackage->PreviousPackage = PP->PreviousPackage;
       trcount++;
+      DeleteMe = TRUE;
     } // ENDIF MoveToGrid
 
-    if (AdvancePhotonPointer == TRUE)
-      PP = PP->NextPackage;
+    if (DeleteMe == TRUE) {
+      if (DEBUG > 1) fprintf(stdout, "delete photon\n");
+      dcount++;
+      PhotonPackages.DeletePackage(idx);
+      idx--; // Decrement to reprocess this index now occupied by the swapped element
+    } else {
+      // Write back modified fields
+      PhotonPackages.Flux[idx] = tempPP->Photons;
+      PhotonPackages.Type[idx] = tempPP->Type;
+      PhotonPackages.Energy[idx] = tempPP->Energy;
+      PhotonPackages.CrossSection[idx] = tempPP->CrossSection;
+      PhotonPackages.TimeInterval[idx] = tempPP->EmissionTimeInterval;
+      PhotonPackages.EmissionTime[idx] = tempPP->EmissionTime;
+      PhotonPackages.CurrentTime[idx] = tempPP->CurrentTime;
+      PhotonPackages.Radius[idx] = tempPP->Radius;
+      PhotonPackages.ColumnDensity[idx] = tempPP->ColumnDensity;
+      PhotonPackages.PixelNum[idx] = tempPP->ipix;
+      PhotonPackages.Level[idx] = tempPP->level;
+      PhotonPackages.SourceX[idx] = tempPP->SourcePosition[0];
+      PhotonPackages.SourceY[idx] = tempPP->SourcePosition[1];
+      PhotonPackages.SourceZ[idx] = tempPP->SourcePosition[2];
+      PhotonPackages.SourcePositionDiff[idx] = tempPP->SourcePositionDiff;
+      PhotonPackages.CurrentSource[idx] = tempPP->CurrentSource;
+    }
 
-  } // ENDWHILE photons
+    // Retrieve any child rays that were created by splitting
+    if (tempPP->NextPackage != dummyNext) {
+      PhotonPackageEntry *currChild = tempPP->NextPackage;
+      while (currChild != dummyNext) {
+        PhotonPackages.append(*currChild);
+        PhotonPackageEntry *nextChild = currChild->NextPackage;
+        delete currChild;
+        currChild = nextChild;
+      }
+    }
+
+    // Clean up temporary nodes
+    delete dummyPrev;
+    delete dummyNext;
+    delete tempPP;
+  } // ENDFOR active packages
 
   if (DEBUG)
     fprintf(stdout, "grid::TransportPhotonPackage[%d]: "
 	    "transported %"ISYM" deleted %"ISYM" paused %"ISYM" moved %"ISYM"\n",
 	    this->ID, tcount, dcount, pcount, trcount);
-  NumberOfPhotonPackages -= dcount;
+  
+  NumberOfPhotonPackages = PhotonPackages.numPackages + PausedPhotonPackages.numPackages + FinishedPhotonPackages.numPackages;
 
-#ifdef UNUSED
-  for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
-    if (HasRadiation == TRUE) break;
-    for (j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
-      if (HasRadiation == TRUE) break;
-      index = (k*GridDimension[1] + j)*GridDimension[0] + GridStartIndex[0];
-      for (i = GridStartIndex[0]; i <= GridEndIndex[0]; i++, index++) {
-	if (BaryonField[kphHINum][index] > 0) {
-
-	  HasRadiation = TRUE;
-	  break;
-	}
-      } // ENDFOR i
-    }  // ENDFOR j
-  } // ENDFOR k
-#endif /* UNUSED */
-
-  // Debug xyz-axis for a unigrid 64^3 with a source in the corner.
-#define NO_DEBUG_AXES
-#ifdef DEBUG_AXES
-  printf("PHDebug(x): kph= %"GSYM" %"GSYM" %"GSYM", Nph = %"GSYM" %"GSYM" %"GSYM"\n, HI = %"GSYM" %"GSYM" %"GSYM"\n",
-	 BaryonField[kphHINum][14914], BaryonField[kphHINum][14915], 
-	 BaryonField[kphHINum][14916], 
-	 BaryonField[kphHeIINum][14914], BaryonField[kphHeIINum][14915], 
-	 BaryonField[kphHeIINum][14916], 
-	 BaryonField[HINum][14914], BaryonField[HINum][14915], 
-	 BaryonField[HINum][14916]);
-  printf("PHDebug(y): kph= %"GSYM" %"GSYM" %"GSYM", Nph = %"GSYM" %"GSYM" %"GSYM"\n, HI = %"GSYM" %"GSYM" %"GSYM"\n",
-	 BaryonField[kphHINum][14983], BaryonField[kphHINum][15053], 
-	 BaryonField[kphHINum][15123], 
-	 BaryonField[kphHeIINum][14983], BaryonField[kphHeIINum][15053], 
-	 BaryonField[kphHeIINum][15123], 
-	 BaryonField[HINum][14983], BaryonField[HINum][15053], 
-	 BaryonField[HINum][15123]);
-  printf("PHDebug(z): kph= %"GSYM" %"GSYM" %"GSYM", Nph = %"GSYM" %"GSYM" %"GSYM"\n, HI = %"GSYM" %"GSYM" %"GSYM"\n",
-	 BaryonField[kphHINum][19813], BaryonField[kphHINum][24713], 
-	 BaryonField[kphHINum][29613], 
-	 BaryonField[kphHeIINum][19813], BaryonField[kphHeIINum][24713], 
-	 BaryonField[kphHeIINum][29613], 
-	 BaryonField[HINum][19813], BaryonField[HINum][24713], 
-	 BaryonField[HINum][29613]);
-#endif /* DEBUG_AXES */
-	 
   return SUCCESS;
 }
+

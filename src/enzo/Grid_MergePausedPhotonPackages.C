@@ -83,25 +83,37 @@ Eint32 compare_ss (const void *a, const void *b)
 
 int grid::MergePausedPhotonPackages() {
 
-  if (PausedPhotonPackages->NextPackage == NULL)
+  if (PausedPhotonPackages.numPackages == 0)
     return 0;
 
   int i, dim, nphotons;
-  PhotonPackageEntry *PP, *TempPP;
+  PhotonPackageEntry *TempPP;
   
   /* It's easier to sort an array with qsort rather than a linked
      list, so let's put the photons in a temp. array.  After sorting
      we should reassign the links. */
 
-  nphotons = 0;
-  PP = PausedPhotonPackages->NextPackage;
-  while (PP != NULL) {
-    PP = PP->NextPackage;
-    nphotons++;
-  }
+  nphotons = PausedPhotonPackages.numPackages;
+  TempPP = new PhotonPackageEntry[nphotons];
 
-  PP = PausedPhotonPackages->NextPackage;
-  TempPP = LinkedListToArray(PP, nphotons);
+  for (i = 0; i < nphotons; i++) {
+    TempPP[i].Photons = PausedPhotonPackages.Flux[i];
+    TempPP[i].Type = PausedPhotonPackages.Type[i];
+    TempPP[i].Energy = PausedPhotonPackages.Energy[i];
+    TempPP[i].CrossSection = PausedPhotonPackages.CrossSection[i];
+    TempPP[i].EmissionTimeInterval = PausedPhotonPackages.TimeInterval[i];
+    TempPP[i].EmissionTime = PausedPhotonPackages.EmissionTime[i];
+    TempPP[i].CurrentTime = PausedPhotonPackages.CurrentTime[i];
+    TempPP[i].Radius = PausedPhotonPackages.Radius[i];
+    TempPP[i].ColumnDensity = PausedPhotonPackages.ColumnDensity[i];
+    TempPP[i].ipix = PausedPhotonPackages.PixelNum[i];
+    TempPP[i].level = PausedPhotonPackages.Level[i];
+    TempPP[i].SourcePositionDiff = PausedPhotonPackages.SourcePositionDiff[i];
+    TempPP[i].SourcePosition[0] = PausedPhotonPackages.SourceX[i];
+    TempPP[i].SourcePosition[1] = PausedPhotonPackages.SourceY[i];
+    TempPP[i].SourcePosition[2] = PausedPhotonPackages.SourceZ[i];
+    TempPP[i].CurrentSource = PausedPhotonPackages.CurrentSource[i];
+  }
 
   /* Sort by super source, then on level for each source, then on
      pixel number, last on photon type. */
@@ -109,18 +121,17 @@ int grid::MergePausedPhotonPackages() {
   if (DEBUG) {
     printf("========== BEFORE SORTING ==========\n");
     for (i = 0; i < nphotons; i++)
-      printf("photon %"ISYM": type %"ISYM", lvl %"ISYM", pix %"ISYM", r=%"GSYM", L=%"GSYM", CSRC=%x\n", i, TempPP[i].Type, TempPP[i].level,
+      printf("photon %"ISYM": type %"ISYM", lvl %"ISYM", pix %"ISYM", r=%"GSYM", L=%"GSYM", CSRC=%p\n", i, TempPP[i].Type, TempPP[i].level,
 	     TempPP[i].ipix, TempPP[i].Radius, TempPP[i].Photons, 
 	     TempPP[i].CurrentSource);
   }
 
   qsort(TempPP, nphotons, sizeof(PhotonPackageEntry), compare_ss);
-  //std::sort(TempPP, TempPP+nphotons, cmp_ss());
 
   if (DEBUG) {
     printf("========== AFTER ALL SORTING ==========\n");
     for (i = 0; i < nphotons; i++)
-      printf("photon %"ISYM": type %"ISYM", lvl %"ISYM", pix %"ISYM", r=%"GSYM", L=%"GSYM", CSRC=%x\n", i, TempPP[i].Type, TempPP[i].level,
+      printf("photon %"ISYM": type %"ISYM", lvl %"ISYM", pix %"ISYM", r=%"GSYM", L=%"GSYM", CSRC=%p\n", i, TempPP[i].Type, TempPP[i].level,
 	     TempPP[i].ipix, TempPP[i].Radius, TempPP[i].Photons, 
 	     TempPP[i].CurrentSource);
   }
@@ -136,9 +147,6 @@ int grid::MergePausedPhotonPackages() {
   float weight;
   for (i = 0; i < nphotons; i++) {
 
-//    if (TempPP[i].Photons <= tiny_number)
-//      continue;
-
     if (i > 0)
       match = ((TempPP[i].level == TempPP[i-1].level) &&
 	       (TempPP[i].ipix  == TempPP[i-1].ipix)  &&
@@ -152,23 +160,30 @@ int grid::MergePausedPhotonPackages() {
       weight = TempPP[i].Photons;
       NewPack->Photons += weight;
       NewPack->EmissionTimeInterval += TempPP[i].EmissionTimeInterval * weight;
-      //NewPack->Radius += TempPP[i].Radius * weight;
       NewPack->ColumnDensity += TempPP[i].ColumnDensity * weight;
       this->NumberOfPhotonPackages--;
     } else { // ENDIF match
 
       // First put the previous package (after correcting several
-      // values for weighted averages) in the linked list if not NULL
+      // values for weighted averages) in the SoA if not NULL
       if (NewPack != NULL) {
-	//NewPack->Radius /= NewPack->Photons;
 	NewPack->EmissionTimeInterval /= NewPack->Photons;
 	NewPack->ColumnDensity /= NewPack->Photons;
 	if (DEBUG)
-	  printf("photon %"ISYM": type %"ISYM", lvl %"ISYM", pix %"ISYM", r=%"GSYM", L=%"GSYM", CSRC=%x\n", merges, 
+	  printf("photon %"ISYM": type %"ISYM", lvl %"ISYM", pix %"ISYM", r=%"GSYM", L=%"GSYM", CSRC=%p\n", merges, 
 		 NewPack->Type, NewPack->level,
 		 NewPack->ipix, NewPack->Radius, NewPack->Photons, 
 		 NewPack->CurrentSource);
-	InsertPhotonAfter(this->PhotonPackages, NewPack);
+        this->PhotonPackages.append(NewPack->Photons, NewPack->Type, NewPack->Energy,
+                                    NewPack->CrossSection, NewPack->EmissionTimeInterval,
+                                    NewPack->EmissionTime, NewPack->CurrentTime,
+                                    NewPack->Radius, NewPack->ColumnDensity,
+                                    NewPack->ipix, NewPack->level,
+                                    NewPack->SourcePosition[0], NewPack->SourcePosition[1],
+                                    NewPack->SourcePosition[2], NewPack->SourcePositionDiff,
+                                    NewPack->CurrentSource);
+        delete NewPack;
+        NewPack = NULL;
       }
 
       // Create a new package
@@ -196,28 +211,29 @@ int grid::MergePausedPhotonPackages() {
     } // ENDELSE match
   } // ENDFOR photons
   
-  // Insert the last ray into the linked list
+  // Insert the last ray into the SoA
   if (NewPack != NULL) {
-    //NewPack->Radius /= NewPack->Photons;
     NewPack->EmissionTimeInterval /= NewPack->Photons;
     NewPack->ColumnDensity /= NewPack->Photons;
     if (DEBUG)
-      printf("photon %"ISYM": type %"ISYM", lvl %"ISYM", pix %"ISYM", r=%"GSYM", L=%"GSYM", CSRC=%x\n", merges, 
+      printf("photon %"ISYM": type %"ISYM", lvl %"ISYM", pix %"ISYM", r=%"GSYM", L=%"GSYM", CSRC=%p\n", merges, 
 	     NewPack->Type, NewPack->level,
 	     NewPack->ipix, NewPack->Radius, NewPack->Photons, 
 	     NewPack->CurrentSource);
-    InsertPhotonAfter(this->PhotonPackages, NewPack);
+    this->PhotonPackages.append(NewPack->Photons, NewPack->Type, NewPack->Energy,
+                                NewPack->CrossSection, NewPack->EmissionTimeInterval,
+                                NewPack->EmissionTime, NewPack->CurrentTime,
+                                NewPack->Radius, NewPack->ColumnDensity,
+                                NewPack->ipix, NewPack->level,
+                                NewPack->SourcePosition[0], NewPack->SourcePosition[1],
+                                NewPack->SourcePosition[2], NewPack->SourcePositionDiff,
+                                NewPack->CurrentSource);
+    delete NewPack;
   }
 
   /* Delete all paused packages and cleanup temporary arrays */
 
-  PP = PausedPhotonPackages->NextPackage;
-  while (PP != NULL) {
-    PP = DeletePhotonPackage(PP);
-    PP = PP->NextPackage;
-  }
-  PausedPhotonPackages->NextPackage = NULL;
-  PausedPhotonPackages->PreviousPackage = NULL;
+  PausedPhotonPackages.free_arrays();
   delete [] TempPP;
 
   if (DEBUG)

@@ -80,8 +80,7 @@ int grid::PhotonTestRestartInitialize(int level, int *NumberOfCellsSet)
 //     FieldType[RPresNum3 = NumberOfBaryonFields++] = RadPressure2;
 //   }
 
-  NumberOfPhotonPackages = 0;
-  PhotonPackages-> NextPackage= NULL;
+  PhotonPackages.free_arrays();
 
 
   /* Initialize radiation fields - not needed in restart?? */

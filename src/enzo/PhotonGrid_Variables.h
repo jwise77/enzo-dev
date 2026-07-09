@@ -3,14 +3,15 @@
 int    NumberOfPhotonPackages;
 //int    NumberOfRenderingPackages;
 
-//  start pointer for linked list of packages
-PhotonPackageEntry *PhotonPackages;
+//  SoA of active packages
+PhotonPackageSoA PhotonPackages;
 
-// linked list of packages with its work already finished
-PhotonPackageEntry *FinishedPhotonPackages;  
+// SoA of packages with its work already finished
+PhotonPackageSoA FinishedPhotonPackages;  
 
-// linked list of packages that are "paused", waiting to be merged
-PhotonPackageEntry *PausedPhotonPackages;
+// SoA of packages that are "paused", waiting to be merged
+PhotonPackageSoA PausedPhotonPackages;
+
 
 // linked list of packages used for projections or volume renderings
 //PhotonPackageEntry *RenderingPhotonPackages;

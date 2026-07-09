@@ -98,11 +98,7 @@ void grid::PrepareGrid(int Rank, int GridDim[],
 
 #ifdef TRANSFER
   SubgridMarker = NULL;
-  if (PhotonPackages == NULL) {
-    PhotonPackages = new PhotonPackageEntry;
-    PhotonPackages->NextPackage = NULL;
-    PhotonPackages->PreviousPackage = NULL;
-  }
+  PhotonPackages.initialize(128);
 #endif
  
 }
