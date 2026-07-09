@@ -1792,7 +1792,7 @@ int CommunicationTransferActiveParticles(grid* Grids[], int NumberOfGrids,
 			       int CountOnly = FALSE);
 
   int TransferSubgridStars(grid* Subgrids[], int NumberOfSubgrids, 
-			   int* &NumberToMove, int StartIndex, 
+			   int* &NumberToMove, int &Counter, 
 			   int EndIndex, star_data* &List, 
 			   bool KeepLocal, bool ParticlesAreLocal,
 			   int CopyDirection,
@@ -1800,7 +1800,7 @@ int CommunicationTransferActiveParticles(grid* Grids[], int NumberOfGrids,
                            int CountOnly = FALSE);
 
 int TransferSubgridActiveParticles(grid* Subgrids[], int NumberOfSubgrids,
-                     int* &NumberToMove, int StartIndex,
+                     int* &NumberToMove, int &Counter,
                      int EndIndex, ActiveParticleList<ActiveParticleType> &List,
                      bool KeepLocal, bool ParticlesAreLocal,
                      int CopyDirection,

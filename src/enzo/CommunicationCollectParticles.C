@@ -230,6 +230,8 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
     StarSendList = new star_data[TotalStars];
  
 int ParticleCounter = 0;
+int StarCounter = 0;
+int APCounter = 0;
 //printf("Particle Counter reset 1\n");
 #pragma omp parallel for default(shared) reduction(+:NumberToMove[:NumberOfProcessors], StarsToMove[:NumberOfProcessors], APNumberToMove[:NumberOfProcessors])
     for (j = 0; j < NumberOfGrids; j++)
@@ -242,11 +244,11 @@ int ParticleCounter = 0;
 
 
         GridHierarchyPointer[j]->GridData->TransferSubgridStars
-            (SubgridPointers, NumberOfSubgrids, StarsToMove, Zero, Zero,
+            (SubgridPointers, NumberOfSubgrids, StarsToMove, StarCounter, Zero,
              StarSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, FALSE);
 
     GridHierarchyPointer[j]->GridData->TransferSubgridActiveParticles
-        (SubgridPointers, NumberOfSubgrids, APNumberToMove, Zero, Zero,
+        (SubgridPointers, NumberOfSubgrids, APNumberToMove, APCounter, Zero,
          APSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, FALSE, FALSE);
     
 	GridHierarchyPointer[j]->GridData->TransferSubgridParticles

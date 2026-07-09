@@ -123,6 +123,8 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
 
   int ParticleCounter1 = 0;
   int ParticleCounter2 = 0;
+  int StarCounter = 0;
+  int APCounter = 0;
 #pragma omp parallel
 {
 #pragma omp for reduction(+:NumberToMove[:NumberOfProcessors], StarsToMove[:NumberOfProcessors], APNumberToMove[:NumberOfProcessors]) private(ID, grid2, SiblingList)
@@ -200,6 +202,8 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   }
   SendList = new particle_data[TotalNumber];
   StarSendList = new star_data[TotalStars];
+  StarCounter = 0;
+  APCounter = 0;
 
 }// end omp single
  
@@ -207,11 +211,11 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   for (grid1 = 0; grid1 < NumberOfGrids; grid1++) {
 
     Grids[grid1]->GridData->TransferSubgridStars
-      (GridPointers, NumberOfGrids, StarsToMove, Zero, Zero,
+      (GridPointers, NumberOfGrids, StarsToMove, StarCounter, Zero,
        StarSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, TRUE, FALSE);
 
     Grids[grid1]->GridData->TransferSubgridActiveParticles
-      (GridPointers, NumberOfGrids, APNumberToMove, Zero, Zero,
+      (GridPointers, NumberOfGrids, APNumberToMove, APCounter, Zero,
        APSendList, KeepLocal, ParticlesAreLocal, COPY_OUT, TRUE, FALSE);
 
     Grids[grid1]->GridData->TransferSubgridParticles
