@@ -11,7 +11,7 @@ This project extends Enzo's GPU compute capabilities using OpenMP target offload
 
 ## Architecture Guidelines
 - **Structure of Arrays (SoA):** Convert the photon package linked list into a flat SoA to enable coalesced memory access and SIMT parallelization [1, 2]. See [.gemini/enzo-moray-soa.md](.gemini/enzo-moray-soa.md) for more details that were generated from a NotebookLM conversation.
-- **Communication-Computation Overlap:** Utilize an asynchronous, six-step MPI handshake to hide latency when rays cross AMR grid boundaries [3, 4].
+- **Communication-Computation Overlap:** Utilize an asynchronous, six-step MPI handshake to hide latency when rays cross AMR grid boundaries [3, 4].  See [.gemini/enzo-moray-nonblock.md](.gemini/enzo-moray-nonblock.md) and [.gemini/enzo-moray-nonblock2.md](.gemini/enzo-moray-nonblock2.md) for more details that were generated from a NotebookLM conversation.
 - **Data Minimization:** Keep fields (Density, Energy, etc.) on-device during the RT step. Accumulate photo-ionization ($k_{ph}$) and heating ($\Gamma_{ph}$) rates in device-side buffers [5, 6].
 
 ## Development Rules

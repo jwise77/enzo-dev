@@ -149,65 +149,66 @@ int grid::TransportPhotonPackages(int level, int finest_level,
     EndTime = PhotonTime+dtPhoton-PFLOAT_EPSILON;
 
   for (int idx = 0; idx < PhotonPackages.numPackages; idx++) {
-    // Create temporary PhotonPackageEntry to bridge with the existing WalkPhotonPackage
-    PhotonPackageEntry *tempPP = new PhotonPackageEntry;
-    tempPP->Photons = PhotonPackages.Flux[idx];
-    tempPP->Type = PhotonPackages.Type[idx];
-    tempPP->Energy = PhotonPackages.Energy[idx];
-    tempPP->CrossSection = PhotonPackages.CrossSection[idx];
-    tempPP->EmissionTimeInterval = PhotonPackages.TimeInterval[idx];
-    tempPP->EmissionTime = PhotonPackages.EmissionTime[idx];
-    tempPP->CurrentTime = PhotonPackages.CurrentTime[idx];
-    tempPP->Radius = PhotonPackages.Radius[idx];
-    tempPP->ColumnDensity = PhotonPackages.ColumnDensity[idx];
-    tempPP->ipix = PhotonPackages.PixelNum[idx];
-    tempPP->level = PhotonPackages.Level[idx];
-    tempPP->SourcePosition[0] = PhotonPackages.SourceX[idx];
-    tempPP->SourcePosition[1] = PhotonPackages.SourceY[idx];
-    tempPP->SourcePosition[2] = PhotonPackages.SourceZ[idx];
-    tempPP->SourcePositionDiff = PhotonPackages.SourcePositionDiff[idx];
-    tempPP->CurrentSource = PhotonPackages.CurrentSource[idx];
+    // Create temporary PhotonPackageEntry on the stack to bridge with the existing WalkPhotonPackage
+    PhotonPackageEntry tempPP;
+    tempPP.Photons = PhotonPackages.Flux[idx];
+    tempPP.Type = PhotonPackages.Type[idx];
+    tempPP.Energy = PhotonPackages.Energy[idx];
+    tempPP.CrossSection = PhotonPackages.CrossSection[idx];
+    tempPP.EmissionTimeInterval = PhotonPackages.TimeInterval[idx];
+    tempPP.EmissionTime = PhotonPackages.EmissionTime[idx];
+    tempPP.CurrentTime = PhotonPackages.CurrentTime[idx];
+    tempPP.Radius = PhotonPackages.Radius[idx];
+    tempPP.ColumnDensity = PhotonPackages.ColumnDensity[idx];
+    tempPP.ipix = PhotonPackages.PixelNum[idx];
+    tempPP.level = PhotonPackages.Level[idx];
+    tempPP.SourcePosition[0] = PhotonPackages.SourceX[idx];
+    tempPP.SourcePosition[1] = PhotonPackages.SourceY[idx];
+    tempPP.SourcePosition[2] = PhotonPackages.SourceZ[idx];
+    tempPP.SourcePositionDiff = PhotonPackages.SourcePositionDiff[idx];
+    tempPP.CurrentSource = PhotonPackages.CurrentSource[idx];
     
     // Set dummy PreviousPackage/NextPackage to satisfy internal linked list validation in WalkPhotonPackage
-    PhotonPackageEntry *dummyPrev = new PhotonPackageEntry;
-    PhotonPackageEntry *dummyNext = new PhotonPackageEntry;
-    tempPP->PreviousPackage = dummyPrev;
-    tempPP->NextPackage = dummyNext;
-    dummyPrev->NextPackage = tempPP;
-    dummyNext->PreviousPackage = tempPP;
+    PhotonPackageEntry dummyPrev;
+    PhotonPackageEntry dummyNext;
+    tempPP.PreviousPackage = &dummyPrev;
+    tempPP.NextPackage = &dummyNext;
+    dummyPrev.NextPackage = &tempPP;
+    dummyNext.PreviousPackage = &tempPP;
 
+    PhotonPackageEntry *tempPPPtr = &tempPP;
     int retval = 0;
     DeleteMe = FALSE;
     PauseMe = FALSE;
     MoveToGrid = NULL;
 
     if (MYPROC && DEBUG) {
-      if (prev_type != tempPP->Type) {
-	fprintf(stdout, "%s: Radiation type = %d\n", __FUNCTION__, tempPP->Type);
-	prev_type = tempPP->Type;
+      if (prev_type != tempPP.Type) {
+	fprintf(stdout, "%s: Radiation type = %d\n", __FUNCTION__, tempPP.Type);
+	prev_type = tempPP.Type;
       }
     }
 
-    if (tempPP->CurrentTime < EndTime) {
-      retval = WalkPhotonPackage(&tempPP,
+    if (tempPP.CurrentTime < EndTime) {
+      retval = WalkPhotonPackage(&tempPPPtr,
 				 &MoveToGrid, ParentGrid, CurrentGrid, Grids0, nGrids0,
 				 DeleteMe, PauseMe, DeltaLevel, LightCrossingTime,
 				 LightSpeed, level, MinimumPhotonFlux);
       tcount++;
     } else {
       /* If all work is finished, store in FinishedPhotonPackages and remove from active */
-      FinishedPhotonPackages.append(*tempPP);
+      FinishedPhotonPackages.append(tempPP);
       DeleteMe = TRUE;
     }
 
     if (PauseMe == TRUE) {
       if (DEBUG > 1) fprintf(stdout, "paused photon\n");
-      this->RegridPausedPhotonPackage(&tempPP, ParentGrid, &MoveToGrid, DeltaLevel,
+      this->RegridPausedPhotonPackage(&tempPPPtr, ParentGrid, &MoveToGrid, DeltaLevel,
 				      DeleteMe, DomainWidth, LightSpeed);
 
       // Insert in paused photon list if it belongs in this grid.
       if (MoveToGrid == NULL && DeleteMe == FALSE) {
-	PausedPhotonPackages.append(*tempPP);
+	PausedPhotonPackages.append(tempPP);
 	DeleteMe = TRUE;
       }
       pcount++;
@@ -222,7 +223,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
       (*PhotonsToMove)->NextPackageToMove = NewEntry;
       
       // We must copy the ray to a standalone package to put in the move list
-      PhotonPackageEntry *movedPP = new PhotonPackageEntry(*tempPP);
+      PhotonPackageEntry *movedPP = new PhotonPackageEntry(tempPP);
       movedPP->PreviousPackage = NULL;
       movedPP->NextPackage = NULL;
       
@@ -236,7 +237,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
       
       if (NewEntry->ToProcessor >= NumberOfProcessors ||
 	  NewEntry->ToProcessor < 0) {
-	tempPP->PrintInfo();
+	tempPP.PrintInfo();
 	ENZO_VFAIL("Grid %d, Invalid ToProcessor P%d", GridNum, 
 		   NewEntry->ToProcessor)
       }
@@ -251,39 +252,34 @@ int grid::TransportPhotonPackages(int level, int finest_level,
       idx--; // Decrement to reprocess this index now occupied by the swapped element
     } else {
       // Write back modified fields
-      PhotonPackages.Flux[idx] = tempPP->Photons;
-      PhotonPackages.Type[idx] = tempPP->Type;
-      PhotonPackages.Energy[idx] = tempPP->Energy;
-      PhotonPackages.CrossSection[idx] = tempPP->CrossSection;
-      PhotonPackages.TimeInterval[idx] = tempPP->EmissionTimeInterval;
-      PhotonPackages.EmissionTime[idx] = tempPP->EmissionTime;
-      PhotonPackages.CurrentTime[idx] = tempPP->CurrentTime;
-      PhotonPackages.Radius[idx] = tempPP->Radius;
-      PhotonPackages.ColumnDensity[idx] = tempPP->ColumnDensity;
-      PhotonPackages.PixelNum[idx] = tempPP->ipix;
-      PhotonPackages.Level[idx] = tempPP->level;
-      PhotonPackages.SourceX[idx] = tempPP->SourcePosition[0];
-      PhotonPackages.SourceY[idx] = tempPP->SourcePosition[1];
-      PhotonPackages.SourceZ[idx] = tempPP->SourcePosition[2];
-      PhotonPackages.SourcePositionDiff[idx] = tempPP->SourcePositionDiff;
-      PhotonPackages.CurrentSource[idx] = tempPP->CurrentSource;
+      PhotonPackages.Flux[idx] = tempPP.Photons;
+      PhotonPackages.Type[idx] = tempPP.Type;
+      PhotonPackages.Energy[idx] = tempPP.Energy;
+      PhotonPackages.CrossSection[idx] = tempPP.CrossSection;
+      PhotonPackages.TimeInterval[idx] = tempPP.EmissionTimeInterval;
+      PhotonPackages.EmissionTime[idx] = tempPP.EmissionTime;
+      PhotonPackages.CurrentTime[idx] = tempPP.CurrentTime;
+      PhotonPackages.Radius[idx] = tempPP.Radius;
+      PhotonPackages.ColumnDensity[idx] = tempPP.ColumnDensity;
+      PhotonPackages.PixelNum[idx] = tempPP.ipix;
+      PhotonPackages.Level[idx] = tempPP.level;
+      PhotonPackages.SourceX[idx] = tempPP.SourcePosition[0];
+      PhotonPackages.SourceY[idx] = tempPP.SourcePosition[1];
+      PhotonPackages.SourceZ[idx] = tempPP.SourcePosition[2];
+      PhotonPackages.SourcePositionDiff[idx] = tempPP.SourcePositionDiff;
+      PhotonPackages.CurrentSource[idx] = tempPP.CurrentSource;
     }
 
     // Retrieve any child rays that were created by splitting
-    if (tempPP->NextPackage != dummyNext) {
-      PhotonPackageEntry *currChild = tempPP->NextPackage;
-      while (currChild != dummyNext) {
+    if (tempPP.NextPackage != &dummyNext) {
+      PhotonPackageEntry *currChild = tempPP.NextPackage;
+      while (currChild != &dummyNext) {
         PhotonPackages.append(*currChild);
         PhotonPackageEntry *nextChild = currChild->NextPackage;
         delete currChild;
         currChild = nextChild;
       }
     }
-
-    // Clean up temporary nodes
-    delete dummyPrev;
-    delete dummyNext;
-    delete tempPP;
   } // ENDFOR active packages
 
   if (DEBUG)

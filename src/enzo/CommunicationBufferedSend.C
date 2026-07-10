@@ -206,5 +206,16 @@ int CommunicationBufferedSend(void *buffer, int size, MPI_Datatype Type, int Tar
  
   return SUCCESS;
 }
+
+int CommunicationBufferedSendActiveCount(void)
+{
+  int active = 0;
+  for (int i = 0; i <= LastActiveIndex; i++) {
+    if (RequestBuffer[i] != NULL) {
+      active++;
+    }
+  }
+  return active;
+}
  
 #endif /* USE_MPI */

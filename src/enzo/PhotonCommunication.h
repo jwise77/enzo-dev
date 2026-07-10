@@ -22,6 +22,10 @@
 
 #ifdef USE_MPI
 
+EXTERN MPI_Datatype MPI_PhotonList;
+EXTERN int PH_WorkReceived;
+EXTERN MPI_Request PH_ConsensusRequest;
+
 EXTERN char *PH_CommunicationReceiveBuffer[MAX_PH_RECEIVE_BUFFERS];
 EXTERN MPI_Request PH_CommunicationReceiveMPI_Request[MAX_PH_RECEIVE_BUFFERS];
 EXTERN Eint32 PH_CommunicationReceiveIndex;

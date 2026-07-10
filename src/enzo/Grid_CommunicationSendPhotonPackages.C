@@ -227,13 +227,13 @@ int grid::CommunicationSendPhotonPackages(grid *ToGrid, int ToProcessor,
       }
 
       if (RadiativeTransferSourceClustering) {
-	PhotonPackageEntry *tempPP = new PhotonPackageEntry;
+	PhotonPackageEntry tempPP;
 	int leafID = buffer[index].SuperSourceID;
-	if (FindSuperSource(&tempPP, leafID) == FAIL) {
+	PhotonPackageEntry *tempPPPtr = &tempPP;
+	if (FindSuperSource(&tempPPPtr, leafID) == FAIL) {
 	  ENZO_FAIL("Error in FindSuperSource.\n");
 	}
-	ToPP->CurrentSource[idx] = tempPP->CurrentSource;
-	delete tempPP;
+	ToPP->CurrentSource[idx] = tempPP.CurrentSource;
       } else
 	ToPP->CurrentSource[idx] = NULL;
 

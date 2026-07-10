@@ -46,8 +46,7 @@
 void my_exit(int status);
 int RadiationFieldCalculateRates(FLOAT Time);
 int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
-				 bool local_transport,
-				 int &keep_transporting);
+				 bool block = false);
 int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[], 
 				 ListOfPhotonsToMove **AllPhotons, 
 				 char *kt_global,
@@ -59,13 +58,10 @@ int RadiativeTransferMoveLocalPhotons(ListOfPhotonsToMove **AllPhotons,
 				      int &keep_transporting);
 int GenerateGridArray(LevelHierarchyEntry *LevelArray[], int level,
 		      HierarchyEntry **Grids[]);
-int InitializePhotonMessages(void);
 int InitializePhotonCommunication(void);
 int FinalizePhotonCommunication(void);
-int KeepTransportingInitialize(char* &kt_global, bool initial_call);
-int KeepTransportingFinalize(char* &kt_global, int keep_transporting);
-int KeepTransportingCheck(char* &kt_global, int &keep_transporting);
-int KeepTransportingSend(int keep_transporting);
+int CommunicationBufferedSendActiveCount(void);
+int CommunicationBufferPurge(void);
 RadiationSourceEntry* DeleteRadiationSource(RadiationSourceEntry *RS);
 PhotonPackageEntry* DeletePhotonPackage(PhotonPackageEntry *PP);
 int CreateSourceClusteringTree(int nShine, SuperSourceData *SourceList,
@@ -82,16 +78,12 @@ void PrintMemoryUsage(char *str);
 void fpcol(Eflt64 *x, int n, int m, FILE *log_fptr);
 double ReturnWallTime();
 
-#ifdef USE_MPI
-int InitializePhotonReceive(int max_size, bool local_transport,
-			    MPI_Datatype MPI_PhotonType);
-static int FirstTimeCalled = TRUE;
-static MPI_Datatype MPI_PhotonList;
-#endif
+
 
 //#define NONBLOCKING_RT_OFF  // moved to a compile-time define
 #define REPORT_PERF
-#define MAX_ITERATIONS 5
+#define MAX_ITERATIONS 1000000
+#define DEBUG_RT 0
 
 #ifdef REPORT_PERF
 #define START_PERF() tt0 = ReturnWallTime();
@@ -146,18 +138,15 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
   /* Declarations */
 
-#ifdef USE_MPI
-  if (FirstTimeCalled) {
-    MPI_Type_contiguous(sizeof(GroupPhotonList), MPI_BYTE, &MPI_PhotonList);
-    MPI_Type_commit(&MPI_PhotonList);
-    FirstTimeCalled = FALSE;
-  }
-#endif
+
 
   /* For early termination with a background, calculate background
      intensities */
 
   RadiationFieldCalculateRates(PhotonTime+0.5*dtPhoton);
+
+  TIMER_REGISTER("RayTracing");
+  TIMER_REGISTER("RayCommunication");
 
   grid *Helper;
   int i, lvl, GridNum;
@@ -379,10 +368,15 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     PhotonsToMove->NextPackageToMove = NULL;
 
     int keep_transporting = 1;
-    int local_keep_transporting = 1, last_keep_transporting;
-    int secondary_kt_check = TRUE, iteration = 0;
-    bool initial_call = true;
-    char *kt_global = NULL;
+    int iteration = 0;
+    int local_work = 0;
+    int globally_terminated = 0;
+#ifdef USE_MPI
+    int consensus_active = 0;
+    int outstanding_receives = 0;
+    int outstanding_sends = 0;
+    PH_WorkReceived = 0;
+#endif
 
     HierarchyEntry **Temp0;
     int nGrids0 = GenerateGridArray(LevelArray, 0, &Temp0);
@@ -400,115 +394,157 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
     PrintMemoryUsage("EvolvePhotons -- before loop");
 
-    while (secondary_kt_check == TRUE && iteration++ < MAX_ITERATIONS) {
-
-#ifdef NONBLOCKING_RT
-    KeepTransportingInitialize(kt_global, initial_call);
-    initial_call = false;
-#endif
-
-    while (keep_transporting != NO_TRANSPORT && 
-	   keep_transporting != HALT_TRANSPORT) {
-#ifndef NONBLOCKING_RT
-      InitializePhotonMessages();
-#endif
-      last_keep_transporting = local_keep_transporting;
-      keep_transporting = 0;
-      PhotonsToMove->NextPackageToMove = NULL;
-      START_PERF();
-#ifndef NONBLOCKING_RT
-      keep_transporting = 1;
-#endif /* !NONBLOCKING_RT */
-
-      TIMER_START("RayTracing");
-      if (local_keep_transporting)
-      for (lvl = MAX_DEPTH_OF_HIERARCHY-1; lvl >= 0 ; lvl--) {
-
-	//NumberOfGrids = GenerateGridArray(LevelArray, lvl, &Grids);
-	for (Temp = LevelArray[lvl], GridNum = 0;
-	     Temp; Temp = Temp->NextGridThisLevel, GridNum++) {
-	  //for (GridNum = 0; GridNum < NumberOfGrids; GridNum++) {
-
-	  if (Temp->GridHierarchyEntry->ParentGrid != NULL) 
-	    Helper = Temp->GridHierarchyEntry->ParentGrid->GridData;
-	  else
-	    Helper = NULL;
-
-#ifdef BITWISE_IDENTICALITY
-	  Temp->GridData->PhotonSortLinkedLists();
-#endif
-	  Temp->GridData->TransportPhotonPackages
-	    (lvl, level, &PhotonsToMove, GridNum, Grids0, nGrids0, Helper, 
-	     Temp->GridData);
-
-	} // ENDFOR grids
-
-	//delete [] Grids;
-
-      }                          // loop over levels
-      TIMER_STOP("RayTracing");
-      END_PERF(4);
-
-      if (PhotonsToMove->NextPackageToMove != NULL)
-	keep_transporting = 1;
-      else
-	keep_transporting = 0;
-
-//    printf("EvoPH[P%"ISYM"]: keep_transporting = %"ISYM", PhotonsToMove = %x\n",
-//	     MyProcessorNumber, keep_transporting, PhotonsToMove->NextPackageToMove);
-
-      /* Check if there are any photons leaving this grid.  If so, move them. */
-      
-      START_PERF();
-      TIMER_START("RayCommunication");
-      CommunicationTransferPhotons(LevelArray, &PhotonsToMove, kt_global,
-				   keep_transporting);
-      TIMER_STOP("RayCommunication");
-      END_PERF(5);
-
-      /* When all photons have been traced, all of the paused (to be
-	 merged) photons are in their correct grid, merge them */
-
-      int nmerges = 0;
-      if (RadiativeTransferSourceClustering && keep_transporting == 0) {
-	for (lvl = MAX_DEPTH_OF_HIERARCHY-1; lvl >= 0; lvl--)
-	  for (Temp = LevelArray[lvl]; Temp; Temp = Temp->NextGridThisLevel) {
-	    nmerges += Temp->GridData->MergePausedPhotonPackages();
-	  } // ENDFOR grids
-	if (nmerges > 0) keep_transporting = TRUE;
+    while (!globally_terminated && iteration++ < MAX_ITERATIONS) {
+      if (DEBUG_RT) {
+        printf("P%d: EvolvePhotons loop iteration %d starting\n", MyProcessorNumber, iteration);
+        fflush(stdout);
       }
 
-      /* Receive keep_transporting messages and take the MAX */
-
-      START_PERF();
-      TIMER_START("RayCommunication");
-      local_keep_transporting = keep_transporting;
-#ifdef NONBLOCKING_RT
-      if (keep_transporting != last_keep_transporting)
-	KeepTransportingSend(keep_transporting);
-      KeepTransportingCheck(kt_global, keep_transporting);
-#else /* NONBLOCKING_RT */
-      keep_transporting = CommunicationMaxValue(keep_transporting);
-#endif
-      TIMER_STOP("RayCommunication");
-      END_PERF(6);
-
-    }                           //  end while keep_transporting
-
-#ifdef NONBLOCKING_RT    
-    KeepTransportingFinalize(kt_global, keep_transporting);
 #ifdef USE_MPI
-    InitializePhotonReceive(PHOTON_BUFFER_SIZE, true, MPI_PhotonList);
-#endif
-    CommunicationReceiverPhotons(LevelArray, false, local_keep_transporting);
-    secondary_kt_check = CommunicationMaxValue(local_keep_transporting);
-#else /* NONBLOCKING_RT */
-    secondary_kt_check = FALSE;
+      // Step 1: Check completed Count & Data Receives (always non-blocking here)
+      CommunicationReceiverPhotons(LevelArray, false);
+      
+      // Calculate local work and MPI status
+      local_work = 0;
+      for (lvl = 0; lvl < MAX_DEPTH_OF_HIERARCHY; lvl++) {
+        for (Temp = LevelArray[lvl]; Temp; Temp = Temp->NextGridThisLevel) {
+          local_work += Temp->GridData->ReturnPhotonPackagePointer()->numPackages;
+        }
+      }
+
+      outstanding_receives = PH_CommunicationReceiveIndex;
+      outstanding_sends = CommunicationBufferedSendActiveCount();
+      if (DEBUG_RT) {
+        printf("P%d: Iteration %d status: local_work=%d, active_recv=%d, active_send=%d, consensus_active=%d\n",
+               MyProcessorNumber, iteration, local_work, outstanding_receives, outstanding_sends, consensus_active);
+        fflush(stdout);
+      }
+#else
+      local_work = 0;
+      for (lvl = 0; lvl < MAX_DEPTH_OF_HIERARCHY; lvl++) {
+        for (Temp = LevelArray[lvl]; Temp; Temp = Temp->NextGridThisLevel) {
+          local_work += Temp->GridData->ReturnPhotonPackagePointer()->numPackages;
+        }
+      }
 #endif
 
-    }  // ENDWHILE secondary keep_transporting check
+      // Step 2: Trace locally available rays in grids
+      if (local_work > 0) {
+        START_PERF();
+        TIMER_START("RayTracing");
+        PhotonsToMove->NextPackageToMove = NULL;
 
+        for (lvl = MAX_DEPTH_OF_HIERARCHY-1; lvl >= 0 ; lvl--) {
+          for (Temp = LevelArray[lvl], GridNum = 0; Temp; Temp = Temp->NextGridThisLevel, GridNum++) {
+            if (Temp->GridHierarchyEntry->ParentGrid != NULL) 
+              Helper = Temp->GridHierarchyEntry->ParentGrid->GridData;
+            else
+              Helper = NULL;
+
+#ifdef BITWISE_IDENTICALITY
+            Temp->GridData->PhotonSortLinkedLists();
+#endif
+            Temp->GridData->TransportPhotonPackages
+              (lvl, level, &PhotonsToMove, GridNum, Grids0, nGrids0, Helper, 
+               Temp->GridData);
+          }
+        }
+        TIMER_STOP("RayTracing");
+        END_PERF(4);
+      }
+
+      // Step 3: Pack and send boundary rays non-blocking
+      int temp_keep = 0;
+      if (PhotonsToMove->NextPackageToMove != NULL) {
+        START_PERF();
+        TIMER_START("RayCommunication");
+        CommunicationTransferPhotons(LevelArray, &PhotonsToMove, NULL, temp_keep);
+        TIMER_STOP("RayCommunication");
+        END_PERF(5);
+      }
+
+      // Step 4: Check for completed sends
+#ifdef USE_MPI
+      CommunicationBufferPurge();
+      outstanding_sends = CommunicationBufferedSendActiveCount();
+#endif
+
+      // When all photons have been traced, merge paused packages
+      int nmerges = 0;
+      if (RadiativeTransferSourceClustering && local_work == 0) {
+        for (lvl = MAX_DEPTH_OF_HIERARCHY-1; lvl >= 0; lvl--) {
+          for (Temp = LevelArray[lvl]; Temp; Temp = Temp->NextGridThisLevel) {
+            nmerges += Temp->GridData->MergePausedPhotonPackages();
+          }
+        }
+      }
+
+      // Step 5: Distributed termination check & Consensus
+#ifdef USE_MPI
+      int current_local_idle = (local_work == 0 && outstanding_receives == 0 && outstanding_sends == 0) ? 1 : 0;
+
+      if (current_local_idle) {
+        if (DEBUG_RT) {
+          printf("P%d: Iteration %d is locally idle. consensus_active=%d\n", MyProcessorNumber, iteration, consensus_active);
+          fflush(stdout);
+        }
+      }
+
+      if (current_local_idle) {
+        if (!consensus_active) {
+          PH_WorkReceived = 0; // Reset flag when starting a new consensus barrier
+          MPI_Ibarrier(MPI_COMM_WORLD, &PH_ConsensusRequest);
+          consensus_active = 1;
+        } else {
+          Eint32 completed = 0;
+          MPI_Test(&PH_ConsensusRequest, &completed, MPI_STATUS_IGNORE);
+          if (DEBUG_RT) {
+            printf("P%d: Testing consensus: completed=%d, PH_WorkReceived=%d\n", MyProcessorNumber, completed, PH_WorkReceived);
+            fflush(stdout);
+          }
+          if (completed) {
+            consensus_active = 0;
+            PH_ConsensusRequest = MPI_REQUEST_NULL;
+            Eint32 local_work_received = PH_WorkReceived;
+            Eint32 global_work_received = 0;
+            MPI_Allreduce(&local_work_received, &global_work_received, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+            if (DEBUG_RT) {
+              printf("P%d: Consensus completed: local_work_received=%d, global_work_received=%d\n",
+                     MyProcessorNumber, local_work_received, global_work_received);
+              fflush(stdout);
+            }
+            PH_WorkReceived = 0;
+            if (global_work_received == 0) {
+              globally_terminated = 1;
+              if (DEBUG_RT) {
+                printf("P%d: Consensus completed with zero work received! Setting globally_terminated=1\n", MyProcessorNumber);
+                fflush(stdout);
+              }
+            }
+          }
+        }
+      }
+
+      // Step 6: CPU Yielding / Waitsome if idle and waiting
+      if (!globally_terminated && local_work == 0 && outstanding_sends == 0 && nmerges == 0 && consensus_active == 1) {
+        CommunicationReceiverPhotons(LevelArray, true);
+      }
+#else
+      if (local_work == 0 && nmerges == 0) {
+        globally_terminated = 1;
+      }
+#endif
+    }
+
+    if (DEBUG_RT) {
+      printf("P%d: EvolvePhotons loop finished. Calling FinalizePhotonCommunication()\n", MyProcessorNumber);
+      fflush(stdout);
+    }
     FinalizePhotonCommunication();
+    if (DEBUG_RT) {
+      printf("P%d: EvolvePhotons finished FinalizePhotonCommunication()\n", MyProcessorNumber);
+      fflush(stdout);
+    }
 
     /* Move all finished photon packages back to their original place,
        PhotonPackages.  For the adaptive timestep, we don't carryover
