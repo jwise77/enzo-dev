@@ -372,9 +372,11 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     int local_work = 0;
     int globally_terminated = 0;
 #ifdef USE_MPI
-    int consensus_active = 0;
+    int consensus_active = 0;  // 0=none, 1=barrier, 2=iallreduce pending
     int outstanding_receives = 0;
     int outstanding_sends = 0;
+    Eint32 local_done_val = 0;   // MPI_Iallreduce send buffer (must persist)
+    Eint32 global_done_val = 0;  // MPI_Iallreduce recv buffer (must persist)
     PH_WorkReceived = 0;
 #endif
 
@@ -429,6 +431,8 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 #endif
 
       // Step 2: Trace locally available rays in grids
+      int pre_trace_photons = local_work;
+      int has_photons_to_move = 0;
       if (local_work > 0) {
         START_PERF();
         TIMER_START("RayTracing");
@@ -453,9 +457,12 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
         END_PERF(4);
       }
 
+      // Check if any photons crossed grid boundaries
+      has_photons_to_move = (PhotonsToMove->NextPackageToMove != NULL) ? 1 : 0;
+
       // Step 3: Pack and send boundary rays non-blocking
       int temp_keep = 0;
-      if (PhotonsToMove->NextPackageToMove != NULL) {
+      if (has_photons_to_move) {
         START_PERF();
         TIMER_START("RayCommunication");
         CommunicationTransferPhotons(LevelArray, &PhotonsToMove, NULL, temp_keep);
@@ -469,68 +476,151 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       outstanding_sends = CommunicationBufferedSendActiveCount();
 #endif
 
+      // Recount photons after tracing + sending
+      int post_trace_photons = 0;
+      for (lvl = 0; lvl < MAX_DEPTH_OF_HIERARCHY; lvl++)
+        for (Temp = LevelArray[lvl]; Temp; Temp = Temp->NextGridThisLevel)
+          post_trace_photons += Temp->GridData->ReturnPhotonPackagePointer()->numPackages;
+
+      // Determine whether transport made progress this iteration.
+      // "Done" photons that stay in grids (already traced for this
+      // timestep) don't constitute active work — matching the original
+      // blocking code's keep_transporting semantics.
+      int transport_progress = has_photons_to_move ||
+                               (post_trace_photons < pre_trace_photons);
+
       // When all photons have been traced, merge paused packages
       int nmerges = 0;
-      if (RadiativeTransferSourceClustering && local_work == 0) {
+      if (RadiativeTransferSourceClustering && !transport_progress) {
         for (lvl = MAX_DEPTH_OF_HIERARCHY-1; lvl >= 0; lvl--) {
           for (Temp = LevelArray[lvl]; Temp; Temp = Temp->NextGridThisLevel) {
             nmerges += Temp->GridData->MergePausedPhotonPackages();
           }
         }
+        if (nmerges > 0) transport_progress = 1;
       }
 
       // Step 5: Distributed termination check & Consensus
+      //
+      // Three-phase non-blocking consensus:
+      //   Phase 0 (consensus_active==0): Enter Ibarrier when locally idle
+      //   Phase 1 (consensus_active==1): Barrier pending; continue processing
+      //   Phase 1→2 transition: Barrier completed; drain eager messages, then
+      //                         start MPI_Iallreduce (non-blocking!) with
+      //                         current local state.  This transition happens
+      //                         REGARDLESS of local idle status, avoiding the
+      //                         deadlock where blocking MPI_Allreduce prevented
+      //                         processing of pending rendezvous Irecvs.
+      //   Phase 2 (consensus_active==2): Iallreduce pending; continue processing
+      //   Phase 2 completion: If global_done==0, terminate.  Otherwise reset
+      //                       to phase 0 for another round.
+      //
 #ifdef USE_MPI
-      int current_local_idle = (local_work == 0 && outstanding_receives == 0 && outstanding_sends == 0) ? 1 : 0;
+      int current_local_idle = (!transport_progress && outstanding_receives == 0 && outstanding_sends == 0) ? 1 : 0;
 
-      if (current_local_idle) {
+      // --- Barrier→Iallreduce transition (runs even if NOT idle) ---
+      if (consensus_active == 1 && PH_ConsensusRequest == MPI_REQUEST_NULL) {
+        // Barrier completed (detected by CommunicationReceiverPhotons or MPI_Test).
+        // Drain eager messages that may have been delivered during the barrier.
+        CommunicationReceiverPhotons(LevelArray, false);  // drain pass 1: count→post data Irecv
+        CommunicationReceiverPhotons(LevelArray, false);  // drain pass 2: data Irecv completion
+
+        // Recompute state after drain
+        outstanding_receives = PH_CommunicationReceiveIndex;
+        outstanding_sends = CommunicationBufferedSendActiveCount();
+
+        // Contribute current state to non-blocking allreduce.
+        // "done" (0) only if truly idle AND no work received during the barrier.
+        // Note: we don't check numPackages here — done photons sitting in
+        // grids are not active work (they're already traced for this timestep).
+        local_done_val = (outstanding_sends == 0 &&
+                          outstanding_receives == 0 && PH_WorkReceived == 0) ? 0 : 1;
+        global_done_val = 1; // safe default (don't terminate)
+        MPI_Iallreduce(&local_done_val, &global_done_val, 1, MPI_INT, MPI_MAX,
+                       MPI_COMM_WORLD, &PH_ConsensusRequest);
+        consensus_active = 2;
+        PH_WorkReceived = 0;
+
         if (DEBUG_RT) {
-          printf("P%d: Iteration %d is locally idle. consensus_active=%d\n", MyProcessorNumber, iteration, consensus_active);
+          printf("P%d: Barrier completed. Started Iallreduce with local_done=%d "
+                 "(lw=%d os=%d or=%d)\n",
+                 MyProcessorNumber, local_done_val, local_work,
+                 outstanding_sends, outstanding_receives);
           fflush(stdout);
         }
       }
 
-      if (current_local_idle) {
-        if (!consensus_active) {
-          PH_WorkReceived = 0; // Reset flag when starting a new consensus barrier
-          MPI_Ibarrier(MPI_COMM_WORLD, &PH_ConsensusRequest);
-          consensus_active = 1;
-        } else {
-          Eint32 completed = 0;
-          MPI_Test(&PH_ConsensusRequest, &completed, MPI_STATUS_IGNORE);
-          if (DEBUG_RT) {
-            printf("P%d: Testing consensus: completed=%d, PH_WorkReceived=%d\n", MyProcessorNumber, completed, PH_WorkReceived);
-            fflush(stdout);
-          }
-          if (completed) {
-            consensus_active = 0;
-            PH_ConsensusRequest = MPI_REQUEST_NULL;
-            Eint32 local_work_received = PH_WorkReceived;
-            Eint32 global_work_received = 0;
-            MPI_Allreduce(&local_work_received, &global_work_received, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+      // --- Iallreduce completion check (runs even if NOT idle) ---
+      if (consensus_active == 2 && PH_ConsensusRequest == MPI_REQUEST_NULL) {
+        // Iallreduce completed (detected by CommunicationReceiverPhotons
+        // setting PH_ConsensusRequest = MPI_REQUEST_NULL, or by direct MPI_Test).
+        if (DEBUG_RT) {
+          printf("P%d: Iallreduce completed: global_done=%d\n",
+                 MyProcessorNumber, global_done_val);
+          fflush(stdout);
+        }
+        if (global_done_val == 0) {
+          // All ranks reported done.  Re-verify local state to guard
+          // against messages that arrived during the Iallreduce.
+          outstanding_receives = PH_CommunicationReceiveIndex;
+          outstanding_sends = CommunicationBufferedSendActiveCount();
+          if (outstanding_sends == 0 &&
+              outstanding_receives == 0 && PH_WorkReceived == 0) {
+            globally_terminated = 1;
             if (DEBUG_RT) {
-              printf("P%d: Consensus completed: local_work_received=%d, global_work_received=%d\n",
-                     MyProcessorNumber, local_work_received, global_work_received);
+              printf("P%d: Globally terminated!\n", MyProcessorNumber);
               fflush(stdout);
             }
-            PH_WorkReceived = 0;
-            if (global_work_received == 0) {
-              globally_terminated = 1;
-              if (DEBUG_RT) {
-                printf("P%d: Consensus completed with zero work received! Setting globally_terminated=1\n", MyProcessorNumber);
-                fflush(stdout);
-              }
+          } else {
+            // Race: new work arrived during Iallreduce.  Reset.
+            if (DEBUG_RT) {
+              printf("P%d: Iallreduce said done but local state dirty "
+                     "(lw=%d os=%d or=%d wr=%d). Resetting.\n",
+                     MyProcessorNumber, local_work, outstanding_sends,
+                     outstanding_receives, PH_WorkReceived);
+              fflush(stdout);
             }
+            consensus_active = 0;
+            PH_ConsensusRequest = MPI_REQUEST_NULL;
           }
+        } else {
+          // Some rank had work — reset and try again when idle
+          consensus_active = 0;
+          PH_ConsensusRequest = MPI_REQUEST_NULL;
         }
       }
 
-      // Step 6: CPU Yielding / Waitsome if idle and waiting
-      if (!globally_terminated && local_work == 0 && outstanding_sends == 0 && nmerges == 0 && consensus_active == 1) {
+      // --- Phase 0: Enter new barrier when locally idle ---
+      if (current_local_idle && consensus_active == 0 && !globally_terminated) {
+        if (DEBUG_RT) {
+          printf("P%d: Iteration %d is locally idle. Entering Ibarrier.\n",
+                 MyProcessorNumber, iteration);
+          fflush(stdout);
+        }
+        PH_WorkReceived = 0;
+        MPI_Ibarrier(MPI_COMM_WORLD, &PH_ConsensusRequest);
+        consensus_active = 1;
+      }
+
+      // --- Phase 1 or 2: Explicit MPI_Test to drive progress ---
+      if (consensus_active >= 1 && PH_ConsensusRequest != MPI_REQUEST_NULL) {
+        Eint32 test_flag = 0;
+        MPI_Test(&PH_ConsensusRequest, &test_flag, MPI_STATUS_IGNORE);
+        // If completed, PH_ConsensusRequest is now MPI_REQUEST_NULL.
+        // The transition logic above will handle it on the next iteration.
+      }
+
+      // Step 6: CPU Yielding / Waitsome if idle and waiting.
+      // Only block when there IS a pending consensus request to wait on;
+      // blocking with PH_ConsensusRequest==NULL deadlocks because
+      // Waitsome would have only count Irecvs (nothing to wake it).
+      if (!globally_terminated && !transport_progress && outstanding_sends == 0 &&
+          nmerges == 0 && consensus_active >= 1 &&
+          PH_ConsensusRequest != MPI_REQUEST_NULL) {
         CommunicationReceiverPhotons(LevelArray, true);
       }
 #else
-      if (local_work == 0 && nmerges == 0) {
+      if (!transport_progress && nmerges == 0) {
         globally_terminated = 1;
       }
 #endif
