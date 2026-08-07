@@ -80,14 +80,14 @@ Option                  Default      Description
 Free Parameters
 ---------------
 
-==========================  ===========  ==============================================================
-Option                      Default      Description
-==========================  ===========  ==============================================================
-**ENZO_MAX_SUBGRIDS**       ``100000``   Maximum number of subgrids.
-**ENZO_MAX_BARYONS**        ``30``       Maximum number of baryon fields.
-**ENZO_MAX_TASKS_PER_NODE** ``8``        Maximum parallel tasks per node.
-**ENZO_MEMORY_POOL_SIZE**   ``100000``   Initial memory pool size (in photon packages).
-==========================  ===========  ==============================================================
+===========================  ===========  ==============================================================
+Option                       Default      Description
+===========================  ===========  ==============================================================
+**ENZO_MAX_SUBGRIDS**        ``100000``   Maximum number of subgrids.
+**ENZO_MAX_BARYONS**         ``30``       Maximum number of baryon fields.
+**ENZO_MAX_TASKS_PER_NODE**  ``8``        Maximum parallel tasks per node.
+**ENZO_MEMORY_POOL_SIZE**    ``100000``   Initial memory pool size (in photon packages).
+===========================  ===========  ==============================================================
 
 Building Specific Targets
 -------------------------
