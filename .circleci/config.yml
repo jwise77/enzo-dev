@@ -40,7 +40,7 @@ commands:
             git clone https://github.com/yt-project/yt
             cd yt
             git checkout main
-            pip install --no-build-isolation -e .
+            pip install --no-build-isolation -v .
             cd ..
             pip install yt_astro_analysis
             # Install hypre
