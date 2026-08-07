@@ -8,6 +8,9 @@ commands:
           name: "Set environment variables."
           command: |
             echo 'export LD_LIBRARY_PATH=$HOME/local/lib:$LD_LIBRARY_PATH' >> $BASH_ENV
+            echo 'export CMAKE_PREFIX_PATH=$HOME/local:$HOME/grackle:$CMAKE_PREFIX_PATH' >> $BASH_ENV
+            echo 'export GRACKLE_ROOT=$HOME/local' >> $BASH_ENV
+            echo 'export HYPRE_ROOT=$HOME/local' >> $BASH_ENV
             echo 'export ENZOTEST_DIR=$HOME/enzo_test' >> $BASH_ENV
             echo 'export ANSWER_NAME="push_suite"' >> $BASH_ENV
             echo 'export HYPRE=2.20.0' >> $BASH_ENV
@@ -34,14 +37,7 @@ commands:
             pip install --upgrade pip
             pip install --upgrade wheel
             pip install --upgrade setuptools
-            pip install Cython numpy h5py fastcache flake8 nose3 girder-client matplotlib pytest gitpython # yt
-            # Temporary workaround to use updated answer testing from the yt dev repository
-            # instead of pip until next yt point release
-            git clone https://github.com/yt-project/yt
-            cd yt
-            git checkout main
-            pip install -e .
-            cd ..
+            pip install Cython numpy h5py fastcache flake8 nose3 girder-client matplotlib pytest gitpython yt
             pip install yt_astro_analysis
             # Install hypre
             mkdir -p $HOME/local
@@ -114,7 +110,7 @@ commands:
             source $HOME/venv/bin/activate
             if [ ! -e << parameters.skipfile >> ]; then
               git checkout << parameters.tag >>
-              cmake -B build -S . -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
+              cmake -B build -S . -DCMAKE_PREFIX_PATH="$HOME/local;$HOME/grackle" -DGRACKLE_ROOT="$HOME/local" -DHYPRE_ROOT="$HOME/local" -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
               cmake --build build --parallel 6
               cd run
               python ./test_runner.py --suite=push -o $ENZOTEST_DIR --answer-name=$ANSWER_NAME --local --machine=local_nompi --strict=high --verbose --jrun=4 << parameters.flags >>
@@ -135,17 +131,17 @@ commands:
             if [[ $prec == 64 && $part == 64 ]]; then
               continue
             fi
-            cmake -B build -S . -DENZO_PRECISION=$prec -DENZO_PARTICLES=$part -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
+            cmake -B build -S . -DCMAKE_PREFIX_PATH="$HOME/local;$HOME/grackle" -DGRACKLE_ROOT="$HOME/local" -DHYPRE_ROOT="$HOME/local" -DENZO_PRECISION=$prec -DENZO_PARTICLES=$part -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
             cmake --build build --parallel 6 || exit 1
             done ; done
             # test 32-bit integers and 32-bit particle IDs
-            cmake -B build -S . -DENZO_INTEGERS=32 -DENZO_PARTICLE_IDS=32 -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
+            cmake -B build -S . -DCMAKE_PREFIX_PATH="$HOME/local;$HOME/grackle" -DGRACKLE_ROOT="$HOME/local" -DHYPRE_ROOT="$HOME/local" -DENZO_INTEGERS=32 -DENZO_PARTICLE_IDS=32 -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
             cmake --build build --parallel 6 || exit 1
             # test without mpi
-            cmake -B build -S . -DENZO_USE_MPI=OFF -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
+            cmake -B build -S . -DCMAKE_PREFIX_PATH="$HOME/local;$HOME/grackle" -DGRACKLE_ROOT="$HOME/local" -DHYPRE_ROOT="$HOME/local" -DENZO_USE_MPI=OFF -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
             cmake --build build --parallel 6 || exit 1
             # test without radiative transfer
-            cmake -B build -S . -DENZO_TRANSFER=OFF -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
+            cmake -B build -S . -DCMAKE_PREFIX_PATH="$HOME/local;$HOME/grackle" -DGRACKLE_ROOT="$HOME/local" -DHYPRE_ROOT="$HOME/local" -DENZO_TRANSFER=OFF -DENZO_USE_GRACKLE=ON -DENZO_USE_HYPRE=ON
             cmake --build build --parallel 6 || exit 1
 
   build-docs:
@@ -183,6 +179,7 @@ jobs:
             - ~/.cache/pip
             - ~/venv
             - ~/local
+            - ~/grackle
 
       - install-grackle
       - download-test-data

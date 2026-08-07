@@ -3,13 +3,13 @@
 
 find_path(HYPRE_INCLUDE_DIR
     NAMES HYPRE.h
-    HINTS ${HYPRE_ROOT} $ENV{HYPRE_ROOT} /usr /usr/local
+    HINTS ${HYPRE_ROOT} $ENV{HYPRE_ROOT} $ENV{HOME}/local $ENV{HOME}/.local /usr /usr/local
     PATH_SUFFIXES include
 )
 
 find_library(HYPRE_LIBRARY
     NAMES HYPRE
-    HINTS ${HYPRE_ROOT} $ENV{HYPRE_ROOT} /usr /usr/local
+    HINTS ${HYPRE_ROOT} $ENV{HYPRE_ROOT} $ENV{HOME}/local $ENV{HOME}/.local /usr /usr/local
     PATH_SUFFIXES lib lib64
 )
 

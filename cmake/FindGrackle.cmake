@@ -3,13 +3,13 @@
 
 find_path(GRACKLE_INCLUDE_DIR
     NAMES grackle.h
-    HINTS ${GRACKLE_ROOT} $ENV{GRACKLE_ROOT} $ENV{HOME}/.local /usr /usr/local
+    HINTS ${GRACKLE_ROOT} $ENV{GRACKLE_ROOT} $ENV{HOME}/local $ENV{HOME}/grackle $ENV{HOME}/.local /usr /usr/local
     PATH_SUFFIXES include
 )
 
 find_library(GRACKLE_LIBRARY
     NAMES grackle
-    HINTS ${GRACKLE_ROOT} $ENV{GRACKLE_ROOT} $ENV{HOME}/.local /usr /usr/local
+    HINTS ${GRACKLE_ROOT} $ENV{GRACKLE_ROOT} $ENV{HOME}/local $ENV{HOME}/grackle $ENV{HOME}/.local /usr /usr/local
     PATH_SUFFIXES lib lib64
 )
 
