@@ -658,9 +658,9 @@ typedef long long int   HDF5_hid_t;
 #define END_LOAD_TIMER(A,B) A->AddToCost(B,MPI_Wtime() - _mpi_time);
 #else
 #define START_GRID_TIMER ;
-#define END_GRID_TIMER ;
+#define END_GRID_TIMER(A) ;
 #define START_LOAD_TIMER ;
-#define END_LOAD_TIMER(A) ;
+#define END_LOAD_TIMER(A,B) ;
 #endif  
 
 #endif

@@ -207,4 +207,19 @@ int CommunicationBufferedSend(void *buffer, int size, MPI_Datatype Type, int Tar
   return SUCCESS;
 }
  
+#else
+
+#include "macros_and_parameters.h"
+#include "typedefs.h"
+
+int CommunicationBufferPurge(void)
+{
+  return SUCCESS;
+}
+
+int CommunicationBufferedSendCancel(int Tag)
+{
+  return SUCCESS;
+}
+
 #endif /* USE_MPI */
