@@ -189,33 +189,44 @@ int grid::TransportPhotonPackages(int level, int finest_level,
   if (SingleThread) {
     FPP = this->FinishedPhotonPackages;
     PausedPP = this->PausedPhotonPackages;
-    if (ThreadNum > 0) PP = NULL; // Other cores are idle if not enough work
+    if (ThreadNum > 0) {
+      PP = NULL;
+    } else {
+      if (PP != NULL)
+        MergePhotonLists(HeadPointer, PP);
+      this->PhotonPackages->NextPackage = NULL;
+      PP = HeadPointer->NextPackage;
+    }
   } else {
     PhotonPackageEntry *TempPP;
     FPP = new PhotonPackageEntry;
     PausedPP = new PhotonPackageEntry;
     photons_per_thread = count / CoresPerProcess;
     pstart = photons_per_thread * ThreadNum;
-    pend = min(count, photons_per_thread * (ThreadNum+1))-1;
+    pend = (ThreadNum == CoresPerProcess-1) ? count : pstart + photons_per_thread;
     if (DEBUG)
       printf("PP threading: thread %d, %d/%d photons, %d -> %d\n", 
 	     ThreadNum, photons_per_thread, count, pstart, pend);
     for (ii = 0; ii < pstart; ii++)
-      PP = PP->NextPackage;
+      if (PP != NULL) PP = PP->NextPackage;
 
-    // Save the first photon pointer
-    MergePhotonLists(HeadPointer, PP);
+    if (PP != NULL) {
+      // Save the first photon pointer
+      MergePhotonLists(HeadPointer, PP);
 
-    // Set NextPackage of the last photon in the list to NULL to
-    // terminate the list.
-    TempPP = PP;
-    for (ii = pstart; ii < pend; ii++)
-      TempPP = TempPP->NextPackage;
+      // Set NextPackage of the last photon in the list to NULL to
+      // terminate the list.
+      TempPP = PP;
+      for (ii = pstart; ii < pend-1; ii++)
+        if (TempPP != NULL && TempPP->NextPackage != NULL)
+          TempPP = TempPP->NextPackage;
 
-    // Need the barrier, so we don't break the list before all of the
-    // threads have their own list from the main list.
+      // Need the barrier, so we don't break the list before all of the
+      // threads have their own list from the main list.
 #pragma omp barrier
-    TempPP->NextPackage = NULL;
+      if (TempPP != NULL)
+        TempPP->NextPackage = NULL;
+    }
 
     // The first photon package to calculate the one linked by
     // HeadPointer
@@ -368,9 +379,10 @@ int grid::TransportPhotonPackages(int level, int finest_level,
 
 #pragma omp critical
   {
+    if (HeadPointer->NextPackage != NULL)
+      MergePhotonLists(this->PhotonPackages, HeadPointer->NextPackage);
+
     if (!SingleThread) {
-      if (HeadPointer->NextPackage != NULL)
-	MergePhotonLists(this->PhotonPackages, HeadPointer->NextPackage);
       if (FPP->NextPackage != NULL)
 	MergePhotonLists(this->FinishedPhotonPackages, FPP->NextPackage);
       if (PausedPP->NextPackage != NULL)
