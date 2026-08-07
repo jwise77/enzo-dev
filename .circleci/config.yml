@@ -25,6 +25,7 @@ commands:
     steps:
       - run:
           name: "Install dependencies."
+          no_output_timeout: 30m
           command: |
             source $BASH_ENV
             sudo apt-get update
