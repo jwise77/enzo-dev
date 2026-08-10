@@ -1984,6 +1984,11 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 
 
 
+#ifndef USE_MPI
+  if (UnigridTranspose == 2)
+    UnigridTranspose = 1;
+#endif
+
   if ((MetaData.GravityBoundary != TopGridPeriodic) &&
       (UnigridTranspose)) {
     /* it turns out that Robert Harkness' unigrid transpose stuff is incompatible with the top
