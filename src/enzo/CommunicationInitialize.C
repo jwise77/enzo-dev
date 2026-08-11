@@ -124,14 +124,13 @@ int CommunicationInitialize(Eint32 *argc, char **argv[])
 #ifdef _OPENMP
   int CoresPerProcessor;
   int tid, cid;
-  MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
 #pragma omp parallel default(shared) private(tid, cid)
 {
   CoresPerProcessor = omp_get_num_threads();
   tid = omp_get_thread_num();
   cid = sched_getcpu();
   NumberOfCores = CoresPerProcessor * NumberOfProcessors;
-  printf("Hello from rank: %d, thread: %d, affinity: (core = %d) \n", mpi_rank, tid, cid);
+  printf("Hello from rank: %d, thread: %d, affinity: (core = %d) \n", MyProcessorNumber, tid, cid);
   if (MyProcessorNumber == ROOT_PROCESSOR)
     printf("MPI_Init: NumberOfCores = %"ISYM"\n", NumberOfCores);
 }
