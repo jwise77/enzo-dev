@@ -106,7 +106,7 @@ int ExternalBoundary::SetExternalBoundary(int FieldRank, int GridDims[],
   for (dim = 0; dim < BoundaryRank; dim++)
     if (BoundaryDimension[dim] != 1) {
       if (BoundaryType[field][dim][0] == NULL) {
-	ENZO_VFAIL("BoundaryType not yet declared for field: %i.\n", field)
+	ENZO_VFAIL("BoundaryType not yet declared for field: %" ISYM ".\n", field)
       }
     }
 #endif
