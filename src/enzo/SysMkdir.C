@@ -74,7 +74,7 @@ int main ()
   int ierr;
  
   ierr=SysMkdir ("/tmp", "/tmp/a/b/c/d");
-  printf("ierr=%"ISYM", dir=(/tmp/a/b/c/d)\n",  ierr);
+  printf("ierr=%" ISYM", dir=(/tmp/a/b/c/d)\n",  ierr);
   return(ierr);
 }
 */

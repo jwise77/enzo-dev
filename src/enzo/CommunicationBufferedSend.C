@@ -46,7 +46,7 @@ static int          LastActiveIndex = -1;
 
 int CommunicationBufferPurge(void) { 
 
-  //fprintf(stderr,"CCO p%"ISYM" LastActive %"ISYM"!\n", MyProcessorNumber, LastActiveIndex);
+  //fprintf(stderr,"CCO p%" ISYM" LastActive %" ISYM"!\n", MyProcessorNumber, LastActiveIndex);
 
   int i;
   MPI_Arg RequestDone;
@@ -66,20 +66,20 @@ int CommunicationBufferPurge(void) {
 	
 	/* If the request is done, deallocate associated buffer. */
 
-	//fprintf(stderr,"CCO p%"ISYM": mem- thread %"ISYM" finished\n",MyProcessorNumber, i);
+	//fprintf(stderr,"CCO p%" ISYM": mem- thread %" ISYM" finished\n",MyProcessorNumber, i);
 	
 	delete [] RequestBuffer[i];
 	RequestBuffer[i] = NULL;
         BuffersPurged++;
-        //fprintf(stderr, "CBP buffer %"ISYM" released\n", i);
+        //fprintf(stderr, "CBP buffer %" ISYM" released\n", i);
 	
       } else{
 
-	//fprintf(stderr,"CCO p%"ISYM": mem- thread %"ISYM" active\n",MyProcessorNumber, i);
+	//fprintf(stderr,"CCO p%" ISYM": mem- thread %" ISYM" active\n",MyProcessorNumber, i);
 
 	NewLastActiveIndex = max(i, NewLastActiveIndex);
         BuffersActive++;
-        //fprintf(stderr, "CBP buffer %"ISYM" remains active\n", i);
+        //fprintf(stderr, "CBP buffer %" ISYM" remains active\n", i);
 
       }
     }
@@ -88,7 +88,7 @@ int CommunicationBufferPurge(void) {
   LastActiveIndex = NewLastActiveIndex;
 
   // if (BuffersPurged != 0)
-  // fprintf(stderr, "CBP %"ISYM": %"ISYM" buffers purged, %"ISYM" buffers remain active\n",
+  // fprintf(stderr, "CBP %" ISYM": %" ISYM" buffers purged, %" ISYM" buffers remain active\n",
   //                  MyProcessorNumber, BuffersPurged, BuffersActive);
 
   return SUCCESS;

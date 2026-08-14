@@ -477,22 +477,22 @@ void Star::DeleteCopyInGrid(void)
 
 void Star::PrintInfo(void)
 {
-  printf("[P%d] Star %"ISYM": pos = %"PSYM" %"PSYM" %"PSYM", vel = %"FSYM" %"FSYM" %"FSYM"\n",
+  printf("[P%d] Star %" ISYM": pos = %" PSYM" %" PSYM" %" PSYM", vel = %" FSYM" %" FSYM" %" FSYM"\n",
 	 MyProcessorNumber, Identifier, pos[0], pos[1], pos[2], vel[0], vel[1], vel[2]);
-  printf("\t delta_vel = %"FSYM" %"FSYM" %"FSYM"\n", delta_vel[0], delta_vel[1],
+  printf("\t delta_vel = %" FSYM" %" FSYM" %" FSYM"\n", delta_vel[0], delta_vel[1],
 	 delta_vel[2]);
-  printf("\t naccr = %"ISYM, naccretions);
+  printf("\t naccr = %" ISYM, naccretions);
   if (naccretions > 0)
-    printf(", accr_rate[0] = %"GSYM", accr_time[0] = %"GSYM"\n", 
+    printf(", accr_rate[0] = %" GSYM", accr_time[0] = %" GSYM"\n", 
 	   accretion_rate[0], accretion_time[0]);
   else
     printf("\n");
-  printf("\t birthtime = %"FSYM", lifetime = %"FSYM"\n", BirthTime, LifeTime);
-  printf("\t Z = %"GSYM", deltaZ = %"GSYM"\n", Metallicity, deltaZ);
-  printf("\t mass = %"GSYM", dmass = %"GSYM", fmass = %"GSYM", type = %"ISYM", grid %"ISYM","
-	 " lvl %"ISYM"\n", Mass, DeltaMass, FinalMass, type, GridID, level);
-  printf("\t FeedbackFlag = %"ISYM"\n", FeedbackFlag);
-  printf("\t accreted_angmom = %"FSYM" %"FSYM" %"FSYM"\n", accreted_angmom[0],
+  printf("\t birthtime = %" FSYM", lifetime = %" FSYM"\n", BirthTime, LifeTime);
+  printf("\t Z = %" GSYM", deltaZ = %" GSYM"\n", Metallicity, deltaZ);
+  printf("\t mass = %" GSYM", dmass = %" GSYM", fmass = %" GSYM", type = %" ISYM", grid %" ISYM","
+	 " lvl %" ISYM"\n", Mass, DeltaMass, FinalMass, type, GridID, level);
+  printf("\t FeedbackFlag = %" ISYM"\n", FeedbackFlag);
+  printf("\t accreted_angmom = %" FSYM" %" FSYM" %" FSYM"\n", accreted_angmom[0],
 	 accreted_angmom[1], accreted_angmom[2]);
   printf("\t this = %x, PrevStar = %x, NextStar = %x\n", this, PrevStar, NextStar);
   return;

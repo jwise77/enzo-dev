@@ -222,7 +222,7 @@ int PhotonTestRestartInitialize(FILE *fptr, FILE *Outfptr,
  
   }
   if (debug)
-    printf("PhotonTestRestart: NumberOfCellsSet = %"ISYM"\n", NumberOfCellsSet);
+    printf("PhotonTestRestart: NumberOfCellsSet = %" ISYM"\n", NumberOfCellsSet);
  
   /* -------------------------------------------------------------------- */
   /* Loop over grid and project solution to parent to maintain consistency. */

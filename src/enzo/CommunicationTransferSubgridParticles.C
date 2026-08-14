@@ -225,8 +225,8 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
   CommunicationSumValues(&TotalAPNumberOfReceives, 1);
 
   if (debug)
-    printf("TransferSubgridParticles[%"ISYM"]: Moved %"ISYM" particles, "
-	   "%"ISYM" stars, %"ISYM" active particles.\n", level, TotalNumberOfReceives,
+    printf("TransferSubgridParticles[%" ISYM"]: Moved %" ISYM" particles, "
+	   "%" ISYM" stars, %" ISYM" active particles.\n", level, TotalNumberOfReceives,
            TotalStarNumberOfReceives, TotalAPNumberOfReceives);
 	   
 

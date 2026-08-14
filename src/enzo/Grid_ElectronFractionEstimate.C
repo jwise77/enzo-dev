@@ -208,7 +208,7 @@ int grid::ElectronFractionEstimate(float dt)
 	      * proper_de / dom
 	    - brem * (proper_hii + 0.25*proper_heii + proper_heiii) * proper_de;
 
-	  //	  printf("edot[0] = %"GSYM"\n", edot);
+	  //	  printf("edot[0] = %" GSYM"\n", edot);
 
 	  edotplus = CoolData.ipiht * BaryonField[gammaNum][index] * rtunits
 	    * proper_hi / dom;
@@ -216,7 +216,7 @@ int grid::ElectronFractionEstimate(float dt)
 
 	  edot += edotplus;
 
-	  //	  printf("edotplus = %"GSYM" (%"GSYM")\n", edotplus, max_edotplus);
+	  //	  printf("edotplus = %" GSYM" (%" GSYM")\n", edotplus, max_edotplus);
 
 	  if (DualEnergyFormalism)
 
@@ -224,7 +224,7 @@ int grid::ElectronFractionEstimate(float dt)
 	  BaryonField[TENum][index] += edot / proper_d * dt;
 #endif /* UNUSED */
 
-//	  printf("(%"ISYM" %"ISYM" %"ISYM") tem=%.2g, gg=%.2g, edot=%.2g, "
+//	  printf("(%" ISYM" %" ISYM" %" ISYM") tem=%.2g, gg=%.2g, edot=%.2g, "
 //		 "ge=%.2g\n",
 //		 i, j, k, temperature, BaryonField[gammaNum][index],
 //		 edot, BaryonField[GENum][index]);
@@ -243,7 +243,7 @@ int grid::ElectronFractionEstimate(float dt)
 	  total_h = BaryonField[HINum][index] + BaryonField[HIINum][index];
 	  new_hii = x_eq * total_h;
 
-//	  printf("(%"ISYM" %"ISYM" %"ISYM") t_i=%.2g, x_eq=%.2g, t_frac=%.2g, "
+//	  printf("(%" ISYM" %" ISYM" %" ISYM") t_i=%.2g, x_eq=%.2g, t_frac=%.2g, "
 //		 "x_est=%.2g, x0=%.2g, kph=%.2g\n",
 //		 i, j, k, t_i, x_eq, t_frac, x_estimate, efrac, 
 //		 BaryonField[kphHINum][index]);

@@ -89,11 +89,11 @@ int NohInitialize(FILE *fptr,
 
     /* read parameters */
 
-    ret += sscanf(line, "NohProblemFullBox = %"ISYM,
+    ret += sscanf(line, "NohProblemFullBox = %" ISYM,
 		  &NohProblemFullBox);
-    ret += sscanf(line, "NohSubgridLeft = %"FSYM, 
+    ret += sscanf(line, "NohSubgridLeft = %" FSYM, 
 		  &NohSubgridLeft);
-    ret += sscanf(line, "NohSubgridRight = %"FSYM,
+    ret += sscanf(line, "NohSubgridRight = %" FSYM,
 		  &NohSubgridRight);
 
     /* if the line is suspicious, issue a warning */
@@ -183,8 +183,8 @@ int NohInitialize(FILE *fptr,
 
   if (MyProcessorNumber == ROOT_PROCESSOR) {
 
-    fprintf(Outfptr, "NohSubgridLeft  = %"GOUTSYM"\n"  , NohSubgridLeft);
-    fprintf(Outfptr, "NohSubgridRight = %"GOUTSYM"\n\n", NohSubgridRight);
+    fprintf(Outfptr, "NohSubgridLeft  = %" GOUTSYM"\n"  , NohSubgridLeft);
+    fprintf(Outfptr, "NohSubgridRight = %" GOUTSYM"\n\n", NohSubgridRight);
   }
 
   return SUCCESS;

@@ -39,7 +39,7 @@ int FSProb::Dump(EnzoVector *ucur)
     fprintf(stderr,"  EtaRadius = %g\n", EtaRadius);
     fprintf(stderr,"  EtaCenter = %g %g %g\n", 
 	    EtaCenter[0], EtaCenter[1], EtaCenter[2]);
-    fprintf(stderr,"  LimType = %"ISYM"\n",LimType);
+    fprintf(stderr,"  LimType = %" ISYM"\n",LimType);
     fprintf(stderr,"  dt_suggest = %g\n",dt_suggest);
     fprintf(stderr,"  aUnits = %g\n",aUnits);
     fprintf(stderr,"  EUnits = %g\n",EUnits);

@@ -80,12 +80,12 @@ int RadHydroRadShockInitialize(FILE *fptr, FILE *Outfptr,
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
 	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "DensityConstant = %"FSYM, &DensityConstant);
-	ret += sscanf(line, "GasTempConstant = %"FSYM, &GasTempConstant);
-	ret += sscanf(line, "RadTempConstant = %"FSYM, &RadTempConstant);
-	ret += sscanf(line, "VelocityConstant = %"FSYM, &VelocityConstant);
-	ret += sscanf(line, "ShockDir = %"ISYM, &ShockDir);
-	ret += sscanf(line, "CGSType = %"ISYM, &CGSType);
+	ret += sscanf(line, "DensityConstant = %" FSYM, &DensityConstant);
+	ret += sscanf(line, "GasTempConstant = %" FSYM, &GasTempConstant);
+	ret += sscanf(line, "RadTempConstant = %" FSYM, &RadTempConstant);
+	ret += sscanf(line, "VelocityConstant = %" FSYM, &VelocityConstant);
+	ret += sscanf(line, "ShockDir = %" ISYM, &ShockDir);
+	ret += sscanf(line, "CGSType = %" ISYM, &CGSType);
       } // end input from parameter file
       fclose(RHfptr);
     }

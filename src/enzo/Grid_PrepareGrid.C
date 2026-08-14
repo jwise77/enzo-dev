@@ -45,7 +45,7 @@ void grid::PrepareGrid(int Rank, int GridDim[],
   /* debugging code */
 /*
   if (debug) {
-    printf("PrepareGrid: Rank = %"ISYM"\n", Rank);
+    printf("PrepareGrid: Rank = %" ISYM"\n", Rank);
     printf("PrepareGrid: GridDim = ");
     WriteListOfInts(stdout, Rank, GridDim);
     printf("PrepareGrid: LeftEdge = ");

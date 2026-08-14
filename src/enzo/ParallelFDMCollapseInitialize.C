@@ -127,9 +127,9 @@ int ParallelFDMCollapseInitialize(FILE *fptr, FILE *Outfptr,
     if (sscanf(line, "FDMCollapseAbsBdName = %s", dummy) == 1)
       FDMCollapseAbsBdName = dummy;
 
-    ret += sscanf(line, "FDMUseParticles = %"ISYM, &FDMUseParticles);
-    ret += sscanf(line, "FDMParticleMeanDensity = %"FSYM, &FDMParticleMeanDensity);
-    ret += sscanf(line, "FDMCollapseAbsorbingBoundary = %"ISYM, &FDMCollapseAbsorbingBoundary);
+    ret += sscanf(line, "FDMUseParticles = %" ISYM, &FDMUseParticles);
+    ret += sscanf(line, "FDMParticleMeanDensity = %" FSYM, &FDMParticleMeanDensity);
+    ret += sscanf(line, "FDMCollapseAbsorbingBoundary = %" ISYM, &FDMCollapseAbsorbingBoundary);
 
         /* If the dummy char space was used, then make another. */
  
@@ -212,17 +212,17 @@ int ParallelFDMCollapseReInitialize(HierarchyEntry *TopGrid, TopGridData &MetaDa
   char *RealPsiName = NULL, *ImagPsiName = NULL, *AbsBdName = NULL;
 
   if (MyProcessorNumber == ROOT_PROCESSOR)
-  printf("FDMCollapse: ReInitializing grid %"ISYM"\n", gridnum);
+  printf("FDMCollapse: ReInitializing grid %" ISYM"\n", gridnum);
 
   if (FDMCollapseNumberOfInitialGrids > 1) {
     if (FDMCollapseRePsiName)
-      sprintf(RealPsiName = new char[MAX_LINE_LENGTH], "%s.%1"ISYM,
+      sprintf(RealPsiName = new char[MAX_LINE_LENGTH], "%s.%1" ISYM,
 	      FDMCollapseRePsiName, gridnum);
     if (FDMCollapseImPsiName)
-      sprintf(ImagPsiName = new char[MAX_LINE_LENGTH], "%s.%1"ISYM,
+      sprintf(ImagPsiName = new char[MAX_LINE_LENGTH], "%s.%1" ISYM,
 	      FDMCollapseRePsiName, gridnum);
     if (FDMCollapseAbsBdName)
-      sprintf(AbsBdName = new char[MAX_LINE_LENGTH], "%s.%1"ISYM,
+      sprintf(AbsBdName = new char[MAX_LINE_LENGTH], "%s.%1" ISYM,
 	      FDMCollapseAbsBdName, gridnum);
   } else {
     RealPsiName            = FDMCollapseRePsiName;

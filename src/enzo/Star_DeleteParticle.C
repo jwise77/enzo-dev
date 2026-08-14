@@ -55,7 +55,7 @@ int Star::DeleteParticle(LevelHierarchyEntry *LevelArray[])
   if (changedGrid == INT_UNDEFINED) {
     if (debug)
       fprintf(stdout, "RemoveParticles: WARNING -- "
-	      "particle %"ISYM" not found...\n", this->Identifier);
+	      "particle %" ISYM" not found...\n", this->Identifier);
     delete [] Grids;
     return SUCCESS;
   }

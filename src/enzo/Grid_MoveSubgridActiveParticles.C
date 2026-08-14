@@ -89,7 +89,7 @@ int grid::MoveSubgridActiveParticles(int NumberOfSubgrids, grid* ToGrids[],
       if (subgrid[i] >= 0) NumberToMoveLocal++;
 
       if (subgrid[i] < -1 || subgrid[i] > NumberOfSubgrids-1) {
-	ENZO_VFAIL("particle subgrid (%"ISYM"/%"ISYM") out of range\n", subgrid[i],
+	ENZO_VFAIL("particle subgrid (%" ISYM"/%" ISYM") out of range\n", subgrid[i],
 		NumberOfSubgrids)
       }
 

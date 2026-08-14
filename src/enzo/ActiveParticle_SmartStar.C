@@ -196,9 +196,9 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	}
 	if (DensityThreshold == huge_number)
 	  ENZO_VFAIL("Error in Accreting Particles: DensityThreshold = huge_number! \n"
-		     "JeansDensity = %"GOUTSYM" \n"
-		     "data.DensityUnits = %"GOUTSYM" \n"
-		     "CellTemperature = %"GOUTSYM" \n",
+		     "JeansDensity = %" GOUTSYM" \n"
+		     "data.DensityUnits = %" GOUTSYM" \n"
+		     "CellTemperature = %" GOUTSYM" \n",
 		     JeansDensity, data.DensityUnits, CellTemperature);
 #endif
 
@@ -512,7 +512,7 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
     // Check bounds - if star particle is outside of this grid then give a warning and continue
     //printf("%s: GridDimension = %d %d %d\n", __FUNCTION__, GridDimension[0], GridDimension[1], GridDimension[2]);
     if (i < 0 || i > GridXSize-1 || j < 0 || j > GridYSize-1 || k < 0 || k > GridZSize-1){
-      fprintf(stdout, "Particle out of grid; xind, yind, zind = %"ISYM", %"ISYM", %"ISYM"\n",i,j,k);
+      fprintf(stdout, "Particle out of grid; xind, yind, zind = %" ISYM", %" ISYM", %" ISYM"\n",i,j,k);
       continue;
     }
     // Calculate serial index

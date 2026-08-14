@@ -107,17 +107,17 @@ int TurbulenceInitialize(FILE *fptr, FILE *Outfptr,
 
     ret = 0;
 
-    ret += sscanf(line, "RefineAtStart = %"ISYM, &RefineAtStart);
-    ret += sscanf(line, "PutSink = %"ISYM, &PutSink);
-    ret += sscanf(line, "Density = %"FSYM, &CloudDensity);
-    ret += sscanf(line, "SoundVelocity = %"FSYM, &CloudSoundSpeed);
-    ret += sscanf(line, "MachNumber = %"FSYM, &CloudMachNumber);
-    ret += sscanf(line, "AngularVelocity = %"FSYM, &CloudAngularVelocity);
-    ret += sscanf(line, "CloudRadius = %"PSYM, &CloudRadius);
-    ret += sscanf(line, "SetTurbulence = %"ISYM, &SetTurbulence);
-    ret += sscanf(line, "RandomSeed = %"ISYM, &RandomSeed);
-    ret += sscanf(line, "InitialBfield = %"FSYM, &InitialBField);
-    ret += sscanf(line, "CloudType = %"ISYM, &CloudType);
+    ret += sscanf(line, "RefineAtStart = %" ISYM, &RefineAtStart);
+    ret += sscanf(line, "PutSink = %" ISYM, &PutSink);
+    ret += sscanf(line, "Density = %" FSYM, &CloudDensity);
+    ret += sscanf(line, "SoundVelocity = %" FSYM, &CloudSoundSpeed);
+    ret += sscanf(line, "MachNumber = %" FSYM, &CloudMachNumber);
+    ret += sscanf(line, "AngularVelocity = %" FSYM, &CloudAngularVelocity);
+    ret += sscanf(line, "CloudRadius = %" PSYM, &CloudRadius);
+    ret += sscanf(line, "SetTurbulence = %" ISYM, &SetTurbulence);
+    ret += sscanf(line, "RandomSeed = %" ISYM, &RandomSeed);
+    ret += sscanf(line, "InitialBfield = %" FSYM, &InitialBField);
+    ret += sscanf(line, "CloudType = %" ISYM, &CloudType);
   }
 
   /* Convert to code units */
@@ -134,12 +134,12 @@ int TurbulenceInitialize(FILE *fptr, FILE *Outfptr,
   InitialBField /= MagneticUnits;
   CloudAngularVelocity *= TimeUnits;
 
-  printf("Magnetic Units=%"GSYM"\n", MagneticUnits);  
-  printf("B field=%"GSYM"\n", InitialBField);  
-printf("Plasma beta=%"GSYM"\n", CloudDensity*CloudSoundSpeed*CloudSoundSpeed/(InitialBField*InitialBField/2.0));
-  printf("DensityUnits=%"GSYM",VelocityUnits=%"GSYM",LengthUnits=%"GSYM",TimeUnits=%"GSYM" (%"GSYM" yr),PressureUnits=%"GSYM"\n", 
+  printf("Magnetic Units=%" GSYM"\n", MagneticUnits);  
+  printf("B field=%" GSYM"\n", InitialBField);  
+printf("Plasma beta=%" GSYM"\n", CloudDensity*CloudSoundSpeed*CloudSoundSpeed/(InitialBField*InitialBField/2.0));
+  printf("DensityUnits=%" GSYM",VelocityUnits=%" GSYM",LengthUnits=%" GSYM",TimeUnits=%" GSYM" (%" GSYM" yr),PressureUnits=%" GSYM"\n", 
 	 DensityUnits, VelocityUnits, LengthUnits, TimeUnits, TimeUnits/3.1558e7, PressureUnits);
-  printf("CloudDensity=%"GSYM", CloudSoundSpeed=%"GSYM", CloudRadius=%"GSYM", CloudAngularVelocity=%"GSYM"\n", 
+  printf("CloudDensity=%" GSYM", CloudSoundSpeed=%" GSYM", CloudRadius=%" GSYM", CloudAngularVelocity=%" GSYM"\n", 
 	 CloudDensity, CloudSoundSpeed, CloudRadius, CloudAngularVelocity);
 
 
@@ -171,14 +171,14 @@ printf("Plasma beta=%"GSYM"\n", CloudDensity*CloudSoundSpeed*CloudSoundSpeed/(In
 	  return FAIL;
 	}
 	CurrentGrid = CurrentGrid->NextGridThisLevel;
-	fprintf(stderr, "v_rms, Volume: %"GSYM"  %"GSYM"\n", v_rms, Volume);
+	fprintf(stderr, "v_rms, Volume: %" GSYM"  %" GSYM"\n", v_rms, Volume);
       }
       
 #ifdef USE_MPI
       CommunicationAllReduceValues(&v_rms, 1, MPI_SUM);
       CommunicationAllReduceValues(&Volume, 1, MPI_SUM);
 #endif
-      fprintf(stderr, "v_rms, Volume: %"GSYM"  %"GSYM"\n", v_rms, Volume);
+      fprintf(stderr, "v_rms, Volume: %" GSYM"  %" GSYM"\n", v_rms, Volume);
       // Carry out the Normalization
       v_rms = sqrt(v_rms/Volume); // actuall v_rms
       fac = CloudSoundSpeed*CloudMachNumber/v_rms;
@@ -359,11 +359,11 @@ printf("Plasma beta=%"GSYM"\n", CloudDensity*CloudSoundSpeed*CloudSoundSpeed/(In
 //       return FAIL;
 //     }
 //     fprintf(header, "MovieVersion = %s\n", movieVersion);
-//     fprintf(header, "RootReso = %"ISYM"\n", MetaData.TopGridDims[0]);
-//     fprintf(header, "FLOATSize = %"ISYM"\n", sizeOfFLOAT);
-//     fprintf(header, "RecordSize = %"ISYM"\n", sizeOfRecord);
-//     fprintf(header, "NumFields = %"ISYM"\n", nMovieFields);
-//     fprintf(header, "NumCPUs = %"ISYM"\n", NumberOfProcessors);
+//     fprintf(header, "RootReso = %" ISYM"\n", MetaData.TopGridDims[0]);
+//     fprintf(header, "FLOATSize = %" ISYM"\n", sizeOfFLOAT);
+//     fprintf(header, "RecordSize = %" ISYM"\n", sizeOfRecord);
+//     fprintf(header, "NumFields = %" ISYM"\n", nMovieFields);
+//     fprintf(header, "NumCPUs = %" ISYM"\n", NumberOfProcessors);
 //     fprintf(header, "FileStem = %s\n", NewMovieName);
 //     fclose(header);
 //   } /* END: write movie header file */

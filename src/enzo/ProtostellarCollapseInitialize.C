@@ -61,7 +61,7 @@ int ProtostellarCollapseInitialize(FILE *fptr, FILE *Outfptr,
   /* make sure it is 3D */
 
   if (MetaData.TopGridRank != 3) {
-    ENZO_VFAIL("Cannot do ProtostellarCollapse in %"ISYM" dimension(s)\n", MetaData.TopGridRank)
+    ENZO_VFAIL("Cannot do ProtostellarCollapse in %" ISYM" dimension(s)\n", MetaData.TopGridRank)
   }    
 
   /* Setup and parameters:
@@ -102,15 +102,15 @@ int ProtostellarCollapseInitialize(FILE *fptr, FILE *Outfptr,
 
     /* read parameters */
 
-    ret += sscanf(line, "ProtostellarCollapseCoreRadius      = %"FSYM, 
+    ret += sscanf(line, "ProtostellarCollapseCoreRadius      = %" FSYM, 
 		  &ProtostellarCollapseCoreRadius);
-    ret += sscanf(line, "ProtostellarCollapseOuterDensity    = %"FSYM, 
+    ret += sscanf(line, "ProtostellarCollapseOuterDensity    = %" FSYM, 
 		  &ProtostellarCollapseOuterDensity);
-    ret += sscanf(line, "ProtostellarCollapseAngularVelocity = %"FSYM, 
+    ret += sscanf(line, "ProtostellarCollapseAngularVelocity = %" FSYM, 
 		  &ProtostellarCollapseAngularVelocity);
-    ret += sscanf(line, "ProtostellarCollapseSubgridLeft     = %"FSYM, 
+    ret += sscanf(line, "ProtostellarCollapseSubgridLeft     = %" FSYM, 
 		  &ProtostellarCollapseSubgridLeft);
-    ret += sscanf(line, "ProtostellarCollapseSubgridRight    = %"FSYM, 
+    ret += sscanf(line, "ProtostellarCollapseSubgridRight    = %" FSYM, 
 		  &ProtostellarCollapseSubgridRight);
 
     /* if the line is suspicious, issue a warning */
@@ -183,7 +183,7 @@ int ProtostellarCollapseInitialize(FILE *fptr, FILE *Outfptr,
 	     TopCell[dim])*POW(RefineBy, lev + 1);
 
     if (debug)
-      printf("PCI: Level[%"ISYM"]: NumberOfSubgridZones = [%"ISYM",%"ISYM",%"ISYM"]\n", lev+1, 
+      printf("PCI: Level[%" ISYM"]: NumberOfSubgridZones = [%" ISYM",%" ISYM",%" ISYM"]\n", lev+1, 
 	     NumberOfSubgridZones[0], NumberOfSubgridZones[1], NumberOfSubgridZones[2]);
 
     if (NumberOfSubgridZones[0] > 0) {
@@ -212,7 +212,7 @@ int ProtostellarCollapseInitialize(FILE *fptr, FILE *Outfptr,
       }
 
       if (debug)
-	printf("PCI: Level[%"ISYM"]: SubgridDims = [%"ISYM",%"ISYM",%"ISYM"] [%"FSYM"-%"FSYM", %"FSYM"-%"FSYM", %"FSYM"-%"FSYM"]\n", lev+1, 
+	printf("PCI: Level[%" ISYM"]: SubgridDims = [%" ISYM",%" ISYM",%" ISYM"] [%" FSYM"-%" FSYM", %" FSYM"-%" FSYM", %" FSYM"-%" FSYM"]\n", lev+1, 
 	       SubgridDims[0], SubgridDims[1], SubgridDims[2],
 	       LeftEdge[0],RightEdge[0],LeftEdge[1],RightEdge[1],LeftEdge[2],RightEdge[2]);
 
@@ -296,15 +296,15 @@ int ProtostellarCollapseInitialize(FILE *fptr, FILE *Outfptr,
 
   if (MyProcessorNumber == ROOT_PROCESSOR) {
 
-    fprintf(Outfptr, "ProtostellarCollapseCoreDensity     = %"FSYM"\n"  , 
+    fprintf(Outfptr, "ProtostellarCollapseCoreDensity     = %" FSYM"\n"  , 
 	              ProtostellarCollapseCoreDensity);
-    fprintf(Outfptr, "ProtostellarCollapseCoreEnergy      = %"FSYM"\n"  , 
+    fprintf(Outfptr, "ProtostellarCollapseCoreEnergy      = %" FSYM"\n"  , 
 	              ProtostellarCollapseCoreEnergy);
-    fprintf(Outfptr, "ProtostellarCollapseOuterDensity    = %"FSYM"\n"  , 
+    fprintf(Outfptr, "ProtostellarCollapseOuterDensity    = %" FSYM"\n"  , 
 	              ProtostellarCollapseOuterDensity);
-    fprintf(Outfptr, "ProtostellarCollapseCoreRadius      = %"FSYM"\n"  , 
+    fprintf(Outfptr, "ProtostellarCollapseCoreRadius      = %" FSYM"\n"  , 
 	              ProtostellarCollapseCoreRadius);
-    fprintf(Outfptr, "ProtostellarCollapseAngularVelocity = %"FSYM"\n"  , 
+    fprintf(Outfptr, "ProtostellarCollapseAngularVelocity = %" FSYM"\n"  , 
 	              ProtostellarCollapseAngularVelocity);
   }
 

@@ -119,7 +119,7 @@ int ClusterSMBHSumGasMass(HierarchyEntry *Grids[], int NumberOfGrids, int level)
 
   if (MyProcessorNumber == ROOT_PROCESSOR) {
     FILE *fptr=fopen("MT.out","a");
-    fprintf(fptr,"Time, ClusterSMBHJetMdot, ClusterSMBHAccretionTime, and Total ClusterSMBHColdGasMass in Msun = %"ESYM" %"ESYM" %"ESYM" %"ESYM"\n", Time, ClusterSMBHJetMdot, ClusterSMBHAccretionTime, ColdGasMassMsun);
+    fprintf(fptr,"Time, ClusterSMBHJetMdot, ClusterSMBHAccretionTime, and Total ClusterSMBHColdGasMass in Msun = %" ESYM" %" ESYM" %" ESYM" %" ESYM"\n", Time, ClusterSMBHJetMdot, ClusterSMBHAccretionTime, ColdGasMassMsun);
     fclose(fptr);
   }
   return SUCCESS;

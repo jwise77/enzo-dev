@@ -18,7 +18,7 @@ int grid::MHDLoopInitGrid(float LoopDensity,float Pressure, float Vx, float Vy, 
                           FLOAT Center[], int CurrentAxis){ 
 
 
-  fprintf(stderr,"GridDim %"ISYM" %"ISYM" %"ISYM"\n",GridDimension[0],GridDimension[1],GridDimension[2]);
+  fprintf(stderr,"GridDim %" ISYM" %" ISYM" %" ISYM"\n",GridDimension[0],GridDimension[1],GridDimension[2]);
   int field=0;
 
   FieldType[NumberOfBaryonFields++] = Density;

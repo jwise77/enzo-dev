@@ -251,7 +251,7 @@ int grid::CRShockTubesInitializeGrid(   float x0,   float x1,
       }
     }
     if (debug)
-      printf("%"FSYM"\t%"FSYM"\t%"FSYM"\n", x , BaryonField[ieint][i], BaryonField[iCRD][i] );
+      printf("%" FSYM"\t%" FSYM"\t%" FSYM"\n", x , BaryonField[ieint][i], BaryonField[iCRD][i] );
   }
 
   // --------------- FOR DIFFUSION PROBLEM --

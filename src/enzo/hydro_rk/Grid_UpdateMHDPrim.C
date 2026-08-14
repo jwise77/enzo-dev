@@ -205,10 +205,10 @@ int grid::UpdateMHDPrim(float **dU, float c1, float c2)
 
 	if (D_new < 0 || isnan(D_new)) {
 
-	  printf("UpdateMHDPrim: rho <0 at %"ISYM" %"ISYM" %"ISYM": rho_old=%"FSYM", rho=%"FSYM", rho_new=%"FSYM", dU[iD]=%"FSYM"\n", 
+	  printf("UpdateMHDPrim: rho <0 at %" ISYM" %" ISYM" %" ISYM": rho_old=%" FSYM", rho=%" FSYM", rho_new=%" FSYM", dU[iD]=%" FSYM"\n", 
 		 i, j, k, rho_old, rho, D_new, dU[iD][n]);
 	  D_new = max(rho, SmallRho);
-	  printf("UpdateMHDPrim: use rho: %"FSYM"\n", D_new);
+	  printf("UpdateMHDPrim: use rho: %" FSYM"\n", D_new);
 	  //	  D_new = rho;
 
 	  return FAIL;
@@ -229,9 +229,9 @@ int grid::UpdateMHDPrim(float **dU, float c1, float c2)
 	if (etot < 0 && EOSType == 0) {
 	  float v2_old = vx_old*vx_old + vy_old*vy_old + vz_old*vz_old;
 	  float B2_old = Bx_old*vx_old + By_old*By_old + Bz_old*Bz_old;
-	  printf("UpdateMHDPrim: tau < 0. etot_old=%"GSYM", etot=%"GSYM", etot_new=%"GSYM", v2=%"GSYM", v2old=%"GSYM", dU[iTau] = %"GSYM", dtFixed = %"GSYM"\n", 
+	  printf("UpdateMHDPrim: tau < 0. etot_old=%" GSYM", etot=%" GSYM", etot_new=%" GSYM", v2=%" GSYM", v2old=%" GSYM", dU[iTau] = %" GSYM", dtFixed = %" GSYM"\n", 
 		 Tau_old/rho_old, Tau/rho, Tau_new/D_new, v2, v2_old, dU[iEtot][n]*CellWidth[0][0]/dtFixed, dtFixed);
-	  printf("rho_new=%"GSYM", rho=%"GSYM", rho_old=%"GSYM", B2_old/rho_old=%"GSYM"\n", D_new, rho, rho_old, B2_old/rho_old);
+	  printf("rho_new=%" GSYM", rho=%" GSYM", rho_old=%" GSYM", B2_old/rho_old=%" GSYM"\n", D_new, rho, rho_old, B2_old/rho_old);
 	  //return FAIL;
 	}
 
@@ -288,9 +288,9 @@ int grid::UpdateMHDPrim(float **dU, float c1, float c2)
 	    }
 
 	  if (BaryonField[GENum][igrid] < 0.0) {
-	    printf("UpdateMHDPrim: eint < 0, cs2=%"GSYM", eta*v2=%"GSYM", eint=%"GSYM", etot=%"GSYM", 0.5*v2=%"GSYM", p=%"GSYM", rho=%"GSYM",0.5*B2/rho=%"GSYM"\n", 
+	    printf("UpdateMHDPrim: eint < 0, cs2=%" GSYM", eta*v2=%" GSYM", eint=%" GSYM", etot=%" GSYM", 0.5*v2=%" GSYM", p=%" GSYM", rho=%" GSYM",0.5*B2/rho=%" GSYM"\n", 
 		   cs*cs, DualEnergyFormalismEta1*v2, eint, etot, 0.5*v2, p, D_new, 0.5*B2/rho);
-	    printf("dU[%"ISYM"]=%"GSYM", dU[ieint]=%"GSYM", eint_old=%"GSYM",eint1=%"GSYM"\n", iEtot, dU[iEtot][n], dU[iEint][n], eint_old, eint1);
+	    printf("dU[%" ISYM"]=%" GSYM", dU[ieint]=%" GSYM", eint_old=%" GSYM",eint1=%" GSYM"\n", iEtot, dU[iEtot][n], dU[iEint][n], eint_old, eint1);
 	    return FAIL;
 	  }
 	}

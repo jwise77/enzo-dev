@@ -125,7 +125,7 @@ int SetStellarFeedbackEfficiency(FLOAT time)
   }
   
   if(debug){
-    printf("SetStellarFeedbackEfficiency:  StarEnergyToThermalFeedback set to %"FSYM" at time %"PSYM" (redshift %"PSYM")\n",
+    printf("SetStellarFeedbackEfficiency:  StarEnergyToThermalFeedback set to %" FSYM" at time %" PSYM" (redshift %" PSYM")\n",
 	   StarEnergyToThermalFeedback, time, redshift);
   }
   

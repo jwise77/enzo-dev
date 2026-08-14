@@ -221,13 +221,13 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
     NFWSigma[i] = sqrt(kboltz * NFWTemp[i] / (mu * mh));  // in cm/s
     float mean_overdensity = 3.0*SphereDensity[sphere] / (x1*x1*x1) *
         (log(1.0+x1) - x1/(x1+1.0));
-    fprintf(fptr, "%"ISYM" %"GOUTSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM"\n", i, NFWRadius[i], 
+    fprintf(fptr, "%" ISYM" %" GOUTSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM"\n", i, NFWRadius[i], 
 	 NFWDensity[i], NFWMass[i], NFWPressure[i], NFWTemp[i], NFWSigma[i],
          mean_overdensity);
     if (mean_overdensity > 200 && m200 == 0)
       m200 = NFWMass[i];
   }
-  fprintf(fptr, "#m200 = %"GSYM"\n", m200);
+  fprintf(fptr, "#m200 = %" GSYM"\n", m200);
   fclose(fptr);
 
   /* Loop over the set-up twice, once to count the particles, the second
@@ -396,13 +396,13 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 		      pow(SphereRadius[sphere]*LengthUnits, 2) *
 		      ((SphereRadius[sphere] - SphereCoreRadius[sphere]) * 
 		       LengthUnits)) + SphereCoreMass;
-	printf("\nSphere Mass (M_sun): %"FSYM"\n", SphereMass/SolarMass);
+	printf("\nSphere Mass (M_sun): %" FSYM"\n", SphereMass/SolarMass);
       }
       else if (SphereType[sphere] == 1 || SphereType[sphere] == 7) {
 	SphereMass = double(4*pi/3) *
 	  pow((SphereRadius[sphere]*LengthUnits), 3) *
 	  double(SphereDensity[sphere]*DensityUnits);
-	printf("\nSphere Mass (M_sun): %"FSYM"\n", SphereMass/SolarMass);
+	printf("\nSphere Mass (M_sun): %" FSYM"\n", SphereMass/SolarMass);
       } 
       else if (SphereType[sphere] == 6) {
 	VelocitySound[sphere] = sqrt((SphereTemperature[sphere] * Gamma)/mu);
@@ -411,7 +411,7 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 		(SphereDensity[sphere]))) * 
 	  ph_q(SphereCutOff[sphere]);
 	SphereMass = SphereMass*DensityUnits*pow(LengthUnits,3);
-	printf("\nSphere Mass (M_sun): %"FSYM"\n", SphereMass/SolarMass);
+	printf("\nSphere Mass (M_sun): %" FSYM"\n", SphereMass/SolarMass);
       }
       
       VelocityKep = sqrt(GravConst*SphereMass/(SphereRadius[sphere]*(LengthUnits)));
@@ -419,9 +419,9 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 	(SphereFracKeplerianRot[sphere]*VelocityKep);
       SphereRotationalPeriod[sphere] = SphereRotationalPeriod[sphere]/(TimeUnits);
 
-      printf("\nKeplerian Rotation Period (s): %"FSYM"\n", SphereRotationalPeriod[sphere] 
+      printf("\nKeplerian Rotation Period (s): %" FSYM"\n", SphereRotationalPeriod[sphere] 
 	     * SphereFracKeplerianRot[sphere]*TimeUnits);
-      printf("\nSphere Rotation Period (s): %"FSYM"\n", SphereRotationalPeriod[sphere]
+      printf("\nSphere Rotation Period (s): %" FSYM"\n", SphereRotationalPeriod[sphere]
 	     * TimeUnits);
     } else
       SphereRotationalPeriod[sphere] = 0.0;
@@ -430,7 +430,7 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 
     // Calculate speed of sound for this sphere
     VelocitySound[sphere] = sqrt((SphereTemperature[sphere] * Gamma)/mu);
-    printf("\nVelocitySound (cm s^-1): %"FSYM"\n", VelocitySound[sphere] * 
+    printf("\nVelocitySound (cm s^-1): %" FSYM"\n", VelocitySound[sphere] * 
 	   (LengthUnits/TimeUnits));
 
   } // ENDFOR sphere
@@ -931,9 +931,9 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 	ci[dim] = int((pos[dim] - GridLeftEdge[dim]) / CellWidth[dim][0]);
       }
 
-      printf("PhotonTest[%"ISYM"]: Left edge = %"FSYM" %"FSYM" %"FSYM"\n", level, GridLeftEdge[0],
+      printf("PhotonTest[%" ISYM"]: Left edge = %" FSYM" %" FSYM" %" FSYM"\n", level, GridLeftEdge[0],
 	     GridLeftEdge[1], GridLeftEdge[2]);
-      printf("PhotonTest[%"ISYM"]: source (%"FSYM" %"FSYM" %"FSYM") in %"ISYM" %"ISYM" %"ISYM"\n", 
+      printf("PhotonTest[%" ISYM"]: source (%" FSYM" %" FSYM" %" FSYM") in %" ISYM" %" ISYM" %" ISYM"\n", 
 	     level, pos[0], pos[1], pos[2], ci[0], ci[1], ci[2]);
 
       if (pos[0] >= GridLeftEdge[0] && pos[0] <= GridRightEdge[0] &&
@@ -943,7 +943,7 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 	index = GRIDINDEX(ci[0], ci[1], ci[2]);
 	BaryonField[kphHINum][index] = 1;
 
-	printf("PhotonTest[%"ISYM"]: set kphHI in %"ISYM" %"ISYM" %"ISYM" (%"ISYM")\n", 
+	printf("PhotonTest[%" ISYM"]: set kphHI in %" ISYM" %" ISYM" %" ISYM" (%" ISYM")\n", 
 	       level, ci[0], ci[1], ci[2], index);
 
       } /* ENDIF inside grid */
@@ -955,7 +955,7 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
   } /* ENDIF RefineByOpticalDepth */
 
   if (SphereUseParticles && debug)
-    printf("PhotonTestInitialize: DM NumberOfParticles = %"ISYM"\n", 
+    printf("PhotonTestInitialize: DM NumberOfParticles = %" ISYM"\n", 
 	   NumberOfParticles);
 
   delete [] density_field;

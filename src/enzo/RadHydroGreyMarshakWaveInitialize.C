@@ -69,10 +69,10 @@ int RadHydroGreyMarshakWaveInitialize(FILE *fptr, FILE *Outfptr,
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
 	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "RadHydroDensity = %"FSYM, &RadHydroDensity);
-	ret += sscanf(line, "RadHydroGasEnergy = %"FSYM, &RadHydroGasEnergy);
-	ret += sscanf(line, "RadHydroRadEnergy = %"FSYM, &RadHydroRadEnergy);
-	ret += sscanf(line, "GreyMarshDir = %"ISYM, &GreyMarshDir);
+	ret += sscanf(line, "RadHydroDensity = %" FSYM, &RadHydroDensity);
+	ret += sscanf(line, "RadHydroGasEnergy = %" FSYM, &RadHydroGasEnergy);
+	ret += sscanf(line, "RadHydroRadEnergy = %" FSYM, &RadHydroRadEnergy);
+	ret += sscanf(line, "GreyMarshDir = %" ISYM, &GreyMarshDir);
       } // end input from parameter file
       fclose(RHfptr);
     }

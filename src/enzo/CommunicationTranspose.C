@@ -110,7 +110,7 @@ int NonUnigridCommunicationTranspose(region *FromRegion, int NumberOfFromRegions
   int LeftIndex[MAX_DIMENSION], RightIndex[MAX_DIMENSION];
   float *ReceiveBuffer, *SendBuffer;
  
-  //  fprintf(stderr, "CT(%"ISYM"): start From=%"ISYM"  To=%"ISYM"\n", MyProcessorNumber,
+  //  fprintf(stderr, "CT(%" ISYM"): start From=%" ISYM"  To=%" ISYM"\n", MyProcessorNumber,
   //	  NumberOfFromRegions, NumberOfToRegions);
 
   int NumberOfRegions = max(NumberOfFromRegions, NumberOfToRegions);
@@ -148,7 +148,7 @@ int NonUnigridCommunicationTranspose(region *FromRegion, int NumberOfFromRegions
  
     index = 0;
  
-//  fprintf(stderr, "CT(%"ISYM"): sends = %"ISYM"  SendSize = %"ISYM"\n", MyProcessorNumber,
+//  fprintf(stderr, "CT(%" ISYM"): sends = %" ISYM"  SendSize = %" ISYM"\n", MyProcessorNumber,
 //	    sends, SendSize);
  
     for (i = 0; i < sends; i++) {
@@ -205,7 +205,7 @@ int NonUnigridCommunicationTranspose(region *FromRegion, int NumberOfFromRegions
       starttime = MPI_Wtime();
 #endif
  
-//      fprintf(stderr, "CT(%"ISYM"): MPI SS/RS = %"ISYM"/%"ISYM" From/To = %"ISYM" %"ISYM"\n",
+//      fprintf(stderr, "CT(%" ISYM"): MPI SS/RS = %" ISYM"/%" ISYM" From/To = %" ISYM" %" ISYM"\n",
 //	      MyProcessorNumber, SendSize, ReceiveSize, FromProc, ToProc);
 
       Count = SendSize;
@@ -217,7 +217,7 @@ int NonUnigridCommunicationTranspose(region *FromRegion, int NumberOfFromRegions
 //	       MPI_TRANSPOSE_TAG, (void*) ReceiveBuffer, RecvCount,
 //	       DataType, Source, MPI_TRANSPOSE_TAG, MPI_COMM_WORLD,
 //	       &status) != MPI_SUCCESS) {
-//	ENZO_VFAIL("Proc %"ISYM" MPI_Sendrecv error %"ISYM"\n", MyProcessorNumber,
+//	ENZO_VFAIL("Proc %" ISYM" MPI_Sendrecv error %" ISYM"\n", MyProcessorNumber,
 //		status.MPI_ERROR)
 //      }
 
@@ -245,7 +245,7 @@ int NonUnigridCommunicationTranspose(region *FromRegion, int NumberOfFromRegions
  
     index = 0;
  
-//    fprintf(stderr, "CT(%"ISYM"): receives = %"ISYM"\n", MyProcessorNumber, receives);
+//    fprintf(stderr, "CT(%" ISYM"): receives = %" ISYM"\n", MyProcessorNumber, receives);
  
     for (i = 0; i < receives; i++) {
 
@@ -282,7 +282,7 @@ int NonUnigridCommunicationTranspose(region *FromRegion, int NumberOfFromRegions
  
     /* Clean up. */
  
-//    fprintf(stderr, "CT(%"ISYM"): end jump %"ISYM"\n", MyProcessorNumber, n);
+//    fprintf(stderr, "CT(%" ISYM"): end jump %" ISYM"\n", MyProcessorNumber, n);
  
     delete [] SendBuffer;
     delete [] ReceiveBuffer;
@@ -291,7 +291,7 @@ int NonUnigridCommunicationTranspose(region *FromRegion, int NumberOfFromRegions
  
   /* Delete FromRegion data. */
  
-//  fprintf(stderr, "CT(%"ISYM"): Deleting FromRegions\n", MyProcessorNumber);
+//  fprintf(stderr, "CT(%" ISYM"): Deleting FromRegions\n", MyProcessorNumber);
  
   for (i = 0; i < NumberOfFromRegions; i++) {
     delete [] FromRegion[i].Data;
@@ -343,7 +343,7 @@ int OptimizedUnigridCommunicationTranspose(
  
   if(First_Pass < 6)  {
 
-//    fprintf(stderr, "FFT Initialization Pass %"ISYM" on proc %"ISYM" : #FromRegions =  %"ISYM"  #ToRegions =  %"ISYM"\n",
+//    fprintf(stderr, "FFT Initialization Pass %" ISYM" on proc %" ISYM" : #FromRegions =  %" ISYM"  #ToRegions =  %" ISYM"\n",
 //	    First_Pass, MyProcessorNumber, NumberOfFromRegions, NumberOfToRegions);
 
   // Loop over processor jumps (number of processors ahead to send)
@@ -416,7 +416,7 @@ int OptimizedUnigridCommunicationTranspose(
       }
     }
 
-    //    fprintf(stderr, "  Counter indices on proc %"ISYM" for n = %"ISYM": ict = %"ISYM", jct = %"ISYM"\n", MyProcessorNumber, n, ict, jct);
+    //    fprintf(stderr, "  Counter indices on proc %" ISYM" for n = %" ISYM": ict = %" ISYM", jct = %" ISYM"\n", MyProcessorNumber, n, ict, jct);
 
 
 /*
@@ -537,13 +537,13 @@ int OptimizedUnigridCommunicationTranspose(
     for ( n = 0; n < 6; n++ ) {
 
     for ( m = 0; m < NumberOfProcessors; m++ ) {
-      fprintf(stderr, "  %"ISYM"  %"ISYM"  %"ISYM"  %"ISYM"\n",
+      fprintf(stderr, "  %" ISYM"  %" ISYM"  %" ISYM"  %" ISYM"\n",
               n, m, cSndRcv[n*NumberOfProcessors+m].ReceiveSize, cSndRcv[n*NumberOfProcessors+m].receives);
     }
 
     for ( m = 0; m < NumberOfProcessors; m++ ) {
       for ( l = 0; l < NumberOfToRegions; l++ ) {
-        fprintf(stderr, "  %"ISYM, cSndRcv[n*NumberOfProcessors+m].Receives[l].Processor);
+        fprintf(stderr, "  %" ISYM, cSndRcv[n*NumberOfProcessors+m].Receives[l].Processor);
       }
       fprintf(stderr, "\n");
     }
@@ -551,7 +551,7 @@ int OptimizedUnigridCommunicationTranspose(
     for ( m = 0; m < NumberOfProcessors; m++ ) {
       for ( l = 0; l < NumberOfToRegions; l++ ) {
         for ( k = 0; k < MAX_DIMENSION; k++ ) {
-           fprintf(stderr, "  %"ISYM"  %"ISYM, cSndRcv[n*NumberOfProcessors+m].Receives[l].StartIndex[k], cSndRcv[n*NumberOfProcessors+m].Receives[l].RegionDim[k]);
+           fprintf(stderr, "  %" ISYM"  %" ISYM, cSndRcv[n*NumberOfProcessors+m].Receives[l].StartIndex[k], cSndRcv[n*NumberOfProcessors+m].Receives[l].RegionDim[k]);
         }
         fprintf(stderr, "\n");
       }
@@ -565,25 +565,25 @@ int OptimizedUnigridCommunicationTranspose(
     for ( m = 0; m < 6*NumberOfProcessors; m++ ) {
       for ( l = 0; l < NumberOfToRegions; l++ ) {
         for ( k = 0; k < MAX_DIMENSION; k++ ) {
-           fprintf(stderr, "  %"ISYM"  %"ISYM, cSndRcv[m].Receives[l].StartIndex[k], cSndRcv[m].Receives[l].RegionDim[k]);
+           fprintf(stderr, "  %" ISYM"  %" ISYM, cSndRcv[m].Receives[l].StartIndex[k], cSndRcv[m].Receives[l].RegionDim[k]);
         }
-        fprintf(stderr, "  %"ISYM, cSndRcv[m].Receives[l].Processor);
+        fprintf(stderr, "  %" ISYM, cSndRcv[m].Receives[l].Processor);
         fprintf(stderr, "\n");
       }
-      fprintf(stderr, "  %"ISYM"\n", cSndRcv[m].ReceiveSize);
-      fprintf(stderr, "  %"ISYM"\n", cSndRcv[m].receives);
+      fprintf(stderr, "  %" ISYM"\n", cSndRcv[m].ReceiveSize);
+      fprintf(stderr, "  %" ISYM"\n", cSndRcv[m].receives);
     }
 
     for ( m = 0; m < 6*NumberOfProcessors; m++ ) {
       for ( l = 0; l < NumberOfFromRegions; l++ ) {
         for ( k = 0; k < MAX_DIMENSION; k++ ) {
-          fprintf(stderr, "  %"ISYM"  %"ISYM, cSndRcv[m].Sends[l].StartIndex[k], cSndRcv[m].Sends[l].RegionDim[k]);
+          fprintf(stderr, "  %" ISYM"  %" ISYM, cSndRcv[m].Sends[l].StartIndex[k], cSndRcv[m].Sends[l].RegionDim[k]);
         }
-        fprintf(stderr, "  %"ISYM, cSndRcv[m].Sends[l].Processor);
+        fprintf(stderr, "  %" ISYM, cSndRcv[m].Sends[l].Processor);
         fprintf(stderr, "\n");
       }
-      fprintf(stderr, "  %"ISYM"\n", cSndRcv[m].SendSize);
-      fprintf(stderr, "  %"ISYM"\n", cSndRcv[m].sends);
+      fprintf(stderr, "  %" ISYM"\n", cSndRcv[m].SendSize);
+      fprintf(stderr, "  %" ISYM"\n", cSndRcv[m].sends);
     }
 */
 
@@ -623,7 +623,7 @@ int OptimizedUnigridCommunicationTranspose(
  
     index = 0;
  
-//  fprintf(stderr, "CT(%"ISYM"): sends = %"ISYM"  SendSize = %"ISYM" receives = %"ISYM"  RecvSzs = %"ISYM"\n", MyProcessorNumber,
+//  fprintf(stderr, "CT(%" ISYM"): sends = %" ISYM"  SendSize = %" ISYM" receives = %" ISYM"  RecvSzs = %" ISYM"\n", MyProcessorNumber,
 //	    sends, SendSize, receives, ReceiveSize);
  
     for (i = 0; i < sends; i++) {
@@ -677,7 +677,7 @@ int OptimizedUnigridCommunicationTranspose(
       starttime = MPI_Wtime();
 #endif
  
-//      fprintf(stderr, "CT(%"ISYM"): MPI SS/RS = %"ISYM"/%"ISYM" From/To = %"ISYM" %"ISYM"\n",
+//      fprintf(stderr, "CT(%" ISYM"): MPI SS/RS = %" ISYM"/%" ISYM" From/To = %" ISYM" %" ISYM"\n",
 //	      MyProcessorNumber, SendSize, ReceiveSize, FromProc, ToProc);
 
       Count = SendSize;
@@ -690,7 +690,7 @@ int OptimizedUnigridCommunicationTranspose(
 	       MPI_TRANSPOSE_TAG, (void*) ReceiveBuffer, RecvCount,
 	       DataType, Source, MPI_TRANSPOSE_TAG, MPI_COMM_WORLD,
 	       &Status) != MPI_SUCCESS) {
-	ENZO_VFAIL("Proc %"ISYM" MPI_Sendrecv error %"ISYM"\n", MyProcessorNumber,
+	ENZO_VFAIL("Proc %" ISYM" MPI_Sendrecv error %" ISYM"\n", MyProcessorNumber,
 		Status.MPI_ERROR)
       }
 */
@@ -718,7 +718,7 @@ int OptimizedUnigridCommunicationTranspose(
  
     index = 0;
  
-    //fprintf(stderr, "CT(%"ISYM"): receives = %"ISYM"\n", MyProcessorNumber, receives);
+    //fprintf(stderr, "CT(%" ISYM"): receives = %" ISYM"\n", MyProcessorNumber, receives);
  
     for (i = 0; i < receives; i++) {
  
@@ -753,7 +753,7 @@ int OptimizedUnigridCommunicationTranspose(
  
     /* Clean up. */
  
-    //fprintf(stderr, "CT(%"ISYM"): end jump %"ISYM"\n", MyProcessorNumber, n);
+    //fprintf(stderr, "CT(%" ISYM"): end jump %" ISYM"\n", MyProcessorNumber, n);
  
     delete [] SendBuffer;
     delete [] ReceiveBuffer;
@@ -763,7 +763,7 @@ int OptimizedUnigridCommunicationTranspose(
  
   /* Delete FromRegion data. */
  
-  //fprintf(stderr, "CT(%"ISYM"): Deleting FromRegions\n", MyProcessorNumber);
+  //fprintf(stderr, "CT(%" ISYM"): Deleting FromRegions\n", MyProcessorNumber);
  
   for (i = 0; i < NumberOfFromRegions; i++) {
     delete [] FromRegion[i].Data;
@@ -805,7 +805,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
   MPI_Arg Dest;
  
 #ifdef DEBUG_NONBLOCKCT
-    fprintf(stderr, "CT(%"ISYM"): start From=%"ISYM"  To=%"ISYM"\n", 
+    fprintf(stderr, "CT(%" ISYM"): start From=%" ISYM"  To=%" ISYM"\n", 
 	    MyProcessorNumber, NumberOfFromRegions, NumberOfToRegions);
 #endif
 
@@ -914,7 +914,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
     index = 0;
  
 #ifdef DEBUG_NONBLOCKCT
-    fprintf(stderr, "CT(%"ISYM"): sends = %"ISYM"  SendSize = %"ISYM"\n", 
+    fprintf(stderr, "CT(%" ISYM"): sends = %" ISYM"  SendSize = %" ISYM"\n", 
 	    MyProcessorNumber, sends, SendSize);
 #endif
  
@@ -968,7 +968,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
 #endif
  
 #ifdef DEBUG_NONBLOCKCT
-      fprintf(stderr, "CT(%"ISYM"): MPI SS/RS = %"ISYM"/%"ISYM" From/To = %"ISYM" %"ISYM"\n",
+      fprintf(stderr, "CT(%" ISYM"): MPI SS/RS = %" ISYM"/%" ISYM" From/To = %" ISYM" %" ISYM"\n",
 	      MyProcessorNumber, SendSize, ReceiveSize, FromProc, ToProc);
 #endif
 
@@ -981,7 +981,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
 //	       MPI_TRANSPOSE_TAG, (void*) ReceiveBuffer, RecvCount,
 //	       DataType, Source, MPI_TRANSPOSE_TAG, MPI_COMM_WORLD,
 //	       &status) != MPI_SUCCESS) {
-//	ENZO_VFAIL("Proc %"ISYM" MPI_Sendrecv error %"ISYM"\n", MyProcessorNumber,
+//	ENZO_VFAIL("Proc %" ISYM" MPI_Sendrecv error %" ISYM"\n", MyProcessorNumber,
 //		status.MPI_ERROR)
 //      }
 
@@ -1025,7 +1025,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
       TotalCompletedRequests = 0;
 
 #ifdef DEBUG_NONBLOCKCT
-      printf("CT(%"ISYM"): TotalCompletedRequests = %d, NumberOfRequests = %d\n",
+      printf("CT(%" ISYM"): TotalCompletedRequests = %d, NumberOfRequests = %d\n",
 	     MyProcessorNumber, TotalCompletedRequests, 
 	     NumberOfRequests);
 #endif
@@ -1054,7 +1054,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
 	      (n == 0 && request == 0)) {
 
 #ifdef DEBUG_NONBLOCKCT
-	    fprintf(stderr, "CT(%"ISYM"): request = %d, receives = %"ISYM"\n", 
+	    fprintf(stderr, "CT(%" ISYM"): request = %d, receives = %" ISYM"\n", 
 		    MyProcessorNumber, request, receives);
 #endif
 
@@ -1108,7 +1108,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
 	  } // ENDIF completed request
 	} // ENDFOR requests
 #ifdef DEBUG_NONBLOCKCT
-	printf("CT(%"ISYM"): (n=%d) -- completed %d out of %d requests\n",
+	printf("CT(%" ISYM"): (n=%d) -- completed %d out of %d requests\n",
 	       MyProcessorNumber, n, TotalCompletedRequests, NumberOfRequests);
 #endif
       } // ENDWHILE
@@ -1125,7 +1125,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
     } // ENDIF ReceiveMode
 
 #ifdef DEBUG_NONBLOCKCT
-    fprintf(stderr, "CT(%"ISYM"): end jump %"ISYM"\n", MyProcessorNumber, n);
+    fprintf(stderr, "CT(%" ISYM"): end jump %" ISYM"\n", MyProcessorNumber, n);
 #endif
  
   } // end: loop over processors jumps

@@ -121,7 +121,7 @@ int grid::MHD_Curl(int * Start, int * End, int Method){
 		-( (OK[dimX][1] == 1) ? dTdX[dimZ]*(ElectricField[dimY][E4]- ElectricField[dimY][E3]) : 0 ));
 	    break;
 	  default:
-	    ENZO_VFAIL(" Method = %"ISYM" isn't a valid argument to MHD_Curl.  Fix it.\n",Method)
+	    ENZO_VFAIL(" Method = %" ISYM" isn't a valid argument to MHD_Curl.  Fix it.\n",Method)
 	    break;
 	  }//switch
 	}//i,j,k

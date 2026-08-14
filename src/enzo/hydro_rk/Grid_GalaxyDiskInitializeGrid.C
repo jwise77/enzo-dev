@@ -189,7 +189,7 @@ int grid::GalaxyDiskInitializeGrid(int NumberOfHalos,
     NFWVelc[i] = f_s*sqrt(GravConst*NFWMass[i]/(NFWRadius[i]*LengthUnits));
     
     mean_overdensity = 3.0*delta_c/pow(x1,3)*(log(1.0+x1)-x1/(x1+1.0));
-    fprintf(fptr, "%"ISYM" %"GOUTSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM"\n", i, NFWRadius[i]*LengthUnits, 
+    fprintf(fptr, "%" ISYM " %" GOUTSYM " %" GSYM " %" GSYM " %" GSYM " %" GSYM " %" GSYM " %" GSYM " %" GSYM "\n", i, NFWRadius[i]*LengthUnits, 
 	 NFWDensity[i], NFWMass[i], NFWPressure[i], NFWTemp[i], NFWSigma[i],
          mean_overdensity, NFWVelc[i]);
     if (mean_overdensity > 199 && m200 == 0) {
@@ -198,7 +198,7 @@ int grid::GalaxyDiskInitializeGrid(int NumberOfHalos,
       r_vir = NFWRadius[i]*LengthUnits;
       i_vir = i;
       if (i_vir != 0) {
-	printf("Halo parameters wrong: mean_overdensity=%"GSYM"\n",
+	printf("Halo parameters wrong: mean_overdensity=%" GSYM "\n",
 	       mean_overdensity);
 	return FAIL;
       }
@@ -223,7 +223,7 @@ int grid::GalaxyDiskInitializeGrid(int NumberOfHalos,
     NFWSigma[i] *= vfac;
   }
   double T_vir = 0.5*mh/kboltz*GravConst*m200*SolarMass/r_vir; 
-  fprintf(fptr, "#m200 = %"GSYM", r_vir = %"GSYM", T_vir=%"GSYM", r_sphere=%"GSYM", vfac=%"GSYM",rhomean=%"GSYM"\n", 
+  fprintf(fptr, "#m200 = %" GSYM ", r_vir = %" GSYM ", T_vir=%" GSYM ", r_sphere=%" GSYM ", vfac=%" GSYM ",rhomean=%" GSYM "\n", 
 	  m200, r_vir, T_vir, HaloRadius[0]*LengthUnits, vfac, rhomean);
   fclose(fptr);
 
@@ -249,7 +249,7 @@ int grid::GalaxyDiskInitializeGrid(int NumberOfHalos,
     double ParticleMeanDensity = NFWMass[i_vir]/1e4/pow(dx,3);
     ParticleMeanDensity /= DensityUnits;
     
-    printf("rho_sphere = %"GSYM", rho_p = %"GSYM"\n", HaloDensity[0],
+    printf("rho_sphere = %" GSYM ", rho_p = %" GSYM "\n", HaloDensity[0],
 	   ParticleMeanDensity);
     
     /* Set particles. */
@@ -267,7 +267,7 @@ int grid::GalaxyDiskInitializeGrid(int NumberOfHalos,
       npart = 0;
       
       /* Allocate space. */
-      printf("npart=%"ISYM"\n", NumberOfParticles);
+      printf("npart=%" ISYM "\n", NumberOfParticles);
       this->AllocateNewParticles(NumberOfParticles);
       
       /* Particle values will be set below. */
@@ -335,7 +335,7 @@ int grid::GalaxyDiskInitializeGrid(int NumberOfHalos,
 	Vrot = max(vdm + vphidisk - vpress,0); // do not go below 0
 	Omega = Vrot/2/M_PI/R;
 	ToomreQ = c_s*Omega/SigmaR/GravConst;
-	fprintf(fptr, "%"ISYM" %"GOUTSYM"\t %g   \t %g\t  %g\t  %g\t  %g\t       %g\t  %g\t   %g\t %g \t %g\n", 
+	fprintf(fptr, "%" ISYM " %" GOUTSYM "\t %g   \t %g\t  %g\t  %g\t  %g\t       %g\t  %g\t   %g\t %g \t %g\n", 
 		i, R/kpc_cm, SigmaR/SolarMass*pc_cm*pc_cm, rhoc/Mu/mh, Mdr/SolarMass, (NFWMass[i]+Mdr)/SolarMass, 
 		hr/pc_cm, Vrot/1e5, vdm/1e5,  vphidisk/1e5, -vpress/1e5,ToomreQ
 		  );
@@ -665,7 +665,7 @@ int grid::GalaxyDiskInitializeGrid(int NumberOfHalos,
   } // end loop SetupLoopCount
 
   if (UseParticles) {
-    printf("GalaxyDiskInitialize: NumberOfParticles = %"ISYM"\n", 
+    printf("GalaxyDiskInitialize: NumberOfParticles = %" ISYM "\n", 
 	   NumberOfParticles);
   }
   

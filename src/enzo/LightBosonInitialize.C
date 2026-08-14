@@ -59,8 +59,8 @@ int LightBosonInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
  
     /* read parameters */
  
-    ret += sscanf(line, "LightBosonCenter = %"PSYM, &LightBosonCenter);
-    ret += sscanf(line, "LightBosonProblemType = %"ISYM, &LightBosonProblemType);
+    ret += sscanf(line, "LightBosonCenter = %" PSYM, &LightBosonCenter);
+    ret += sscanf(line, "LightBosonProblemType = %" ISYM, &LightBosonProblemType);
  
     /* if the line is suspicious, issue a warning */
  
@@ -100,8 +100,8 @@ int LightBosonInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   /* Write parameters to parameter output file */
  
   if (MyProcessorNumber == ROOT_PROCESSOR) {
-    fprintf(Outfptr, "LightBosonCenter     = %"PSYM"\n", LightBosonCenter);
-    fprintf(Outfptr, "LightBosonProblemType = %"ISYM"\n", LightBosonProblemType);
+    fprintf(Outfptr, "LightBosonCenter     = %" PSYM"\n", LightBosonCenter);
+    fprintf(Outfptr, "LightBosonProblemType = %" ISYM"\n", LightBosonProblemType);
   }
 
   return SUCCESS;

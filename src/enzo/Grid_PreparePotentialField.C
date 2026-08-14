@@ -113,7 +113,7 @@ int grid::PreparePotentialField(grid *ParentGrid)
     ParentDim[dim] = ParentGrid->GravitatingMassFieldDimension[dim];
     if (ParentStartIndex[dim] < 0 ||
 	ParentStartIndex[dim]+ParentTempDim[dim] > ParentDim[dim]) {
-      ENZO_VFAIL("ParentStartIndex[%"ISYM"] = %"ISYM" ParentTempDim = %"ISYM"(%"ISYM").\n",
+      ENZO_VFAIL("ParentStartIndex[%" ISYM"] = %" ISYM" ParentTempDim = %" ISYM"(%" ISYM").\n",
 	      dim, ParentStartIndex[dim], ParentTempDim[dim], ParentDim[dim])
     }
   }

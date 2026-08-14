@@ -57,22 +57,22 @@ int gFLDProblem::UpdateBoundary(EnzoVector *u, float time, int flag)
 	  &ugh[0][0], &ugh[0][1], &ugh[1][0], 
 	  &ugh[1][1], &ugh[2][0], &ugh[2][1]);
   if (udims[0] != LocDims[0]) {
-    fprintf(stderr,"p%"ISYM" UpdateBC: mismatched x0 dims %"ISYM"!=%"ISYM"\n",
+    fprintf(stderr,"p%" ISYM" UpdateBC: mismatched x0 dims %" ISYM"!=%" ISYM"\n",
 	    MyProcessorNumber,udims[0],LocDims[0]);
     ENZO_FAIL("Error in gFLDProblem_UpdateBoundary");
   }
   if (udims[1] != LocDims[1]) {
-    fprintf(stderr,"p%"ISYM" UpdateBC: mismatched x1 dims %"ISYM"!=%"ISYM"\n",
+    fprintf(stderr,"p%" ISYM" UpdateBC: mismatched x1 dims %" ISYM"!=%" ISYM"\n",
 	    MyProcessorNumber,udims[1],LocDims[1]);
     ENZO_FAIL("Error in gFLDProblem_UpdateBoundary");
   }
   if (udims[2] != LocDims[2]) {
-    fprintf(stderr,"p%"ISYM" UpdateBC: mismatched x2 dims %"ISYM"!=%"ISYM"\n",
+    fprintf(stderr,"p%" ISYM" UpdateBC: mismatched x2 dims %" ISYM"!=%" ISYM"\n",
 	    MyProcessorNumber,udims[2],LocDims[2]);
     ENZO_FAIL("Error in gFLDProblem_UpdateBoundary");
   }
   if (udims[3] != (2+Nchem)) {
-    fprintf(stderr,"p%"ISYM" UpdateBC: mismatched nspecies %"ISYM"!=3\n",
+    fprintf(stderr,"p%" ISYM" UpdateBC: mismatched nspecies %" ISYM"!=3\n",
 	    MyProcessorNumber,udims[3]);
     ENZO_FAIL("Error in gFLDProblem_UpdateBoundary");
   }

@@ -137,7 +137,7 @@ int grid::RadHydroRadShockInitializeGrid(float DensityConstant,
 
     if (debug) {
       fprintf(stdout,"RadHydroRadShockInitializeGrid:\n");
-      printf("           ShockDir = %"ISYM"\n",ShockDir);
+      printf("           ShockDir = %" ISYM"\n",ShockDir);
       
       printf("    DensityConstant = %g\n",DensityConstant);    
       printf("         TEConstant = %g\n",TEConstant);    

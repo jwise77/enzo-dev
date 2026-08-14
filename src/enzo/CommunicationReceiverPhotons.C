@@ -74,7 +74,7 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
     return SUCCESS;
 
 #ifdef DEBUG_CRP
-  printf("P(%"ISYM") in PH_CRH with %"ISYM" requests (local=%d)\n", 
+  printf("P(%" ISYM") in PH_CRH with %" ISYM" requests (local=%d)\n", 
 	 MyProcessorNumber, TotalReceives, local_transport);
 #endif
 
@@ -104,7 +104,7 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
 		 PH_ListOfIndices, PH_ListOfStatuses);
   
 #ifdef DEBUG_CRP
-  printf("PH_CRH[%"ISYM"][b]: %"ISYM" %"ISYM" %"ISYM" (%"ISYM" %"ISYM" %"ISYM")\n", 
+  printf("PH_CRH[%" ISYM"][b]: %" ISYM" %" ISYM" %" ISYM" (%" ISYM" %" ISYM" %" ISYM")\n", 
 	 MyProcessorNumber, TotalReceives, ReceivesCompletedToDate, 
 	 NumberOfCompletedRequests, 
 	 PH_ListOfIndices[0], PH_ListOfIndices[1], PH_ListOfIndices[2]);
@@ -134,7 +134,7 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
       continue;
 
 #ifdef DEBUG_CRP
-    printf("PH_CRH[P%"ISYM"][%"ISYM"]: processing request %"ISYM"\n",
+    printf("PH_CRH[P%" ISYM"][%" ISYM"]: processing request %" ISYM"\n",
 	   MyProcessorNumber, irecv, index);
     fflush(stdout);
 #endif
@@ -155,7 +155,7 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
     TotalReceivedPhotons += NumberReceives;
 
 #ifdef DEBUG_CRP
-    printf("CTPhR(P%"ISYM"): Received %"ISYM" photons\n", MyProcessorNumber, 
+    printf("CTPhR(P%" ISYM"): Received %" ISYM" photons\n", MyProcessorNumber, 
 	   NumberReceives);
 #endif
 
@@ -213,8 +213,8 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
 	 on the tree */
 
 #ifdef DEBUG_CRP2
-      printf("CTPhR(P%"ISYM"): Photon %"ISYM" :: lvl %"ISYM", grid %"ISYM
-	     ", srcid=%"ISYM", L = %"GSYM"\n",
+      printf("CTPhR(P%" ISYM"): Photon %" ISYM" :: lvl %" ISYM", grid %" ISYM
+	     ", srcid=%" ISYM", L = %" GSYM"\n",
 	     MyProcessorNumber, i, lvl, gi, 
 	     RecvBuffer[i].buffer.SuperSourceID, NewPack->Photons);
 #endif
@@ -232,8 +232,8 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
       ToGrid->SetNumberOfPhotonPackages(ToCount+1);
 
 #ifdef DEBUG_CRP2
-      printf("CTPhR(P%"ISYM"): Photon %"ISYM" :: lvl %"ISYM", grid %"ISYM
-	     ", srcid=%"ISYM", L = %"GSYM" (%"GSYM")\n",
+      printf("CTPhR(P%" ISYM"): Photon %" ISYM" :: lvl %" ISYM", grid %" ISYM
+	     ", srcid=%" ISYM", L = %" GSYM" (%" GSYM")\n",
 	     MyProcessorNumber, i, lvl, gi, 
 	     RecvBuffer[i].buffer.SuperSourceID, NewPack->Photons,
 	     ToPP->NextPackage->Photons);
@@ -276,7 +276,7 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
     keep_transporting = 1;
   
 #ifdef DEBUG_CRP
-  printf("P(%"ISYM") out of PH_CRH with %"ISYM" requests. nphotons=%d, kt=%d\n",
+  printf("P(%" ISYM") out of PH_CRH with %" ISYM" requests. nphotons=%d, kt=%d\n",
 	 MyProcessorNumber, PH_CommunicationReceiveMaxIndex, 
 	 TotalReceivedPhotons, keep_transporting);
 #endif

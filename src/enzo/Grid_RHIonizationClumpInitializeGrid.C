@@ -241,7 +241,7 @@ int grid::RHIonizationClumpInitializeGrid(int NumChemicals,
       printf("  Total overall density = %g\n",TotDens);
       printf("  Grid bounds = [%g,%g]x[%g,%g]x[%g,%g]\n",
 	     gridx0l, gridx0r, gridx1l, gridx1r, gridx2l, gridx2r );
-      printf("  Grid dims = %"ISYM"x%"ISYM"x%"ISYM"\n",
+      printf("  Grid dims = %" ISYM"x%" ISYM"x%" ISYM"\n",
 	     (GridEndIndex[0]-GridStartIndex[0]+1), 
 	     (GridEndIndex[1]-GridStartIndex[1]+1), 
 	     (GridEndIndex[2]-GridStartIndex[2]+1) );

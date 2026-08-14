@@ -118,7 +118,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
       GridStartIndex[dim] = 0;
       GridEndIndex[dim] = 0;
     }
-    if (fscanf(fptr, "GridRank = %"ISYM"\n", &GridRank) != 1) {
+    if (fscanf(fptr, "GridRank = %" ISYM"\n", &GridRank) != 1) {
             ENZO_FAIL("Error reading GridRank.");
     }
  
@@ -154,25 +154,25 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
             ENZO_FAIL("Error reading GridRightEdge.");
     }
  
-    if (fscanf(fptr, "Time = %"PSYM"\n", &Time) != 1) {
+    if (fscanf(fptr, "Time = %" PSYM"\n", &Time) != 1) {
             ENZO_FAIL("Error reading Time.");
     }
  
-    if (fscanf(fptr, "SubgridsAreStatic = %"ISYM"\n", &SubgridsAreStatic) != 1) {
+    if (fscanf(fptr, "SubgridsAreStatic = %" ISYM"\n", &SubgridsAreStatic) != 1) {
             ENZO_FAIL("Error reading SubgridsAreStatic.");
     }
  
     /* Read baryon field quantities. */
  
-    if (fscanf(fptr, "NumberOfBaryonFields = %"ISYM"\n",
+    if (fscanf(fptr, "NumberOfBaryonFields = %" ISYM"\n",
 	       &NumberOfBaryonFields) != 1) {
             ENZO_FAIL("Error reading NumberOfBaryonFields.");
     }
     if (NumberOfBaryonFields > 0) {
 
       if (NumberOfBaryonFields >= MAX_NUMBER_OF_BARYON_FIELDS) {
-	ENZO_VFAIL("NumberOfBaryonFields (%"ISYM") exceeds "
-	       "MAX_NUMBER_OF_BARYON_FIELDS (%"ISYM").\n", 
+	ENZO_VFAIL("NumberOfBaryonFields (%" ISYM") exceeds "
+	       "MAX_NUMBER_OF_BARYON_FIELDS (%" ISYM").\n", 
 	       NumberOfBaryonFields, MAX_NUMBER_OF_BARYON_FIELDS)
       }
 
@@ -188,15 +188,15 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 		ENZO_FAIL("Error reading BaryonFileName.");
       }
  
-      fscanf(fptr, "CourantSafetyNumber    = %"FSYM"\n", &CourantSafetyNumber);
-      fscanf(fptr, "PPMFlatteningParameter = %"ISYM"\n", &PPMFlatteningParameter);
-      fscanf(fptr, "PPMDiffusionParameter  = %"ISYM"\n", &PPMDiffusionParameter);
-      fscanf(fptr, "PPMSteepeningParameter = %"ISYM"\n", &PPMSteepeningParameter);
+      fscanf(fptr, "CourantSafetyNumber    = %" FSYM"\n", &CourantSafetyNumber);
+      fscanf(fptr, "PPMFlatteningParameter = %" ISYM"\n", &PPMFlatteningParameter);
+      fscanf(fptr, "PPMDiffusionParameter  = %" ISYM"\n", &PPMDiffusionParameter);
+      fscanf(fptr, "PPMSteepeningParameter = %" ISYM"\n", &PPMSteepeningParameter);
     }
 
     /* 3) Read particle info */
  
-    if (fscanf(fptr, "NumberOfParticles = %"ISYM"\n", &NumberOfParticles) != 1) {
+    if (fscanf(fptr, "NumberOfParticles = %" ISYM"\n", &NumberOfParticles) != 1) {
             ENZO_FAIL("error reading NumberOfParticles.");
     }
  
@@ -212,7 +212,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
     /* 4) Read gravity info */
  
     if (SelfGravity)
-      if (fscanf(fptr, "GravityBoundaryType = %"ISYM"\n",&GravityBoundaryType) != 1) {
+      if (fscanf(fptr, "GravityBoundaryType = %" ISYM"\n",&GravityBoundaryType) != 1) {
 		ENZO_FAIL("Error reading GravityBoundaryType.");
       }
 
@@ -285,11 +285,11 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
  
     }
  
-  sprintf(id, "%"GROUP_TAG_FORMAT""ISYM, GridID);
+  sprintf(id, "%" GROUP_TAG_FORMAT"" ISYM, GridID);
  
-  sprintf(pid, "%"TASK_TAG_FORMAT""ISYM, MyProcessorNumber);
+  sprintf(pid, "%" TASK_TAG_FORMAT"" ISYM, MyProcessorNumber);
  
-  sprintf(gpid, "%"TASK_TAG_FORMAT""ISYM, ProcessorNumber);
+  sprintf(gpid, "%" TASK_TAG_FORMAT"" ISYM, ProcessorNumber);
  
   strcpy(name, "/Grid");
   strcat(name, id);
@@ -304,7 +304,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 #ifndef SINGLE_HDF5_OPEN_ON_INPUT
     if (io_log) fprintf(log_fptr, "H5Fopen with Name %s\n", procfilename);
     file_id = H5Fopen(procfilename,  H5F_ACC_RDONLY, H5P_DEFAULT);
-    if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+    if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
     if( file_id == h5_error ){ENZO_FAIL("Error in IO");}
 
 #endif
@@ -335,7 +335,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
  
     for (int dim = 0; dim < GridRank; dim++) {
       OutDims[GridRank-dim-1] = ActiveDim[dim];
-      if (io_log) fprintf(log_fptr, "Outdims %"ISYM"\n", (int) OutDims[GridRank-dim-1]);
+      if (io_log) fprintf(log_fptr, "Outdims %" ISYM"\n", (int) OutDims[GridRank-dim-1]);
     }
  
     /* allocate temporary space */
@@ -349,29 +349,29 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
       /* get data into temporary array */
  
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){ENZO_FAIL("Error in IO");}
  
       if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", DataLabel[field]);
  
       dset_id =  H5Dopen(group_id, DataLabel[field]);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       //      if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
        if( dset_id == h5_error ){
-	 fprintf(stderr, "NumberOfBaryonFields = %"ISYM"", field);
+	 fprintf(stderr, "NumberOfBaryonFields = %" ISYM"", field);
 	 my_exit(EXIT_FAILURE);
        }
 
       h5_status = H5Dread(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-      if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       /* copy active region into whole grid */
@@ -518,21 +518,21 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
       
       
       file_dsp_id = H5Screate_simple((Eint32) GridRank, MHDOutDims, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       
       if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", MHDLabel[field]);
       
       dset_id = H5Dopen(group_id, MHDLabel[field]);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       
       h5_status = H5Dread(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, 
 			  (VOIDP) MHDtmp);
       
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       
       MagneticField[field] = new float[MagneticSize[field]];
       if( MagneticField[field] == NULL )
@@ -604,7 +604,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 
       if (io_log) fprintf(log_fptr, "H5Fopen with Name %s\n", procfilename);
       file_id = H5Fopen(procfilename, H5F_ACC_RDONLY, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+      if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
       if( file_id == h5_error ){ENZO_FAIL("Error in IO");}
 
 #endif
@@ -656,13 +656,13 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
     for (int dim = 0; dim < GridRank; dim++) {
  
       file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){ENZO_FAIL("Error in IO");}
  
       if (io_log) fprintf(log_fptr,"H5Dopen with Name = %s\n", ParticlePositionLabel[dim]);
  
       dset_id =  H5Dopen(group_id, ParticlePositionLabel[dim]);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){ENZO_FAIL("Error in IO");}
  
       num_type = H5Dget_type(dset_id);
@@ -673,7 +673,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
  
 	  //                                 NOTE: for 128bits this must be FILE_type_id and NOT FLOAT_type_id!
 	  h5_status = H5Dread(dset_id, FILE_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) ParticlePosition[dim]);
-	  if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
 	}
@@ -681,17 +681,17 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 	{
  
 	  h5_status = H5Dread(dset_id, FLOAT_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) ParticlePosition[dim]);
-	  if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
 	}
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
     }
@@ -702,25 +702,25 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
     for (int dim = 0; dim < GridRank; dim++) {
  
       file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){ENZO_FAIL("Error in IO");}
  
       if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", ParticleVelocityLabel[dim]);
  
       dset_id =  H5Dopen(group_id, ParticleVelocityLabel[dim]);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Dread(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-      if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       for (i = 0; i < NumberOfParticles; i++)
@@ -731,25 +731,25 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
     /* Read ParticleMass into temporary buffer and Copy to ParticleMass. */
  
     file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-    if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+    if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
     if( file_dsp_id == h5_error ){ENZO_FAIL("Error in IO");}
  
     if (io_log) fprintf(log_fptr,"H5Dopen with Name = particle_mass\n");
  
     dset_id =  H5Dopen(group_id, "particle_mass");
-    if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+    if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
     if( dset_id == h5_error ){ENZO_FAIL("Error in IO");}
  
     h5_status = H5Dread(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-    if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
     h5_status = H5Sclose(file_dsp_id);
-    if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
     h5_status = H5Dclose(dset_id);
-    if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
     for (i = 0; i < NumberOfParticles; i++)
@@ -760,25 +760,25 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
     PINT *tempPINT = new PINT[NumberOfParticles];
  
     file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-    if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+    if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
     if( file_dsp_id == h5_error){ENZO_FAIL("Error in IO");}
  
     if (io_log) fprintf(log_fptr,"H5Dopen  with Name = particle_index\n");
  
     dset_id =  H5Dopen(group_id, "particle_index");
-    if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+    if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
     if( dset_id == h5_error ){ENZO_FAIL("Error in IO");}
  
     h5_status = H5Dread(dset_id, HDF5_PINT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) tempPINT);
-    if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
     h5_status = H5Sclose(file_dsp_id);
-    if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
     h5_status = H5Dclose(dset_id);
-    if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
     for (i = 0; i < NumberOfParticles; i++)
@@ -800,25 +800,25 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
       int *tempint = new int[NumberOfParticles];
  
       file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error){ENZO_FAIL("Error in IO");}
  
       if (io_log) fprintf(log_fptr,"H5Dopen  with Name = particle_type\n");
  
       dset_id =  H5Dopen(group_id, "particle_type");
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) tempint);
-      if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       for (i = 0; i < NumberOfParticles; i++)
@@ -829,7 +829,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 	abs_type = ABS(ParticleType[i]);
         if (abs_type < PARTICLE_TYPE_GAS ||
             abs_type > NUM_PARTICLE_TYPES-1) {
-          ENZO_VFAIL("file: %s: particle %"ISYM" has unknown type %"ISYM"\n",
+          ENZO_VFAIL("file: %s: particle %" ISYM" has unknown type %" ISYM"\n",
                   name, i, ParticleType[i])
         }
       }
@@ -865,25 +865,25 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
       H5Dclose(dset_id);
  
       file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){ENZO_FAIL("Error in IO");}
  
       if (io_log) fprintf(log_fptr,"H5Dopen with Name = %s\n",ParticleAttributeLabel[j]);
  
       dset_id =  H5Dopen(group_id, ParticleAttributeLabel[j]);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Dread(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-      if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
  
       for (i = 0; i < NumberOfParticles; i++)
@@ -915,13 +915,13 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
        && ReadData ){
  
     h5_status = H5Gclose(group_id);
-    if (io_log) fprintf(log_fptr, "H5Gclose: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Gclose: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
 
 #ifndef SINGLE_HDF5_OPEN_ON_INPUT 
 
     h5_status = H5Fclose(file_id);
-    if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
 
 #endif

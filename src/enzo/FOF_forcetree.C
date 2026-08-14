@@ -29,7 +29,7 @@ void force_treeallocate(FOFData &D, int maxnodes)
   _TopData.nodes = new FNODE[D.MaxNodes];
   
   if (_TopData.nodes == NULL) {
-    ENZO_VFAIL("failed to allocate memory for %"ISYM" tree-nodes (%"ISYM" bytes).\n",
+    ENZO_VFAIL("failed to allocate memory for %" ISYM" tree-nodes (%" ISYM" bytes).\n",
 	    D.MaxNodes, sizeof(FNODE)*D.MaxNodes)
   }
   force_setkernel();
@@ -118,7 +118,7 @@ int force_treebuild(FOFData &D, int first, int len, float thetamax)
   nfree++;
   
   if (_TopData.numnodestotal >= D.MaxNodes) {
-    ENZO_VFAIL("FOF: maximum number %"ISYM" of tree-nodes reached.\n", _TopData.numnodestotal)
+    ENZO_VFAIL("FOF: maximum number %" ISYM" of tree-nodes reached.\n", _TopData.numnodestotal)
   }
   
   /* insert all other particles */
@@ -184,7 +184,7 @@ int force_treebuild(FOFData &D, int first, int len, float thetamax)
 	nfree++;
 
 	if (_TopData.numnodestotal >= D.MaxNodes) {
-	  ENZO_VFAIL("FOF: maximum number %"ISYM" of tree-nodes reached.\n", _TopData.numnodestotal)
+	  ENZO_VFAIL("FOF: maximum number %" ISYM" of tree-nodes reached.\n", _TopData.numnodestotal)
         }
 
 	for (j = 0, subi = 0, fak = 1; j < 3; j++, fak<<=1)
@@ -233,7 +233,7 @@ int force_treebuild(FOFData &D, int first, int len, float thetamax)
     nfree++;
 
     if (_TopData.numnodestotal >= D.MaxNodes) {
-      ENZO_VFAIL("FOF: maximum number %"ISYM" of tree-nodes reached.\n", _TopData.numnodestotal)
+      ENZO_VFAIL("FOF: maximum number %" ISYM" of tree-nodes reached.\n", _TopData.numnodestotal)
     }
   } // ENDFOR
   

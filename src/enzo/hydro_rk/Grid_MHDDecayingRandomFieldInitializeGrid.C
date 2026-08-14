@@ -84,7 +84,7 @@ int grid::MHDDecayingRandomFieldInitializeGrid(float rho_medium, float cs_medium
   }
 
   if (debug && (MyProcessorNumber == ROOT_PROCESSOR)) 
-    printf("Begin generating random magnetic field  spectrum... %"ISYM" %"ISYM" %"ISYM"\n", 
+    printf("Begin generating random magnetic field  spectrum... %" ISYM" %" ISYM" %" ISYM"\n", 
 	   GridDimension[0]-2*NumberOfGhostZones,
 	   GridDimension[1]-2*NumberOfGhostZones,
 	   GridDimension[2]-2*NumberOfGhostZones);

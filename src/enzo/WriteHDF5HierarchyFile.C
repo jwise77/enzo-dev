@@ -137,7 +137,7 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
   for(level = MAX_DEPTH_OF_HIERARCHY-1; LevelArray[level]==NULL; level--)
     FinestLevel = level;
   FinestLevel--;
-  if (io_log) fprintf(log_fptr, "FinestLevel = %"ISYM"\n",FinestLevel);
+  if (io_log) fprintf(log_fptr, "FinestLevel = %" ISYM"\n",FinestLevel);
 
 
   int NumberOfGrids[FinestLevel+1];
@@ -173,11 +173,11 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
 
   // create all level groups  
   for(level=0; level<=FinestLevel; level++) {
-    sprintf(GroupName,"/Level%"ISYM,level);
+    sprintf(GroupName,"/Level%" ISYM,level);
     
     if (io_log) fprintf(log_fptr, "Calling H5Gcreate with Name %s\n", GroupName);
     group_id = H5Gcreate(file_id, GroupName, 0);
-    if (io_log) fprintf(log_fptr, "H5Gcreate: %"ISYM"\n", (int) group_id);
+    if (io_log) fprintf(log_fptr, "H5Gcreate: %" ISYM"\n", (int) group_id);
     
 
     // create all grid groups and and write its datasets
@@ -217,17 +217,17 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
 
       LTemp->GridData->WriteHierarchyInformationHDF5(base_name, group_id, level, ParentGridIDs, NumberOfDaughterGrids, DaughterGridIDs, NextGridThisLevelID, NextGridNextLevelID, log_fptr);
       
-      // fprintf(stderr,"level=%"ISYM" grid=%"ISYM"\n",level,LTemp->GridData->GetGridID());
+      // fprintf(stderr,"level=%" ISYM" grid=%" ISYM"\n",level,LTemp->GridData->GetGridID());
       // fprintf(stderr,"  Parents:");
       // if(level==0) fprintf(stderr," none\n");
       // else {
       // 	for(int i=0;i<level;i++)
-      // 	  fprintf(stderr," %"ISYM, ParentGridIDs[i]);
+      // 	  fprintf(stderr," %" ISYM, ParentGridIDs[i]);
       // 	fprintf(stderr,"\n");	
       // }
-      // fprintf(stderr,"  Daughters: %"ISYM" (",NumberOfDaughterGrids);
+      // fprintf(stderr,"  Daughters: %" ISYM" (",NumberOfDaughterGrids);
       // for(i=0;i<NumberOfDaughterGrids;i++)
-      // 	fprintf(stderr," %"ISYM, DaughterGridIDs[i]);
+      // 	fprintf(stderr," %" ISYM, DaughterGridIDs[i]);
       // fprintf(stderr,")\n");	
       // fflush(stderr);
 
@@ -237,17 +237,17 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
 	
     } // loop over grids this level
 
-    //    fprintf(stderr,"  Number of grids this level = %"ISYM"\n",NumberOfGrids[level]);
+    //    fprintf(stderr,"  Number of grids this level = %" ISYM"\n",NumberOfGrids[level]);
 
     // Add NumberOfGrids Attribute
     HDF5_WriteAttribute(group_id, "NumberOfGrids", NumberOfGrids[level], log_fptr);
 
     // Close this group
     h5_status = H5Gclose(group_id);
-    if (io_log) fprintf(log_fptr, "H5Gclose: %"ISYM"\n", (int) h5_status);
+    if (io_log) fprintf(log_fptr, "H5Gclose: %" ISYM"\n", (int) h5_status);
     
   } // loop over levels
-  //  fprintf(stderr,"Total number of grids = %"ISYM"\n",TotalNumberOfGrids);
+  //  fprintf(stderr,"Total number of grids = %" ISYM"\n",TotalNumberOfGrids);
 
 
   // Create a LevelLookupTable, which is just an int array containing
@@ -274,7 +274,7 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
   // Close the file
   h5_status = H5Fclose(file_id);
 
-  if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", (int) h5_status);
+  if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", (int) h5_status);
 
 
   if (io_log) fclose(log_fptr);

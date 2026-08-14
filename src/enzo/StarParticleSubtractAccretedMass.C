@@ -181,8 +181,8 @@ int StarParticleSubtractAccretedMass(TopGridData *MetaData,
 	     VelocityUnits, TemperatureUnits, TimeUnits, Subtraction, 
 	     CellsModified);
 
-//    fprintf(stdout, "StarParticleSubtractAccretedMass[%"ISYM"][%"ISYM"]: "
-//	    "Radius = %e pc, changed %"ISYM" cells.\n", 
+//    fprintf(stdout, "StarParticleSubtractAccretedMass[%" ISYM"][%" ISYM"]: "
+//	    "Radius = %e pc, changed %" ISYM" cells.\n", 
 //	    cstar->ReturnID(), level, influenceRadius*LengthUnits/pc, CellsModified); 
 
 #ifdef UNUSED
@@ -192,11 +192,11 @@ int StarParticleSubtractAccretedMass(TopGridData *MetaData,
 
       if (debug) {
 	if (cstar->ReturnFeedbackFlag() != FORMATION)
-	  fprintf(stdout, "StarParticleSubtractAccretedMass[%"ISYM"][%"ISYM"]: "
-		  "Radius = %"GSYM" pc\n",
+	  fprintf(stdout, "StarParticleSubtractAccretedMass[%" ISYM"][%" ISYM"]: "
+		  "Radius = %" GSYM" pc\n",
 		  cstar->ReturnID(), level, influenceRadius*LengthUnits/pc_cm);
-	fprintf(stdout, "StarParticleSubtractAccretedMass[%"ISYM"][%"ISYM"]: "
-		"changed %"ISYM" cells.\n", 
+	fprintf(stdout, "StarParticleSubtractAccretedMass[%" ISYM"][%" ISYM"]: "
+		"changed %" ISYM" cells.\n", 
 		cstar->ReturnID(), level, CellsModified);
       }
 #endif      

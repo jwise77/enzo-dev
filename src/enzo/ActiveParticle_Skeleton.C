@@ -152,7 +152,7 @@ int ActiveParticleType_Skeleton::EvaluateFormation(grid *thisgrid_orig, ActivePa
   }
 
   if (debug && data.NumberOfNewParticles > 0)
-    fprintf(stderr, "AP_Skeleton: Have created %"ISYM" new particles\n",
+    fprintf(stderr, "AP_Skeleton: Have created %" ISYM" new particles\n",
 	    data.NumberOfNewParticles);
 
   return SUCCESS;
@@ -219,7 +219,7 @@ int ActiveParticleType_Skeleton::EvaluateFeedback
     // Check bounds - if star particle is outside of this grid then give a warning and continue
 
     if (i < 0 || i > GridXSize-1 || j < 0 || j > GridYSize-1 || k < 0 || k > GridZSize-1){
-      fprintf(stdout, "Particle out of grid; xind, yind, zind = %"ISYM", %"ISYM", %"ISYM"\n",i,j,k);
+      fprintf(stdout, "Particle out of grid; xind, yind, zind = %" ISYM", %" ISYM", %" ISYM"\n",i,j,k);
       continue;
     }
 

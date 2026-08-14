@@ -73,11 +73,11 @@ int FSMultiSourceInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
 	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "FSProbVelocity = %"FSYM" %"FSYM" %"FSYM,
+	ret += sscanf(line, "FSProbVelocity = %" FSYM" %" FSYM" %" FSYM,
 		      &X0Velocity, &X1Velocity, &X2Velocity);
-	ret += sscanf(line, "FSProbDensity = %"FSYM, &Density);
-	ret += sscanf(line, "FSProbTEnergy = %"FSYM, &TEnergy);
-	ret += sscanf(line, "FSProbRadiationEnergy = %"FSYM, 
+	ret += sscanf(line, "FSProbDensity = %" FSYM, &Density);
+	ret += sscanf(line, "FSProbTEnergy = %" FSYM, &TEnergy);
+	ret += sscanf(line, "FSProbRadiationEnergy = %" FSYM, 
 		      &RadiationEnergy);
       } // end input from parameter file
       fclose(RHfptr);

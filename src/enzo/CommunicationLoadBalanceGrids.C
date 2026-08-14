@@ -159,7 +159,7 @@ int CommunicationLoadBalanceGrids(HierarchyEntry *GridHierarchyPointer[],
     }
 
     if ((MinProc == -1 || MaxProc == -1) && LoadBalancing == 1)
-      fprintf(stderr, "TERRIBLE ERROR [P%"ISYM"]: CommunicationLoadBalance unable to find processors.\n", MyProcessorNumber);
+      fprintf(stderr, "TERRIBLE ERROR [P%" ISYM"]: CommunicationLoadBalance unable to find processors.\n", MyProcessorNumber);
     
     /* Mark a grid transfer if the ratio is large enough. */
  
@@ -302,14 +302,14 @@ int CommunicationLoadBalanceGrids(HierarchyEntry *GridHierarchyPointer[],
 #endif
   if (MyProcessorNumber == ROOT_PROCESSOR && GridsMoved > 0) {
     tt1 = ReturnWallTime();
-    printf("LoadBalance: Number of grids moved = %"ISYM" out of %"ISYM" "
+    printf("LoadBalance: Number of grids moved = %" ISYM" out of %" ISYM" "
 	   "(%lg seconds elapsed)\n", GridsMoved, NumberOfGrids, tt1-tt0);
   }
 #ifdef UNUSED
   CommunicationSumValues(ProcessorComputeTime, NumberOfProcessors);
   if (MyProcessorNumber == ROOT_PROCESSOR) {
 
-    printf("LoadBalance (grids=%"ISYM"): \n", NumberOfGrids);
+    printf("LoadBalance (grids=%" ISYM"): \n", NumberOfGrids);
     float norm = ProcessorComputeTime[0];
     for (i = 1; i < NumberOfProcessors; i++)
       norm = max(norm, ProcessorComputeTime[i]);

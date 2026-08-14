@@ -95,11 +95,11 @@ int WriteDataset(hid_t WriteLoc, float * data_buffer, io_type * tmp_buffer,
   h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) tmp_buffer);
   if( h5_status == h5_error ){my_exit(EXIT_FAILURE);} 
   h5_status = H5Sclose(file_dsp_id);
-  if (log_fptr) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+  if (log_fptr) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
   if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 	  
   h5_status = H5Dclose(dset_id);
-  if (log_fptr) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+  if (log_fptr) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
   if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
   return SUCCESS;
@@ -165,7 +165,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
   /* initialize */
  
   char id[MAX_GROUP_TAG_SIZE];
-  sprintf(id, "%"GROUP_TAG_FORMAT""ISYM, grid_id);
+  sprintf(id, "%" GROUP_TAG_FORMAT"" ISYM, grid_id);
  
   /* make sure quantities defined at least for 3d */
  
@@ -197,9 +197,9 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
   if (MyProcessorNumber == ROOT_PROCESSOR && HierarchyFileOutputFormat > 0) {
 
-    fprintf(fptr, "Task              = %"ISYM"\n", ProcessorNumber);
+    fprintf(fptr, "Task              = %" ISYM"\n", ProcessorNumber);
  
-    fprintf(fptr, "GridRank          = %"ISYM"\n", GridRank);
+    fprintf(fptr, "GridRank          = %" ISYM"\n", GridRank);
  
     fprintf(fptr, "GridDimension     = ");
     WriteListOfInts(fptr, GridRank, GridDimension);
@@ -216,19 +216,19 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     fprintf(fptr, "GridRightEdge     = ");
     WriteListOfFloats(fptr, GridRank, GridRightEdge);
  
-    fprintf(fptr, "Time              = %"GOUTSYM"\n", Time);
+    fprintf(fptr, "Time              = %" GOUTSYM"\n", Time);
  
-    fprintf(fptr, "SubgridsAreStatic = %"ISYM"\n", SubgridsAreStatic);
+    fprintf(fptr, "SubgridsAreStatic = %" ISYM"\n", SubgridsAreStatic);
  
-    fprintf(fptr, "NumberOfBaryonFields = %"ISYM"\n", NumberOfBaryonFields);
+    fprintf(fptr, "NumberOfBaryonFields = %" ISYM"\n", NumberOfBaryonFields);
  
   }
  
   char pid[MAX_TASK_TAG_SIZE];
-  sprintf(pid, "%"TASK_TAG_FORMAT""ISYM, MyProcessorNumber);
+  sprintf(pid, "%" TASK_TAG_FORMAT"" ISYM, MyProcessorNumber);
  
   char gpid[MAX_TASK_TAG_SIZE];
-  sprintf(gpid, "%"TASK_TAG_FORMAT""ISYM, ProcessorNumber);
+  sprintf(gpid, "%" TASK_TAG_FORMAT"" ISYM, ProcessorNumber);
  
   char *groupfilename = new char[MAX_LINE_LENGTH];
   strcpy(groupfilename, base_name);
@@ -253,7 +253,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     delete [] logname;
  
     if (io_log) fprintf(log_fptr, "Grid_WriteGrid\n");
-    if (io_log) fprintf(log_fptr, "  ID %"ISYM"  %s\n", grid_id, id);
+    if (io_log) fprintf(log_fptr, "  ID %" ISYM"  %s\n", grid_id, id);
     if (io_log) fprintf(log_fptr, "  File %s\n", groupfilename);
     if (io_log) fprintf(log_fptr, "  Group %s\n", name);
 
@@ -262,7 +262,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     strcpy(procmap, base_name);
     strcat(procmap, ".procmap");
     procmap_fptr = fopen(procmap, "a");
-    fprintf(procmap_fptr, "%8"ISYM"  %s  Grid%8.8"ISYM"\n", grid_id, procfilename, grid_id);
+    fprintf(procmap_fptr, "%8" ISYM"  %s  Grid%8.8" ISYM"\n", grid_id, procfilename, grid_id);
     fclose(procmap_fptr);
     delete [] procmap;
 */
@@ -282,7 +282,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     if (io_log) fprintf(log_fptr,"H5Gcreate with Name = %s\n",name);
  
     group_id = H5Gcreate(file_id, name, 0);
-      if (io_log) fprintf(log_fptr, "H5Gcreate id: %"ISYM"\n", group_id);
+      if (io_log) fprintf(log_fptr, "H5Gcreate id: %" ISYM"\n", group_id);
       if( group_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   }
@@ -347,10 +347,10 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
       fprintf(fptr, "BaryonFileName = %s\n", procfilename);
  
-      fprintf(fptr, "CourantSafetyNumber    = %"FSYM"\n", CourantSafetyNumber);
-      fprintf(fptr, "PPMFlatteningParameter = %"ISYM"\n", PPMFlatteningParameter);
-      fprintf(fptr, "PPMDiffusionParameter  = %"ISYM"\n", PPMDiffusionParameter);
-      fprintf(fptr, "PPMSteepeningParameter = %"ISYM"\n", PPMSteepeningParameter);
+      fprintf(fptr, "CourantSafetyNumber    = %" FSYM"\n", CourantSafetyNumber);
+      fprintf(fptr, "PPMFlatteningParameter = %" ISYM"\n", PPMFlatteningParameter);
+      fprintf(fptr, "PPMDiffusionParameter  = %" ISYM"\n", PPMDiffusionParameter);
+      fprintf(fptr, "PPMSteepeningParameter = %" ISYM"\n", PPMSteepeningParameter);
  
     }
  
@@ -401,13 +401,13 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
  
 	file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
 	if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n",DataLabel[field]);
  
 	dset_id =  H5Dcreate(group_id, DataLabel[field], file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
 	/* set datafield name and units, etc. */
@@ -417,7 +417,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 	    DataUnits[field] = "none";
 	  }
  
-	//printf("OutPut Field2: %"ISYM" \n", field);
+	//printf("OutPut Field2: %" ISYM" \n", field);
 	WriteStringAttr(dset_id, "Label", DataLabel[field], log_fptr);
 	WriteStringAttr(dset_id, "Units", DataUnits[field], log_fptr);
 	WriteStringAttr(dset_id, "Format", "e10.4", log_fptr);
@@ -425,15 +425,15 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
  
 	h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 	
 	h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
 	h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       }   // end of loop over fields
@@ -503,7 +503,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 			 MHDeLabel[field],MHDeUnits[0], file_type_id, float_type_id,log_fptr);
 	    if( AvgElectricField[field] != NULL ){
 	      char name[30];
-	      sprintf(name, "AvgElec%"ISYM"",field);
+	      sprintf(name, "AvgElec%" ISYM"",field);
 	      WriteDataset(group_id,AvgElectricField[field],MHDtmp,
 			   ElectricDims[field],GridRank,
 			   MHDWriteStartIndex,MHDWriteEndIndex,MHDActive,
@@ -542,13 +542,13 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 		      );
       
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = Temperature\n");
  
       dset_id = H5Dcreate(group_id, "Temperature", file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if ( DataUnits[field] == NULL )
@@ -562,15 +562,15 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       WriteStringAttr(dset_id, "Geometry", "Cartesian", log_fptr);
  
       h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
 	// If outputing dust temperature, keep temperature field for the calculation.
@@ -619,13 +619,13 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
  
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = Dust_Temperature\n");
  
       dset_id = H5Dcreate(group_id, "Dust_Temperature", file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if ( DataUnits[field] == NULL )
@@ -639,15 +639,15 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       WriteStringAttr(dset_id, "Geometry", "Cartesian", log_fptr);
  
       h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (!OutputTemperature) {
@@ -782,13 +782,13 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       for (int field=0; field<tFields; field++){
 
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n",DataLabelN[field]);
  
       dset_id =  H5Dcreate(file_id, DataLabelN[field], file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       /* set datafield name and units, etc. */
@@ -820,15 +820,15 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       }
  
       h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp_VelAnyl);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
 
@@ -879,13 +879,13 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 			     );
  
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = Cooling_Time\n");
  
       dset_id = H5Dcreate(group_id, "Cooling_Time", file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if ( DataUnits[field] == NULL )
@@ -899,15 +899,15 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       WriteStringAttr(dset_id, "Geometry", "Cartesian", log_fptr);
  
       h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       delete [] cooling_time;
@@ -941,7 +941,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 	  EndIndex[dim] = nint((GridRightEdge[dim] -
 				GravitatingMassFieldParticlesLeftEdge[dim])/
 			       GravitatingMassFieldParticlesCellSize) - 1;
-//      fprintf(stderr, "%"ISYM" %"ISYM" %10.4"FSYM" %10.4"FSYM" %10.4"FSYM" %10.4"FSYM"\n", StartIndex[dim], EndIndex[dim], GridLeftEdge[dim], GridRightEdge[dim], GravitatingMassFieldParticlesLeftEdge[dim], GravitatingMassFieldParticlesCellSize);
+//      fprintf(stderr, "%" ISYM" %" ISYM" %10.4" FSYM" %10.4" FSYM" %10.4" FSYM" %10.4" FSYM"\n", StartIndex[dim], EndIndex[dim], GridLeftEdge[dim], GridRightEdge[dim], GravitatingMassFieldParticlesLeftEdge[dim], GravitatingMassFieldParticlesCellSize);
 	}
  
 	/* Copy active part of field into grid */
@@ -961,13 +961,13 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
  
 	file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
 	if (io_log) fprintf(log_fptr,"H5Dcreate with Name = Dark_Matter_Density\n");
  
 	dset_id =  H5Dcreate(group_id, "Dark_Matter_Density", file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
 	if ( DataUnits[field] == NULL )
@@ -981,15 +981,15 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 	WriteStringAttr(dset_id, "Geometry", "Cartesian", log_fptr);
  
 	h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
 	h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
 	h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       } // end of (if GravitatingMassFieldParticles != NULL)
@@ -1036,13 +1036,13 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 	temp[i] = io_type(InterpolatedField[field][i]);
 
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n", SmoothedDMLabel[field]);
  
       dset_id = H5Dcreate(group_id, SmoothedDMLabel[field], file_type_id, file_dsp_id, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       WriteStringAttr(dset_id, "Label", SmoothedDMLabel[field], log_fptr);
@@ -1052,15 +1052,15 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
       h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, 
 			   (VOIDP) temp);
-      if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       delete [] InterpolatedField[field];
@@ -1092,7 +1092,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
     case 1: NumberOfSPFields = 1; break;  // particle density
     case 2: NumberOfSPFields = 4; break;  // + forming star particle density + SFR density, etc. 
     default: 
-      fprintf(stdout, "Unrecognized value for OutputGriddedStarParticle = %"ISYM"\n",
+      fprintf(stdout, "Unrecognized value for OutputGriddedStarParticle = %" ISYM"\n",
 	      OutputGriddedStarParticle);
       fprintf(stdout, "Setting to 1.  Outputting particle density only.\n");
       OutputGriddedStarParticle = 1;
@@ -1113,13 +1113,13 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 	temp[i] = io_type(InterpolatedField[field][i]);
 
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n", GriddedSPLabel[field-NumberOfInterpolatedFieldsForDM]);
 
       dset_id = H5Dcreate(group_id, GriddedSPLabel[field-NumberOfInterpolatedFieldsForDM], file_type_id, file_dsp_id, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       WriteStringAttr(dset_id, "Label", GriddedSPLabel[field-NumberOfInterpolatedFieldsForDM], log_fptr);
@@ -1128,15 +1128,15 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       WriteStringAttr(dset_id, "Geometry", "Cartesian", log_fptr);
  
       h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-      if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       delete [] InterpolatedField[field];
@@ -1152,7 +1152,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
   /* 4) Save particle quantities. */
  
   if (MyProcessorNumber == ROOT_PROCESSOR && HierarchyFileOutputFormat > 0)
-    fprintf(fptr, "NumberOfParticles   = %"ISYM"\n", NumberOfParticles);
+    fprintf(fptr, "NumberOfParticles   = %" ISYM"\n", NumberOfParticles);
   if (MyProcessorNumber == ROOT_PROCESSOR && 
       HierarchyFileOutputFormat > 0 && 
       OutputSmoothedDarkMatter > 0 && NumberOfParticles == 0)
@@ -1198,19 +1198,19 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
  
       file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n", ParticlePositionLabel[dim]);
  
       dset_id =  H5Dcreate(group_id, ParticlePositionLabel[dim],  FILE_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (sizeof(FLOAT) == 16) {
 //                                  NOTE: for 128bits this must be FILE_type_id and NOT FLOAT_type_id!
       h5_status = H5Dwrite(dset_id, FILE_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) long_temp_pointer);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       }
@@ -1218,17 +1218,17 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       {
  
       h5_status = H5Dwrite(dset_id, FLOAT_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp_pointer);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       }
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     }
@@ -1244,25 +1244,25 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 	temp[i] = io_type(ParticleVelocity[dim][i]);
  
       file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n",ParticleVelocityLabel[dim]);
  
       dset_id =  H5Dcreate(group_id, ParticleVelocityLabel[dim], file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     }
@@ -1274,25 +1274,25 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
  
     file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
     if (io_log) fprintf(log_fptr,"H5Dcreate with Name = particle_mass\n");
  
     dset_id =  H5Dcreate(group_id, "particle_mass", file_type_id, file_dsp_id, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-      if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
     /* Copy number (ID) to temp and write it. */
@@ -1304,25 +1304,25 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
  
     file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
     if (io_log) fprintf(log_fptr,"H5Dcreate with Name = particle_index\n");
  
     dset_id =  H5Dcreate(group_id, "particle_index", HDF5_FILE_PINT, file_dsp_id, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Dwrite(dset_id, HDF5_PINT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) tempPINT);
-      if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     /* Copy type to temp and write it. */
@@ -1338,28 +1338,28 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       tempint[i] = ParticleType[i];
  
     file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
     if (io_log) fprintf(log_fptr,"H5Dcreate with Name = particle_type\n");
  
     dset_id =  H5Dcreate(group_id, "particle_type", HDF5_FILE_INT, file_dsp_id, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Dwrite(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) tempint);
-      if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
     if(OutputParticleTypeGrouping)
         this->CreateParticleTypeGrouping(dset_id, file_dsp_id, group_id, file_id);
  
     h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
     h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
     delete [] tempint;
@@ -1375,25 +1375,25 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
  
  
       file_dsp_id = H5Screate_simple((Eint32) 1, TempIntArray, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n",ParticleAttributeLabel[j]);
  
       dset_id =  H5Dcreate(group_id, ParticleAttributeLabel[j], file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %"ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dwrite(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     }
@@ -1411,10 +1411,10 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
   if (MyProcessorNumber == ProcessorNumber)
   {
      h5_status = H5Gclose(group_id);
-       if (io_log) fprintf(log_fptr, "H5Gclose: %"ISYM"\n", h5_status);
+       if (io_log) fprintf(log_fptr, "H5Gclose: %" ISYM"\n", h5_status);
 
 //     h5_status = H5Fclose(file_id);
-//       if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", h5_status);
+//       if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
 //       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
   }
  
@@ -1428,7 +1428,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
   if (MyProcessorNumber == ROOT_PROCESSOR && HierarchyFileOutputFormat > 0)
     if (SelfGravity)
 
-      fprintf(fptr, "GravityBoundaryType = %"ISYM"\n", GravityBoundaryType);
+      fprintf(fptr, "GravityBoundaryType = %" ISYM"\n", GravityBoundaryType);
  
   /* Clean up. */
  

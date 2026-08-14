@@ -163,7 +163,7 @@ int grid::InterpolateRadiationFromParent(grid *ParentGrid, int Field)
     if (ParentStartIndex[dim] < 0 ||
 	ParentStartIndex[dim]+ParentTempDim[dim] >
 	ParentGrid->GridDimension[dim]) {
-      ENZO_VFAIL("Parent grid not big enough for interpolation!  ParentStartIndex[%"ISYM"] = %"ISYM"  ParentTempDim = %"ISYM"\n", dim, ParentStartIndex[dim], ParentTempDim[dim])
+      ENZO_VFAIL("Parent grid not big enough for interpolation!  ParentStartIndex[%" ISYM"] = %" ISYM"  ParentTempDim = %" ISYM"\n", dim, ParentStartIndex[dim], ParentTempDim[dim])
     }
  
     /* Compute the dimensions of the current grid temporary field. */
@@ -236,11 +236,11 @@ int grid::InterpolateRadiationFromParent(grid *ParentGrid, int Field)
     if (interp_error) {
       ENZO_VFAIL("P%d: Error interpolating emissivity.\n"
 		 "ParentGrid ID = %d\n"
-		 "\t LeftEdge  = %"PSYM" %"PSYM" %"PSYM"\n"
-		 "\t RightEdge = %"PSYM" %"PSYM" %"PSYM"\n"
+		 "\t LeftEdge  = %" PSYM" %" PSYM" %" PSYM"\n"
+		 "\t RightEdge = %" PSYM" %" PSYM" %" PSYM"\n"
 		 "ThisGrid ID = %d\n"
-		 "\t LeftEdge  = %"PSYM" %"PSYM" %"PSYM"\n"
-		 "\t RightEdge = %"PSYM" %"PSYM" %"PSYM"\n",
+		 "\t LeftEdge  = %" PSYM" %" PSYM" %" PSYM"\n"
+		 "\t RightEdge = %" PSYM" %" PSYM" %" PSYM"\n",
 		 MyProcessorNumber, ParentGrid->ID, 
 		 ParentGrid->GridLeftEdge[0], ParentGrid->GridLeftEdge[1], 
 		 ParentGrid->GridLeftEdge[2], ParentGrid->GridRightEdge[0], 

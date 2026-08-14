@@ -84,8 +84,8 @@ int grid::MHDOrszagTangInitGrid(float DensityIn,float Pressure, float V0, float 
   int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num, B1Num, B2Num, B3Num;
   IdentifyPhysicalQuantities(DensNum, GENum, Vel1Num, Vel2Num, Vel3Num, TENum, B1Num, B2Num, B3Num);
 
-  fprintf(stderr,"Density %"FSYM" Pressure %"FSYM" V0 %"FSYM" B0 %"FSYM" \n", DensityIn,Pressure,V0,B0);
-  fprintf(stderr,"Scale: %"FSYM" %"FSYM" %"FSYM"\n", Scale[0],Scale[1],Scale[2]);
+  fprintf(stderr,"Density %" FSYM" Pressure %" FSYM" V0 %" FSYM" B0 %" FSYM" \n", DensityIn,Pressure,V0,B0);
+  fprintf(stderr,"Scale: %" FSYM" %" FSYM" %" FSYM"\n", Scale[0],Scale[1],Scale[2]);
   
   //Vector Potential. 
   //Due to the similarity in centering, and lack of foresight in naming,

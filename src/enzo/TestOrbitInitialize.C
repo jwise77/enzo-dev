@@ -90,15 +90,15 @@ int TestOrbitInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
     /* read parameters */
 
-    ret += sscanf(line, "TestOrbitNumberOfParticles = %"ISYM,
+    ret += sscanf(line, "TestOrbitNumberOfParticles = %" ISYM,
 		  &TestOrbitNumberOfParticles);
-    ret += sscanf(line, "TestOrbitRadius = %"PSYM,
+    ret += sscanf(line, "TestOrbitRadius = %" PSYM,
 		  &TestOrbitRadius);
-    ret += sscanf(line, "TestOrbitCentralMass = %"FSYM,
+    ret += sscanf(line, "TestOrbitCentralMass = %" FSYM,
 		  &TestOrbitCentralMass);
-    ret += sscanf(line, "TestOrbitTestMass = %"FSYM,
+    ret += sscanf(line, "TestOrbitTestMass = %" FSYM,
 		  &TestOrbitTestMass);
-    ret += sscanf(line, "TestOrbitUseBaryons = %"ISYM,
+    ret += sscanf(line, "TestOrbitUseBaryons = %" ISYM,
 		  &TestOrbitUseBaryons);
 
     /* if the line is suspicious, issue a warning */
@@ -158,15 +158,15 @@ int TestOrbitInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   
   if (MyProcessorNumber == ROOT_PROCESSOR) {
 
-    fprintf(Outfptr, "TestOrbitNumberOfParticles = %"ISYM"\n",
+    fprintf(Outfptr, "TestOrbitNumberOfParticles = %" ISYM"\n",
 	    TestOrbitNumberOfParticles);
-    fprintf(Outfptr, "TestOrbitRadius            = %"GOUTSYM"\n",
+    fprintf(Outfptr, "TestOrbitRadius            = %" GOUTSYM"\n",
 	    TestOrbitRadius);
-    fprintf(Outfptr, "TestOrbitCentralMass       = %"GOUTSYM"\n",
+    fprintf(Outfptr, "TestOrbitCentralMass       = %" GOUTSYM"\n",
 	    TestOrbitCentralMass);
-    fprintf(Outfptr, "TestOrbitTestMass          = %"GOUTSYM"\n",
+    fprintf(Outfptr, "TestOrbitTestMass          = %" GOUTSYM"\n",
 	    TestOrbitTestMass);
-    fprintf(Outfptr, "TestOrbitUseBaryons        = %"ISYM"\n\n",
+    fprintf(Outfptr, "TestOrbitUseBaryons        = %" ISYM"\n\n",
 	    TestOrbitUseBaryons);
   }
 

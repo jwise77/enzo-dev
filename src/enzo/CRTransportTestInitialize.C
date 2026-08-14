@@ -62,29 +62,29 @@ int CRTransportTestInitialize(FILE *fptr, FILE *Outfptr,
     ret = 0;
     /* read parameters */
     
-    ret += sscanf(line, "CRTransportTestType = %"ISYM, 
+    ret += sscanf(line, "CRTransportTestType = %" ISYM, 
 		  &TestType);
-    ret += sscanf(line, "CRTransportTestRefineAtStart = %"ISYM, 
+    ret += sscanf(line, "CRTransportTestRefineAtStart = %" ISYM, 
 		  &RefineAtStart);    
-    ret += sscanf(line, "CRTransportTestCenter = %"FSYM, 
+    ret += sscanf(line, "CRTransportTestCenter = %" FSYM, 
 		  &Center);
-    ret += sscanf(line, "CRTransportTestVelocityX = %"FSYM,
+    ret += sscanf(line, "CRTransportTestVelocityX = %" FSYM,
 		  &VelocityX);
-    ret += sscanf(line, "CRTransportTestVelocityY = %"FSYM,
+    ret += sscanf(line, "CRTransportTestVelocityY = %" FSYM,
                   &VelocityY);
-    ret += sscanf(line, "CRTransportTestVelocityZ = %"FSYM,
+    ret += sscanf(line, "CRTransportTestVelocityZ = %" FSYM,
 		                &VelocityZ);
-    ret += sscanf(line, "CRTransportTestGasPressure = %"FSYM, 
+    ret += sscanf(line, "CRTransportTestGasPressure = %" FSYM, 
 		  &GasPressure);
-    ret += sscanf(line, "CRTransportTestDensity = %"FSYM, 
+    ret += sscanf(line, "CRTransportTestDensity = %" FSYM, 
 	      	  &GasDensity);
-    ret += sscanf(line, "CRTransportTestCREnergyDensity = %"FSYM,
+    ret += sscanf(line, "CRTransportTestCREnergyDensity = %" FSYM,
 		  &CREnergyDensity);
-    ret += sscanf(line, "CRTransportTestBx = %"FSYM,
+    ret += sscanf(line, "CRTransportTestBx = %" FSYM,
                   &Bx);
-    ret += sscanf(line, "CRTransportTestBy = %"FSYM,
+    ret += sscanf(line, "CRTransportTestBy = %" FSYM,
                   &By);
-    ret += sscanf(line, "CRTransportTestBz = %"FSYM,
+    ret += sscanf(line, "CRTransportTestBz = %" FSYM,
                   &Bz);
     
     if (ret == 0 && strstr(line, "=") && strstr(line, "CRTransportTest") 
@@ -130,7 +130,7 @@ int CRTransportTestInitialize(FILE *fptr, FILE *Outfptr,
        and re-initialize the level after it is created. */
 
     for (level = 0; level < MaximumRefinementLevel; level++) {
-      printf("In level %"ISYM"\n", level);
+      printf("In level %" ISYM"\n", level);
       if (RebuildHierarchy(&MetaData, LevelArray, level) == FAIL) {
 	fprintf(stderr, "Error in RebuildHierarchy.\n");
 	return FAIL;
@@ -191,27 +191,27 @@ int CRTransportTestInitialize(FILE *fptr, FILE *Outfptr,
   /* Write parameters to parameter output file */
 
   if (MyProcessorNumber == ROOT_PROCESSOR) {
-    fprintf(Outfptr, "CRTransportTestRefineAtStart        = %"ISYM"\n",
+    fprintf(Outfptr, "CRTransportTestRefineAtStart        = %" ISYM"\n",
 	    RefineAtStart);
-    fprintf(Outfptr, "CRTransportTestCenter = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestCenter = %" FSYM"\n",
 	    Center);
-    fprintf(Outfptr, "CRTransportTestDensity          = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestDensity          = %" FSYM"\n",
 	    GasDensity);
-    fprintf(Outfptr, "CRTransportTestVelocityX        = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestVelocityX        = %" FSYM"\n",
 	    VelocityX);
-    fprintf(Outfptr, "CRTransportTestVelocityY        = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestVelocityY        = %" FSYM"\n",
 	    VelocityY);
-    fprintf(Outfptr, "CRTransportTestVelocityZ       = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestVelocityZ       = %" FSYM"\n",
 	    VelocityZ);
-    fprintf(Outfptr, "CRTransportTestGasPressure         = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestGasPressure         = %" FSYM"\n",
 	    GasPressure);
-    fprintf(Outfptr, "CRTransportCREnergyDensity       = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportCREnergyDensity       = %" FSYM"\n",
 	    CREnergyDensity);
-    fprintf(Outfptr, "CRTransportTestBx     = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestBx     = %" FSYM"\n",
 	    Bx);
-    fprintf(Outfptr, "CRTransportTestBy     = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestBy     = %" FSYM"\n",
             By);
-    fprintf(Outfptr, "CRTransportTestBz     = %"FSYM"\n",
+    fprintf(Outfptr, "CRTransportTestBz     = %" FSYM"\n",
             Bz);
   }
 

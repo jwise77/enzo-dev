@@ -65,7 +65,7 @@ int GravityEquilibriumTestInitialize(FILE *fptr, FILE *Outfptr,
  
     /* read parameters */
  
-    ret += sscanf(line, "GravityEquilibriumTestScaleHeight = %"FSYM,
+    ret += sscanf(line, "GravityEquilibriumTestScaleHeight = %" FSYM,
 		  &GravityEquilibriumTestScaleHeight);
  
     /* if the line is suspicious, issue a warning */
@@ -106,7 +106,7 @@ int GravityEquilibriumTestInitialize(FILE *fptr, FILE *Outfptr,
  
   if (MyProcessorNumber == ROOT_PROCESSOR)
 
-    fprintf(Outfptr, "GravityEquilibriumTestScaleHeight = %"GSYM"\n",
+    fprintf(Outfptr, "GravityEquilibriumTestScaleHeight = %" GSYM"\n",
 	    GravityEquilibriumTestScaleHeight);
  
   return SUCCESS;

@@ -171,7 +171,7 @@ void grid::Gadgetfind_abundances_and_rates(float logT, float rho, float *ne_gues
 	break;
 
       if(niter > (MAXITER - 10))
-	printf("ne= %e  niter=%"ISYM"\n", ne, niter);
+	printf("ne= %e  niter=%" ISYM"\n", ne, niter);
       //if(debug) printf("In Gadget_find_abundances_and_rates:9\n");
     }
   while(niter < MAXITER);

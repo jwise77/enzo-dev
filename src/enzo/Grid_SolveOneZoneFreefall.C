@@ -200,7 +200,7 @@ int grid::SolveOneZoneFreefall()
         BaryonField[DensNum][index] = NewDensity;
 
 	if (index == max_rho_index) {
-	  fprintf(stderr, "One-zone collapse: rho[%"ISYM", %"ISYM", %"ISYM"] = %"ESYM" g/cm^3, f = %"FSYM,
+	  fprintf(stderr, "One-zone collapse: rho[%" ISYM", %" ISYM", %" ISYM"] = %" ESYM" g/cm^3, f = %" FSYM,
 		  i, j, k, (BaryonField[DensNum][index] * DensityUnits), 
 		  force_factor[index]);
 	}
@@ -219,7 +219,7 @@ int grid::SolveOneZoneFreefall()
             BaryonField[H2INum][index] *= DensityRatio;
             BaryonField[H2IINum][index] *= DensityRatio;
 	    if (index == max_rho_index) {
-	      fprintf(stderr, ", f_H2 = %"ESYM,
+	      fprintf(stderr, ", f_H2 = %" ESYM,
 		      (BaryonField[H2INum][index] /
 		       BaryonField[DensNum][index]));
 	    }

@@ -73,7 +73,7 @@ int ZeusFDM(float *d, float *e, float *u, float *v, float *w, float *p,
   
    for (i = 0; i < size; i++) {
     if (d[i] < 0) {
-      fprintf(stderr, "u,v,w,d,e=%"GSYM",%"GSYM",%"GSYM",%"GSYM",%"GSYM"  dx=%"GSYM"  dt=%"GSYM"\n", 
+      fprintf(stderr, "u,v,w,d,e=%" GSYM",%" GSYM",%" GSYM",%" GSYM",%" GSYM"  dx=%" GSYM"  dt=%" GSYM"\n", 
         u[i],v[i],w[i],d[i],p[i], dx[0], dt);
       ENZO_FAIL("ZeusSolver: Negative Density! \n");
     } else{

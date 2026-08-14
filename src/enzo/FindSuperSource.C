@@ -34,7 +34,7 @@ int FindSuperSource(PhotonPackageEntry **PP, int &LeafID,
 	PrintSourceClusteringTree(SourceClusteringTree, fptr);
 	fclose(fptr);
 	fprintf(stdout, "WARNING: NULL leaf in clustering tree. Source was deleted? "
-		"LeafID = %"ISYM", temp = %p, last = %p\n", LeafID, temp, last);
+		"LeafID = %" ISYM", temp = %p, last = %p\n", LeafID, temp, last);
 	if (last != NULL)
 	  fprintf(stdout, "\t last->leafID = %d\n", last->LeafID);
       }

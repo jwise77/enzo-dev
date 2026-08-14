@@ -131,7 +131,7 @@ printf("begin calculating PointSourceGravityConstant");
                 POW(SphereCoreRadius[0]*LengthUnits, 3) *
                (log(1.0+1.0) - 1.0/(1.0+1.0))/SolarMass;// in Msun. Not Mvir, but Ms.
     BaryonMeanDensity = 0.15; // 15% baryon fraction
-printf("PointSourceGravityConstant= %"GSYM"\n", PointSourceGravityConstant);
+printf("PointSourceGravityConstant= %" GSYM"\n", PointSourceGravityConstant);
   }
   /* Return if this doesn't concern us. */
 
@@ -203,10 +203,10 @@ printf("PointSourceGravityConstant= %"GSYM"\n", PointSourceGravityConstant);
     dpdr = -Allg[i]* GasDensity[i];
     }
     
-  fprintf(fptr, "%"ISYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" \n", i, NFWRadius[i],
+  fprintf(fptr, "%" ISYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" \n", i, NFWRadius[i],
          NFWDensity[i], Allg[i], NFWPressure[i], NFWTemp[i], GasDensity[i]);
 }  //end for
-  fprintf(fptr, "CriticalDensity = %"GSYM" , DensityUnits = %"GSYM", TimeUnits=%"GSYM", LengthUnits= %"GSYM"\n", CriticalDensity, DensityUnits, TimeUnits, LengthUnits);
+  fprintf(fptr, "CriticalDensity = %" GSYM" , DensityUnits = %" GSYM", TimeUnits=%" GSYM", LengthUnits= %" GSYM"\n", CriticalDensity, DensityUnits, TimeUnits, LengthUnits);
   fclose(fptr);
 
   /* Loop over the set-up twice, once to count the particles, the second

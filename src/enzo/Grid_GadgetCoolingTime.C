@@ -105,9 +105,9 @@ int grid::GadgetCoolingTime(float *d, float *e, float *ge,
 
   GadgetIonizeParamsTable(redshift);
 
-  if(debug) printf("GadgetCoolingTime: loop from %"ISYM" %"ISYM" %"ISYM" to %"ISYM" %"ISYM" %"ISYM"\n",
+  if(debug) printf("GadgetCoolingTime: loop from %" ISYM" %" ISYM" %" ISYM" to %" ISYM" %" ISYM" %" ISYM"\n",
 		   (*is),(*js),(*ks),(*ie),(*je),(*ke) );
-  if(debug) printf("GadgetCoolingTime: grid dims %"ISYM" %"ISYM" %"ISYM"\n",
+  if(debug) printf("GadgetCoolingTime: grid dims %" ISYM" %" ISYM" %" ISYM"\n",
 		   (*in),(*jn),(*kn));
 
 

@@ -162,7 +162,7 @@ int ProjectToPlane2(char *ParameterFile, HierarchyEntry &TopGrid,
   }
 
   if (debug)
-    printf("ProjectToPlane: Left = %"GOUTSYM" %"GOUTSYM" %"GOUTSYM"   Right = %"GOUTSYM" %"GOUTSYM" %"GOUTSYM"\n",
+    printf("ProjectToPlane: Left = %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"   Right = %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
 	   ProjectLeft[0], ProjectLeft[1], ProjectLeft[2],
 	   ProjectRight[0], ProjectRight[1], ProjectRight[2]);
 

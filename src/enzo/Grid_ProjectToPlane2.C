@@ -145,7 +145,7 @@ int grid::ProjectToPlane2(FLOAT ProjectedFieldLeftEdge[],
   stop += GridStartIndex[ProjectionDimension];
   if (debug) 
     printf("ProjectToGrid: start = %d/%d (%5.3f)  stop = %d/%d (%5.3f)  "
-	   "GridLeft/Right = %5.3"FSYM"/%5.3"FSYM"\n",
+	   "GridLeft/Right = %5.3" FSYM"/%5.3" FSYM"\n",
 	   start, GridStartIndex[ProjectionDimension], LeftCellFraction,
 	   stop, GridEndIndex[ProjectionDimension], RightCellFraction,
 	   GridLeftEdge[ProjectionDimension],

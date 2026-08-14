@@ -355,7 +355,7 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
 #endif
 
 #ifdef MEM_TRACE
-    fprintf(memtracePtr, "==== CYCLE %"ISYM" ====\n", MetaData.CycleNumber);
+    fprintf(memtracePtr, "==== CYCLE %" ISYM" ====\n", MetaData.CycleNumber);
 #endif    
     PrintMemoryUsage("Top");
 
@@ -452,21 +452,21 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
  
 #ifdef CONFIG_TESTING
     if (MyProcessorNumber == ROOT_PROCESSOR) {
-      printf("enzo-test: MetaData.CycleNumber %"ISYM"\n", MetaData.CycleNumber);
+      printf("enzo-test: MetaData.CycleNumber %" ISYM"\n", MetaData.CycleNumber);
       printf("enzo-test: dt %.14g\n",dt);
-      printf("enzo-test: MetaData.Time %"GOUTSYM"\n", MetaData.Time);
+      printf("enzo-test: MetaData.Time %" GOUTSYM"\n", MetaData.Time);
       fflush(stdout);
     }
 #endif
 
     if (MyProcessorNumber == ROOT_PROCESSOR) {
-      fprintf(stderr, "TopGrid dt = %"ESYM"     time = %"GOUTSYM"    cycle = %"ISYM,
+      fprintf(stderr, "TopGrid dt = %" ESYM"     time = %" GOUTSYM"    cycle = %" ISYM,
 	     dt, MetaData.Time, MetaData.CycleNumber);
 
       if (ComovingCoordinates) {
 	FLOAT a, dadt;
 	CosmologyComputeExpansionFactor(MetaData.Time, &a, &dadt);
-	fprintf(stderr, "    z = %"GOUTSYM, (1 + InitialRedshift)/a - 1);
+	fprintf(stderr, "    z = %" GOUTSYM, (1 + InitialRedshift)/a - 1);
       }
       fprintf(stderr, "\n");
     }
@@ -683,7 +683,7 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
 
   if (ThisTask == 0 ) {
     for ( i = 0; i < TaskCount; i++) {
-      fprintf(stderr, "TaskMemory : Task %"ISYM"  Memory %"ISYM"\n", i, TaskMemory[i]);
+      fprintf(stderr, "TaskMemory : Task %" ISYM"  Memory %" ISYM"\n", i, TaskMemory[i]);
     }
   }
 */
@@ -697,7 +697,7 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
 
     if (MyProcessorNumber == ROOT_PROCESSOR) {
       evlog = fopen("Evtime", "a");
-      fprintf(evlog, "%8"ISYM"  %16.9e  %16.9e  %16.9e\n", MetaData.CycleNumber, tlev1-tlev0, treb1-treb0, tloop1-tloop0);
+      fprintf(evlog, "%8" ISYM"  %16.9e  %16.9e  %16.9e\n", MetaData.CycleNumber, tlev1-tlev0, treb1-treb0, tloop1-tloop0);
       fclose(evlog);
     }
 
@@ -726,7 +726,7 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
       MetaData.OutputsLeftBeforeExit--;
       if (MetaData.OutputsLeftBeforeExit <= 0) {
         if (MyProcessorNumber == ROOT_PROCESSOR) {
-          fprintf(stderr, "Exiting after writing %"ISYM" datadumps.\n",
+          fprintf(stderr, "Exiting after writing %" ISYM" datadumps.\n",
                   MetaData.NumberOfOutputsBeforeExit);
         }      
         Stop = TRUE;
@@ -746,9 +746,9 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
   /* Done, so report on current time, etc. */
  
   if (MyProcessorNumber == ROOT_PROCESSOR) {
-    printf("Time     = %9"FSYM"   CycleNumber = %6"ISYM"    Wallclock   = %9"FSYM"\n",
+    printf("Time     = %9" FSYM"   CycleNumber = %6" ISYM"    Wallclock   = %9" FSYM"\n",
 	   MetaData.Time, MetaData.CycleNumber, MetaData.CPUTime);
-    printf("StopTime = %9"FSYM"   StopCycle   = %6"ISYM"\n",
+    printf("StopTime = %9" FSYM"   StopCycle   = %6" ISYM"\n",
 	   MetaData.StopTime, MetaData.StopCycle);
   }
  
@@ -788,13 +788,13 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
   if (!Restart && !StoppedByOutput && MyProcessorNumber == ROOT_PROCESSOR) {
     if ((Exit_fptr = fopen("RunFinished", "w")) == NULL)
       ENZO_FAIL("Error opening RunFinished.");
-    fprintf(Exit_fptr, "Finished on cycle %"ISYM"\n", MetaData.CycleNumber);
+    fprintf(Exit_fptr, "Finished on cycle %" ISYM"\n", MetaData.CycleNumber);
     fclose(Exit_fptr);
   }
 
   if (NumberOfProcessors > 1)
 
-    printf("Communication: processor %"ISYM" CommunicationTime = %"FSYM"\n",
+    printf("Communication: processor %" ISYM" CommunicationTime = %" FSYM"\n",
 	   MyProcessorNumber, CommunicationTime);
  
   /* done */

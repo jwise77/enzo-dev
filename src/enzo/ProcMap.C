@@ -36,7 +36,7 @@ int ProcMapper(LevelHierarchyEntry *LevelArray[])
  
       while (Temp2 != NULL) {
         proc = Temp2->GridData->ReturnProcessorNumber();
-        fprintf(stderr, "Calling proc %"ISYM" : this proc %"ISYM"\n", MyProcessorNumber, proc);
+        fprintf(stderr, "Calling proc %" ISYM" : this proc %" ISYM"\n", MyProcessorNumber, proc);
  
         Temp2 = Temp2->NextGridThisLevel;
       }

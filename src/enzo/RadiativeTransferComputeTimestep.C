@@ -199,7 +199,7 @@ int RadiativeTransferComputeTimestep(LevelHierarchyEntry *LevelArray[],
   float dtTol = PFLOAT_EPSILON * HydroTime;
   if ((HydroTime+dtTol - PhotonTime) < dtPhoton) {
     if (debug) 
-      printf("HydroTime = %"PSYM", PhotonTime = %"PSYM
+      printf("HydroTime = %" PSYM", PhotonTime = %" PSYM
 	     ", dtPhoton = %g, dtPhoton0 = %g\n",
 	     HydroTime, PhotonTime, dtPhoton, Saved_dtPhoton);
     dtPhoton = min(1.01 * (HydroTime - PhotonTime), Saved_dtPhoton);

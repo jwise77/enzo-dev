@@ -600,7 +600,7 @@ int grid::PoissonSolverMultigrid()
 // {
  
 //   char* c= (char *) malloc(100 * sizeof(char));
-//   sprintf(c, "BO_%"GOUTSYM".TNT",Time);
+//   sprintf(c, "BO_%" GOUTSYM".TNT",Time);
 
 //   FILE *fptr=fopen(c, "w");
 //   printf(fptr, "x\ty\tvalue\twidth\theight\n");
@@ -699,7 +699,7 @@ int grid::PrintToScreenBoundaries(float *field, char *display, int direction, in
 
 
  //  char* c= (char *)malloc(100 * sizeof(char));
-//   sprintf(c, "BO_%"GOUTSYM".TNT",Time);
+//   sprintf(c, "BO_%" GOUTSYM".TNT",Time);
 
 //   FILE *fptr=fopen(c, "w");
 //   fprintf(fptr, "x\ty\tvalue\twidth\theight\n");

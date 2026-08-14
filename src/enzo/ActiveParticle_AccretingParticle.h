@@ -137,7 +137,7 @@ void ActiveParticleType_AccretingParticle::MergeAccretingParticles(
 #if DEBUG
   int GridId = LevelArray[ThisLevel]->GridData->GetGridID();
   int GridLevel = LevelArray[ThisLevel]->GridData->GetLevel();
-  printf("%s: Grid %p\t GridID = %d\t GridLevel = %d\n", __FUNCTION__,
+  printf("%s: Grid %p\t GridID = %" ISYM "\t GridLevel = %" ISYM "\n", __FUNCTION__,
 	 LevelArray[ThisLevel]->GridData, GridId, GridLevel);
 #endif
   for (i=0; i<(*nParticles); i++) {
@@ -301,7 +301,7 @@ int ActiveParticleType_AccretingParticle::AfterEvolveLevel(
       ParticleList.clear();
       
       if (debug)
-        printf("Number of particles after merging: %"ISYM"\n",NumberOfMergedParticles);
+        printf("Number of particles after merging: %" ISYM"\n",NumberOfMergedParticles);
       
       /* Assign local particles to grids */
       

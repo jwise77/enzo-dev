@@ -73,7 +73,7 @@ int ExternalBoundary::InitializeExternalBoundaryFace(int dim,
   /* Error check */
  
   if (dim > BoundaryRank) {
-    ENZO_VFAIL("Dimension %"ISYM" > BoundaryRank %"ISYM".\n", dim, BoundaryRank)
+    ENZO_VFAIL("Dimension %" ISYM" > BoundaryRank %" ISYM".\n", dim, BoundaryRank)
   }
  
   /* compute size of entire mesh */

@@ -88,7 +88,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     else {foundgrid=1; break;}
   }
   if (foundgrid == 0) {
-    printf("FLD Initialize ERROR: p%"ISYM" could not locate his grid\n",
+    printf("FLD Initialize ERROR: p%" ISYM" could not locate his grid\n",
 	   MyProcessorNumber);
     ENZO_FAIL("Error in gFLDProblem_Initialize");
   }
@@ -191,56 +191,56 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
       // read until out of lines
       while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 	ret = 0;
-	ret += sscanf(line, "RadHydroESpectrum = %"ISYM, &ESpectrum);
-	ret += sscanf(line, "RadHydroChemistry = %"ISYM, &Nchem);
-	ret += sscanf(line, "RadHydroHFraction = %"FSYM, &HFrac);
-	ret += sscanf(line, "RadHydroModel = %"ISYM, &Model);
-	ret += sscanf(line, "RadHydroMaxDt = %"FSYM, &maxdt);
-	ret += sscanf(line, "RadHydroMinDt = %"FSYM, &mindt);
-	ret += sscanf(line, "RadHydroInitDt = %"FSYM, &initdt);
-	ret += sscanf(line, "RadHydroDtNorm = %"FSYM, &dtnorm);
-	ret += sscanf(line, "RadHydroDtRadFac = %"FSYM, &dtfac[0]);
-	ret += sscanf(line, "RadHydroDtGasFac = %"FSYM, &dtfac[1]);
-	ret += sscanf(line, "RadHydroDtChemFac = %"FSYM, &dtfac[2]);
-	ret += sscanf(line, "RadiationScaling = %"FSYM, &ErScale);
-	ret += sscanf(line, "EnergyCorrectionScaling = %"FSYM, &ecScale);
-	ret += sscanf(line, "ChemistryScaling = %"FSYM, &NiScale);
-	ret += sscanf(line, "RadHydroTheta = %"FSYM, &theta);
-	ret += sscanf(line, "RadHydroLimiterType = %"ISYM, &LimType);
-	ret += sscanf(line, "RadiationBoundaryX0Faces = %"ISYM" %"ISYM, 
+	ret += sscanf(line, "RadHydroESpectrum = %" ISYM, &ESpectrum);
+	ret += sscanf(line, "RadHydroChemistry = %" ISYM, &Nchem);
+	ret += sscanf(line, "RadHydroHFraction = %" FSYM, &HFrac);
+	ret += sscanf(line, "RadHydroModel = %" ISYM, &Model);
+	ret += sscanf(line, "RadHydroMaxDt = %" FSYM, &maxdt);
+	ret += sscanf(line, "RadHydroMinDt = %" FSYM, &mindt);
+	ret += sscanf(line, "RadHydroInitDt = %" FSYM, &initdt);
+	ret += sscanf(line, "RadHydroDtNorm = %" FSYM, &dtnorm);
+	ret += sscanf(line, "RadHydroDtRadFac = %" FSYM, &dtfac[0]);
+	ret += sscanf(line, "RadHydroDtGasFac = %" FSYM, &dtfac[1]);
+	ret += sscanf(line, "RadHydroDtChemFac = %" FSYM, &dtfac[2]);
+	ret += sscanf(line, "RadiationScaling = %" FSYM, &ErScale);
+	ret += sscanf(line, "EnergyCorrectionScaling = %" FSYM, &ecScale);
+	ret += sscanf(line, "ChemistryScaling = %" FSYM, &NiScale);
+	ret += sscanf(line, "RadHydroTheta = %" FSYM, &theta);
+	ret += sscanf(line, "RadHydroLimiterType = %" ISYM, &LimType);
+	ret += sscanf(line, "RadiationBoundaryX0Faces = %" ISYM" %" ISYM, 
 		      BdryType[0], BdryType[0]+1);
 	if (rank > 1) {
-	  ret += sscanf(line, "RadiationBoundaryX1Faces = %"ISYM" %"ISYM,
+	  ret += sscanf(line, "RadiationBoundaryX1Faces = %" ISYM" %" ISYM,
 			BdryType[1], BdryType[1]+1);
 	  if (rank > 2) {
-	    ret += sscanf(line, "RadiationBoundaryX2Faces = %"ISYM" %"ISYM,
+	    ret += sscanf(line, "RadiationBoundaryX2Faces = %" ISYM" %" ISYM,
 			  BdryType[2], BdryType[2]+1);
 	  }
 	}
-	ret += sscanf(line, "RadHydroAprxJacobian = %"ISYM, &approx_jac);
-	ret += sscanf(line, "RadHydroInitialGuess = %"ISYM, &initial_guess);
-	ret += sscanf(line, "RadHydroAnalyticChem = %"ISYM, &AnalyticChem);
-	ret += sscanf(line, "RadHydroNewtLinesearch = %"ISYM, &newt_linesearch);
-	ret += sscanf(line, "RadHydroNewtIters = %"ISYM, &newt_maxit);
-	ret += sscanf(line, "RadHydroNewtNorm = %"ISYM, &newt_norm);
-	ret += sscanf(line, "RadHydroINConst = %"FSYM, &newt_INconst);
-	ret += sscanf(line, "RadHydroNewtTolerance = %"FSYM, &newt_tol);
-	ret += sscanf(line, "RadHydroMinLinesearch = %"FSYM,
+	ret += sscanf(line, "RadHydroAprxJacobian = %" ISYM, &approx_jac);
+	ret += sscanf(line, "RadHydroInitialGuess = %" ISYM, &initial_guess);
+	ret += sscanf(line, "RadHydroAnalyticChem = %" ISYM, &AnalyticChem);
+	ret += sscanf(line, "RadHydroNewtLinesearch = %" ISYM, &newt_linesearch);
+	ret += sscanf(line, "RadHydroNewtIters = %" ISYM, &newt_maxit);
+	ret += sscanf(line, "RadHydroNewtNorm = %" ISYM, &newt_norm);
+	ret += sscanf(line, "RadHydroINConst = %" FSYM, &newt_INconst);
+	ret += sscanf(line, "RadHydroNewtTolerance = %" FSYM, &newt_tol);
+	ret += sscanf(line, "RadHydroMinLinesearch = %" FSYM,
 		      &newt_MinLinesearch);
 	ret += sscanf(line, "RadHydroMaxMGIters = %i", &sol_maxit);
 	ret += sscanf(line, "RadHydroMGRelaxType = %i", &sol_rlxtype);
 	ret += sscanf(line, "RadHydroMGPreRelax = %i", &sol_npre);
 	ret += sscanf(line, "RadHydroMGPostRelax = %i", &sol_npost);
-	ret += sscanf(line, "PlanckOpacityC0 = %"FSYM, &PlanckOpacityC0);
-	ret += sscanf(line, "PlanckOpacityC1 = %"FSYM, &PlanckOpacityC1);
-	ret += sscanf(line, "PlanckOpacityC2 = %"FSYM, &PlanckOpacityC2);
-	ret += sscanf(line, "PlanckOpacityC3 = %"FSYM, &PlanckOpacityC3);
-	ret += sscanf(line, "PlanckOpacityC4 = %"FSYM, &PlanckOpacityC4);
-	ret += sscanf(line, "EnergyOpacityC0 = %"FSYM, &EnergyOpacityC0);
-	ret += sscanf(line, "EnergyOpacityC1 = %"FSYM, &EnergyOpacityC1);
-	ret += sscanf(line, "EnergyOpacityC2 = %"FSYM, &EnergyOpacityC2);
-	ret += sscanf(line, "EnergyOpacityC3 = %"FSYM, &EnergyOpacityC3);
-	ret += sscanf(line, "EnergyOpacityC4 = %"FSYM, &EnergyOpacityC4);
+	ret += sscanf(line, "PlanckOpacityC0 = %" FSYM, &PlanckOpacityC0);
+	ret += sscanf(line, "PlanckOpacityC1 = %" FSYM, &PlanckOpacityC1);
+	ret += sscanf(line, "PlanckOpacityC2 = %" FSYM, &PlanckOpacityC2);
+	ret += sscanf(line, "PlanckOpacityC3 = %" FSYM, &PlanckOpacityC3);
+	ret += sscanf(line, "PlanckOpacityC4 = %" FSYM, &PlanckOpacityC4);
+	ret += sscanf(line, "EnergyOpacityC0 = %" FSYM, &EnergyOpacityC0);
+	ret += sscanf(line, "EnergyOpacityC1 = %" FSYM, &EnergyOpacityC1);
+	ret += sscanf(line, "EnergyOpacityC2 = %" FSYM, &EnergyOpacityC2);
+	ret += sscanf(line, "EnergyOpacityC3 = %" FSYM, &EnergyOpacityC3);
+	ret += sscanf(line, "EnergyOpacityC4 = %" FSYM, &EnergyOpacityC4);
 	
       }  // end loop over file lines
 
@@ -251,7 +251,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 	rewind(fptr);
         while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 	  ret = 0;
-	  ret += sscanf(line, "SuOlsonGreyEps = %"FSYM, &MarshakParms[0]);
+	  ret += sscanf(line, "SuOlsonGreyEps = %" FSYM, &MarshakParms[0]);
         }  // end loop over file lines
 //         if (debug) printf("gFLDProblem_Initialize: SuOlsonGreyEps = %g\n",MarshakParms[0]);
       }  // end Model IF statement
@@ -267,9 +267,9 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 	IonizationParms[4] = 0.0;
         while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 	  ret = 0;
-	  ret += sscanf(line, "NGammaDot = %"FSYM, &IonizationParms[0]);
-	  ret += sscanf(line, "EtaRadius = %"FSYM, &IonizationParms[1]);
-	  ret += sscanf(line, "EtaCenter = %"FSYM" %"FSYM" %"FSYM, 
+	  ret += sscanf(line, "NGammaDot = %" FSYM, &IonizationParms[0]);
+	  ret += sscanf(line, "EtaRadius = %" FSYM, &IonizationParms[1]);
+	  ret += sscanf(line, "EtaCenter = %" FSYM" %" FSYM" %" FSYM, 
 			&IonizationParms[2], &IonizationParms[3], &IonizationParms[4]);
         }  // end loop over file lines
         if (debug) {
@@ -297,7 +297,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     for (face=0; face<2; face++)
       /// ADD NEW BOUNDARY CONDITION TYPES HERE!
       if ((BdryType[dim][face] < 0) || (BdryType[dim][face] > 2)) {
-	fprintf(stderr,"gFLDProblem_Initialize Warning: re-setting BC to periodic, dim %"ISYM", face %"ISYM"\n",dim,face);
+	fprintf(stderr,"gFLDProblem_Initialize Warning: re-setting BC to periodic, dim %" ISYM", face %" ISYM"\n",dim,face);
 	BdryType[dim][face] = 0;
       }
 
@@ -305,7 +305,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
   for (dim=0; dim<rank; dim++) 
     if ((BdryType[dim][0]*BdryType[dim][1] == 0) && 
 	(BdryType[dim][0]+BdryType[dim][1] != 0)) {
-      fprintf(stderr,"gFLDProblem_Initialize Warning: non-matching periodic BCs, dim %"ISYM"\n",dim);
+      fprintf(stderr,"gFLDProblem_Initialize Warning: non-matching periodic BCs, dim %" ISYM"\n",dim);
       BdryType[dim][0] = 0;
       BdryType[dim][1] = 0;
     }
@@ -335,7 +335,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
   // Nchem gives the number of chemical species
   if ((Nchem < 0) || (Nchem > 10)) {
-    fprintf(stderr,"gFLDProblem Initialize: illegal Nchem = %"ISYM"\n",Nchem);
+    fprintf(stderr,"gFLDProblem Initialize: illegal Nchem = %" ISYM"\n",Nchem);
     fprintf(stderr,"   re-setting Nchem to 0\n");
     Nchem = 0;  // default is no chemistry
   }
@@ -350,7 +350,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
   // LimType gives the limiter formula to use (see header)
   if ((LimType < 0) || (LimType > 4)) {
-    fprintf(stderr,"gFLDProblem Initialize: illegal LimType = %"ISYM"\n",LimType);
+    fprintf(stderr,"gFLDProblem Initialize: illegal LimType = %" ISYM"\n",LimType);
     fprintf(stderr,"   re-setting LimType to 4 (ZEUS)\n");
     LimType = 0;  // default is ZEUS limiter
   }
@@ -410,7 +410,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     NiScale = 1.0;  // default is no scaling
   }
   if (debug)
-    printf("gFLDProblem::Initialize p%"ISYM": ErScale = %g, ecScale = %g, NiScale = %g\n",
+    printf("gFLDProblem::Initialize p%" ISYM": ErScale = %g, ecScale = %g, NiScale = %g\n",
 	   MyProcessorNumber,ErScale,ecScale,NiScale);
 
   // dtfac gives the desired percent change in values per step
@@ -456,10 +456,10 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     }
   }
   if (debug){
-    printf("gFLDProblem::Initialize p%"ISYM": rank = %"ISYM", Nchem = %"ISYM", HFrac = %g\n",
+    printf("gFLDProblem::Initialize p%" ISYM": rank = %" ISYM", Nchem = %" ISYM", HFrac = %g\n",
 	   MyProcessorNumber, rank, Nchem, HFrac);
-    printf("gFLDProblem::Initialize p%"ISYM": layout = (%"ISYM",%"ISYM",%"ISYM")\n",MyProcessorNumber,layout[0],layout[1],layout[2]);
-    printf("gFLDProblem::Initialize p%"ISYM": location = (%"ISYM",%"ISYM",%"ISYM")\n",MyProcessorNumber,location[0],location[1],location[2]);
+    printf("gFLDProblem::Initialize p%" ISYM": layout = (%" ISYM",%" ISYM",%" ISYM")\n",MyProcessorNumber,layout[0],layout[1],layout[2]);
+    printf("gFLDProblem::Initialize p%" ISYM": location = (%" ISYM",%" ISYM",%" ISYM")\n",MyProcessorNumber,location[0],location[1],location[2]);
   }
 
   //   for non-periodic domain, unset neighbor info.
@@ -470,12 +470,12 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
       NBors[dim][1] = MPI_PROC_NULL;
   }
   if (debug) {
-    printf("gFLDProblem::Initialize p%"ISYM": EdgeVals = (%g:%g,%g:%g,%g:%g)\n",
+    printf("gFLDProblem::Initialize p%" ISYM": EdgeVals = (%g:%g,%g:%g,%g:%g)\n",
 	   MyProcessorNumber, EdgeVals[0][0], EdgeVals[0][1], EdgeVals[1][0],
 	   EdgeVals[1][1], EdgeVals[2][0], EdgeVals[2][1]);
-    printf("gFLDProblem::Initialize p%"ISYM": OnBdry = (%"ISYM":%"ISYM",%"ISYM":%"ISYM",%"ISYM":%"ISYM")\n",MyProcessorNumber,int(OnBdry[0][0]),int(OnBdry[0][1]),int(OnBdry[1][0]),int(OnBdry[1][1]),int(OnBdry[2][0]),int(OnBdry[2][1]));
-    printf("gFLDProblem::Initialize p%"ISYM": BdryType = (%"ISYM":%"ISYM",%"ISYM":%"ISYM",%"ISYM":%"ISYM")\n",MyProcessorNumber,BdryType[0][0],BdryType[0][1],BdryType[1][0],BdryType[1][1],BdryType[2][0],BdryType[2][1]);
-    printf("gFLDProblem::Initialize p%"ISYM": NBors = (%"ISYM":%"ISYM",%"ISYM":%"ISYM",%"ISYM":%"ISYM")\n",MyProcessorNumber,NBors[0][0],NBors[0][1],NBors[1][0],NBors[1][1],NBors[2][0],NBors[2][1]);
+    printf("gFLDProblem::Initialize p%" ISYM": OnBdry = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,int(OnBdry[0][0]),int(OnBdry[0][1]),int(OnBdry[1][0]),int(OnBdry[1][1]),int(OnBdry[2][0]),int(OnBdry[2][1]));
+    printf("gFLDProblem::Initialize p%" ISYM": BdryType = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,BdryType[0][0],BdryType[0][1],BdryType[1][0],BdryType[1][1],BdryType[2][0],BdryType[2][1]);
+    printf("gFLDProblem::Initialize p%" ISYM": NBors = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,NBors[0][0],NBors[0][1],NBors[1][0],NBors[1][1],NBors[2][0],NBors[2][1]);
   }
 
   // set initial time step into TopGrid
@@ -527,14 +527,14 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     ArrDims[dim] = LocDims[dim] + 2*NumberOfGhostZones;
 
   if (debug) {
-    printf("gFLDProblem::Initialize p%"ISYM": SolvIndices = (%i:%i,%i:%i,%i:%i)\n",
+    printf("gFLDProblem::Initialize p%" ISYM": SolvIndices = (%i:%i,%i:%i,%i:%i)\n",
 	   MyProcessorNumber, SolvIndices[0][0], SolvIndices[0][1], SolvIndices[1][0], 
 	   SolvIndices[1][1], SolvIndices[2][0], SolvIndices[2][1]);
-    printf("gFLDProblem::Initialize p%"ISYM": SolvOff = (%"ISYM",%"ISYM",%"ISYM")\n",
+    printf("gFLDProblem::Initialize p%" ISYM": SolvOff = (%" ISYM",%" ISYM",%" ISYM")\n",
 	   MyProcessorNumber, SolvOff[0], SolvOff[1], SolvOff[2]);
-    printf("gFLDProblem::Initialize p%"ISYM": LocDims = (%"ISYM",%"ISYM",%"ISYM")\n",
+    printf("gFLDProblem::Initialize p%" ISYM": LocDims = (%" ISYM",%" ISYM",%" ISYM")\n",
 	   MyProcessorNumber, LocDims[0], LocDims[1], LocDims[2]);
-    printf("gFLDProblem::Initialize p%"ISYM": ArrDims = (%"ISYM",%"ISYM",%"ISYM")\n",
+    printf("gFLDProblem::Initialize p%" ISYM": ArrDims = (%" ISYM",%" ISYM",%" ISYM")\n",
 	   MyProcessorNumber, ArrDims[0], ArrDims[1], ArrDims[2]);
   }
 
@@ -561,7 +561,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
   GhDims[2][1] = zghosts;
 
   if (debug)
-    printf("gFLDProblem::Initialize p%"ISYM": GhDims = (%"ISYM":%"ISYM",%"ISYM":%"ISYM",%"ISYM":%"ISYM")\n",
+    printf("gFLDProblem::Initialize p%" ISYM": GhDims = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",
 	   MyProcessorNumber, GhDims[0][0], GhDims[0][1], GhDims[1][0], 
 	   GhDims[1][1], GhDims[2][0], GhDims[2][1]);
 
@@ -796,12 +796,12 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
   //   check Newton solver parameters
   if (newt_maxit < 1) {
-    fprintf(stderr,"Illegal RadHydroNewtIters = %"ISYM". Setting to 20\n",
+    fprintf(stderr,"Illegal RadHydroNewtIters = %" ISYM". Setting to 20\n",
 	    newt_maxit);
     newt_maxit = 20;
   }
   if ((newt_norm < 0) || (newt_norm > 5)) {
-    fprintf(stderr,"Illegal RadHydroNewtNorm = %"ISYM". Setting to 0\n",
+    fprintf(stderr,"Illegal RadHydroNewtNorm = %" ISYM". Setting to 0\n",
 	    newt_norm);
     newt_norm = 0;
   }
@@ -1265,13 +1265,13 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
       return FAIL;
     }
     else {
-      fprintf(outfptr, "RadHydroESpectrum = %"ISYM"\n", ESpectrum);
-      fprintf(outfptr, "RadHydroChemistry = %"ISYM"\n", Nchem);
-      fprintf(outfptr, "RadHydroModel = %"ISYM"\n", Model);
+      fprintf(outfptr, "RadHydroESpectrum = %" ISYM"\n", ESpectrum);
+      fprintf(outfptr, "RadHydroChemistry = %" ISYM"\n", Nchem);
+      fprintf(outfptr, "RadHydroModel = %" ISYM"\n", Model);
       fprintf(outfptr, "RadHydroMaxDt = %g\n", maxdt);
       fprintf(outfptr, "RadHydroMinDt = %g\n", mindt);
       fprintf(outfptr, "RadHydroInitDt = %g\n", initdt);
-      fprintf(outfptr, "RadHydroDtNorm = %"FSYM"\n", dtnorm);
+      fprintf(outfptr, "RadHydroDtNorm = %" FSYM"\n", dtnorm);
       fprintf(outfptr, "RadHydroDtRadFac = %g\n", dtfac[0]);
       fprintf(outfptr, "RadHydroDtGasFac = %g\n", dtfac[1]);
       fprintf(outfptr, "RadHydroDtChemFac = %g\n", dtfac[2]);
@@ -1279,23 +1279,23 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
       fprintf(outfptr, "EnergyCorrectionScaling = %g\n", ecScale);
       fprintf(outfptr, "ChemistryScaling = %g\n", NiScale);
       fprintf(outfptr, "RadHydroTheta = %g\n", theta);
-      fprintf(outfptr, "RadHydroLimiterType = %"ISYM"\n", LimType);
-      fprintf(outfptr, "RadiationBoundaryX0Faces = %"ISYM" %"ISYM"\n", 
+      fprintf(outfptr, "RadHydroLimiterType = %" ISYM"\n", LimType);
+      fprintf(outfptr, "RadiationBoundaryX0Faces = %" ISYM" %" ISYM"\n", 
 	      BdryType[0][0], BdryType[0][1]);
       if (rank > 1) {
-	fprintf(outfptr, "RadiationBoundaryX1Faces = %"ISYM" %"ISYM"\n", 
+	fprintf(outfptr, "RadiationBoundaryX1Faces = %" ISYM" %" ISYM"\n", 
 		BdryType[1][0], BdryType[1][1]);
 	if (rank > 2) {
-	  fprintf(outfptr, "RadiationBoundaryX2Faces = %"ISYM" %"ISYM"\n", 
+	  fprintf(outfptr, "RadiationBoundaryX2Faces = %" ISYM" %" ISYM"\n", 
 		  BdryType[2][0], BdryType[2][1]);
 	}
       }
-      fprintf(outfptr, "RadHydroAprxJacobian = %"ISYM"\n", approx_jac);    
-      fprintf(outfptr, "RadHydroInitialGuess = %"ISYM"\n", initial_guess);    
-      fprintf(outfptr, "RadHydroAnalyticChem = %"ISYM"\n", AnalyticChem);
-      fprintf(outfptr, "RadHydroNewtLinesearch = %"ISYM"\n", newt_linesearch);
-      fprintf(outfptr, "RadHydroNewtIters = %"ISYM"\n", newt_maxit);    
-      fprintf(outfptr, "RadHydroNewtNorm = %"ISYM"\n", newt_norm);    
+      fprintf(outfptr, "RadHydroAprxJacobian = %" ISYM"\n", approx_jac);    
+      fprintf(outfptr, "RadHydroInitialGuess = %" ISYM"\n", initial_guess);    
+      fprintf(outfptr, "RadHydroAnalyticChem = %" ISYM"\n", AnalyticChem);
+      fprintf(outfptr, "RadHydroNewtLinesearch = %" ISYM"\n", newt_linesearch);
+      fprintf(outfptr, "RadHydroNewtIters = %" ISYM"\n", newt_maxit);    
+      fprintf(outfptr, "RadHydroNewtNorm = %" ISYM"\n", newt_norm);    
       fprintf(outfptr, "RadHydroINConst = %g\n", newt_INconst);    
       fprintf(outfptr, "RadHydroNewtTolerance = %g\n", newt_tol);    
       fprintf(outfptr, "RadHydroMinLinesearch = %g\n", 

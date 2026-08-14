@@ -73,7 +73,7 @@ int CommunicationShareParticles(int *NumberToMove, particle_data* &SendList,
  
     if (FirstTimeCalled) {
       Count = sizeof(particle_data);
-      //  fprintf(stderr, "Size of ParticleMoveList %"ISYM"\n", Count);
+      //  fprintf(stderr, "Size of ParticleMoveList %" ISYM"\n", Count);
       stat = MPI_Type_contiguous(Count, DataTypeByte, &MPI_ParticleMoveList);
       stat |= MPI_Type_commit(&MPI_ParticleMoveList);
       if (stat != MPI_SUCCESS) ENZO_FAIL("");

@@ -363,9 +363,9 @@ int grid::AccreteOntoAccretingParticle(
 
 #ifdef DEBUG_AP
 	    if (index == cgindex)
-	      printf("Sink Density: %"GOUTSYM", "
-		     "Cell Density: %"GOUTSYM", "
-		     "New Density:  %"GOUTSYM"\n",
+	      printf("Sink Density: %" GOUTSYM", "
+		     "Cell Density: %" GOUTSYM", "
+		     "New Density:  %" GOUTSYM"\n",
 		     maccreted/CellVolume,
 		     BaryonField[DensNum][index],
 		     BaryonField[DensNum][index]-maccreted/CellVolume);

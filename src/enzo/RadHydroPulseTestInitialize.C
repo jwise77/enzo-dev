@@ -55,7 +55,7 @@ int RadHydroPulseTestInitialize(FILE *fptr, FILE *Outfptr,
 
   // make sure it is 3D
   if (MetaData.TopGridRank != 3) {
-    printf("Cannot do Rad-Hydro Tests in %"ISYM" dimension(s)\n", 
+    printf("Cannot do Rad-Hydro Tests in %" ISYM" dimension(s)\n", 
 	   MetaData.TopGridRank);
     return FAIL;
   }    
@@ -80,9 +80,9 @@ int RadHydroPulseTestInitialize(FILE *fptr, FILE *Outfptr,
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
 	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "RadHydroDensity = %"FSYM, &RadHydroDensity);
-	ret += sscanf(line, "RadHydroRadEnergy = %"FSYM, &RadHydroRadEnergy);
-	ret += sscanf(line, "RadPulseDim = %"ISYM, &RadPulseDim);
+	ret += sscanf(line, "RadHydroDensity = %" FSYM, &RadHydroDensity);
+	ret += sscanf(line, "RadHydroRadEnergy = %" FSYM, &RadHydroRadEnergy);
+	ret += sscanf(line, "RadPulseDim = %" ISYM, &RadPulseDim);
       } // end input from parameter file
       fclose(RHfptr);
     }

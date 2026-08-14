@@ -86,7 +86,7 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     else {foundgrid=1; break;}
   }
   if (foundgrid == 0) {
-    printf("FLD Initialize ERROR: p%"ISYM" could not locate his grid\n",
+    printf("FLD Initialize ERROR: p%" ISYM" could not locate his grid\n",
 	   MyProcessorNumber);
     ENZO_FAIL("Error in gFLDSplit_Initialize");
   }
@@ -95,7 +95,7 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 // #ifdef _OPENMP
 //   // output number of OpenMP threads that will be used in this run
 //   int nthreads = omp_get_max_threads();
-//   printf("FLD Initialize: MPI task %"ISYM" has %"ISYM" available OpenMP threads\n",
+//   printf("FLD Initialize: MPI task %" ISYM" has %" ISYM" available OpenMP threads\n",
 //	  MyProcessorNumber,nthreads);
 // #endif
 
@@ -191,48 +191,48 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
       // read until out of lines
       while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 	ret = 0;
-	ret += sscanf(line, "RadHydroESpectrum = %"ISYM, &ESpectrum);
-	ret += sscanf(line, "RadHydroChemistry = %"ISYM, &Nchem);
-	ret += sscanf(line, "RadHydroHFraction = %"FSYM, &HFrac);
-	ret += sscanf(line, "RadHydroModel = %"ISYM, &Model);
-	ret += sscanf(line, "RadHydroMaxDt = %"FSYM, &maxdt);
-	ret += sscanf(line, "RadHydroMinDt = %"FSYM, &mindt);
-	ret += sscanf(line, "RadHydroInitDt = %"FSYM, &initdt);
-	ret += sscanf(line, "RadHydroMaxSubcycles = %"FSYM, &maxsubcycles);
-	ret += sscanf(line, "RadHydroMaxChemSubcycles = %"FSYM, &maxchemsub);
-	ret += sscanf(line, "RadHydroDtNorm = %"FSYM, &dtnorm);
-	ret += sscanf(line, "RadHydroDtGrowth = %"FSYM, &dtgrowth);
-	ret += sscanf(line, "RadHydroDtRadFac = %"FSYM, &dtfac[0]);
-	ret += sscanf(line, "RadHydroDtGasFac = %"FSYM, &dtfac[1]);
-	ret += sscanf(line, "RadHydroDtChemFac = %"FSYM, &dtfac[2]);
-	ret += sscanf(line, "RadiationScaling = %"FSYM, &ErScale);
-	ret += sscanf(line, "EnergyCorrectionScaling = %"FSYM, &ecScale);
-	ret += sscanf(line, "ChemistryScaling = %"FSYM, &NiScale);
-	ret += sscanf(line, "AutomaticScaling = %"ISYM, &autoscale);
-	ret += sscanf(line, "RadHydroTheta = %"FSYM, &theta);
-	ret += sscanf(line, "RadiationBoundaryX0Faces = %"ISYM" %"ISYM, 
+	ret += sscanf(line, "RadHydroESpectrum = %" ISYM, &ESpectrum);
+	ret += sscanf(line, "RadHydroChemistry = %" ISYM, &Nchem);
+	ret += sscanf(line, "RadHydroHFraction = %" FSYM, &HFrac);
+	ret += sscanf(line, "RadHydroModel = %" ISYM, &Model);
+	ret += sscanf(line, "RadHydroMaxDt = %" FSYM, &maxdt);
+	ret += sscanf(line, "RadHydroMinDt = %" FSYM, &mindt);
+	ret += sscanf(line, "RadHydroInitDt = %" FSYM, &initdt);
+	ret += sscanf(line, "RadHydroMaxSubcycles = %" FSYM, &maxsubcycles);
+	ret += sscanf(line, "RadHydroMaxChemSubcycles = %" FSYM, &maxchemsub);
+	ret += sscanf(line, "RadHydroDtNorm = %" FSYM, &dtnorm);
+	ret += sscanf(line, "RadHydroDtGrowth = %" FSYM, &dtgrowth);
+	ret += sscanf(line, "RadHydroDtRadFac = %" FSYM, &dtfac[0]);
+	ret += sscanf(line, "RadHydroDtGasFac = %" FSYM, &dtfac[1]);
+	ret += sscanf(line, "RadHydroDtChemFac = %" FSYM, &dtfac[2]);
+	ret += sscanf(line, "RadiationScaling = %" FSYM, &ErScale);
+	ret += sscanf(line, "EnergyCorrectionScaling = %" FSYM, &ecScale);
+	ret += sscanf(line, "ChemistryScaling = %" FSYM, &NiScale);
+	ret += sscanf(line, "AutomaticScaling = %" ISYM, &autoscale);
+	ret += sscanf(line, "RadHydroTheta = %" FSYM, &theta);
+	ret += sscanf(line, "RadiationBoundaryX0Faces = %" ISYM" %" ISYM, 
 		      BdryType[0], BdryType[0]+1);
 	if (rank > 1) {
-	  ret += sscanf(line, "RadiationBoundaryX1Faces = %"ISYM" %"ISYM,
+	  ret += sscanf(line, "RadiationBoundaryX1Faces = %" ISYM" %" ISYM,
 			BdryType[1], BdryType[1]+1);
 	  if (rank > 2) {
-	    ret += sscanf(line, "RadiationBoundaryX2Faces = %"ISYM" %"ISYM,
+	    ret += sscanf(line, "RadiationBoundaryX2Faces = %" ISYM" %" ISYM,
 			  BdryType[2], BdryType[2]+1);
 	  }
 	}
-	ret += sscanf(line, "RadHydroInitialGuess = %"ISYM, &initial_guess);
-	ret += sscanf(line, "RadHydroKrylovMethod = %"ISYM, &Krylov_method);
-	ret += sscanf(line, "RadHydroSolTolerance = %"FSYM, &sol_tolerance);
+	ret += sscanf(line, "RadHydroInitialGuess = %" ISYM, &initial_guess);
+	ret += sscanf(line, "RadHydroKrylovMethod = %" ISYM, &Krylov_method);
+	ret += sscanf(line, "RadHydroSolTolerance = %" FSYM, &sol_tolerance);
 	ret += sscanf(line, "RadHydroMaxMGIters = %i", &sol_maxit);
 	ret += sscanf(line, "RadHydroMGRelaxType = %i", &sol_rlxtype);
 	ret += sscanf(line, "RadHydroMGPreRelax = %i", &sol_npre);
 	ret += sscanf(line, "RadHydroMGPostRelax = %i", &sol_npost);
-	ret += sscanf(line, "EnergyOpacityC0 = %"FSYM, &EnergyOpacityC0);
-	ret += sscanf(line, "EnergyOpacityC1 = %"FSYM, &EnergyOpacityC1);
-	ret += sscanf(line, "EnergyOpacityC2 = %"FSYM, &EnergyOpacityC2);
-	ret += sscanf(line, "NGammaDot = %"FSYM, &NGammaDot);
-	ret += sscanf(line, "EtaRadius = %"FSYM, &EtaRadius);
-	ret += sscanf(line, "EtaCenter = %"FSYM" %"FSYM" %"FSYM, 
+	ret += sscanf(line, "EnergyOpacityC0 = %" FSYM, &EnergyOpacityC0);
+	ret += sscanf(line, "EnergyOpacityC1 = %" FSYM, &EnergyOpacityC1);
+	ret += sscanf(line, "EnergyOpacityC2 = %" FSYM, &EnergyOpacityC2);
+	ret += sscanf(line, "NGammaDot = %" FSYM, &NGammaDot);
+	ret += sscanf(line, "EtaRadius = %" FSYM, &EtaRadius);
+	ret += sscanf(line, "EtaCenter = %" FSYM" %" FSYM" %" FSYM, 
 		      &(EtaCenter[0]), &(EtaCenter[1]), &(EtaCenter[2]));
 	
       }  // end loop over file lines
@@ -253,7 +253,7 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     for (face=0; face<2; face++)
       /// ADD NEW BOUNDARY CONDITION TYPES HERE!
       if ((BdryType[dim][face] < 0) || (BdryType[dim][face] > 2)) {
-	fprintf(stderr,"gFLDSplit_Initialize Warning: re-setting BC to periodic, dim %"ISYM", face %"ISYM"\n",dim,face);
+	fprintf(stderr,"gFLDSplit_Initialize Warning: re-setting BC to periodic, dim %" ISYM", face %" ISYM"\n",dim,face);
 	BdryType[dim][face] = 0;
       }
 
@@ -261,7 +261,7 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
   for (dim=0; dim<rank; dim++) 
     if ((BdryType[dim][0]*BdryType[dim][1] == 0) && 
 	(BdryType[dim][0]+BdryType[dim][1] != 0)) {
-      fprintf(stderr,"gFLDSplit_Initialize Warning: non-matching periodic BCs, dim %"ISYM"\n",dim);
+      fprintf(stderr,"gFLDSplit_Initialize Warning: non-matching periodic BCs, dim %" ISYM"\n",dim);
       BdryType[dim][0] = 0;
       BdryType[dim][1] = 0;
     }
@@ -291,13 +291,13 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
   // Model gives the physical set of equations to use
   if ((Model != 1) && (Model != 10) && (Model != 4)) {
-    fprintf(stderr,"gFLDSplit Initialize: illegal Model = %"ISYM"\n",Model);
+    fprintf(stderr,"gFLDSplit Initialize: illegal Model = %" ISYM"\n",Model);
     ENZO_FAIL("   Model is unimplemented in this module, exiting.");
   }
 
   // Nchem gives the number of chemical species
   if ((Nchem < 0) || (Nchem > 10)) {
-    fprintf(stderr,"gFLDSplit Initialize: illegal Nchem = %"ISYM"\n",Nchem);
+    fprintf(stderr,"gFLDSplit Initialize: illegal Nchem = %" ISYM"\n",Nchem);
     fprintf(stderr,"   re-setting Nchem to 0\n");
     Nchem = 1;  // default is Hydrogen only
   }
@@ -383,7 +383,7 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
   }
   autoScale = (autoscale != 0);  // set bool based on integer input
   if (debug)
-    printf("gFLDSplit::Initialize p%"ISYM": ErScale = %g, ecScale = %g, NiScale = %g, autoScale = %"ISYM"\n",
+    printf("gFLDSplit::Initialize p%" ISYM": ErScale = %g, ecScale = %g, NiScale = %g, autoScale = %" ISYM"\n",
 	   MyProcessorNumber,ErScale,ecScale,NiScale,autoscale);
 
   // dtfac gives the desired percent change in values per step
@@ -436,10 +436,10 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     }
   }
   if (debug){
-    printf("gFLDSplit::Initialize p%"ISYM": rank = %"ISYM", Nchem = %"ISYM", HFrac = %g\n",
+    printf("gFLDSplit::Initialize p%" ISYM": rank = %" ISYM", Nchem = %" ISYM", HFrac = %g\n",
 	   MyProcessorNumber, rank, Nchem, HFrac);
-    printf("gFLDSplit::Initialize p%"ISYM": layout = (%"ISYM",%"ISYM",%"ISYM")\n",MyProcessorNumber,layout[0],layout[1],layout[2]);
-    printf("gFLDSplit::Initialize p%"ISYM": location = (%"ISYM",%"ISYM",%"ISYM")\n",MyProcessorNumber,location[0],location[1],location[2]);
+    printf("gFLDSplit::Initialize p%" ISYM": layout = (%" ISYM",%" ISYM",%" ISYM")\n",MyProcessorNumber,layout[0],layout[1],layout[2]);
+    printf("gFLDSplit::Initialize p%" ISYM": location = (%" ISYM",%" ISYM",%" ISYM")\n",MyProcessorNumber,location[0],location[1],location[2]);
   }
 
   //   for non-periodic domain, unset neighbor info.
@@ -450,12 +450,12 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
       NBors[dim][1] = MPI_PROC_NULL;
   }
   if (debug) {
-//     printf("gFLDSplit::Initialize p%"ISYM": EdgeVals = (%g:%g,%g:%g,%g:%g)\n",
+//     printf("gFLDSplit::Initialize p%" ISYM": EdgeVals = (%g:%g,%g:%g,%g:%g)\n",
 // 	   MyProcessorNumber, EdgeVals[0][0], EdgeVals[0][1], EdgeVals[1][0],
 // 	   EdgeVals[1][1], EdgeVals[2][0], EdgeVals[2][1]);
-//     printf("gFLDSplit::Initialize p%"ISYM": OnBdry = (%"ISYM":%"ISYM",%"ISYM":%"ISYM",%"ISYM":%"ISYM")\n",MyProcessorNumber,int(OnBdry[0][0]),int(OnBdry[0][1]),int(OnBdry[1][0]),int(OnBdry[1][1]),int(OnBdry[2][0]),int(OnBdry[2][1]));
-//     printf("gFLDSplit::Initialize p%"ISYM": BdryType = (%"ISYM":%"ISYM",%"ISYM":%"ISYM",%"ISYM":%"ISYM")\n",MyProcessorNumber,BdryType[0][0],BdryType[0][1],BdryType[1][0],BdryType[1][1],BdryType[2][0],BdryType[2][1]);
-//     printf("gFLDSplit::Initialize p%"ISYM": NBors = (%"ISYM":%"ISYM",%"ISYM":%"ISYM",%"ISYM":%"ISYM")\n",MyProcessorNumber,NBors[0][0],NBors[0][1],NBors[1][0],NBors[1][1],NBors[2][0],NBors[2][1]);
+//     printf("gFLDSplit::Initialize p%" ISYM": OnBdry = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,int(OnBdry[0][0]),int(OnBdry[0][1]),int(OnBdry[1][0]),int(OnBdry[1][1]),int(OnBdry[2][0]),int(OnBdry[2][1]));
+//     printf("gFLDSplit::Initialize p%" ISYM": BdryType = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,BdryType[0][0],BdryType[0][1],BdryType[1][0],BdryType[1][1],BdryType[2][0],BdryType[2][1]);
+//     printf("gFLDSplit::Initialize p%" ISYM": NBors = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,NBors[0][0],NBors[0][1],NBors[1][0],NBors[1][1],NBors[2][0],NBors[2][1]);
   }
 
   // get the current units values (used to help set the time step size)
@@ -525,14 +525,14 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     ArrDims[dim] = LocDims[dim] + 2*NumberOfGhostZones;
 
 //   if (debug) {
-//     printf("gFLDSplit::Initialize p%"ISYM": SolvIndices = (%i:%i,%i:%i,%i:%i)\n",
+//     printf("gFLDSplit::Initialize p%" ISYM": SolvIndices = (%i:%i,%i:%i,%i:%i)\n",
 // 	   MyProcessorNumber, SolvIndices[0][0], SolvIndices[0][1], SolvIndices[1][0], 
 // 	   SolvIndices[1][1], SolvIndices[2][0], SolvIndices[2][1]);
-//     printf("gFLDSplit::Initialize p%"ISYM": SolvOff = (%"ISYM",%"ISYM",%"ISYM")\n",
+//     printf("gFLDSplit::Initialize p%" ISYM": SolvOff = (%" ISYM",%" ISYM",%" ISYM")\n",
 // 	   MyProcessorNumber, SolvOff[0], SolvOff[1], SolvOff[2]);
-//     printf("gFLDSplit::Initialize p%"ISYM": LocDims = (%"ISYM",%"ISYM",%"ISYM")\n",
+//     printf("gFLDSplit::Initialize p%" ISYM": LocDims = (%" ISYM",%" ISYM",%" ISYM")\n",
 // 	   MyProcessorNumber, LocDims[0], LocDims[1], LocDims[2]);
-//     printf("gFLDSplit::Initialize p%"ISYM": ArrDims = (%"ISYM",%"ISYM",%"ISYM")\n",
+//     printf("gFLDSplit::Initialize p%" ISYM": ArrDims = (%" ISYM",%" ISYM",%" ISYM")\n",
 // 	   MyProcessorNumber, ArrDims[0], ArrDims[1], ArrDims[2]);
 //   }
 
@@ -559,7 +559,7 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
   GhDims[2][1] = zghosts;
 
 //   if (debug)
-//     printf("gFLDSplit::Initialize p%"ISYM": GhDims = (%"ISYM":%"ISYM",%"ISYM":%"ISYM",%"ISYM":%"ISYM")\n",
+//     printf("gFLDSplit::Initialize p%" ISYM": GhDims = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",
 // 	   MyProcessorNumber, GhDims[0][0], GhDims[0][1], GhDims[1][0], 
 // 	   GhDims[1][1], GhDims[2][0], GhDims[2][1]);
 
@@ -766,7 +766,7 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
   //   check HYPRE solver parameters
   if (Krylov_method < 0 || Krylov_method > 2) {
-    fprintf(stderr,"Illegal RadHydroKrylovMethod = %"ISYM". Setting to 1 (BiCGStab\n",
+    fprintf(stderr,"Illegal RadHydroKrylovMethod = %" ISYM". Setting to 1 (BiCGStab\n",
 	    Krylov_method);
     Krylov_method = 1;
   }

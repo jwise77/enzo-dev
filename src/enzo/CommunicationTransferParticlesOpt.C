@@ -146,7 +146,7 @@ int CommunicationTransferParticles(grid *GridPointer[], int NumberOfGrids,
 #ifdef DEBUG_CTP
   if (MyProcessorNumber == ROOT_PROCESSOR) 
   for (j = 0; j < NumberOfGrids; j++)
-    fprintf(stderr, "Pa(%"ISYM") CTP grid[%"ISYM"] = %"ISYM"\n",
+    fprintf(stderr, "Pa(%" ISYM") CTP grid[%" ISYM"] = %" ISYM"\n",
 	    MyProcessorNumber, j, GridPointer[j]->ReturnNumberOfParticles());
 #endif
  
@@ -272,7 +272,7 @@ int CommunicationTransferParticles(grid *GridPointer[], int NumberOfGrids,
   CommunicationSumValues(&TotalNumberToMove, 1);
   if (debug)
 
-    printf("CommunicationTransferParticles: moved = %"ISYM"\n",
+    printf("CommunicationTransferParticles: moved = %" ISYM"\n",
   	   TotalNumberToMove);
  
   return SUCCESS;

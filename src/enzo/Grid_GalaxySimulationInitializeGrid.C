@@ -308,7 +308,7 @@ int grid::GalaxySimulationInitializeGrid(double DiskRadius,
   if( UniformDensity < 1.0E-10 ){
     UniformDensity /= DensityUnits;
     if( debug && MyProcessorNumber == ROOT_PROCESSOR ) 
-      fprintf(stdout,"Converting GalaxySimulationUniformDensity = %"GSYM" from CGS to code units\n",UniformDensity);
+      fprintf(stdout,"Converting GalaxySimulationUniformDensity = %" GSYM" from CGS to code units\n",UniformDensity);
   } // end uniform density if
 
   /* Set up inflow */
@@ -625,7 +625,7 @@ int grid::GalaxySimulationInitializeGrid(double DiskRadius,
 	    BaryonField[1][n] += 0.5*POW(BaryonField[vel+dim][n], 2);
 
 	if (BaryonField[1][n] <= 0.0)
-	  printf("G_GSIC: negative or zero energy  n = %"ISYM"  temp = %"FSYM"   e = %"FSYM"\n",
+	  printf("G_GSIC: negative or zero energy  n = %" ISYM"  temp = %" FSYM"   e = %" FSYM"\n",
 		 n, temperature, BaryonField[1][n]);
 
 
@@ -1043,7 +1043,7 @@ void DiskForceBalance(FLOAT cellwidth, FLOAT z, double density, struct CGMdata& 
   denuse = density*DensityUnits; 
 
   if (Pressure < 0.0 && fabs(rcyl)*LengthUnits/Mpc_cm <= TruncRadius && fabs(z) <= fabs(zicm)) {
-    fprintf(stderr,"neg pressure:  P = %"FSYM", z = %"FSYM", r = %"FSYM"\n", Pressure, z/Mpc_cm, rcyl*LengthUnits/Mpc_cm);
+    fprintf(stderr,"neg pressure:  P = %" FSYM", z = %" FSYM", r = %" FSYM"\n", Pressure, z/Mpc_cm, rcyl*LengthUnits/Mpc_cm);
   }
   if (fabs(rcyl)*LengthUnits/Mpc_cm >= TruncRadius || fabs(zicm) <= fabs(z)){
     Pressure = 0.0;
@@ -1061,7 +1061,7 @@ void DiskForceBalance(FLOAT cellwidth, FLOAT z, double density, struct CGMdata& 
     denuse = HaloGasDensity(rsph/LengthUnits, CGM_data);
   }
   if (denuse < HaloGasDensity(rsph/LengthUnits, CGM_data)) {
-    fprintf(stderr,"denuse small:  %"FSYM"\n", denuse);
+    fprintf(stderr,"denuse small:  %" FSYM"\n", denuse);
   }
   
   rsph_icm = sqrt(rcyl*rcyl+POW(zicm/LengthUnits,2));  // code units
@@ -1095,10 +1095,10 @@ void DiskForceBalance(FLOAT cellwidth, FLOAT z, double density, struct CGMdata& 
   /* Some error checking. */
 
   if (temperature < 0.0) 
-    fprintf(stderr,"G_GSIG: temp = %"FSYM", P = %"FSYM", z = %"FSYM", zicm = %"FSYM", zicmf=%"FSYM", zsmall=%"FSYM", rcyl = %"FSYM"\n", 
+    fprintf(stderr,"G_GSIG: temp = %" FSYM", P = %" FSYM", z = %" FSYM", zicm = %" FSYM", zicmf=%" FSYM", zsmall=%" FSYM", rcyl = %" FSYM"\n", 
       temperature, Pressure, z/Mpc_cm, zicm/Mpc_cm, zicmf, zsmall, rcyl*LengthUnits/Mpc_cm);
   if ((FtotR - FdPdR) > 0.0) { 
-    fprintf(stderr,"G_GSIG: FtotR = %"FSYM", FdPdR = %"FSYM", P = %"FSYM",P2 = %"FSYM", Picm = %"FSYM", dr = %"FSYM", rcyl = %"FSYM", z = %"FSYM"\n", 
+    fprintf(stderr,"G_GSIG: FtotR = %" FSYM", FdPdR = %" FSYM", P = %" FSYM",P2 = %" FSYM", Picm = %" FSYM", dr = %" FSYM", rcyl = %" FSYM", z = %" FSYM"\n", 
       FtotR, FdPdR, Pressure, Pressure2, Picm, r2-rcyl*LengthUnits, rcyl*LengthUnits/Mpc_cm, z/Mpc_cm);
     FdPdR = 0.0;
   } // end FtotR - FdPdr > 0.0 if
@@ -1305,8 +1305,8 @@ double qromb(double (*func)(double), double a, double b)
   }
   /* Print bug report and exit */
   fprintf(stderr,"Too many steps in routine QROMB\n");
-  fprintf(stderr,"\t>> rcyl = %"FSYM", z = %"FSYM", z_icm = %"FSYM"\n", rcyl*LengthUnits/Mpc_cm, a/Mpc_cm, b/Mpc_cm);
-  fprintf(stderr,"\t>> ss = %"FSYM", dss = %"FSYM"\n", ss, dss);
+  fprintf(stderr,"\t>> rcyl = %" FSYM", z = %" FSYM", z_icm = %" FSYM"\n", rcyl*LengthUnits/Mpc_cm, a/Mpc_cm, b/Mpc_cm);
+  fprintf(stderr,"\t>> ss = %" FSYM", dss = %" FSYM"\n", ss, dss);
   ENZO_FAIL("FAILED IN QROMB IN GRID_GALAXYSIMULATIONINIALIZE\n");
   return -1.0;
 }

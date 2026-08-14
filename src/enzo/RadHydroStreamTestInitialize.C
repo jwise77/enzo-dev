@@ -55,7 +55,7 @@ int RadHydroStreamTestInitialize(FILE *fptr, FILE *Outfptr,
   // local declarations
   int dim;
 
-  printf("Setting up problem with rank = %"ISYM"\n",MetaData.TopGridRank);
+  printf("Setting up problem with rank = %" ISYM"\n",MetaData.TopGridRank);
 
   // Setup and parameters:
   //  1. ambient density (should be very small) - free parameter
@@ -77,10 +77,10 @@ int RadHydroStreamTestInitialize(FILE *fptr, FILE *Outfptr,
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
 	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "RadHydroDensity = %"FSYM, &RadHydroDensity);
-	ret += sscanf(line, "RadHydroRadEnergy = %"FSYM, &RadHydroRadEnergy);
-	ret += sscanf(line, "RadStreamDim = %"ISYM, &RadStreamDim);
-	ret += sscanf(line, "RadStreamDir = %"ISYM, &RadStreamDir);
+	ret += sscanf(line, "RadHydroDensity = %" FSYM, &RadHydroDensity);
+	ret += sscanf(line, "RadHydroRadEnergy = %" FSYM, &RadHydroRadEnergy);
+	ret += sscanf(line, "RadStreamDim = %" ISYM, &RadStreamDim);
+	ret += sscanf(line, "RadStreamDir = %" ISYM, &RadStreamDir);
       } // end input from parameter file
       fclose(RHfptr);
     }
@@ -96,7 +96,7 @@ int RadHydroStreamTestInitialize(FILE *fptr, FILE *Outfptr,
 
   // ensure that streaming dimension is active for this rank
   if (RadStreamDim >= MetaData.TopGridRank) {
-    fprintf(stderr,"RadStreamDim = %"ISYM" illegal for rank = %"ISYM"!\n",
+    fprintf(stderr,"RadStreamDim = %" ISYM" illegal for rank = %" ISYM"!\n",
 	    RadStreamDim,MetaData.TopGridRank);
     return FAIL;
   }

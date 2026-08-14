@@ -189,7 +189,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
     }
  
   char pid[MAX_TASK_TAG_SIZE];
-  sprintf(pid, "%"TASK_TAG_FORMAT""ISYM, MyProcessorNumber);
+  sprintf(pid, "%" TASK_TAG_FORMAT"" ISYM, MyProcessorNumber);
  
   char *logname = new char[MAX_NAME_LENGTH];
   strcpy(logname, "CSlog.");
@@ -200,7 +200,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
   delete [] logname;
  
   if (io_log) fprintf(log_fptr, "\n");
-  if (io_log) fprintf(log_fptr, "Processor %"ISYM", Target processor %"ISYM"\n", MyProcessorNumber, ProcessorNumber);
+  if (io_log) fprintf(log_fptr, "Processor %" ISYM", Target processor %" ISYM"\n", MyProcessorNumber, ProcessorNumber);
  
   // Determine if the data should be loaded in or not
   // TotalRefinement == 1 indicated the top grid
@@ -217,9 +217,9 @@ int grid::NestedCosmologySimulationInitializeGrid(
   if (ParallelRootGridIO == TRUE && TotalRefinement > 0)
     ReadData = FALSE;
  
-  if (io_log) fprintf(log_fptr, "CSIG ParallelRootGridIO = %"ISYM"\n", ParallelRootGridIO);
-  if (io_log) fprintf(log_fptr, "TotalRefinement = %"ISYM"\n", TotalRefinement);
-  if (io_log) fprintf(log_fptr, "ReadData = %"ISYM"\n", ReadData);
+  if (io_log) fprintf(log_fptr, "CSIG ParallelRootGridIO = %" ISYM"\n", ParallelRootGridIO);
+  if (io_log) fprintf(log_fptr, "TotalRefinement = %" ISYM"\n", TotalRefinement);
+  if (io_log) fprintf(log_fptr, "ReadData = %" ISYM"\n", ReadData);
  
   /* Calculate buffer Offset (same as Grid unless doing ParallelRootGridIO
      (TotalRefinement = -1 if used as a signal that we should really load
@@ -236,27 +236,27 @@ int grid::NestedCosmologySimulationInitializeGrid(
 
     if (CosmologySimulationDensityName != NULL) {
       file_id = H5Fopen(CosmologySimulationDensityName, H5F_ACC_RDONLY, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+      if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
       if( file_id == h5_error){ENZO_FAIL("IO Problem");}
  
       dset_id = H5Dopen(file_id, CosmologySimulationDensityName);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       if( dset_id == h5_error){ENZO_FAIL("IO Problem");}
     } else if (CosmologySimulationParticleVelocityName != NULL) {
       file_id = H5Fopen(CosmologySimulationParticleVelocityName, 
 			H5F_ACC_RDONLY, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+      if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
       if (file_id == h5_error){ENZO_FAIL("IO Problem");}
       dset_id = H5Dopen(file_id, CosmologySimulationParticleVelocityName);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       if (dset_id == h5_error){ENZO_FAIL("IO Problem");}
     } else if (CosmologySimulationParticleVelocityNames[0] != NULL) {
       file_id = H5Fopen(CosmologySimulationParticleVelocityNames[0], 
 			H5F_ACC_RDONLY, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+      if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
       if (file_id == h5_error){ENZO_FAIL("IO Problem");}
       dset_id = H5Dopen(file_id, CosmologySimulationParticleVelocityNames[0]);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
       if (dset_id == h5_error){ENZO_FAIL("IO Problem");}
     } else
       ENZO_FAIL("Cannot find initial density or particle velocity datafile"
@@ -267,27 +267,27 @@ int grid::NestedCosmologySimulationInitializeGrid(
     /* Read Rank, Dimensions, TopGridStart, TopGridEnd and TopGridDims attributes */
  
     ReadAttribute(dset_id, &field_rank_attr, "Rank", log_fptr, io_log);
-    if (io_log) fprintf(log_fptr, "RANK %"ISYM"\n", field_rank_attr);
+    if (io_log) fprintf(log_fptr, "RANK %" ISYM"\n", field_rank_attr);
  
     ReadAttribute(dset_id, field_dims_attr, "Dimensions", log_fptr, io_log);
  
     ReadAttribute(dset_id, TopGridStart, "TopGridStart", log_fptr, io_log);
-    if (io_log) fprintf(log_fptr, "TopGridStart: %"ISYM" %"ISYM" %"ISYM"\n", TopGridStart[0], TopGridStart[1], TopGridStart[2]);
+    if (io_log) fprintf(log_fptr, "TopGridStart: %" ISYM" %" ISYM" %" ISYM"\n", TopGridStart[0], TopGridStart[1], TopGridStart[2]);
 
     ReadAttribute(dset_id, TopGridEnd, "TopGridEnd", log_fptr, io_log);
-    if (io_log) fprintf(log_fptr, "TopGridEnd: %"ISYM" %"ISYM" %"ISYM"\n", TopGridEnd[0], TopGridEnd[1], TopGridEnd[2]);
+    if (io_log) fprintf(log_fptr, "TopGridEnd: %" ISYM" %" ISYM" %" ISYM"\n", TopGridEnd[0], TopGridEnd[1], TopGridEnd[2]);
  
     ReadAttribute(dset_id, TopGridDims, "TopGridDims", log_fptr, io_log);
-    if (io_log) fprintf(log_fptr, "TopGridDims: %"ISYM" %"ISYM" %"ISYM"\n", TopGridDims[0], TopGridDims[1], TopGridDims[2]);
+    if (io_log) fprintf(log_fptr, "TopGridDims: %" ISYM" %" ISYM" %" ISYM"\n", TopGridDims[0], TopGridDims[1], TopGridDims[2]);
 
     /* Close dataset and file. */
  
     h5_status = H5Dclose(dset_id);
-    if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
     h5_status = H5Fclose(file_id);
-    if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
     if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
     for (dim = 0; dim < GridRank; dim++) {
@@ -300,9 +300,9 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	TopGridEnd[dim] -= 1;
     }
  
-    //        fprintf(stderr, "TopGridDims = %"ISYM" %"ISYM" %"ISYM"\n", TopGridDims[0], TopGridDims[1], TopGridDims[2]);
-    //        fprintf(stderr, "TopGridStart: %"ISYM" %"ISYM" %"ISYM"\n", TopGridStart[0], TopGridStart[1], TopGridStart[2]);
-    //        fprintf(stderr, "TopGridEnd: %"ISYM" %"ISYM" %"ISYM"\n", TopGridEnd[0], TopGridEnd[1], TopGridEnd[2]);
+    //        fprintf(stderr, "TopGridDims = %" ISYM" %" ISYM" %" ISYM"\n", TopGridDims[0], TopGridDims[1], TopGridDims[2]);
+    //        fprintf(stderr, "TopGridStart: %" ISYM" %" ISYM" %" ISYM"\n", TopGridStart[0], TopGridStart[1], TopGridStart[2]);
+    //        fprintf(stderr, "TopGridEnd: %" ISYM" %" ISYM" %" ISYM"\n", TopGridEnd[0], TopGridEnd[1], TopGridEnd[2]);
 
     /* Calculate the start of the entire subgrid region in problem units. */
     /* This is now passed in from above rather than calculated here because this
@@ -318,13 +318,13 @@ int grid::NestedCosmologySimulationInitializeGrid(
     }
  
     for (dim = 0; dim < GridRank; dim++)
-      if (io_log) fprintf(log_fptr, "DDim %"ISYM" : LHS %10.4"FSYM"  RHS %10.4"FSYM"\n", dim, DomainLeftEdge[dim], DomainRightEdge[dim]);
+      if (io_log) fprintf(log_fptr, "DDim %" ISYM" : LHS %10.4" FSYM"  RHS %10.4" FSYM"\n", dim, DomainLeftEdge[dim], DomainRightEdge[dim]);
  
     for (dim = 0; dim < GridRank; dim++)
-      if (io_log) fprintf(log_fptr, "SDim %"ISYM" : LHS %10.4"FSYM"  RHS %10.4"FSYM"\n", dim, SubDomainLeftEdge[dim], SubDomainRightEdge[dim]);
+      if (io_log) fprintf(log_fptr, "SDim %" ISYM" : LHS %10.4" FSYM"  RHS %10.4" FSYM"\n", dim, SubDomainLeftEdge[dim], SubDomainRightEdge[dim]);
  
     for (dim = 0; dim < GridRank; dim++)
-      if (io_log) fprintf(log_fptr, "GDim %"ISYM" : LHS %10.4"FSYM"  RHS %10.4"FSYM"\n", dim, GridLeftEdge[dim], GridRightEdge[dim]);
+      if (io_log) fprintf(log_fptr, "GDim %" ISYM" : LHS %10.4" FSYM"  RHS %10.4" FSYM"\n", dim, GridLeftEdge[dim], GridRightEdge[dim]);
  
   } // end: if (ParallelRootGridIO == TRUE && TotalRefinement < 0)
  
@@ -337,7 +337,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
     for (dim = 0; dim < GridRank; dim++)
     Offset[dim] = nint((GridLeftEdge[dim] - DomainLeftEdge[dim])/CellWidth[dim][0]);
   */
-  if (io_log) fprintf(log_fptr, "CSIG Offsets %"ISYM" %"ISYM" %"ISYM"\n", Offset[0], Offset[1], Offset[2]);
+  if (io_log) fprintf(log_fptr, "CSIG Offsets %" ISYM" %" ISYM" %" ISYM"\n", Offset[0], Offset[1], Offset[2]);
  
  
   level = (InitialGridNumber > 0) ? 
@@ -349,7 +349,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
  
   if (CosmologySimulationDensityName != NULL) {
  
-    //  fprintf(stderr, "Create baryon fields for %s on CPU %"ISYM"\n", CosmologySimulationDensityName, MyProcessorNumber);
+    //  fprintf(stderr, "Create baryon fields for %s on CPU %" ISYM"\n", CosmologySimulationDensityName, MyProcessorNumber);
  
     FieldType[NumberOfBaryonFields++] = Density;
 
@@ -421,7 +421,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
     FieldType[FDMDensNum = NumberOfBaryonFields++] = FDMDensity;
   } 
 
-  //  fprintf(stderr, "Total Baryon Fields in VVV: %"ISYM" on CPU %"ISYM"\n", NumberOfBaryonFields, MyProcessorNumber);
+  //  fprintf(stderr, "Total Baryon Fields in VVV: %" ISYM" on CPU %" ISYM"\n", NumberOfBaryonFields, MyProcessorNumber);
  
   // Set the subgrid static flag
  
@@ -458,14 +458,14 @@ int grid::NestedCosmologySimulationInitializeGrid(
       // Allocate space for the fields ONLY if ReadData is TRUE!
      
       if (ReadData == TRUE) {
-	if (io_log) fprintf(log_fptr, "Allocate %"ISYM" fields, %"ISYM" floats per field\n", NumberOfBaryonFields, size);
+	if (io_log) fprintf(log_fptr, "Allocate %" ISYM" fields, %" ISYM" floats per field\n", NumberOfBaryonFields, size);
 	for (dim=0; dim < GridRank; dim++) {
-	  if (io_log) fprintf(log_fptr, "  Field dim %"ISYM" size %"ISYM"\n", dim, GridDimension[dim]);
+	  if (io_log) fprintf(log_fptr, "  Field dim %" ISYM" size %" ISYM"\n", dim, GridDimension[dim]);
 	}
       }
  
       if (ReadData == TRUE && debug)
-	printf("Allocating %"ISYM" baryon fields of size %"ISYM"\n", NumberOfBaryonFields, size);
+	printf("Allocating %" ISYM" baryon fields of size %" ISYM"\n", NumberOfBaryonFields, size);
  
       if (ReadData == TRUE)
         this->AllocateGrids();
@@ -548,7 +548,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	  if (READFILE(CosmologySimulationVelocityNames[dim], GridRank,
 		       GridDimension, GridStartIndex, GridEndIndex, Offset,
 		       BaryonField[vel+dim], &tempbuffer, idim, ndim) == FAIL) {
-	    ENZO_VFAIL("Error reading velocity field %"ISYM".\n", dim)
+	    ENZO_VFAIL("Error reading velocity field %" ISYM".\n", dim)
 	  }
 	} // ENDFOR dim
       } // ENDIF grid velocities
@@ -644,7 +644,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 
 	if (StringKick > 0.) { // gives only baryons a uniform kick velocity in x direction
 	  // models http://adsabs.harvard.edu/abs/2010PhRvD..82h3520T
-	  printf("adding string kick %"FSYM" %"FSYM"\n", StringKick, 
+	  printf("adding string kick %" FSYM" %" FSYM"\n", StringKick, 
 		 StringKick/VelocityUnits*1e5);
 	  int dim0 = vel + StringKickDimension;
 	  int dim1 = vel + (StringKickDimension+1) % GridRank;
@@ -711,7 +711,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
  
     int ii = sizeof(inits_type);
  
-    //  fprintf(stderr, "CSIG size of inits_type is %"ISYM"\n", ii);
+    //  fprintf(stderr, "CSIG size of inits_type is %" ISYM"\n", ii);
  
     switch(ii)
       {
@@ -745,7 +745,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 		 &TempInt, TempIntArray, &NSeg, &LSeg, log_fptr);
  
 	if (TempInt != 1) {
-	  ENZO_VFAIL("Rank (%"ISYM") is not one in file %s.\n", TempInt,
+	  ENZO_VFAIL("Rank (%" ISYM") is not one in file %s.\n", TempInt,
 		  CosmologySimulationParticlePositionName)
 	}
  
@@ -797,7 +797,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	  enzo_layout[idim] = mpi_layout[GridRank-1-idim];
 
 	if (MyProcessorNumber == ROOT_PROCESSOR) {
-	  fprintf(stderr, "ENZO_layout %"ISYM" x %"ISYM" x %"ISYM"\n", enzo_layout[0], enzo_layout[1], enzo_layout[2]);
+	  fprintf(stderr, "ENZO_layout %" ISYM" x %" ISYM" x %" ISYM"\n", enzo_layout[0], enzo_layout[1], enzo_layout[2]);
 	}
 
 	/* This calculates the I,J,K index of the particle region to read in
@@ -812,9 +812,9 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	//    M = ((I*B*CC) + J*CC) + K;
 	M = ((K*B*A) + J*A) + I;
  
-	if (io_log) fprintf(log_fptr, "ABC %"ISYM" %"ISYM" %"ISYM";  IJK %"ISYM" %"ISYM" %"ISYM";  M = %"ISYM"\n", A,B,CC,I,J,K,M);
+	if (io_log) fprintf(log_fptr, "ABC %" ISYM" %" ISYM" %" ISYM";  IJK %" ISYM" %" ISYM" %" ISYM";  M = %" ISYM"\n", A,B,CC,I,J,K,M);
  
-	sprintf(pid, "%"TASK_TAG_FORMAT""ISYM, M);
+	sprintf(pid, "%" TASK_TAG_FORMAT"" ISYM, M);
  
 	printf("PreSortedParticles - ParallelRootGridIO\n");
 
@@ -865,8 +865,8 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	if (lex > 0)
 	  strcat(PType, Extension);
  
-	if (io_log) fprintf(log_fptr, "Proc %"ISYM" reads particle grid %s\n", MyProcessorNumber, PPos);
-	if (io_log) fprintf(log_fptr, "Proc %"ISYM" reads particle grid %s\n", MyProcessorNumber, PVel);
+	if (io_log) fprintf(log_fptr, "Proc %" ISYM" reads particle grid %s\n", MyProcessorNumber, PPos);
+	if (io_log) fprintf(log_fptr, "Proc %" ISYM" reads particle grid %s\n", MyProcessorNumber, PVel);
  
 	if ( fln-ext > 0 )
 	  delete [] Extension;
@@ -874,12 +874,12 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	// Read attributes for parallel particle I/O
  
 	file_id = H5Fopen(PPos, H5F_ACC_RDONLY, H5P_DEFAULT);
-	fprintf(stderr, "H5Fopen %s on proc %"ISYM" status %"ISYM"\n", PPos, MyProcessorNumber, file_id);
-	if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+	fprintf(stderr, "H5Fopen %s on proc %" ISYM" status %" ISYM"\n", PPos, MyProcessorNumber, file_id);
+	if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
 	if( file_id == h5_error){ENZO_FAIL("IO Problem");}
  
 	dset_id = H5Dopen(file_id, PPos);
-	if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+	if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
 	if( dset_id == h5_error ){ENZO_FAIL("IO Problem");}
 
 	ReadAttribute(dset_id, &NumSortedParticles, "NumberOfParticles", log_fptr, io_log);
@@ -887,11 +887,11 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	ReadAttribute(dset_id, &TotParticleCount, "TotalParticleCount", log_fptr, io_log);
  
 	h5_status = H5Dclose(dset_id);
-	if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+	if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
 	if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	h5_status = H5Fclose(file_id);
-	if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", h5_status);
+	if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
 	if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	if ( TotParticleCount != TotalParticleCount )
@@ -903,16 +903,16 @@ int grid::NestedCosmologySimulationInitializeGrid(
  
 	// Allocate space for the particles
  
-	printf("Calling AllocateNewParticles with %"ISYM"\n", NumberOfParticles);
+	printf("Calling AllocateNewParticles with %" ISYM"\n", NumberOfParticles);
  
 	this->AllocateNewParticles(NumberOfParticles);
  
 	// Allocate 32- or 64-bit buffer for ring input
  
-	if (io_log) fprintf(log_fptr, "Allocate %"ISYM" inits_type for RingTemp\n", NumberOfParticles);
+	if (io_log) fprintf(log_fptr, "Allocate %" ISYM" inits_type for RingTemp\n", NumberOfParticles);
 
 	if (debug)
-	  printf("Allocating %"ISYM" (NumberOfParticles)\n",NumberOfParticles);
+	  printf("Allocating %" ISYM" (NumberOfParticles)\n",NumberOfParticles);
  
 	// Allocate buffer for floating point particle data
  
@@ -947,11 +947,11 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	    // 1D memory model
  
 	    mem_dsp_id = H5Screate_simple((Eint32) 1, &mem_count, NULL);
-	    if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %"ISYM"\n", mem_dsp_id);
+	    if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %" ISYM"\n", mem_dsp_id);
 	    if( mem_dsp_id == h5_error ){ENZO_FAIL("IO Problem");}
 	      
 	    h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
-	    if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %"ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %" ISYM"\n", h5_status);
 	    if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    // Data in the file is (1+Rank)D with Npart components per grid point.
@@ -970,42 +970,42 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	      slab_count[1] = 1;
  
 	    file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-	    if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+	    if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
 	    if( file_dsp_id == h5_error ){ENZO_FAIL("IO Problem");}
 	    
 	    h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, slab_offset, slab_stride, slab_count, NULL);
-	    if (io_log) fprintf(log_fptr, "H5Sselect file slab: %"ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
 	    if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    file_id = H5Fopen(PPos, H5F_ACC_RDWR, H5P_DEFAULT);
-	    fprintf(stderr, "H5Fopen %s on proc %"ISYM" status %"ISYM"\n", PPos, MyProcessorNumber, file_id);
-	    if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+	    fprintf(stderr, "H5Fopen %s on proc %" ISYM" status %" ISYM"\n", PPos, MyProcessorNumber, file_id);
+	    if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
 	    if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    dset_id =  H5Dopen(file_id, PPos);
-	    if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+	    if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
 	    if( dset_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    if ( NumSortedParticles > 0 ) {
 	      h5_status = H5Dread(dset_id, type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) RingTemp);
-	      if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
 	    }
  
 	    h5_status = H5Dclose(dset_id);
-	    if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
 	    if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    h5_status = H5Sclose(mem_dsp_id);
-	    if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
 	    if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    h5_status = H5Sclose(file_dsp_id);
-	    if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
 	    if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    h5_status = H5Fclose(file_id);
-	    if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
 	    if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    // Convert to FLOAT
@@ -1047,11 +1047,11 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	      // 1D memory model
  
 	      mem_dsp_id = H5Screate_simple((Eint32) 1, &mem_count, NULL);
-	      if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %"ISYM"\n", mem_dsp_id);
+	      if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %" ISYM"\n", mem_dsp_id);
 	      if( mem_dsp_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
-	      if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      // Data in the file is (1+Rank)D with Npart components per grid point.
@@ -1072,43 +1072,43 @@ int grid::NestedCosmologySimulationInitializeGrid(
 		}
  
 	      file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-	      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+	      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
 	      if( file_dsp_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, slab_offset, slab_stride, slab_count, NULL);
-	      if (io_log) fprintf(log_fptr, "H5Sselect file slab: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      file_id = H5Fopen(PVel, H5F_ACC_RDWR, H5P_DEFAULT);
-	      fprintf(stderr, "H5Fopen %s on proc %"ISYM" status %"ISYM"\n", PVel, MyProcessorNumber, file_id);
-	      if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+	      fprintf(stderr, "H5Fopen %s on proc %" ISYM" status %" ISYM"\n", PVel, MyProcessorNumber, file_id);
+	      if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
 	      if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      dset_id =  H5Dopen(file_id, PVel);
-	      if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+	      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
 	      if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      if ( NumSortedParticles > 0 )
 		{
 		  h5_status = H5Dread(dset_id, type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) RingTemp);
-		  if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+		  if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
 		  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
 		}
  
 	      h5_status = H5Dclose(dset_id);
-	      if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      h5_status = H5Sclose(mem_dsp_id);
-	      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      h5_status = H5Sclose(file_dsp_id);
-	      if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      h5_status = H5Fclose(file_id);
-	      if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      // Convert to float
@@ -1152,11 +1152,11 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	  // 1D memory model
  
 	  mem_dsp_id = H5Screate_simple((Eint32) 1, &mem_count, NULL);
-	  if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %"ISYM"\n", mem_dsp_id);
+	  if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %" ISYM"\n", mem_dsp_id);
 	  if( mem_dsp_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
-	  if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  // Data in the file is (1+Rank)D with Npart components per grid point.
@@ -1177,42 +1177,42 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	    }
  
 	  file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-	  if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+	  if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
 	  if( file_dsp_id == h5_error ){ENZO_FAIL("IO Problem");}
 
 	  h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, slab_offset, slab_stride, slab_count, NULL);
-	  if (io_log) fprintf(log_fptr, "H5Sselect file slab: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  file_id = H5Fopen(PMass, H5F_ACC_RDWR, H5P_DEFAULT);
-	  if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+	  if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
 	  if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  dset_id =  H5Dopen(file_id, PMass);
-	  if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+	  if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
 	  if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  if ( NumSortedParticles > 0 )
 	    {
 	      h5_status = H5Dread(dset_id, type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) RingTemp);
-	      if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
 	    }
 
 	  h5_status = H5Dclose(dset_id);
-	  if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
 
 	  h5_status = H5Sclose(mem_dsp_id);
-	  if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
 
 	  h5_status = H5Sclose(file_dsp_id);
-	  if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
 
 	  h5_status = H5Fclose(file_id);
-	  if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
 
 	  // Convert to float
@@ -1253,11 +1253,11 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	  // 1D memory model
  
 	  mem_dsp_id = H5Screate_simple((Eint32) 1, &mem_count, NULL);
-	  if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %"ISYM"\n", mem_dsp_id);
+	  if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %" ISYM"\n", mem_dsp_id);
 	  if( mem_dsp_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
-	  if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  // Data in the file is (1+Rank)D with Npart components per grid point.
@@ -1278,42 +1278,42 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	    }
  
 	  file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-	  if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %"ISYM"\n", file_dsp_id);
+	  if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
 	  if( file_dsp_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, slab_offset, slab_stride, slab_count, NULL);
-	  if (io_log) fprintf(log_fptr, "H5Sselect file slab: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  file_id = H5Fopen(PType, H5F_ACC_RDWR, H5P_DEFAULT);
-	  if (io_log) fprintf(log_fptr, "H5Fopen id: %"ISYM"\n", file_id);
+	  if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
 	  if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  dset_id =  H5Dopen(file_id, PType);
-	  if (io_log) fprintf(log_fptr, "H5Dopen id: %"ISYM"\n", dset_id);
+	  if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
 	  if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  if ( NumSortedParticles > 0 )
 	    {
 	      h5_status = H5Dread(dset_id, int_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) IntRingTemp);
-	      if (io_log) fprintf(log_fptr, "H5Dread: %"ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
 	    }
  
 	  h5_status = H5Dclose(dset_id);
-	  if (io_log) fprintf(log_fptr, "H5Dclose: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  h5_status = H5Sclose(mem_dsp_id);
-	  if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  h5_status = H5Sclose(file_dsp_id);
-	  if (io_log) fprintf(log_fptr, "H5Sclose: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  h5_status = H5Fclose(file_id);
-	  if (io_log) fprintf(log_fptr, "H5Fclose: %"ISYM"\n", h5_status);
+	  if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
 	  if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	  // Convert to float
@@ -1400,12 +1400,12 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	for (dim = 0; dim < GridRank; dim++) {
 	  if (READFILE(CosmologySimulationParticlePositionName, 1, Dim,
 		       Start, End, Offset, NULL, &tempbuffer, dim, 3) == FAIL) {
-	    ENZO_VFAIL("Error reading particle position %"ISYM".\n", dim)
+	    ENZO_VFAIL("Error reading particle position %" ISYM".\n", dim)
 	  }
 	  for (i = 0; i < NumberOfParticles; i++)
 	    ParticlePosition[dim][i] = FLOAT(tempbuffer[i]);
  
-	  if (io_log) fprintf(log_fptr, "De-Allocate [] tempbuffer for dim = %"ISYM"\n", dim);
+	  if (io_log) fprintf(log_fptr, "De-Allocate [] tempbuffer for dim = %" ISYM"\n", dim);
  
 	  delete [] tempbuffer;
 	}
@@ -1416,7 +1416,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	  for (dim = 0; dim < GridRank; dim++) {
 	    if (READFILE(CosmologySimulationParticleVelocityName, 1, Dim,
 			 Start, End, Offset, ParticleVelocity[dim], &tempbuffer, dim, 3) == FAIL) {
-	      ENZO_VFAIL("Error reading particle velocity %"ISYM".\n", dim)
+	      ENZO_VFAIL("Error reading particle velocity %" ISYM".\n", dim)
 	    }
 	    //        fcol(ParticleVelocity[dim], NumberOfParticles, 10, log_fptr);
 	  }
@@ -1484,7 +1484,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	    fprintf(stderr,"you are not manually setting particle mass.  You want\n");
 	    fprintf(stderr,"to double-check that particle masses are being \n");
 	    fprintf(stderr,"calculated correctly!\n");
-	    fprintf(stderr,"Your particle mass is being calculated as:  %"GSYM"\n",
+	    fprintf(stderr,"Your particle mass is being calculated as:  %" GSYM"\n",
 		    UniformParticleMass);
 	    fprintf(stderr,"\n*********************************************\n\n\n");
 	  }
@@ -1494,7 +1494,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	  UniformParticleMass *= CosmologySimulationManualParticleMassRatio;
 
 	  if (debug) {
-	    printf("Particle mass ratio is: %"GSYM" so particle mass is %"GSYM"\n",
+	    printf("Particle mass ratio is: %" GSYM" so particle mass is %" GSYM"\n",
 		   CosmologySimulationManualParticleMassRatio,
 		   UniformParticleMass);
 	    fflush(stdout);
@@ -1505,7 +1505,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	// Set all particle masses to this value
  
 	if (debug) 
-	  printf("NestedCosmologySimulationInitializeGrid: particle mass = %"GSYM"\n",
+	  printf("NestedCosmologySimulationInitializeGrid: particle mass = %" GSYM"\n",
 		 UniformParticleMass);
  
 	for (i = 0; i < NumberOfParticles; i++)

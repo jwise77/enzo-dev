@@ -18,7 +18,7 @@ int FindCube(char *cubename)
        {
          if( strcmp(cubename, CubeDumps[i]) == 0 )
          {
-            //  fprintf(stderr, "Found %s, element %"ISYM"\n", CubeDumps[i], i);
+            //  fprintf(stderr, "Found %s, element %" ISYM"\n", CubeDumps[i], i);
             return i;
          }
        }

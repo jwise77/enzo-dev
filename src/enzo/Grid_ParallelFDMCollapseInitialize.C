@@ -88,7 +88,7 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
 #endif
 
   char pid[MAX_TASK_TAG_SIZE];
-  sprintf(pid, "%"TASK_TAG_FORMAT""ISYM, MyProcessorNumber);
+  sprintf(pid, "%" TASK_TAG_FORMAT"" ISYM, MyProcessorNumber);
  
   char *logname = new char[MAX_NAME_LENGTH];
   strcpy(logname, "TSlog.");
@@ -97,10 +97,10 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
   if (io_log) {
     log_fptr = fopen(logname, "a");
     fprintf(log_fptr, "\n");
-    fprintf(log_fptr, "TSIG ParallelRootGridIO = %"ISYM"\n", ParallelRootGridIO);
-    fprintf(log_fptr, "Processor %"ISYM", Target processor %"ISYM"\n",
+    fprintf(log_fptr, "TSIG ParallelRootGridIO = %" ISYM"\n", ParallelRootGridIO);
+    fprintf(log_fptr, "Processor %" ISYM", Target processor %" ISYM"\n",
         MyProcessorNumber, ProcessorNumber);
-    fprintf(log_fptr, "TotalRefinement = %"ISYM"\n", TotalRefinement);
+    fprintf(log_fptr, "TotalRefinement = %" ISYM"\n", TotalRefinement);
   }
 
   /* Determine if the data should be loaded in or not. */
@@ -110,7 +110,7 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
   if (ParallelRootGridIO == TRUE && TotalRefinement == 1)
     ReadData = FALSE;
  
-  if (io_log) fprintf(log_fptr, "ReadData = %"ISYM"\n", ReadData);
+  if (io_log) fprintf(log_fptr, "ReadData = %" ISYM"\n", ReadData);
 
     /* Calculate buffer Offset (same as Grid unless doing ParallelRootGridIO
      (TotalRefinement = -1 if used as a signal that we should really load

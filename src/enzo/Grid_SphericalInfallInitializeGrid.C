@@ -84,7 +84,7 @@ int grid::SphericalInfallInitializeGrid(float InitialPerturbation,
  
     if (POW(nint(POW(NumberOfParticles, 1.0/float(GridRank))),
 	    float(GridRank)) != NumberOfParticles) {
-      ENZO_VFAIL("NumberOfParticles must be N^%"ISYM".\n", GridRank)
+      ENZO_VFAIL("NumberOfParticles must be N^%" ISYM".\n", GridRank)
     }
  
     /* Set ParticleDimension to be the number of particle per dim. */
@@ -124,9 +124,9 @@ int grid::SphericalInfallInitializeGrid(float InitialPerturbation,
       DelCenter[dim] = 0.; // <- TA make it uniform
     }
     if (debug) {
-      printf("SphericalInfallInitialize: DelCenter = %"FSYM" %"FSYM" %"FSYM"\n",
+      printf("SphericalInfallInitialize: DelCenter = %" FSYM" %" FSYM" %" FSYM"\n",
 	     DelCenter[0], DelCenter[1], DelCenter[2]);
-      printf("SphericalInfallInitialize: ParticleCenter = %"ISYM" %"ISYM" %"ISYM"\n",
+      printf("SphericalInfallInitialize: ParticleCenter = %" ISYM" %" ISYM" %" ISYM"\n",
 	     ParticleCenter[0], ParticleCenter[1], ParticleCenter[2]);
     }
  
@@ -222,7 +222,7 @@ int grid::SphericalInfallInitializeGrid(float InitialPerturbation,
  
     float Center = 0.5*(DomainRightEdge[0] - DomainLeftEdge[0]) +
       DomainLeftEdge[0] + 0.5*CellWidth[0][0];
-    printf("SphericalInfall: Center = %"GSYM"\n", Center);
+    printf("SphericalInfall: Center = %" GSYM"\n", Center);
     n = 0;
 #if 0
     float xpos, ypos, zpos, radius;

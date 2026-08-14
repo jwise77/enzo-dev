@@ -58,7 +58,7 @@ int HydroSweepX(float **Prim, float **Flux3D, int GridDimension[],
   }
 
   int extra = (ReconstructionMethod == PPM);
-  //    fprintf(stderr, "extra %"ISYM"\n", extra);
+  //    fprintf(stderr, "extra %" ISYM"\n", extra);
   for (int field = 0; field < NEQ_HYDRO-idual; field++) {
     priml[field] = new float[Xactivesize+1+extra];
     primr[field] = new float[Xactivesize+1+extra];

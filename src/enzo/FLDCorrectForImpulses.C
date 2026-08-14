@@ -56,7 +56,7 @@ int FLDCorrectForImpulses(int field, LevelHierarchyEntry *LevelArray[],
     sigma = 3.71e-18;
     break;
   default:
-    if (debug) fprintf(stderr, "radiation field = %"ISYM"\n", field);
+    if (debug) fprintf(stderr, "radiation field = %" ISYM"\n", field);
     ENZO_FAIL("Free-streaming radiation field not recognized.");
     break;
   }

@@ -83,25 +83,25 @@ int AGNDiskInitialize(FILE *fptr, FILE *Outfptr,
 
     /* read parameters */
 
-    ret += sscanf(line, "DiskType = %"ISYM,
+    ret += sscanf(line, "DiskType = %" ISYM,
 		  &DiskType);
-    ret += sscanf(line, "RefineAtStart = %"ISYM, 
+    ret += sscanf(line, "RefineAtStart = %" ISYM, 
 		  &RefineAtStart);
-    ret += sscanf(line, "BlackHoleMass = %"FSYM,
+    ret += sscanf(line, "BlackHoleMass = %" FSYM,
 		  &BlackHoleMass);
-    ret += sscanf(line, "DiskType = %"ISYM, 
+    ret += sscanf(line, "DiskType = %" ISYM, 
 		  &DiskType);
-    ret += sscanf(line, "BlackHoleType = %"ISYM, 
+    ret += sscanf(line, "BlackHoleType = %" ISYM, 
 		  &BlackHoleType);
-    ret += sscanf(line, "UseGas = %"ISYM, 
+    ret += sscanf(line, "UseGas = %" ISYM, 
 		  &UseGas);
-    ret += sscanf(line, "DiskDensity = %"FSYM, 
+    ret += sscanf(line, "DiskDensity = %" FSYM, 
 		  &DiskDensity);
-    ret += sscanf(line, "DiskTemperature = %"FSYM, 
+    ret += sscanf(line, "DiskTemperature = %" FSYM, 
 		  &DiskTemperature);
-    ret += sscanf(line, "DiskRadius = %"PSYM, 
+    ret += sscanf(line, "DiskRadius = %" PSYM, 
 		  &DiskRadius);
-    ret += sscanf(line, "DiskHeight = %"PSYM, 
+    ret += sscanf(line, "DiskHeight = %" PSYM, 
 		  &DiskHeight);
 
   } // end input from parameter file
@@ -113,12 +113,12 @@ int AGNDiskInitialize(FILE *fptr, FILE *Outfptr,
   float MagneticUnits = sqrt(DensityUnits*4.0*M_PI)*VelocityUnits;
   float PressureUnits = DensityUnits*pow(VelocityUnits,2);
 
-  printf("denu=%"GSYM", velu=%"GSYM", timeu=%"GSYM", tempu=%"GSYM", lenu=%"GSYM", bu=%"GSYM", presu=%"GSYM"\n",
+  printf("denu=%" GSYM", velu=%" GSYM", timeu=%" GSYM", tempu=%" GSYM", lenu=%" GSYM", bu=%" GSYM", presu=%" GSYM"\n",
 	 DensityUnits, VelocityUnits, TimeUnits, TemperatureUnits, LengthUnits, 
 	 MagneticUnits, PressureUnits);
 
-  printf("timeu=%"GSYM"(year)\n", TimeUnits/3.1558e7);
-  //printf("temp=%"GSYM", radius=%"GSYM", height=%"GSYM", density=%"GSYM"\n",
+  printf("timeu=%" GSYM"(year)\n", TimeUnits/3.1558e7);
+  //printf("temp=%" GSYM", radius=%" GSYM", height=%" GSYM", density=%" GSYM"\n",
   // DiskTemperature[0], DiskRadius[0], DiskHeight[0], DiskDensity[0]);
 
   if (UsePhysicalUnit) {

@@ -75,7 +75,7 @@ int grid::CopyZonesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION])
 
     delta=L*AngularVelocity*VelocityGradient;
   
-    //printf("L: %"GSYM" Delta: %"GSYM" %"GSYM" (%"GSYM" %"GSYM")\n", L, delta, delta, AngularVelocity, VelocityGradient);
+    //printf("L: %" GSYM" Delta: %" GSYM" %" GSYM" (%" GSYM" %" GSYM")\n", L, delta, delta, AngularVelocity, VelocityGradient);
 
     if (fabs(EdgeOffset[ShearingBoundaryDirection]-FLOAT(1.0)*L)<=
 	CellWidth[ShearingBoundaryDirection][0]*0.1) 
@@ -232,7 +232,7 @@ int grid::CopyZonesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION])
      the grid. */
  
   if (traceMPI) 
-    fprintf(tracePtr, "CopyZones SendRegion from %"ISYM" to %"ISYM"\n", 
+    fprintf(tracePtr, "CopyZones SendRegion from %" ISYM" to %" ISYM"\n", 
 	    ProcessorNumber, OtherGrid->ProcessorNumber);
  
   

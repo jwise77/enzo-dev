@@ -74,7 +74,7 @@ int rk4(float *repsi, float *impsi,
   kep2 = min(ke+2, kn-1);*/
 
   /* Compute the laplacian term */
- // fprintf(stderr, " ksm1,kep1 %"ISYM", %"ISYM"\n", ks, ke);
+ // fprintf(stderr, " ksm1,kep1 %" ISYM", %" ISYM"\n", ks, ke);
 
   // 1st step
 

@@ -33,7 +33,7 @@ int grid::MoveAllParticles(int NumberOfGrids, grid* FromGrid[])
 {
 
   if (NumberOfGrids < 1) {
-    ENZO_VFAIL("NumberOfGrids(%"ISYM") must be > 0.\n", NumberOfGrids)
+    ENZO_VFAIL("NumberOfGrids(%" ISYM") must be > 0.\n", NumberOfGrids)
   }
  
   /* Determine total number of local particles. */
@@ -59,8 +59,8 @@ int grid::MoveAllParticles(int NumberOfGrids, grid* FromGrid[])
   /* Debugging info. */
 
   if (debug1)
-    printf("MoveAllParticles: %"ISYM",%"ISYM
-           " (before: ThisGrid = %"ISYM",%"ISYM").\n",
+    printf("MoveAllParticles: %" ISYM",%" ISYM
+           " (before: ThisGrid = %" ISYM",%" ISYM").\n",
            TotalNumberOfParticles, TotalNumberOfActiveParticles,
            NumberOfParticles, NumberOfActiveParticles);
  

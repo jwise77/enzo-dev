@@ -89,7 +89,7 @@ int start;
   /* Debugging info. */
  
   if (debug)
-    printf("MoveSubgridParticles: %"ISYM" particles (after: Top = %"ISYM", Sub = %"ISYM").\n",
+    printf("MoveSubgridParticles: %" ISYM" particles (after: Top = %" ISYM", Sub = %" ISYM").\n",
 	   TotalNumberOfParticles, FromNumberOfParticles,
 	   TotalNumberOfParticles + NumberOfParticles);
  
@@ -149,7 +149,7 @@ int start;
   /* Copy FromGrid's particles to new space (starting at NumberOfParticles). */
  
   start = *Counter;
-  printf("Counter %"ISYM"\n",start);
+  printf("Counter %" ISYM"\n",start);
  
   j = 0;
   for (i = 0; i < FromGrid->NumberOfParticles; i++)
@@ -190,7 +190,7 @@ int start;
  
     }
  
-  printf("Counter %"ISYM"\n",start);
+  printf("Counter %" ISYM"\n",start);
   *Counter = start;
  
   /* Delete this grid's particles (now copied). */

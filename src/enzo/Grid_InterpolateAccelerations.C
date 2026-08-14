@@ -84,7 +84,7 @@ int grid::InterpolateAccelerations(grid *FromGrid)
     size *= GridDimension[dim];
  
     if (GridOffset[dim] < 0) {
-      ENZO_VFAIL("GridOffset[%"ISYM"] = %"GSYM" < 0.\n", dim, GridOffset[dim])
+      ENZO_VFAIL("GridOffset[%" ISYM"] = %" GSYM" < 0.\n", dim, GridOffset[dim])
     }
   }
  

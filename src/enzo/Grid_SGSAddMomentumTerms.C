@@ -41,7 +41,7 @@
  */
 void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
   if (debug1)
-    printf("[%"ISYM"] grid::SGS_AddMom_nonlinear_kinetic start\n",MyProcessorNumber);
+    printf("[%" ISYM"] grid::SGS_AddMom_nonlinear_kinetic start\n",MyProcessorNumber);
 
   int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
   int B1Num, B2Num, B3Num, PhiNum;
@@ -109,7 +109,7 @@ void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
  */
 void grid::SGS_AddMom_nonlinear_kinetic_scaled(float **Tau) {
   if (debug1)
-    printf("[%"ISYM"] grid::SGS_AddMom_nonlinear_kinetic_scaled start\n",MyProcessorNumber);
+    printf("[%" ISYM"] grid::SGS_AddMom_nonlinear_kinetic_scaled start\n",MyProcessorNumber);
 
   int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
   int B1Num, B2Num, B3Num, PhiNum;
@@ -198,7 +198,7 @@ void grid::SGS_AddMom_nonlinear_kinetic_scaled(float **Tau) {
  */
 void grid::SGS_AddMom_nonliner_magnetic(float **Tau) {
   if (debug1)
-    printf("[%"ISYM"] grid::SGS_AddMom_nonliner_magnetic start\n",MyProcessorNumber);
+    printf("[%" ISYM"] grid::SGS_AddMom_nonliner_magnetic start\n",MyProcessorNumber);
 
   int size = 1;
   int StartIndex[MAX_DIMENSION];
@@ -264,7 +264,7 @@ void grid::SGS_AddMom_nonliner_magnetic(float **Tau) {
  */
 void grid::SGS_AddMom_eddy_viscosity_scaled(float **Tau) {
   if (debug1)
-    printf("[%"ISYM"] grid::SGS_AddMom_eddy_viscosity_scaled start\n",MyProcessorNumber);
+    printf("[%" ISYM"] grid::SGS_AddMom_eddy_viscosity_scaled start\n",MyProcessorNumber);
 
   int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
   int B1Num, B2Num, B3Num, PhiNum;
@@ -352,7 +352,7 @@ void grid::SGS_AddMom_eddy_viscosity_scaled(float **Tau) {
  */
 void grid::SGS_AddMom_scale_similarity_kinetic(float **Tau) {
   if (debug1)
-    printf("[%"ISYM"] grid::SGS_AddMom_scale_similarity_kinetic start\n",MyProcessorNumber);
+    printf("[%" ISYM"] grid::SGS_AddMom_scale_similarity_kinetic start\n",MyProcessorNumber);
 
   int size = 1;
   int StartIndex[MAX_DIMENSION];
@@ -402,7 +402,7 @@ void grid::SGS_AddMom_scale_similarity_kinetic(float **Tau) {
  */
 void grid::SGS_AddMom_scale_similarity_magnetic(float **Tau) {
   if (debug1)
-    printf("[%"ISYM"] grid::SGS_AddMom_scale_similarity_magnetic start\n",MyProcessorNumber);
+    printf("[%" ISYM"] grid::SGS_AddMom_scale_similarity_magnetic start\n",MyProcessorNumber);
 
   int size = 1;
   int StartIndex[MAX_DIMENSION];
@@ -458,7 +458,7 @@ int grid::SGS_AddMomentumTerms(float **dU) {
     return SUCCESS;
 
   if (debug1)
-    printf("[%"ISYM"] grid::SGS_AddMomentumTerms start\n",MyProcessorNumber);
+    printf("[%" ISYM"] grid::SGS_AddMomentumTerms start\n",MyProcessorNumber);
 
   int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
   int B1Num, B2Num, B3Num, PhiNum;

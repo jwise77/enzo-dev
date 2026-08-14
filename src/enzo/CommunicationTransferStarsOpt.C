@@ -141,7 +141,7 @@ int CommunicationTransferStars(grid *GridPointer[], int NumberOfGrids,
 #ifdef DEBUG_CTP
   if (MyProcessorNumber == ROOT_PROCESSOR) 
   for (j = 0; j < NumberOfGrids; j++)
-    fprintf(stderr, "Pa(%"ISYM") CTP grid[%"ISYM"] = %"ISYM"\n",
+    fprintf(stderr, "Pa(%" ISYM") CTP grid[%" ISYM"] = %" ISYM"\n",
 	    MyProcessorNumber, j, GridPointer[j]->ReturnNumberOfStars());
 #endif
  
@@ -221,7 +221,7 @@ int CommunicationTransferStars(grid *GridPointer[], int NumberOfGrids,
 
   CommunicationSumValues(&TotalNumberToMove, 1);
   if (debug)
-    printf("CommunicationTransferStars: moved = %"ISYM"\n",
+    printf("CommunicationTransferStars: moved = %" ISYM"\n",
   	   TotalNumberToMove);
 
   return SUCCESS;

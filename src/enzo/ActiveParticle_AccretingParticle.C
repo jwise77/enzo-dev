@@ -151,9 +151,9 @@ int ActiveParticleType_AccretingParticle::EvaluateFormation
 	}
 	if (DensityThreshold == huge_number)
 	  ENZO_VFAIL("Error in Accreting Particles: DensityThreshold = huge_number! \n"
-		     "JeansDensity = %"GOUTSYM" \n"
-		     "data.DensityUnits = %"GOUTSYM" \n"
-		     "CellTemperature = %"GOUTSYM" \n",
+		     "JeansDensity = %" GOUTSYM" \n"
+		     "data.DensityUnits = %" GOUTSYM" \n"
+		     "CellTemperature = %" GOUTSYM" \n",
 		     JeansDensity, data.DensityUnits, CellTemperature);
 
 	if (density[index] <= DensityThreshold)

@@ -103,7 +103,7 @@ int InexactNewtonSolver::Solve(NonlinearProblemABC *prob, EnzoVector *x)
     
       if (debug) {
 	printf("  -----------------------------------------------------------------------\n");	
-	printf("   Newton iteration %"ISYM", ||f|| = %g (tol = %g)\n",
+	printf("   Newton iteration %" ISYM", ||f|| = %g (tol = %g)\n",
 	       Niters,fnormtest,Ntol);
 	printf("  -----------------------------------------------------------------------\n");	
       }

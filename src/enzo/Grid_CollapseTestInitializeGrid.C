@@ -210,13 +210,13 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
     NFWSigma[i] = sqrt(kboltz * NFWTemp[i] / (mu * mh));  // in cm/s
     float mean_overdensity = 3.0*SphereDensity[sphere] / (x1*x1*x1) *
       (log(1.0+x1) - x1/(x1+1.0));
-    fprintf(fptr, "%"ISYM" %"GOUTSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM"\n", i, NFWRadius[i], 
+    fprintf(fptr, "%" ISYM" %" GOUTSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM"\n", i, NFWRadius[i], 
 	    NFWDensity[i], NFWMass[i], NFWPressure[i], NFWTemp[i], NFWSigma[i],
 	    mean_overdensity);
     if (mean_overdensity > 200 && m200 == 0)
       m200 = NFWMass[i];
   }
-  fprintf(fptr, "#m200 = %"GSYM"\n", m200);
+  fprintf(fptr, "#m200 = %" GSYM"\n", m200);
   fclose(fptr);
 
   /* Loop over the set-up twice, once to count the particles, the second
@@ -319,7 +319,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
       case 1:
 	SphereMass = (4*pi/3.0)*POW((SphereRadius[sphere]*LengthUnits), 3) *
 	  (SphereDensity[sphere]*DensityUnits);
-	printf("mass = %"GSYM", lunit = %"GSYM", dunit = %"GSYM", rho = %"GSYM", r = %"GSYM"\n",
+	printf("mass = %" GSYM", lunit = %" GSYM", dunit = %" GSYM", rho = %" GSYM", r = %" GSYM"\n",
 	       SphereMass, LengthUnits, DensityUnits, SphereDensity[sphere],
 	       SphereRadius[sphere]);
 	break;
@@ -360,7 +360,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 	break;
 
       case 7:
-	printf("PointSourceGravityConstant[P%"ISYM"][0] = %"GSYM"\n", MyProcessorNumber,
+	printf("PointSourceGravityConstant[P%" ISYM"][0] = %" GSYM"\n", MyProcessorNumber,
 	       PointSourceGravityConstant);
 	if (level == 0)
 	  SphereMass = PointSourceGravityConstant * SolarMass;
@@ -370,7 +370,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 	// Convert to code units (accel = vel^2 = 1 at dr = 1)
 	PointSourceGravityConstant = GravConst * SphereMass / 
 	  (LengthUnits*VelocityUnits*VelocityUnits);
-	printf("PointSourceGravityConstant[P%"ISYM"][1] = %"GSYM"\n", MyProcessorNumber,
+	printf("PointSourceGravityConstant[P%" ISYM"][1] = %" GSYM"\n", MyProcessorNumber,
 	       PointSourceGravityConstant);
 	break;
 
@@ -386,7 +386,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 
       // Circumbinary BH accretion disk (Lippai et al. 2008)
       case 9:
-	printf("PointSourceGravityConstant[P%"ISYM"][0] = %"GSYM"\n", MyProcessorNumber,
+	printf("PointSourceGravityConstant[P%" ISYM"][0] = %" GSYM"\n", MyProcessorNumber,
 	       PointSourceGravityConstant);
 	if (level == 0)
 	  SphereMass = PointSourceGravityConstant * SolarMass;
@@ -396,7 +396,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 	// Convert to code units (accel = vel^2 = 1 at dr = 1)
 	PointSourceGravityConstant = GravConst * SphereMass / 
 	  (LengthUnits*VelocityUnits*VelocityUnits);
-	printf("PointSourceGravityConstant[P%"ISYM"][1] = %"GSYM"\n", MyProcessorNumber,
+	printf("PointSourceGravityConstant[P%" ISYM"][1] = %" GSYM"\n", MyProcessorNumber,
 	       PointSourceGravityConstant);
 
 	BHMass = SphereMass / SolarMass;  // in solar masses
@@ -411,18 +411,18 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 	ThickenTransitionRadius = 1.9e3 * SchwarzschildRadius * 
 	  POW((BHMass/1e6), 2.0/21) / LengthUnits;
 	CavityRadius /= LengthUnits;
-	printf("cgs: %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM"\n", SchwarzschildRadius, 
+	printf("cgs: %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM"\n", SchwarzschildRadius, 
 	       CavityRadius*LengthUnits, InnerDensity*DensityUnits, 
 	       InnerTemperature, ThickenTransitionRadius*LengthUnits,
 	       InnerScaleHeight*LengthUnits);
-	printf("code: %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM" %"GSYM"\n", SchwarzschildRadius/LengthUnits, 
+	printf("code: %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM" %" GSYM"\n", SchwarzschildRadius/LengthUnits, 
 	       CavityRadius, InnerDensity, InnerTemperature, 
 	       ThickenTransitionRadius, InnerScaleHeight);
 	break;
 
       } // ENDSWITCH SphereType
       
-      printf("\nSphere Mass (M_sun): %"FSYM"\n", SphereMass/SolarMass);
+      printf("\nSphere Mass (M_sun): %" FSYM"\n", SphereMass/SolarMass);
       VelocityKep = sqrt(GravConst*SphereMass/(SphereRadius[sphere]*(LengthUnits)));
 
       if (SphereFracKeplerianRot[sphere] > 0) {
@@ -432,15 +432,15 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
       } else
 	SphereRotationalPeriod[sphere] = 0.0;
 
-      printf("\nKeplerian Rotation Period (s): %"GSYM"\n", SphereRotationalPeriod[sphere] 
+      printf("\nKeplerian Rotation Period (s): %" GSYM"\n", SphereRotationalPeriod[sphere] 
 	     * SphereFracKeplerianRot[sphere]*TimeUnits);
-      printf("\nSphere Rotation Period (s): %"GSYM"\n", SphereRotationalPeriod[sphere]
+      printf("\nSphere Rotation Period (s): %" GSYM"\n", SphereRotationalPeriod[sphere]
 	     * TimeUnits);
 
       // Calculate speed of sound for this sphere
       VelocitySound[sphere] = sqrt((SphereTemperature[sphere] * Gamma * kboltz) / 
 				   (mu * mh)) / VelocityUnits;
-      printf("\nVelocitySound (cm s^-1): %"GSYM"\n", VelocitySound[sphere] * 
+      printf("\nVelocitySound (cm s^-1): %" GSYM"\n", VelocitySound[sphere] * 
 	     VelocityUnits);
 
     } // ENDFOR sphere
@@ -619,7 +619,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 		  temperature = SphereTemperature[sphere] - 
 		    GravConst * SphereMass * (mh/kboltz) * 
 		    (1.0/rcyl - 1.0/sqrt(rcyl*rcyl + zpos*zpos)) / LengthUnits;
-		  //printf("r=%"FSYM", z=%"FSYM", T=%"GSYM"\n", r,zpos,temperature);
+		  //printf("r=%" FSYM", z=%" FSYM", T=%" GSYM"\n", r,zpos,temperature);
 		} else
 		  dens1 = InitialDensity;
 	      }
@@ -647,7 +647,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 		    POW(rcyl/ThickenTransitionRadius, 1.05);
 		ScaleHeight = max(ScaleHeight, 2*CellWidth[0][0]);
 
-//		printf("r=%"FSYM", z=%"FSYM", h=%"GSYM", rho=%"GSYM", T=%"GSYM"\n", 
+//		printf("r=%" FSYM", z=%" FSYM", h=%" GSYM", rho=%" GSYM", T=%" GSYM"\n", 
 //		       rcyl,zpos,ScaleHeight,MidplaneDensity,MidplaneTemperature);
 		if (fabs(zpos) < ScaleHeight && 
 		    rcyl > SphereCoreRadius[sphere] &&
@@ -656,7 +656,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 		  temperature = MidplaneTemperature;
 //		    GravConst * SphereMass * (mh/kboltz) * 
 //		    (1.0/rcyl - 1.0/sqrt(rcyl*rcyl + zpos*zpos)) / LengthUnits;
-//		  printf("r=%"FSYM", z=%"FSYM", h=%"GSYM", rho=%"GSYM", T=%"GSYM"\n", 
+//		  printf("r=%" FSYM", z=%" FSYM", h=%" GSYM", rho=%" GSYM", T=%" GSYM"\n", 
 //			 rcyl, zpos, ScaleHeight, dens1, temperature);
 		} else {
 		  dens1 = InitialDensity;
@@ -799,7 +799,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 		    Velocity[dim] = (1-weight)*Velocity[dim] +
 		      weight*DiskVelocity[dim];
 
-		// printf("%"ISYM" %"ISYM" %"ISYM": rho=%"GSYM", w=%"GSYM", T=%"GSYM", V=%"GSYM" %"GSYM" %"GSYM"\n", i, j, k,
+		// printf("%" ISYM" %" ISYM" %" ISYM": rho=%" GSYM", w=%" GSYM", T=%" GSYM", V=%" GSYM" %" GSYM" %" GSYM"\n", i, j, k,
 		//	  density, weight, temperature, Velocity[0], Velocity[1],
 		//	  Velocity[2]);
 
@@ -1026,7 +1026,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
   } // end loop SetupLoopCount
 
   if (SphereUseParticles && debug)
-    printf("CollapseTestInitialize: NumberOfParticles = %"ISYM"\n", 
+    printf("CollapseTestInitialize: NumberOfParticles = %" ISYM"\n", 
 	   NumberOfParticles);
 
   return SUCCESS;
@@ -1205,7 +1205,7 @@ int ComputeRadialVelocity(float density, double mass, float r_init,
       Vr[i] = radius_vr[i] / r_init * vmax;
       exterior_rho[i] = density;
     }
-//    printf("%"ISYM": r = %"GSYM" pc, v_r = %"GSYM" km/s, rho = %"GSYM"\n", 
+//    printf("%" ISYM": r = %" GSYM" pc, v_r = %" GSYM" km/s, rho = %" GSYM"\n", 
 //	   i, radius_vr[i]*LengthUnits/pc, Vr[i]*VelocityUnits/1e5,
 //	   exterior_rho[i]);
   }

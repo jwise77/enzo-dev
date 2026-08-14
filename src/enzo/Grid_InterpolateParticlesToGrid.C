@@ -92,7 +92,7 @@ int grid::InterpolateParticlesToGrid(FOFData *D)
   case 1: NumberOfFields = 1; break;  // density
   case 2: NumberOfFields = 5; break;  // + rms velocity + 3-velocity
   default: 
-    fprintf(stdout, "Unrecognized value for OutputSmoothedDarkMatter = %"ISYM"\n",
+    fprintf(stdout, "Unrecognized value for OutputSmoothedDarkMatter = %" ISYM"\n",
 	    OutputSmoothedDarkMatter);
     fprintf(stdout, "Setting to 1.  Outputting smoothed density only.\n");
     OutputSmoothedDarkMatter = 1;

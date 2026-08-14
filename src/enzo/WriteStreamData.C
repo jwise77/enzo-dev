@@ -504,7 +504,7 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
       if ((fptr = fopen("densestPoint.dat", "a")) == NULL)
 	ENZO_FAIL("Error in opening file densestPoint.dat\n");
 
-    fprintf(fptr, "%"GOUTSYM" %15.6g %"GOUTSYM" %"GOUTSYM" %"GOUTSYM" %"GOUTSYM" %"GOUTSYM" %"GOUTSYM" %"GOUTSYM" %"GOUTSYM" %"GOUTSYM"\n",
+    fprintf(fptr, "%" GOUTSYM" %15.6g %" GOUTSYM" %" GOUTSYM" %" GOUTSYM" %" GOUTSYM" %" GOUTSYM" %" GOUTSYM" %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
 	    MetaData->Time, MaxDensity, pos[0], pos[1], pos[2],
 	    lbbox[0], lbbox[1], lbbox[2], rbbox[0], rbbox[1], rbbox[2]);
     fclose(fptr);

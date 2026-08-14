@@ -276,22 +276,22 @@ float grid::ComputePhotonTimestep()
 
 //  if (debug || NumberOfProcessors > 1) {
 //  if (debug) {
-//    printf("ComputeTimeStep = %"FSYM" (", dt);
+//    printf("ComputeTimeStep = %" FSYM" (", dt);
 //    if (NumberOfBaryonFields > 0)
-//      printf("Bar = %"GSYM" ", dtBaryons);
+//      printf("Bar = %" GSYM" ", dtBaryons);
 //    if (HydroMethod == Zeus_Hydro)
-//      printf("Vis = %"FSYM" ", dtViscous);
+//      printf("Vis = %" FSYM" ", dtViscous);
 //    if (ComovingCoordinates)
-//      printf("Exp = %"FSYM" ", dtExpansion);
+//      printf("Exp = %" FSYM" ", dtExpansion);
 //    if (dtAcceleration != huge_number)
-//      printf("Acc = %"FSYM" ", dtAcceleration);
+//      printf("Acc = %" FSYM" ", dtAcceleration);
 //    if (NumberOfParticles)
-//      printf("Part = %"FSYM" ", dtParticles);
+//      printf("Part = %" FSYM" ", dtParticles);
 //#ifdef TRANSFER
 //    if (RadiationPressure && RadiativeTransfer && dtRadPressure < 100)
-//      printf("Rad = %"GSYM" ", dtRadPressure);
+//      printf("Rad = %" GSYM" ", dtRadPressure);
 //    if (dtSafetyVelocity != huge_number)
-//      printf("Saf = %"GSYM" ", dtSafetyVelocity); 
+//      printf("Saf = %" GSYM" ", dtSafetyVelocity); 
 //#endif /* TRANSFER */
 //    printf(")\n");
 //  }

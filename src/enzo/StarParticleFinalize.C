@@ -110,7 +110,7 @@ int StarParticleFinalize(HierarchyEntry *Grids[], TopGridData *MetaData,
     CommunicationReduceValues(&TotalMass, 1, MPI_SUM);
 #endif
     if (debug)
-      fprintf(stdout, "SinkParticle: Time = %"GOUTSYM", TotalMass = %"GSYM"\n", 
+      fprintf(stdout, "SinkParticle: Time = %" GOUTSYM", TotalMass = %" GSYM"\n", 
 	      TimeNow, TotalMass);
   }
 

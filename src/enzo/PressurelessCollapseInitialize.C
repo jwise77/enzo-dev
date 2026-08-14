@@ -70,11 +70,11 @@ int PressurelessCollapseInitialize(FILE *fptr, FILE *Outfptr,
  
     /* read parameters */
  
-    ret += sscanf(line, "PressurelessCollapseDirection = %"ISYM,
+    ret += sscanf(line, "PressurelessCollapseDirection = %" ISYM,
 		  &PressurelessCollapseDirection);
-    ret += sscanf(line, "PressurelessCollapseInitialDensity = %"FSYM,
+    ret += sscanf(line, "PressurelessCollapseInitialDensity = %" FSYM,
 		  &PressurelessCollapseInitialDensity);
-    ret += sscanf(line, "PressurelessCollapseNumberOfCells = %"ISYM,
+    ret += sscanf(line, "PressurelessCollapseNumberOfCells = %" ISYM,
 		  &PressurelessCollapseNumberOfCells);
  
     /* if the line is suspicious, issue a warning */
@@ -112,9 +112,9 @@ int PressurelessCollapseInitialize(FILE *fptr, FILE *Outfptr,
  
   if (MyProcessorNumber == ROOT_PROCESSOR) {
 
-    fprintf(Outfptr, "PressurelessCollapseDirection      = %"ISYM"\n",
+    fprintf(Outfptr, "PressurelessCollapseDirection      = %" ISYM"\n",
 	    PressurelessCollapseDirection);
-    fprintf(Outfptr, "PressurelessCollapseInitialDensity = %"FSYM"\n\n",
+    fprintf(Outfptr, "PressurelessCollapseInitialDensity = %" FSYM"\n\n",
 	    PressurelessCollapseInitialDensity);
   }
  

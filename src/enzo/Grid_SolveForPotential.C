@@ -132,9 +132,9 @@ int grid::SolveForPotential(int level, FLOAT PotentialTime)
 			GravitySmooth) == FAIL) {
       ENZO_FAIL("Error in MultigridDriver.\n");
     }
-    printf("%"ISYM" %"GSYM"\n", iteration, norm/mean);
+    printf("%" ISYM" %" GSYM"\n", iteration, norm/mean);
     if (iteration++ > MAX_ITERATION) {
-      ENZO_VFAIL("exceeding iteration count (%"ISYM")\n", iteration)
+      ENZO_VFAIL("exceeding iteration count (%" ISYM")\n", iteration)
     }
   }
 #endif /* UNUSED */

@@ -270,7 +270,7 @@ int grid::ProjectSolutionToParentGrid(grid &ParentGrid)
 
       if(MHD_ProjectB == TRUE){
 
-	fprintf(stderr, "PROJB my proc %"ISYM" parent proc %"ISYM"\n", MyProcessorNumber, ParentGrid.ReturnProcessorNumber());
+	fprintf(stderr, "PROJB my proc %" ISYM" parent proc %" ISYM"\n", MyProcessorNumber, ParentGrid.ReturnProcessorNumber());
 	int MHDDim[3][3], MHDParentDim[3][3], MHDParentSize[3]={1,1,1};
 	
 	for(field=0;field<3;field++){

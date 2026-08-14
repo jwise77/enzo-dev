@@ -205,7 +205,7 @@ int ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData,
   strcat(memorymapname, MemoryMapSuffix);
 
 #ifdef USE_MPI
-  sprintf(pid, "%"TASK_TAG_FORMAT""ISYM, MyProcessorNumber);
+  sprintf(pid, "%" TASK_TAG_FORMAT"" ISYM, MyProcessorNumber);
 #endif
  
   /* Read the memory map */

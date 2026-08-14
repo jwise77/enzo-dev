@@ -42,9 +42,9 @@ int ReadUnits(FILE *fptr)
     int ret = 0;
     /* read parameters */
     ret += sscanf(line, "MassUnits = %lf", &GlobalMassUnits);
-    ret += sscanf(line, "DensityUnits = %"FSYM, &GlobalDensityUnits);
-    ret += sscanf(line, "LengthUnits = %"FSYM, &GlobalLengthUnits);
-    ret += sscanf(line, "TimeUnits = %"FSYM, &GlobalTimeUnits);
+    ret += sscanf(line, "DensityUnits = %" FSYM, &GlobalDensityUnits);
+    ret += sscanf(line, "LengthUnits = %" FSYM, &GlobalLengthUnits);
+    ret += sscanf(line, "TimeUnits = %" FSYM, &GlobalTimeUnits);
   }
 
   /* If both mass and density units specified, use only mass and print warning */

@@ -39,8 +39,8 @@ int grid::DebugActiveParticles(int level)
 
   if (ActiveParticles.size() != NumberOfActiveParticles) {
     printf("Active particle count mismatch!");
-    printf("NumberOfActiveParticles = %"GOUTSYM"\n", NumberOfActiveParticles);
-    printf("ActiveParticles.size() = %"GOUTSYM"\n", ActiveParticles.size());
+    printf("NumberOfActiveParticles = %" GOUTSYM"\n", NumberOfActiveParticles);
+    printf("ActiveParticles.size() = %" GOUTSYM"\n", ActiveParticles.size());
     ENZO_FAIL("")
   }
 
@@ -49,10 +49,10 @@ int grid::DebugActiveParticles(int level)
     inside = this->PointInGrid(pos);
     if (inside == FALSE) {
       printf("Active particle outside grid!  level %d, grid %d\n", level, this->ID);
-      printf("\t pos       = %"GOUTSYM " %"GOUTSYM " %"GOUTSYM "\n", pos[0], pos[1], pos[2]);
-      printf("\t left edge = %"GOUTSYM " %"GOUTSYM " %"GOUTSYM "\n",
+      printf("\t pos       = %" GOUTSYM " %" GOUTSYM " %" GOUTSYM "\n", pos[0], pos[1], pos[2]);
+      printf("\t left edge = %" GOUTSYM " %" GOUTSYM " %" GOUTSYM "\n",
 	     GridLeftEdge[0], GridLeftEdge[1], GridLeftEdge[2]);
-      printf("\t right edge = %"GOUTSYM " %"GOUTSYM " %"GOUTSYM "\n",
+      printf("\t right edge = %" GOUTSYM " %" GOUTSYM " %" GOUTSYM "\n",
 	     GridRightEdge[0], GridRightEdge[1], GridRightEdge[2]);
       ENZO_FAIL("");
     }

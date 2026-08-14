@@ -186,7 +186,7 @@ int PrepareDensityField(LevelHierarchyEntry *LevelArray[],
   /*   This is now split into two section. */
  
   if (traceMPI) 
-    fprintf(tracePtr, "PrepareDensityField: P(%"ISYM"): PGMF1 (send)\n", 
+    fprintf(tracePtr, "PrepareDensityField: P(%" ISYM"): PGMF1 (send)\n", 
 	    MyProcessorNumber);
  
   TIME_MSG("PrepareGravitatingMassField1");
@@ -223,7 +223,7 @@ int PrepareDensityField(LevelHierarchyEntry *LevelArray[],
 #endif
 
   if (traceMPI) 
-    fprintf(tracePtr, "PrepareDensityField: P(%"ISYM"): PGMF2 (receive)\n", 
+    fprintf(tracePtr, "PrepareDensityField: P(%" ISYM"): PGMF2 (receive)\n", 
 	    MyProcessorNumber);
  
   TIME_MSG("PrepareGravitatingMassField2");
@@ -312,7 +312,7 @@ int PrepareDensityField(LevelHierarchyEntry *LevelArray[],
   //  if (level > 0)
  
   if (traceMPI) 
-    fprintf(tracePtr, "PrepareDensityField: P(%"ISYM"): COMF1 (send)\n", 
+    fprintf(tracePtr, "PrepareDensityField: P(%" ISYM"): COMF1 (send)\n", 
 	    MyProcessorNumber);
  
   TIME_MSG("CopyOverlappingMassField");
@@ -393,7 +393,7 @@ int PrepareDensityField(LevelHierarchyEntry *LevelArray[],
     LCAPERF_START("ComputePotentialFieldLevelZero");
     TIMER_START("ComputePotentialFieldLevelZero");
     if (traceMPI) 
-      fprintf(tracePtr, "PrepareDensityField: P(%"ISYM"): CPFLZero "
+      fprintf(tracePtr, "PrepareDensityField: P(%" ISYM"): CPFLZero "
 	      "(send-receive)\n", MyProcessorNumber);
 #ifdef FAST_SIB
     ComputePotentialFieldLevelZero(MetaData, SiblingList,
@@ -446,7 +446,7 @@ int PrepareDensityField(LevelHierarchyEntry *LevelArray[],
 #ifdef FAST_SIB
 	for (grid1 = StartGrid; grid1 < EndGrid; grid1++) {
  
-	  //fprintf(stderr, "#SIBSend on cpu %"ISYM": %"ISYM"\n", MyProcessorNumber, SiblingList[grid1].NumberOfSiblings);
+	  //fprintf(stderr, "#SIBSend on cpu %" ISYM": %" ISYM"\n", MyProcessorNumber, SiblingList[grid1].NumberOfSiblings);
  
 	  // for (grid2 = SiblingList[grid1].NumberOfSiblings-1; grid2 = 0; grid2--)
 	  for (grid2 = 0; grid2 < SiblingList[grid1].NumberOfSiblings; grid2++)
@@ -487,7 +487,7 @@ int PrepareDensityField(LevelHierarchyEntry *LevelArray[],
 #ifdef FAST_SIB
 	for (grid1 = StartGrid; grid1 < EndGrid; grid1++) {
  
-	  //fprintf(stderr, "#SIBRecv on cpu %"ISYM": %"ISYM"\n", MyProcessorNumber, SiblingList[grid1].NumberOfSiblings);
+	  //fprintf(stderr, "#SIBRecv on cpu %" ISYM": %" ISYM"\n", MyProcessorNumber, SiblingList[grid1].NumberOfSiblings);
  
 	  // for (grid2 = SiblingList[grid1].NumberOfSiblings-1; grid2 = 0; grid2--)
 	  for (grid2 = 0; grid2 < SiblingList[grid1].NumberOfSiblings; grid2++)

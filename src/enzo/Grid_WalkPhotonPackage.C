@@ -144,7 +144,7 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
   pix2vec_nest64((int64_t) (1 << (*PP)->level), (*PP)->ipix, dir_vec);
 
   if (DEBUG) 
-    fprintf(stderr,"grid::WalkPhotonPackage: %"GSYM" %"GSYM" %"GSYM". \n", 
+    fprintf(stderr,"grid::WalkPhotonPackage: %" GSYM" %" GSYM" %" GSYM". \n", 
 	    dir_vec[0], dir_vec[1], dir_vec[2]);
 
   /***********************************************************************/
@@ -451,7 +451,7 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
     dr = radius - oldr;
 
     if (dr < 0) {
-      printf("dr < 0:   %"GSYM" %"GSYM" %"GSYM"\n", dr, min_dr, oldr);
+      printf("dr < 0:   %" GSYM" %" GSYM" %" GSYM"\n", dr, min_dr, oldr);
       (*PP)->Photons = -1;
       DeleteMe = TRUE;
       return SUCCESS;
@@ -490,7 +490,7 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
     }  // if (splitting condition)
     
     if (DEBUG > 1) 
-      fprintf(stdout, "%x %"ISYM" %"ISYM" %"ISYM" %"GSYM" %"GSYM"\t|\n",
+      fprintf(stdout, "%x %" ISYM" %" ISYM" %" ISYM" %" GSYM" %" GSYM"\t|\n",
 	      (*PP), g[0], g[1], g[2], (*PP)->Radius, dr);
 
     index = cindex;
@@ -510,7 +510,7 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
       ddr *= fraction;
       cdt *= fraction;
       if (DEBUG > 1) 
-	fprintf(stderr, "PAUSE: PP->Photons: %"GSYM"  PP->Radius: %"GSYM"\n",
+	fprintf(stderr, "PAUSE: PP->Photons: %" GSYM"  PP->Radius: %" GSYM"\n",
 		(*PP)->Photons, (*PP)->Radius);
       PauseMe = TRUE;
     }
@@ -804,7 +804,7 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
 
       break;
     default:
-      printf("Photon type = %d, radius = %g, pos = %"FSYM" %"FSYM" %"FSYM"\n",
+      printf("Photon type = %d, radius = %g, pos = %" FSYM" %" FSYM" %" FSYM"\n",
 	     type, radius, r[0], r[1], r[2]);
       ENZO_FAIL("Bad photon type.");
 
@@ -852,11 +852,11 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
     if ((*PP)->Photons < MinimumPhotonFlux*(solid_angle*Area_inv) || 
 	(*PP)->ColumnDensity > tau_delete) {
       if (DEBUG > 1) {
-	fprintf(stderr, "PP-Photons: %"GSYM" (%"GSYM"), PP->Radius: %"GSYM
-		"PP->CurrentTime: %"FSYM"\n",
+	fprintf(stderr, "PP-Photons: %" GSYM" (%" GSYM"), PP->Radius: %" GSYM
+		"PP->CurrentTime: %" FSYM"\n",
 		(*PP)->Photons, MinimumPhotonFlux*solid_angle*Area_inv, 
 		(*PP)->Radius, (*PP)->CurrentTime);
-	fprintf(stderr, "\tdP: %"GSYM"\tddr: %"GSYM"\t cdt: %"GSYM"\t tau: %"GSYM"\n", 
+	fprintf(stderr, "\tdP: %" GSYM"\tddr: %" GSYM"\t cdt: %" GSYM"\t tau: %" GSYM"\n", 
 		dP, ddr, cdt, tau);
       }
       (*PP)->Photons = -1;

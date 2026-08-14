@@ -207,7 +207,7 @@ int grid::InterpolateFieldValues(grid *ParentGrid
       if (ParentStartIndex[dim] < 0 ||
           ParentStartIndex[dim]+ParentTempDim[dim] >
           ParentGrid->GridDimension[dim]) {
-        ENZO_VFAIL("Parent grid not big enough for interpolation!  ParentStartIndex[%"ISYM"] = %"ISYM"  ParentTempDim = %"ISYM"\n", dim, ParentStartIndex[dim], ParentTempDim[dim])
+        ENZO_VFAIL("Parent grid not big enough for interpolation!  ParentStartIndex[%" ISYM"] = %" ISYM"  ParentTempDim = %" ISYM"\n", dim, ParentStartIndex[dim], ParentTempDim[dim])
       }
  
       /* Compute the dimensions of the current grid temporary field. */
@@ -320,11 +320,11 @@ int grid::InterpolateFieldValues(grid *ParentGrid
     if (interp_error) {
       printf("P%d: Error interpolating density.\n"
 		 "ParentGrid ID = %d\n"
-		 "\t LeftEdge  = %"PSYM" %"PSYM" %"PSYM"\n"
-		 "\t RightEdge = %"PSYM" %"PSYM" %"PSYM"\n"
+		 "\t LeftEdge  = %" PSYM" %" PSYM" %" PSYM"\n"
+		 "\t RightEdge = %" PSYM" %" PSYM" %" PSYM"\n"
 		 "ThisGrid ID = %d\n"
-		 "\t LeftEdge  = %"PSYM" %"PSYM" %"PSYM"\n"
-		 "\t RightEdge = %"PSYM" %"PSYM" %"PSYM"\n",
+		 "\t LeftEdge  = %" PSYM" %" PSYM" %" PSYM"\n"
+		 "\t RightEdge = %" PSYM" %" PSYM" %" PSYM"\n",
 		 MyProcessorNumber, ParentGrid->ID, 
 		 ParentGrid->GridLeftEdge[0], ParentGrid->GridLeftEdge[1], 
 		 ParentGrid->GridLeftEdge[2], ParentGrid->GridRightEdge[0], 
@@ -370,11 +370,11 @@ int grid::InterpolateFieldValues(grid *ParentGrid
 	if (interp_error) {
 	  printf("P%d: Error interpolating field %d (%s).\n"
 		     "ParentGrid ID = %d\n"
-		     "\t LeftEdge  = %"PSYM" %"PSYM" %"PSYM"\n"
-		     "\t RightEdge = %"PSYM" %"PSYM" %"PSYM"\n"
+		     "\t LeftEdge  = %" PSYM" %" PSYM" %" PSYM"\n"
+		     "\t RightEdge = %" PSYM" %" PSYM" %" PSYM"\n"
 		     "ThisGrid ID = %d\n"
-		     "\t LeftEdge  = %"PSYM" %"PSYM" %"PSYM"\n"
-		     "\t RightEdge = %"PSYM" %"PSYM" %"PSYM"\n",
+		     "\t LeftEdge  = %" PSYM" %" PSYM" %" PSYM"\n"
+		     "\t RightEdge = %" PSYM" %" PSYM" %" PSYM"\n",
 		     MyProcessorNumber, field, DataLabel[field], ParentGrid->ID, 
 		     ParentGrid->GridLeftEdge[0], ParentGrid->GridLeftEdge[1], 
 		     ParentGrid->GridLeftEdge[2], ParentGrid->GridRightEdge[0], 

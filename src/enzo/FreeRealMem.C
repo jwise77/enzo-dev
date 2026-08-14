@@ -61,7 +61,7 @@ Eint64 FreeRealMem( char *node )
 #endif
 
   def_mem = def_mem * 1024.0;
-  fprintf(stderr,"Default node memory on node %s [%d] is %"ISYM" MBytes\n", node, node_number, def_mem);
+  fprintf(stderr,"Default node memory on node %s [%d] is %" ISYM" MBytes\n", node, node_number, def_mem);
 
   ok = 0;
 
@@ -168,7 +168,7 @@ Eint64 FreeRealMem( char *node )
 #endif
 
   def_mem = def_mem * 1024.0;
-  fprintf(stderr,"Default node memory on node %s [%d] is %"ISYM" MBytes\n", node, node_number, def_mem);
+  fprintf(stderr,"Default node memory on node %s [%d] is %" ISYM" MBytes\n", node, node_number, def_mem);
 
   freemem = def_mem;
 

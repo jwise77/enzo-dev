@@ -72,7 +72,7 @@ int CommunicationShareStars(int *NumberToMove, star_data* &SendList,
  
     if (FirstTimeCalled) {
       Count = sizeof(star_data);
-      //  fprintf(stderr, "Size of StarMoveList %"ISYM"\n", Count);
+      //  fprintf(stderr, "Size of StarMoveList %" ISYM"\n", Count);
       stat = MPI_Type_contiguous(Count, DataTypeByte, &MPI_StarMoveList);
       stat |= MPI_Type_commit(&MPI_StarMoveList);
       if (stat != MPI_SUCCESS) ENZO_FAIL("");

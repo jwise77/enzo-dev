@@ -50,7 +50,7 @@ int Star::DeleteCopyInGridGlobal(LevelHierarchyEntry *LevelArray[])
   if (changedGrid == INT_UNDEFINED) {
     if (debug)
       fprintf(stdout, "Star::DeleteCopyInGridGlobal: WARNING -- "
-	      "star %"ISYM" not found...\n", this->Identifier);
+	      "star %" ISYM" not found...\n", this->Identifier);
     delete [] Grids;
     return SUCCESS;
   }

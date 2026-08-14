@@ -115,7 +115,7 @@ int SetStellarMassThreshold(FLOAT time)
   }
   
   if(debug){
-    printf("SetStellarMassThreshold:  StarMakerMinimumMass set to %"FSYM" at time %"PSYM" (redshift %"PSYM")\n",
+    printf("SetStellarMassThreshold:  StarMakerMinimumMass set to %" FSYM" at time %" PSYM" (redshift %" PSYM")\n",
 	   StarMakerMinimumMass, time, redshift);
   }
   

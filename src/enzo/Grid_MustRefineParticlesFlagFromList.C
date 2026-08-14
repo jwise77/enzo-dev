@@ -55,7 +55,7 @@ int grid::MustRefineParticlesFlagFromList()
   i = 0;
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL)
     if (line[0] != '#')
-      if (sscanf(line, "%"ISYM, &ParticleNumberList[i]) == 1)
+      if (sscanf(line, "%" ISYM, &ParticleNumberList[i]) == 1)
         i++;
 
   fclose(fptr);

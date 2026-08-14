@@ -229,7 +229,7 @@ int grid::SchrodingerSolver( int nhy )
 	xh = r0*cos(sqrt(worb2)*Time);
 	yh = r0*sin(sqrt(worb2)*Time);
 	if (MyProcessorNumber == ROOT_PROCESSOR) {
-    fprintf(stderr, "orbital freq w, host position x,y =%"GSYM", %"GSYM",%"GSYM"\n", worb2, xh, yh);
+    fprintf(stderr, "orbital freq w, host position x,y =%" GSYM", %" GSYM",%" GSYM"\n", worb2, xh, yh);
 	}
 
     for (k = 0; k < GridDimension[2]; k++) {
@@ -277,9 +277,9 @@ int grid::SchrodingerSolver( int nhy )
   if ( rk4(repsi, impsi, 
           GridDimension[0], GridDimension[1], GridDimension[2], GridRank, 
           dtFixed, CellWidthTemp[0], CellWidthTemp[1], CellWidthTemp[2], hmcoef) == FAIL){
-    fprintf(stderr, "P(%"ISYM"): Error in rk4 on step %"ISYM" (dt=%"GSYM")\n", MyProcessorNumber,
+    fprintf(stderr, "P(%" ISYM"): Error in rk4 on step %" ISYM" (dt=%" GSYM")\n", MyProcessorNumber,
       nhy, dtFixed);
-    fprintf(stderr, "  grid dims = %"ISYM" %"ISYM" %"ISYM"\n", GridDimension[0], GridDimension[1], GridDimension[2]);
+    fprintf(stderr, "  grid dims = %" ISYM" %" ISYM" %" ISYM"\n", GridDimension[0], GridDimension[1], GridDimension[2]);
     ENZO_FAIL("Error in 4th runge kutta advance\n");
   }
 
@@ -288,9 +288,9 @@ int grid::SchrodingerSolver( int nhy )
   /*if ( sv2(nhy,repsi, impsi, 
           GridDimension[0], GridDimension[1], GridDimension[2], GridRank, 
           dtFixed, CellWidthTemp[0], CellWidthTemp[1], CellWidthTemp[2], hmcoef) == FAIL){
-    fprintf(stderr, "P(%"ISYM"): Error in rk4 on step %"ISYM" (dt=%"GSYM")\n", MyProcessorNumber,
+    fprintf(stderr, "P(%" ISYM"): Error in rk4 on step %" ISYM" (dt=%" GSYM")\n", MyProcessorNumber,
       nhy, dtFixed);
-    fprintf(stderr, "  grid dims = %"ISYM" %"ISYM" %"ISYM"\n", GridDimension[0], GridDimension[1], GridDimension[2]);
+    fprintf(stderr, "  grid dims = %" ISYM" %" ISYM" %" ISYM"\n", GridDimension[0], GridDimension[1], GridDimension[2]);
     ENZO_FAIL("Error in 4th runge kutta advance\n");
     }*/
 

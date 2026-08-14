@@ -73,16 +73,16 @@ int MHDDecayingRandomFieldInitialize(FILE *fptr, FILE *Outfptr,
 
     /* read parameters */
 
-    ret += sscanf(line, "RefineAtStart = %"ISYM, &RefineAtStart);
-    ret += sscanf(line, "MHDDRF-Density = %"FSYM, &rho_medium);
-    ret += sscanf(line, "MHDDRF-SoundVelocity = %"FSYM, &cs);
-    ret += sscanf(line, "MHDDRF-InitialBfield = %"FSYM, &Bnaught);
-    ret += sscanf(line, "MHDDRF-RandomSeed = %"ISYM, &RandomSeed);
+    ret += sscanf(line, "RefineAtStart = %" ISYM, &RefineAtStart);
+    ret += sscanf(line, "MHDDRF-Density = %" FSYM, &rho_medium);
+    ret += sscanf(line, "MHDDRF-SoundVelocity = %" FSYM, &cs);
+    ret += sscanf(line, "MHDDRF-InitialBfield = %" FSYM, &Bnaught);
+    ret += sscanf(line, "MHDDRF-RandomSeed = %" ISYM, &RandomSeed);
     // parameters that specify the spectrum. See Turbulence_Generator.C for definitions.
-    ret += sscanf(line, "MHDDRF-RMSAlfvenSpeed = %"FSYM, &mach);
-    ret += sscanf(line, "MHDDRF-MinimumWaveNumber = %"FSYM, &Skmin);
-    ret += sscanf(line, "MHDDRF-MaximumWaveNumber = %"FSYM, &Skmax);
-    ret += sscanf(line, "MHDDRF-SpectralIndex = %"FSYM, &Sindex);
+    ret += sscanf(line, "MHDDRF-RMSAlfvenSpeed = %" FSYM, &mach);
+    ret += sscanf(line, "MHDDRF-MinimumWaveNumber = %" FSYM, &Skmin);
+    ret += sscanf(line, "MHDDRF-MaximumWaveNumber = %" FSYM, &Skmax);
+    ret += sscanf(line, "MHDDRF-SpectralIndex = %" FSYM, &Sindex);
 
   } // end input from parameter file
 
@@ -93,8 +93,8 @@ int MHDDecayingRandomFieldInitialize(FILE *fptr, FILE *Outfptr,
 
   /* Convert to code units */
   
-  if (MyProcessorNumber == ROOT_PROCESSOR)  printf(" RAW:  rho_medium = %"GSYM",cs = %"GSYM", v_alfven_RMS = %"GSYM", Bnaught = %"GSYM" \n",rho_medium,cs,mach,Bnaught);
-   if (MyProcessorNumber == ROOT_PROCESSOR) printf(" Magnetic spectrum: n = %"GSYM",kmin = %"GSYM", kmax = %"GSYM" \n", Sindex, Skmin, Skmax);
+  if (MyProcessorNumber == ROOT_PROCESSOR)  printf(" RAW:  rho_medium = %" GSYM",cs = %" GSYM", v_alfven_RMS = %" GSYM", Bnaught = %" GSYM" \n",rho_medium,cs,mach,Bnaught);
+   if (MyProcessorNumber == ROOT_PROCESSOR) printf(" Magnetic spectrum: n = %" GSYM",kmin = %" GSYM", kmax = %" GSYM" \n", Sindex, Skmin, Skmax);
 
   float rhou = 1.0, lenu = 1.0, tempu = 1.0, tu = 1.0, velu = 1.0, 
     presu = 1.0, bfieldu = 1.0;
@@ -107,9 +107,9 @@ int MHDDecayingRandomFieldInitialize(FILE *fptr, FILE *Outfptr,
   cs /= velu;
   Bnaught /= bfieldu;
 
- if (MyProcessorNumber == ROOT_PROCESSOR)  printf("rhou=%"GSYM",velu=%"GSYM",lenu=%"GSYM",tu=%"GSYM",presu=%"GSYM",bfieldu=%"GSYM", tempu=%"GSYM"\n", 
+ if (MyProcessorNumber == ROOT_PROCESSOR)  printf("rhou=%" GSYM",velu=%" GSYM",lenu=%" GSYM",tu=%" GSYM",presu=%" GSYM",bfieldu=%" GSYM", tempu=%" GSYM"\n", 
 	 rhou, velu,lenu,tu,presu,bfieldu, tempu);
-  if (MyProcessorNumber == ROOT_PROCESSOR) printf("rho_medium=%"GSYM", cs=%"GSYM", Bnaught=%"GSYM"\n", rho_medium, cs, Bnaught);
+  if (MyProcessorNumber == ROOT_PROCESSOR) printf("rho_medium=%" GSYM", cs=%" GSYM", Bnaught=%" GSYM"\n", rho_medium, cs, Bnaught);
 
 
   HierarchyEntry *CurrentGrid;
@@ -140,14 +140,14 @@ int MHDDecayingRandomFieldInitialize(FILE *fptr, FILE *Outfptr,
 	return FAIL;
       }
       CurrentGrid = CurrentGrid->NextGridThisLevel;
-      fprintf(stderr, "v_rms, Volume: %"GSYM"  %"GSYM"\n", v_rms, Volume);
+      fprintf(stderr, "v_rms, Volume: %" GSYM"  %" GSYM"\n", v_rms, Volume);
     }
     
 #ifdef USE_MPI
     CommunicationAllReduceValues(&v_rms, 1, MPI_SUM);
     CommunicationAllReduceValues(&Volume, 1, MPI_SUM);
 #endif
-     if (MyProcessorNumber == ROOT_PROCESSOR) fprintf(stderr, "v_alfven_rms, Volume: %"GSYM"  %"GSYM"\n", v_rms, Volume);
+     if (MyProcessorNumber == ROOT_PROCESSOR) fprintf(stderr, "v_alfven_rms, Volume: %" GSYM"  %" GSYM"\n", v_rms, Volume);
     // Carry out the Normalization
 
     // Normalize Magnetic Fields now
@@ -188,7 +188,7 @@ int MHDDecayingRandomFieldInitialize(FILE *fptr, FILE *Outfptr,
        and re-initialize the level after it is created. */
 
     for (level = 0; level < MaximumRefinementLevel; level++) {
-      printf("In level %"ISYM"\n", level);
+      printf("In level %" ISYM"\n", level);
       if (RebuildHierarchy(&MetaData, LevelArray, level) == FAIL) {
 	fprintf(stderr, "Error in RebuildHierarchy.\n");
 	return FAIL;

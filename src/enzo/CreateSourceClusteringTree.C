@@ -182,16 +182,16 @@ int CreateSourceClusteringTree(int nShine, SuperSourceData *SourceList,
     qsort(SourceList, nShine, sizeof(SuperSourceData), compare_z);
     break;
   default:
-    ENZO_VFAIL("sort_dim = %"ISYM" ?!  This should never be greater than 2.\n",
+    ENZO_VFAIL("sort_dim = %" ISYM" ?!  This should never be greater than 2.\n",
 	    sort_dim)
   } // ENDSWITCH
   loop_count++;
 
-//  printf("%"ISYM" (%"ISYM", %"ISYM") :: %"FSYM" %"FSYM" %"FSYM"\n", 
+//  printf("%" ISYM" (%" ISYM", %" ISYM") :: %" FSYM" %" FSYM" %" FSYM"\n", 
 //	 loop_count-1, sort_dim, nShine,
 //	 center[0], center[1], center[2]);
 //  for (i = 0; i < nShine; i++)
-//    printf("==> %"FSYM" %"FSYM" %"FSYM"\n", SourceList[i].Position[0], 
+//    printf("==> %" FSYM" %" FSYM" %" FSYM"\n", SourceList[i].Position[0], 
 //	   SourceList[i].Position[1], SourceList[i].Position[2]);
 
   FLOAT leftdiff, rightdiff;
@@ -303,9 +303,9 @@ void PrintSourceClusteringTree(SuperSourceEntry *leaf, FILE *fptr)
     return;
 
   fprintf(fptr, 
-	 "Source clustering[P%"ISYM"]: leaf %"ISYM", SRC = %x, parent = %x,\n"
+	 "Source clustering[P%" ISYM"]: leaf %" ISYM", SRC = %x, parent = %x,\n"
 	 "                        children = %x %x\n"
-	 "                        pos = %"FSYM" %"FSYM" %"FSYM", cradius = %"GSYM"\n",
+	 "                        pos = %" FSYM" %" FSYM" %" FSYM", cradius = %" GSYM"\n",
 	 MyProcessorNumber, leaf->LeafID, leaf, leaf->ParentSource,
 	 leaf->ChildSource[0], leaf->ChildSource[1], leaf->Position[0],
 	 leaf->Position[1], leaf->Position[2], leaf->ClusteringRadius);

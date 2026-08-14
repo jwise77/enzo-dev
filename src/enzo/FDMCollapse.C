@@ -75,9 +75,9 @@ int FDMCollapseInitialize(FILE *fptr, FILE *Outfptr,
 
     /* read parameters */
 
-    ret += sscanf(line, "CollapseTestUseParticles = %"ISYM, 
+    ret += sscanf(line, "CollapseTestUseParticles = %" ISYM, 
 		  &CollapseTestUseParticles);
-    ret += sscanf(line, "CollapseTestParticleMeanDensity = %"FSYM,
+    ret += sscanf(line, "CollapseTestParticleMeanDensity = %" FSYM,
 		  &CollapseTestParticleMeanDensity);
       
     /* if the line is suspicious, issue a warning */

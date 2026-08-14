@@ -140,13 +140,13 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
     }
   }
 
-  /*printf("star_maker8: nsinks = %"ISYM"\n", nsinks);
+  /*printf("star_maker8: nsinks = %" ISYM"\n", nsinks);
 
   for (n=0; n<nsinks; n++){
-    printf("sink index = %"ISYM"\n", sink_index[n]);
+    printf("sink index = %" ISYM"\n", sink_index[n]);
     printf("sink mass = %g\n", dmold[n]);
-    printf("sink position = %"FSYM",%"FSYM", %"FSYM" \n", xpold[n], ypold[n],  zpold[n] );
-    printf("sink velocity = %"FSYM",%"FSYM", %"FSYM" \n", upold[n], vpold[n],  wpold[n] );
+    printf("sink position = %" FSYM",%" FSYM", %" FSYM" \n", xpold[n], ypold[n],  zpold[n] );
+    printf("sink velocity = %" FSYM",%" FSYM", %" FSYM" \n", upold[n], vpold[n],  wpold[n] );
     } */
 
 
@@ -161,7 +161,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
   /* sink particle accretes gas from parent cell according to modified Bondi-Hoyle formula. 
    Reference: M. Ruffert, ApJ (1994) 427 342. Kernal section from Krumholtz et al 2004 */
      double G = GravConst*(*d1)*POW(*t1,2);    //MassUnits*POW(TimeUnits,2)/POW(LengthUnits,3)
-     //printf("note:   G = %"FSYM" in code units \n",G);
+     //printf("note:   G = %" FSYM" in code units \n",G);
      double csgrid2, radius2, radius;
   float densgrid, tempgrid, msink, drho,
     usink, vsink, wsink, vrel2,vrelc2,vreld2, mdot, e, de;
@@ -194,17 +194,17 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
       usink     = upold[bb];
       vsink     = vpold[bb];
       wsink     = wpold[bb];
-      // printf("sink velocity = %"FSYM",%"FSYM", %"FSYM" cgs \n", usink*(*v1), vsink*(*v1),  wsink*(*v1) );
+      // printf("sink velocity = %" FSYM",%" FSYM", %" FSYM" cgs \n", usink*(*v1), vsink*(*v1),  wsink*(*v1) );
       // printf("gas velocity = %g, %g, %g cgs \n", ugrid*(*v1), vgrid*(*v1),  wgrid*(*v1) );
       csgrid2 = kboltz * tempgrid / mh / POW(*v1,2); 
       vrel2 = POW(ugrid-usink,2) + POW(vgrid-vsink,2) + POW(wgrid-wsink,2);
       r_bh = G*msink / (csgrid2 + vrel2);
       // printf("star_maker8: msink = %g = %g SolarMass, G = %g, csgrid2 = %g, vrel2 = %g, csgrid = %g cm/s, vrel = %g cm/s \n", msink, msink*umass, G, csgrid2, vrel2, pow(csgrid2,0.5)*(*v1), pow(vrel2,0.5)*(*v1));
-      // printf("star_maker8: Accretion routine, r_bh = %g = %g pc, dx = %g = %g pc, r_bh/dx = %"FSYM"\n",r_bh, r_bh*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_bh/(*dx));
+      // printf("star_maker8: Accretion routine, r_bh = %g = %g pc, dx = %g = %g pc, r_bh/dx = %" FSYM"\n",r_bh, r_bh*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_bh/(*dx));
       if (r_bh/(*dx) < 0.25) r_k = (*dx)/4.0;
       else if (r_bh/(*dx) <= 2.0 ) r_k = r_bh;
       else r_k = 2*(*dx); 
-      // printf("    star_maker8: Accretion routine, r_k = %g = %g pc, dx = %g = %g pc, r_k/dx = %"FSYM"\n",r_k, r_k*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_k/(*dx));
+      // printf("    star_maker8: Accretion routine, r_k = %g = %g pc, dx = %g = %g pc, r_k/dx = %" FSYM"\n",r_k, r_k*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_k/(*dx));
 
       n_cell = 0;      
       m_cell = 0;
@@ -252,11 +252,11 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 	printf("\n XXX star_maker8: recalculate r_bh XXX  \n");
 	r_bh = G*msink / (csgrid2 + vrel2);
 	// printf("    star_maker8: msink = %g = %g SolarMass, G = %g, csgrid2 = %g, vrel2 = %g, csgrid = %g cm/s, vrelc = %g cm/s \n", msink, msink*umass, G, csgrid2, vrelc2, pow(csgrid2,0.5)*(*v1), pow(vrel2,0.5)*(*v1));
-	// printf("    star_maker8: Accretion routine, r_bh = %g = %g pc, dx = %g = %g pc, r_bh/dx = %"FSYM"\n",r_bh, r_bh*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_bh/(*dx));
+	// printf("    star_maker8: Accretion routine, r_bh = %g = %g pc, dx = %g = %g pc, r_bh/dx = %" FSYM"\n",r_bh, r_bh*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_bh/(*dx));
 	if (r_bh/(*dx) < 0.25) r_k = (*dx)/4.0;
 	else if (r_bh/(*dx) <= 2.0 ) r_k = r_bh;
 	else r_k = 2*(*dx); 
-	// printf("    star_maker8: Accretion routine, r_k = %g = %g pc, dx = %g = %g pc, r_k/dx = %"FSYM"\n",r_k, r_k*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_k/(*dx));
+	// printf("    star_maker8: Accretion routine, r_k = %g = %g pc, dx = %g = %g pc, r_k/dx = %" FSYM"\n",r_k, r_k*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_k/(*dx));
 
 	n_cell = 0;      
 	m_cell = 0;
@@ -309,15 +309,15 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
       drho = mdot * (*dt) / POW(*dx,3);
       /* printf("dt = %g, mdot * (*dt) / POW(*dx,3) = %g, 0.25 * d[index] =%g  \n",(*dt),mdot * (*dt) / POW(*dx,3),0.25 * d[index] );
       printf("    star_maker8: densgrid = %g cgs \n",densgrid*(*d1));
-	printf("weight_total  = %"FSYM"\n",weight_total);
+	printf("weight_total  = %" FSYM"\n",weight_total);
 	printf("drho  = %g\n",drho ); */
 
       /* Subtract mass from Grid */
 	DensityFloor = 1.e-34/(*d1);
       dens_sum = 0.0;
       for (int ic = 0; ic < n_cell; ic++) {
-	//printf(" ic = %"ISYM"\n", ic);
-	//printf("ind_cell[ic]  = %"ISYM"\n",ind_cell[ic]);
+	//printf(" ic = %" ISYM"\n", ic);
+	//printf("ind_cell[ic]  = %" ISYM"\n",ind_cell[ic]);
 	//printf("d[ind_cell[ic]] = %g = %g cgs \n",d[ind_cell[ic]],d[ind_cell[ic]]*(*d1)  );
 	//printf("weight_cell[ic]  = %g\n",weight_cell[ic] );
 	//printf("DensityFloor =%g = %g cgs \n",DensityFloor, DensityFloor*(*d1));
@@ -328,7 +328,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 	//printf("DEL_RHO = %g \n",del_rho );
 	dens_sum += del_rho;
 	 } 
-      /* printf("   star_maker8 CHECK: dens_sum/drho = %"FSYM"\n", dens_sum/drho );
+      /* printf("   star_maker8 CHECK: dens_sum/drho = %" FSYM"\n", dens_sum/drho );
       printf("star_maker8: Accretion routine, mass added = %g = %g SolarMass, drho = %g\n",drho*POW(*dx,3),drho*POW(*dx,3)*umass,drho );
       printf("   star_maker8 CHECK: dens_sum/mpold[bb] = %g\n", dens_sum/mpold[bb] ); */
       upold[bb] = 0.0; //(mpold[bb]*usink + drho*ugridc) / (mpold[bb] + drho);
@@ -365,18 +365,18 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 
       csgrid2 = kboltz * tempgrid / mh / POW(*v1,2);
       vrel2 = POW(ugrid-usink,2) + POW(vgrid-vsink,2) + POW(wgrid-wsink,2);
-      //printf("star_maker8: Accretion routine, csgrid2 = %"FSYM", vrel2 = %"FSYM", Mach = %"FSYM"\n", csgrid2, vrel2, POW(vrel2/csgrid2,0.5));
-      //printf("star_maker8: Accretion routine, CGS csgrid = %"FSYM", vrel = %"FSYM"\n", POW(csgrid2*POW(*v1,2),0.5), POW(vrel2*POW(*v1,2),0.5));
-      //printf("star_maker8: Accretion routine, msink = %"FSYM" = %"FSYM" SolarMass\n", msink, msink*umass );
+      //printf("star_maker8: Accretion routine, csgrid2 = %" FSYM", vrel2 = %" FSYM", Mach = %" FSYM"\n", csgrid2, vrel2, POW(vrel2/csgrid2,0.5));
+      //printf("star_maker8: Accretion routine, CGS csgrid = %" FSYM", vrel = %" FSYM"\n", POW(csgrid2*POW(*v1,2),0.5), POW(vrel2*POW(*v1,2),0.5));
+      //printf("star_maker8: Accretion routine, msink = %" FSYM" = %" FSYM" SolarMass\n", msink, msink*umass );
       r_bh = G*msink / (csgrid2 + vrel2);
-      // printf("star_maker8: Accretion routine, r_bh = %"FSYM" = %"FSYM" pc, dx = %"FSYM" = %"FSYM" pc, r_bh/dx = %"FSYM"\n",r_bh, r_bh*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_bh/(*dx));
+      // printf("star_maker8: Accretion routine, r_bh = %" FSYM" = %" FSYM" pc, dx = %" FSYM" = %" FSYM" pc, r_bh/dx = %" FSYM"\n",r_bh, r_bh*(*x1)/pc_cm,*dx, *dx*(*x1)/pc_cm, r_bh/(*dx));
       densgrid *= min(POW((*dx)/r_bh, 1.5), 1.0);
       mdot = 4.0 * pi * densgrid * POW(r_bh, 2) * sqrt(1.2544*csgrid2 + vrel2);
       drho = min(mdot * (*dt) / POW(*dx,3), 0.25 * d[index]);
     
       /*maxdens = jlsquared * temp[index] / dx2;
 	drho = max(0.0, d[index] - maxdens);*/        
-      //printf("star_maker8: Accretion routine, mass added = %"FSYM" SolarMass, drho = %"FSYM"\n",drho*POW(*dx,3)*umass,drho );
+      //printf("star_maker8: Accretion routine, mass added = %" FSYM" SolarMass, drho = %" FSYM"\n",drho*POW(*dx,3)*umass,drho );
 
       upold[bb] = (mpold[bb]*usink + drho*ugrid) / (mpold[bb] + drho);
       vpold[bb] = (mpold[bb]*vsink + drho*vgrid) / (mpold[bb] + drho);
@@ -488,7 +488,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
       /* Calculate the jet density */
       rho_wind = (m_cell + fe * dmold[bb]) / (n_cell * POW(*dx,3));
 
-      printf("Wind injected: id=%"PISYM", vwind=%g, n_cell=%"ISYM", x=(%g, %g, %g), n=(%g,%g,%g,), ",
+      printf("Wind injected: id=%" PISYM", vwind=%g, n_cell=%" ISYM", x=(%g, %g, %g), n=(%g,%g,%g,), ",
 	     idold[bb], v_wind*(*v1), n_cell, xpold[bb], ypold[bb], zpold[bb], 
              nx_b, ny_b, nz_b);
       printf(" m_cell=%g, dm=%g, rho_wind=%g, p_wind=%g\n",
@@ -608,7 +608,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
       /* Calculate the jet density */
       rho_wind = (m_cell + fe * dmold[bb]) / (n_cell * POW(*dx,3));
 
-      /*printf("Wind injected: id=%"PISYM", vwind=%g, n_cell=%"ISYM", x=(%g, %g, %g), n=(%g,%g,%g,), ",
+      /*printf("Wind injected: id=%" PISYM", vwind=%g, n_cell=%" ISYM", x=(%g, %g, %g), n=(%g,%g,%g,), ",
 	     idold[bb], v_wind*(*v1), n_cell, xpold[bb], ypold[bb], zpold[bb], 
              nx_b, ny_b, nz_b);
       printf(" m_cell=%g, dm=%g, rho_wind=%g, p_wind=%g\n",
@@ -758,7 +758,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 
       // if (m_wind > 0.0) printf("  density in cells changed, dt = %e, t = %e\n",(*dt),(*t));
       /* Substract the ejected mass and set dm to be zero */
-      /*printf("Iso-wind injected: dt = %e s, vwind=%g, n_cell=%"ISYM", xp=(%g, %g, %g),m_star = %e, m_cell=%e, m_wind=%e, rho=%e, umass = %e\n", 
+      /*printf("Iso-wind injected: dt = %e s, vwind=%g, n_cell=%" ISYM", xp=(%g, %g, %g),m_star = %e, m_cell=%e, m_wind=%e, rho=%e, umass = %e\n", 
 	     (*dt)*(*t1),v_wind*(*v1), n_cell, xpold[bb], ypold[bb], zpold[bb],mpold[bb]*umass , m_cell*umass,m_wind*umass, rho_wind*(*d1),umass);
       printf("Iso-wind injected: volume = %e code, %e cgs\n",cells_volume, cells_volume*POW((*x1),3));*/
 
@@ -817,7 +817,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 	      }
 
 	    } // ENDFOR old particles
-	      //printf("star_maker8: nearest old star = %"FSYM"\n",POW(nearestdx2,0.5) );
+	      //printf("star_maker8: nearest old star = %" FSYM"\n",POW(nearestdx2,0.5) );
 
 	    if (ii < *nmax) {
 
@@ -899,7 +899,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
   } // if (level == maxlevel)
 
   if (ii > 0)
-    printf("P(%"ISYM"): star_maker8[add]: %"ISYM" new sink particles\n", *nproc, ii);
+    printf("P(%" ISYM"): star_maker8[add]: %" ISYM" new sink particles\n", *nproc, ii);
 
   if (ii >= *nmax) {
     fprintf(stdout, "star_maker8: reached max new particle count");

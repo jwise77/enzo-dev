@@ -209,7 +209,7 @@ int ExternalBoundary::SetGalaxySimulationBoundary(FLOAT time)
 				int f_index = 0;
 				while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 					if (line[0] == 'N') {
-						(sscanf(line, "NumberOfSteps = %"ISYM"\n", &ICMTableSize));
+						(sscanf(line, "NumberOfSteps = %" ISYM"\n", &ICMTableSize));
 						ICMTimeTable        = new double[ICMTableSize];
 						ICMDensityTable     = new double[ICMTableSize];
 						ICMTotalEnergyTable = new double[ICMTableSize];

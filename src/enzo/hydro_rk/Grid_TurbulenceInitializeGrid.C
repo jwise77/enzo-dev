@@ -142,9 +142,9 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
   if (UsePhysicalUnit)
     GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits, &TimeUnits, &VelocityUnits, Time);
   double MassUnits = DensityUnits*pow(LengthUnits,3);
-  printf("Mass Units = %"GSYM" \n",MassUnits);
-  printf("Time Units = %"GSYM" \n",TimeUnits);
-  printf("Density Units = %"GSYM" \n",DensityUnits);
+  printf("Mass Units = %" GSYM" \n",MassUnits);
+  printf("Time Units = %" GSYM" \n",TimeUnits);
+  printf("Density Units = %" GSYM" \n",DensityUnits);
 
   GravitationalConstant = 4.0*pi*GravConst*MassUnits*pow(TimeUnits,2)/pow(LengthUnits,3);
 
@@ -453,7 +453,7 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
     if (CloudType == 4 || CloudType == 6) {
       k1 = 2.0;
       k2 = min(34.0, int(GridDimension[0]/10));
-      printf("                GridDimension[0] = %"ISYM"\n",GridDimension[0] );
+      printf("                GridDimension[0] = %" ISYM"\n",GridDimension[0] );
       dk = max(1.0,int((k2-k1)/10));
     }
     if (CloudType == 7) {
@@ -480,7 +480,7 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
     float VelocityNormalization = 1;
 // for level > 0 grids the CloudMachNumber passed in is actuall the Velocity normalization factor
   if (level > 0) VelocityNormalization = CloudMachNumber; 
-  printf("Cloud Mach Number = %"GSYM" \n",CloudMachNumber);
+  printf("Cloud Mach Number = %" GSYM" \n",CloudMachNumber);
   for (i = 0; i < 3; i++) {
     for (n = 0; n < activesize; n++) {
       TurbulenceVelocity[i][n] *= VelocityNormalization;
@@ -581,7 +581,7 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
       }
     }
     */
-    //printf("Grid_TubInit: Mass = %"FSYM"\n",Mass);
+    //printf("Grid_TubInit: Mass = %" FSYM"\n",Mass);
     /* VelRMS /= Mass;
     double t_ff = sqrt(32.0/(3.0*M_PI*CloudDensity));
     double NormFactor = CloudMachNumber * CloudSoundSpeed / VelRMS / t_ff;
@@ -791,9 +791,9 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
 
 
 
-  /*  printf("XXX PutSinkParticle = %"ISYM"\n", PutSinkParticle);
+  /*  printf("XXX PutSinkParticle = %" ISYM"\n", PutSinkParticle);
   int PutSinkParticle = 0;
-  printf("XXX PutSinkParticle = %"ISYM"\n", PutSinkParticle);
+  printf("XXX PutSinkParticle = %" ISYM"\n", PutSinkParticle);
   if (PutSinkParticle == 1 && level == 0) {
     NumberOfParticleAttributes = 6;
     double mass_p = 1.1*1.989e33;
@@ -826,7 +826,7 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
     ParticleAttribute[0][0] = 0.0; // creation time    
     ParticleAttribute[1][0] = t_dyn; // dynamical time                                                                
     ParticleAttribute[2][0] = mass_p; //                                                                                 
-    printf("XXX Sink Particle in, NumberOfParticles = %"ISYM" \n",NumberOfParticles);
+    printf("XXX Sink Particle in, NumberOfParticles = %" ISYM" \n",NumberOfParticles);
     }*/
 
 

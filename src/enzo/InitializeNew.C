@@ -340,14 +340,14 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
     //printf("This should only run if not a restart!");
  
     if (MetaData.TopGridRank < 0 || MetaData.TopGridRank > 3) {
-      ENZO_VFAIL("TopGridRank = %"ISYM" ill defined.\n", MetaData.TopGridRank)
+      ENZO_VFAIL("TopGridRank = %" ISYM" ill defined.\n", MetaData.TopGridRank)
     }
  
   // Error check the dimensions and at the same time add ghost zones
  
     for (dim = 0; dim < MetaData.TopGridRank; dim++) {
       if (MetaData.TopGridDims[dim] < 1 || MetaData.TopGridDims[dim] > 8192) {
-	ENZO_VFAIL("TopGridDims[%"ISYM"] = %"ISYM" ill defined.\n", dim,
+	ENZO_VFAIL("TopGridDims[%" ISYM"] = %" ISYM" ill defined.\n", dim,
 		   MetaData.TopGridDims[dim])
       }
       MetaData.TopGridDims[dim] = (MetaData.TopGridDims[dim] > 1) ?
@@ -773,7 +773,7 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
   #endif /* TRANSFER */
   
   if (ret == INT_UNDEFINED) {
-    ENZO_VFAIL("Problem Type %"ISYM" undefined.\n", ProblemType)
+    ENZO_VFAIL("Problem Type %" ISYM" undefined.\n", ProblemType)
   }
  
   if (ret == FAIL) {
@@ -789,8 +789,8 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
 
   int nFields = TopGrid.GridData->ReturnNumberOfBaryonFields();
   if (nFields >= MAX_NUMBER_OF_BARYON_FIELDS) {
-    ENZO_VFAIL("NumberOfBaryonFields (%"ISYM") + 1 exceeds "
-	       "MAX_NUMBER_OF_BARYON_FIELDS (%"ISYM").\n", 
+    ENZO_VFAIL("NumberOfBaryonFields (%" ISYM") + 1 exceeds "
+	       "MAX_NUMBER_OF_BARYON_FIELDS (%" ISYM").\n", 
 	       nFields, MAX_NUMBER_OF_BARYON_FIELDS)
   }
 
@@ -963,7 +963,7 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
   while (CurrentGrid != NULL) {
     
     if (debug)
-      printf("InitializeNew: Partition Initial Grid %"ISYM"\n", gridcounter);
+      printf("InitializeNew: Partition Initial Grid %" ISYM"\n", gridcounter);
     
     if (CurrentGrid->NextGridThisLevel == NULL)     
       CommunicationPartitionGrid(CurrentGrid, gridcounter);

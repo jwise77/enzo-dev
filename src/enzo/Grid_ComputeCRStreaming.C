@@ -137,8 +137,8 @@ int grid::ComputeCRStreaming(){
 	BaryonField[CRNum][idx] += CRStreamVelocityFactor * dCRdt * dtFixed;
 
 	if((cr[idx]< 0) || isnan(cr[idx])){
-	      printf("CR = %e < 0 (after stream), i,j,k = (%"ISYM", %"ISYM", %"
-		     ISYM"), grid lims = (%"ISYM", %"ISYM", %"ISYM"), (%"ISYM", %"ISYM", %"ISYM")\n",
+	      printf("CR = %e < 0 (after stream), i,j,k = (%" ISYM", %" ISYM", %"
+		     ISYM"), grid lims = (%" ISYM", %" ISYM", %" ISYM"), (%" ISYM", %" ISYM", %" ISYM")\n",
                      cr[idx], i, j, k, GridStart[0],
                      GridStart[1], GridStart[2], GridEnd[0], GridEnd[1], GridEnd[2]);		  
 	      cr[idx] = CRdensFloor; 

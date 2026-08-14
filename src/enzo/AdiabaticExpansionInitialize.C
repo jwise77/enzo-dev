@@ -96,19 +96,19 @@ int AdiabaticExpansionInitialize(FILE *fptr, FILE *Outfptr,
  
     /* read parameters */
  
-    ret += sscanf(line, "AdiabaticExpansionOmegaBaryonNow = %"FSYM,
+    ret += sscanf(line, "AdiabaticExpansionOmegaBaryonNow = %" FSYM,
 		  &AdiabaticExpansionOmegaBaryonNow);
-    ret += sscanf(line, "AdiabaticExpansionOmegaCDMNow = %"FSYM,
+    ret += sscanf(line, "AdiabaticExpansionOmegaCDMNow = %" FSYM,
 		  &AdiabaticExpansionOmegaCDMNow);
-    ret += sscanf(line, "AdiabaticExpansionInitialTemperature = %"FSYM,
+    ret += sscanf(line, "AdiabaticExpansionInitialTemperature = %" FSYM,
 		  &AdiabaticExpansionInitialTemperature);
-    ret += sscanf(line, "AdiabaticExpansionInitialUniformBField = %"FSYM" %"FSYM" %"FSYM,
+    ret += sscanf(line, "AdiabaticExpansionInitialUniformBField = %" FSYM" %" FSYM" %" FSYM,
 		  AdiabaticExpansionInitialUniformBField,
 		  AdiabaticExpansionInitialUniformBField+1,
 		  AdiabaticExpansionInitialUniformBField+2);
-    ret += sscanf(line, "AdiabaticExpansionInitialVelocity = %"FSYM,
+    ret += sscanf(line, "AdiabaticExpansionInitialVelocity = %" FSYM,
 		  &AdiabaticExpansionInitialVelocity);
-    ret += sscanf(line, "AdiabaticExpansionInitialCR = %"FSYM,
+    ret += sscanf(line, "AdiabaticExpansionInitialCR = %" FSYM,
       &AdiabaticExpansionInitialCR);
  
     /* if the line is suspicious, issue a warning */
@@ -223,18 +223,18 @@ int AdiabaticExpansionInitialize(FILE *fptr, FILE *Outfptr,
   /* Write parameters to parameter output file */
  
   if (MyProcessorNumber == ROOT_PROCESSOR) {
-    fprintf(Outfptr, "AdiabaticExpansionOmegaBaryonNow     = %"FSYM"\n",
+    fprintf(Outfptr, "AdiabaticExpansionOmegaBaryonNow     = %" FSYM"\n",
 	    AdiabaticExpansionOmegaBaryonNow);
-    fprintf(Outfptr, "AdiabaticExpansionOmegaCDMNow        = %"FSYM"\n",
+    fprintf(Outfptr, "AdiabaticExpansionOmegaCDMNow        = %" FSYM"\n",
 	    AdiabaticExpansionOmegaCDMNow);
-    fprintf(Outfptr, "AdiabaticExpansionInitialTemperature = %"FSYM"\n",
+    fprintf(Outfptr, "AdiabaticExpansionInitialTemperature = %" FSYM"\n",
 	    AdiabaticExpansionInitialTemperature);
     fprintf(Outfptr, "AdiabaticExpansionInitialUniformBField = ");
     WriteListOfFloats(Outfptr, 3, AdiabaticExpansionInitialUniformBField);
 
-    fprintf(Outfptr, "AdiabaticExpansionInitialVelocity    = %"FSYM"\n\n",
+    fprintf(Outfptr, "AdiabaticExpansionInitialVelocity    = %" FSYM"\n\n",
 	    AdiabaticExpansionInitialVelocity);
-    fprintf(Outfptr, "AdiabaticExpansionInitialCR          = %"FSYM"\n\n",
+    fprintf(Outfptr, "AdiabaticExpansionInitialCR          = %" FSYM"\n\n",
       AdiabaticExpansionInitialCR);
   }
  

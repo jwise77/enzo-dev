@@ -297,7 +297,7 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   int dummy_int, OutputNow = FALSE;
 
   char level_name[MAX_LINE_LENGTH];
-  sprintf(level_name, "Level_%02"ISYM, level);
+  sprintf(level_name, "Level_%02" ISYM, level);
     
   // Update lcaperf "level" attribute
   Eint32 lcaperf_level = level;
@@ -366,7 +366,7 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       if (Grids[grid1]->GridData->FillFluxesFromStorage(
         &NumberOfSubgrids[grid1],
         &SubgridFluxesEstimate[grid1]) != -1) {
-        /*fprintf(stderr, "Level: %"ISYM" Grid: %"ISYM" NS: %"ISYM"\n",
+        /*fprintf(stderr, "Level: %" ISYM" Grid: %" ISYM" NS: %" ISYM"\n",
             level, grid1, NumberOfSubgrids[grid1]);*/
       }
     }
@@ -475,7 +475,7 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       ComputeDednerWaveSpeeds(MetaData, LevelArray, level, dt0);
 	
     if (debug1 && HydroMethod == MHD_RK && (MyProcessorNumber == ROOT_PROCESSOR)) 
-      fprintf(stderr, "wave speeds: timestep: %"GSYM"  C_h: %"GSYM"  C_p: %"GSYM"\n ", 
+      fprintf(stderr, "wave speeds: timestep: %" GSYM"  C_h: %" GSYM"  C_p: %" GSYM"\n ", 
 	       dt0, C_h, C_p);
     /* ------------------------------------------------------- */
     /* Prepare the density field (including particle density). */
@@ -825,7 +825,7 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 #endif
           ,dt0,SiblingGridListStorage
 		      ) == FAIL) {
-	ENZO_VFAIL("Error in EvolveLevel (%"ISYM").\n", level)
+	ENZO_VFAIL("Error in EvolveLevel (%" ISYM").\n", level)
       }
     }
 
@@ -988,7 +988,7 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
  
     EXTRA_OUTPUT_MACRO(6, "After Subcycle Loop")
   if (debug)
-    fprintf(stdout, "EvolveLevel[%"ISYM"]: NumberOfSubCycles = %"ISYM" (%"ISYM" total, %"ISYM" sub)\n", 
+    fprintf(stdout, "EvolveLevel[%" ISYM"]: NumberOfSubCycles = %" ISYM" (%" ISYM" total, %" ISYM" sub)\n", 
             level, cycle, LevelCycleCount[level], LevelSubCycleCount[level]);
  
   /* If possible & desired, report on memory usage. */

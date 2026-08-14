@@ -95,11 +95,11 @@ int ShearingBoxInitialize (FILE *fptr, FILE *Outfptr,
     ret = 0;
 
 /* read parameters */
-    ret += sscanf(line, "ShearingBoxRefineAtStart = %"ISYM, &RefineAtStart); 
-    ret += sscanf(line, "ShearingBoxThermalMagneticRatio= %"FSYM, &ThermalMagneticRatio);
-    ret += sscanf(line, "ShearingBoxFluctuationAmplitudeFraction = %"FSYM, &FluctuationAmplitudeFraction);
-    ret += sscanf(line, "ShearingBoxGeometry = %"FSYM, &ShearingGeometry);  
-    ret += sscanf(line, "ShearingBoxInitialMagneticFieldConfiguration = %"ISYM, &InitialMagneticFieldConfiguration);  
+    ret += sscanf(line, "ShearingBoxRefineAtStart = %" ISYM, &RefineAtStart); 
+    ret += sscanf(line, "ShearingBoxThermalMagneticRatio= %" FSYM, &ThermalMagneticRatio);
+    ret += sscanf(line, "ShearingBoxFluctuationAmplitudeFraction = %" FSYM, &FluctuationAmplitudeFraction);
+    ret += sscanf(line, "ShearingBoxGeometry = %" FSYM, &ShearingGeometry);  
+    ret += sscanf(line, "ShearingBoxInitialMagneticFieldConfiguration = %" ISYM, &InitialMagneticFieldConfiguration);  
  
   } 
  

@@ -39,7 +39,7 @@
  */
 void grid::SGS_AddEMF_nonlinear_compressive(float **EMF) {
     if (debug1)
-        printf("[%"ISYM"] grid::SGS_AddEMF_nonlinear_compressive start\n",MyProcessorNumber);
+        printf("[%" ISYM"] grid::SGS_AddEMF_nonlinear_compressive start\n",MyProcessorNumber);
 
     int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
     int B1Num, B2Num, B3Num, PhiNum;
@@ -139,7 +139,7 @@ void grid::SGS_AddEMF_nonlinear_compressive(float **EMF) {
  */
 void grid::SGS_AddEMF_eddy_resistivity(float **EMF) {
     if (debug1)
-        printf("[%"ISYM"] grid::SGS_AddEMF_eddy_resistivity start\n",MyProcessorNumber);
+        printf("[%" ISYM"] grid::SGS_AddEMF_eddy_resistivity start\n",MyProcessorNumber);
 
     int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
     int B1Num, B2Num, B3Num, PhiNum;
@@ -226,7 +226,7 @@ void grid::SGS_AddEMF_eddy_resistivity(float **EMF) {
  */
 void grid::SGS_AddEMF_scale_similarity(float **EMF) {
     if (debug1)
-        printf("[%"ISYM"] grid::SGS_AddEMF_scale_similarity start\n",MyProcessorNumber);
+        printf("[%" ISYM"] grid::SGS_AddEMF_scale_similarity start\n",MyProcessorNumber);
 
     int size = 1;
     int StartIndex[MAX_DIMENSION];
@@ -278,7 +278,7 @@ int grid::SGS_AddEMFTerms(float **dU) {
         return SUCCESS;
 
     if (debug1)
-        printf("[%"ISYM"] grid::SGS_AddEMFTerms start\n",MyProcessorNumber);
+        printf("[%" ISYM"] grid::SGS_AddEMFTerms start\n",MyProcessorNumber);
 
     int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
     int B1Num, B2Num, B3Num, PhiNum;
@@ -347,7 +347,7 @@ int grid::SGS_AddEMFTerms(float **dU) {
             }
 
     if (debug1)
-        printf("[%"ISYM"] grid::SGS_AddEMFTerms end, last incr: %"FSYM" %"FSYM" %"FSYM" %"FSYM"\n",
+        printf("[%" ISYM"] grid::SGS_AddEMFTerms end, last incr: %" FSYM" %" FSYM" %" FSYM" %" FSYM"\n",
                 MyProcessorNumber,BxIncr,ByIncr,BzIncr,EtotIncr);
 
     for (int dim = 0; dim < MAX_DIMENSION; dim++) {

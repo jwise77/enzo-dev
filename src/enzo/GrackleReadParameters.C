@@ -41,7 +41,7 @@ int GrackleSetDefaultParameters(FILE *fptr){
   rewind(fptr);
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
     int ret = 0;
-    ret += sscanf(line, "use_grackle = %"ISYM, &use_grackle);
+    ret += sscanf(line, "use_grackle = %" ISYM, &use_grackle);
   }
 
 #ifndef USE_GRACKLE

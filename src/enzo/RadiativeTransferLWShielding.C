@@ -143,7 +143,7 @@ int grid::RadiativeTransferLWShielding(PhotonPackageEntry **PP, FLOAT &dP,
   /* [geo_correction] = None (unitless)
    * [(*PP)->Photons] = 1/(LengthUnits^3)
    * [dissrate] = cm^2*CodeLength/(CodeLength^2*CodeTime)
-   /* Units = 1/(CodeTime) */
+   * Units = 1/(CodeTime) */
   
   BaryonField[kdissH2INum][cellindex] += geo_correction * (*PP)->Photons * 
     dissrate;

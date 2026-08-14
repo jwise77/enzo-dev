@@ -97,7 +97,7 @@ int grid::DrivenFlowInitializeGrid(float DrivenFlowDensity,
     for (int i = 0; i < size; i++) {
       BaryonField[ieint][i] = Energy;
     }
-  printf("DrivenFlowInitializeGrid %"FSYM" %"FSYM" %"FSYM" %"FSYM"\n",
+  printf("DrivenFlowInitializeGrid %" FSYM" %" FSYM" %" FSYM" %" FSYM"\n",
     DrivenFlowDensity,DrivenFlowPressure,Gamma,Energy);
   
   if (HydroMethod == MHD_RK) {

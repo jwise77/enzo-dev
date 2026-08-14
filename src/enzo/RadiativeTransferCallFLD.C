@@ -96,7 +96,7 @@ int RadiativeTransferCallFLD(LevelHierarchyEntry *LevelArray[], int level,
 	  GridData->ReturnTimeStep();
       
       if (debug)
-	fprintf(stdout, "CallFLD: level %"ISYM", dtFLD = %g\n",
+	fprintf(stdout, "CallFLD: level %" ISYM", dtFLD = %g\n",
 		level, MetaData->dtFLD);
       
       /* Construct emissivity field on each root grid from the star
@@ -169,7 +169,7 @@ int RadiativeTransferCallFLD(LevelHierarchyEntry *LevelArray[], int level,
 	  GridData->ReturnTimeStep();
       
       if (debug)
-	fprintf(stdout, "CallFLD: level %"ISYM", dtFLD = %g\n",
+	fprintf(stdout, "CallFLD: level %" ISYM", dtFLD = %g\n",
 		level, MetaData->dtFLD);
 
       

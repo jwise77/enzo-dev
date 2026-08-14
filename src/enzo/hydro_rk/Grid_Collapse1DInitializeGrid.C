@@ -68,13 +68,13 @@ int grid::Collapse1DInitializeGrid(FLOAT r_sphere,
         printf("BE sphere data not enough\n");
         return FAIL;
       }
-      sscanf(line, "%"GSYM" %"GSYM, &radius[i], &rho_be[i]);
+      sscanf(line, "%" GSYM" %" GSYM, &radius[i], &rho_be[i]);
     }
     fclose(fptr);
   }
 
 
-  printf("rho_sphere=%"GSYM", cs_sphere=%"GSYM", rho_medium=%"GSYM", p_medium=%"GSYM"\n",
+  printf("rho_sphere=%" GSYM", cs_sphere=%" GSYM", rho_medium=%" GSYM", p_medium=%" GSYM"\n",
 	 rho_sphere, cs_sphere, rho_medium, p_medium);
   
   float rho, vel[3], eint, etot, h, cs, dpdrho, dpde, v2;

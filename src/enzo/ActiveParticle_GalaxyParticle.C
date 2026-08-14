@@ -86,7 +86,7 @@ int ActiveParticleType_GalaxyParticle::EvaluateFormation
   FILE *fptr;
   char line[MAX_LINE_LENGTH];
   char fname[20];
-  sprintf(fname, "gp%04"ISYM".txt", LevelCycleCount[0]);
+  sprintf(fname, "gp%04" ISYM".txt", LevelCycleCount[0]);
 
   if ((fptr = fopen(fname, "r")) == NULL) {
     //fprintf(stderr, "galaxy particle text file not found for this cycle.\n");
@@ -112,7 +112,7 @@ int ActiveParticleType_GalaxyParticle::EvaluateFormation
   //float *tvel;
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
-    sscanf(line, "%"FSYM" %"FSYM" %"FSYM" %"FSYM" %"FSYM" %"FSYM" %"FSYM" %"FSYM,
+    sscanf(line, "%" FSYM" %" FSYM" %" FSYM" %" FSYM" %" FSYM" %" FSYM" %" FSYM" %" FSYM,
       &x, &y, &z, &vx, &vy, &vz, &dens, &radius);
 
     // If this particle is outside this grid,
@@ -123,7 +123,7 @@ int ActiveParticleType_GalaxyParticle::EvaluateFormation
       continue;
     }
 
-    fprintf(stderr,"%d %d inserting particle %"FSYM" %"FSYM" %"FSYM" %"FSYM" %"FSYM"\n",
+    fprintf(stderr,"%d %d inserting particle %" FSYM" %" FSYM" %" FSYM" %" FSYM" %" FSYM"\n",
         MyProcessorNumber, data.GridID, x, y, z, dens, radius);
 
 	// If no more room for particles, throw an ENZO_FAIL

@@ -178,7 +178,7 @@ int grid::ConductHeat(){
 
   } // while(dtSoFar < dtFixed)
 
-  if(debug1) printf("Grid::ConductHeat:  Nsubcycles = %"ISYM"\n",Nsub);
+  if(debug1) printf("Grid::ConductHeat:  Nsubcycles = %" ISYM"\n",Nsub);
 
   if((HydroMethod==PPM_DirectEuler && DualEnergyFormalism==0) || ( UseMHD ))
     delete [] e;

@@ -227,7 +227,7 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   int OutputNow = FALSE;
 
   char level_name[MAX_LINE_LENGTH];
-  sprintf(level_name, "Level_%02"ISYM, level);
+  sprintf(level_name, "Level_%02" ISYM, level);
 
 
 
@@ -276,7 +276,7 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
   Grids[0]->GridData->SetNumberOfColours();
   if (debug)
-  	fprintf(stdout, "EvolveLevel_RK2: NColor = %"ISYM", NSpecies = %"ISYM"\n", NColor, NSpecies); 
+  	fprintf(stdout, "EvolveLevel_RK2: NColor = %" ISYM", NSpecies = %" ISYM"\n", NColor, NSpecies); 
 
   /* Clear the boundary fluxes for all Grids (this will be accumulated over
      the subcycles below (i.e. during one current grid step) and used to by the
@@ -340,7 +340,7 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
       ComputeDednerWaveSpeeds(MetaData, LevelArray, level, dt0);
 	
     if (debug1 && HydroMethod == MHD_RK && (MyProcessorNumber == ROOT_PROCESSOR)) 
-      fprintf(stderr, "wave speeds: timestep: %"GSYM"  C_h: %"GSYM"  C_p: %"GSYM"\n ", 
+      fprintf(stderr, "wave speeds: timestep: %" GSYM"  C_h: %" GSYM"  C_p: %" GSYM"\n ", 
 	       dt0, C_h, C_p);
 
 
@@ -363,7 +363,7 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
    if (DrivenFlowProfile) {
      if (MyProcessorNumber == ROOT_PROCESSOR)
-         if (debug) printf("Level %"ISYM": computing stochastic force field on %"ISYM" grids...\n",
+         if (debug) printf("Level %" ISYM": computing stochastic force field on %" ISYM" grids...\n",
              level,NumberOfGrids);
      if (ComputeStochasticForcing(MetaData, Grids, NumberOfGrids)
          == FAIL) {
@@ -598,7 +598,7 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 #endif
 			  dt0, SiblingGridListStorage) 
 	  == FAIL) {
-	fprintf(stderr, "Error in EvolveLevel_RK2 (%"ISYM").\n", level);
+	fprintf(stderr, "Error in EvolveLevel_RK2 (%" ISYM").\n", level);
 	ENZO_FAIL("");
       }
     }
@@ -706,7 +706,7 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   } // while (dtThisLevelSoFar < dtLevelAbove)
 
   if (debug)
-    printf("EvolveLevelRK2[%"ISYM"]: NumberOfSubCycles = %"ISYM" (%"ISYM" total)\n", level, 
+    printf("EvolveLevelRK2[%" ISYM"]: NumberOfSubCycles = %" ISYM" (%" ISYM" total)\n", level, 
            cycle, LevelCycleCount[level]);
 
   /* If possible & desired, report on memory usage. */

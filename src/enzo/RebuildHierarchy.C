@@ -123,7 +123,7 @@ int RebuildHierarchy(TopGridData *MetaData,
   LCAPERF_START("RebuildHierarchy");
   TIMER_START("RebuildHierarchy");
 
-  if (debug) printf("RebuildHierarchy: level = %"ISYM"\n", level);
+  if (debug) printf("RebuildHierarchy: level = %" ISYM"\n", level);
   ReportMemoryUsage("Rebuild pos 1");
  
   bool ParticlesAreLocal, SyncNumberOfParticles = true;
@@ -425,8 +425,8 @@ int RebuildHierarchy(TopGridData *MetaData,
       CommunicationSumValues(&TotalFlaggedCells, 1);
       CommunicationSumValues(&FlaggedGrids, 1);
       if (debug)
-	printf("RebuildHierarchy[%"ISYM"]: "
-	       "Flagged %"ISYM"/%"ISYM" grids. %"ISYM" flagged cells\n", 
+	printf("RebuildHierarchy[%" ISYM"]: "
+	       "Flagged %" ISYM"/%" ISYM" grids. %" ISYM" flagged cells\n", 
 	       i, FlaggedGrids, grids, TotalFlaggedCells);
       tt1 = ReturnWallTime();
       RHperf[4] += tt1-tt0;

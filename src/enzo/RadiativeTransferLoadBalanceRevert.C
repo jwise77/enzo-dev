@@ -121,7 +121,7 @@ int RadiativeTransferLoadBalanceRevert(HierarchyEntry **Grids[], int *NumberOfGr
   CommunicationBarrier();
 
 //  if (MyProcessorNumber == ROOT_PROCESSOR && GridsMoved > 0)
-//    printf("RevertPhotonLoadBalance[%d]: Number of grids moved = %"ISYM" out of %"ISYM"\n",
+//    printf("RevertPhotonLoadBalance[%d]: Number of grids moved = %" ISYM" out of %" ISYM"\n",
 //	   level, GridsMoved, NumberOfGrids[level]);
 
   } // ENDFOR level

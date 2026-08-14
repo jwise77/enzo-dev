@@ -139,7 +139,7 @@ float blaststyle(int i,int j, int k, int InitStyle, FLOAT BlastCenterLocal[], fl
     
   default:
     which = -1;
-    fprintf(stderr,"MHDBlast: Invalid Init Style %"ISYM"\n",InitStyle);
+    fprintf(stderr,"MHDBlast: Invalid Init Style %" ISYM"\n",InitStyle);
     break;
 
   }//switch
@@ -312,7 +312,7 @@ int grid::MHDBlastInitializeGrid(float DensityA, float DensityB,
   if ( PerturbMethod == 100 )
       srand( 3449653 ); //please don't change this number.
 
-    fprintf(stderr,"GridDim %"ISYM" %"ISYM" %"ISYM"\n",GridDimension[0],GridDimension[1],GridDimension[2]);
+    fprintf(stderr,"GridDim %" ISYM" %" ISYM" %" ISYM"\n",GridDimension[0],GridDimension[1],GridDimension[2]);
     FieldType[NumberOfBaryonFields++] = Density;
   if( EquationOfState == 0 ){
     FieldType[NumberOfBaryonFields++] = TotalEnergy;
@@ -387,7 +387,7 @@ int grid::MHDBlastInitializeGrid(float DensityA, float DensityB,
   
   Radius /= CellWidth[LongDimension][0];
   
-  fprintf(stderr, "Center %"FSYM" %"FSYM" %"FSYM", Radius, %"FSYM"\n", 
+  fprintf(stderr, "Center %" FSYM" %" FSYM" %" FSYM", Radius, %" FSYM"\n", 
 	  BlastCenterLocal[0], BlastCenterLocal[1], BlastCenterLocal[2], Radius);
   
 
@@ -459,8 +459,8 @@ int grid::MHDBlastInitializeGrid(float DensityA, float DensityB,
 	  BA[InitStyle-1], BA[B2num], BA[B3num], EnergyA, Right);
 
     for( field=0; field<7; field++)
-      fprintf(stderr, "EigenVector[%"ISYM"][%"ISYM"] %"FSYM" \n", field, wave, Right[field][wave]);
-    fprintf(stderr,"EigenVector: B2 %"ISYM" B3 %"ISYM" \n", B2num, B3num);
+      fprintf(stderr, "EigenVector[%" ISYM"][%" ISYM"] %" FSYM" \n", field, wave, Right[field][wave]);
+    fprintf(stderr,"EigenVector: B2 %" ISYM" B3 %" ISYM" \n", B2num, B3num);
   }
 
   //

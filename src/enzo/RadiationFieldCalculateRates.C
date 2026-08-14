@@ -591,12 +591,12 @@ int RadiationFieldCalculateRates(FLOAT Time)
 
 /* ------------------------------------------------------------------ */
   if (RadiationFieldType < 0 || RadiationFieldType > 15) {
-    ENZO_VFAIL("RadiationFieldType %"ISYM" not recognized.\n", 
+    ENZO_VFAIL("RadiationFieldType %" ISYM " not recognized.\n", 
 	    RadiationFieldType)
    }
 
   if (AdjustUVBackground < 0 || AdjustUVBackground > 2 ) {
-   ENZO_VFAIL("AdjustUVBackground Type %"ISYM" not recognized.\n",
+   ENZO_VFAIL("AdjustUVBackground Type %" ISYM " not recognized.\n",
             AdjustUVBackground)
   }
 

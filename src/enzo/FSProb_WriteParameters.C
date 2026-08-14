@@ -34,21 +34,21 @@ int FSProb::WriteParameters(FILE *fptr)
   fprintf(fptr, "FSRadiationEtaRadius = %22.16e\n", EtaRadius);
   fprintf(fptr, "FSRadiationEtaCenter = %22.16e %22.16e %22.16e\n", 
 	  EtaCenter[0], EtaCenter[1], EtaCenter[2]);
-  fprintf(fptr, "FSRadiationLimiterType = %"ISYM"\n", LimType);
+  fprintf(fptr, "FSRadiationLimiterType = %" ISYM"\n", LimType);
 
-  fprintf(fptr, "FSRadiationBoundaryX0Faces = %"ISYM" %"ISYM"\n", 
+  fprintf(fptr, "FSRadiationBoundaryX0Faces = %" ISYM" %" ISYM"\n", 
 	  BdryType[0][0], BdryType[0][1]);
   if (rank > 1) {
-    fprintf(fptr, "FSRadiationBoundaryX1Faces = %"ISYM" %"ISYM"\n", 
+    fprintf(fptr, "FSRadiationBoundaryX1Faces = %" ISYM" %" ISYM"\n", 
 	    BdryType[1][0], BdryType[1][1]);
     if (rank > 2) {
-      fprintf(fptr, "FSRadiationBoundaryX2Faces = %"ISYM" %"ISYM"\n", 
+      fprintf(fptr, "FSRadiationBoundaryX2Faces = %" ISYM" %" ISYM"\n", 
 	      BdryType[2][0], BdryType[2][1]);
     }
   }
 
   fprintf(fptr, "FSRadiationMaxDt = %22.16e\n", maxdt);    
-  fprintf(fptr, "FSRadiationInitialGuess = %"ISYM"\n", initial_guess);    
+  fprintf(fptr, "FSRadiationInitialGuess = %" ISYM"\n", initial_guess);    
   fprintf(fptr, "FSRadiationTolerance = %22.16e\n", sol_tolerance);    
   fprintf(fptr, "FSRadiationMaxMGIters = %i\n", sol_maxit);    
   fprintf(fptr, "FSRadiationMGRelaxType = %i\n", sol_rlxtype);    

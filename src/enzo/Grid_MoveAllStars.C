@@ -35,7 +35,7 @@ int grid::MoveAllStars(int NumberOfGrids, grid* FromGrid[], int TopGridDimension
   Star *NewStar, *cstar;
 
   if (NumberOfGrids < 1) {
-    ENZO_VFAIL("NumberOfGrids(%"ISYM") must be > 0.\n", NumberOfGrids)
+    ENZO_VFAIL("NumberOfGrids(%" ISYM") must be > 0.\n", NumberOfGrids)
   }
 
   /* Determine total number of stars. */
@@ -54,7 +54,7 @@ int grid::MoveAllStars(int NumberOfGrids, grid* FromGrid[], int TopGridDimension
 
   /* Debugging info. */
 
-//  if (debug) printf("MoveAllStars: %"ISYM" (before: ThisGrid = %"ISYM").\n",
+//  if (debug) printf("MoveAllStars: %" ISYM" (before: ThisGrid = %" ISYM").\n",
 //		    TotalNumberOfStars, NumberOfStars);
 
   /* Copy FromGrids' stars to new grid. */
@@ -129,7 +129,7 @@ int grid::MoveAllStarsOld(int NumberOfGrids, grid* FromGrid[], int TopGridDimens
   Star *NewStar, *cstar;
 
   if (NumberOfGrids < 1) {
-    ENZO_VFAIL("NumberOfGrids(%"ISYM") must be > 0.\n", NumberOfGrids)
+    ENZO_VFAIL("NumberOfGrids(%" ISYM") must be > 0.\n", NumberOfGrids)
   }
 
   /* Determine total number of stars. */
@@ -148,7 +148,7 @@ int grid::MoveAllStarsOld(int NumberOfGrids, grid* FromGrid[], int TopGridDimens
 
   /* Debugging info. */
 
-//  if (debug) printf("MoveAllStars: %"ISYM" (before: ThisGrid = %"ISYM").\n",
+//  if (debug) printf("MoveAllStars: %" ISYM" (before: ThisGrid = %" ISYM").\n",
 //		    TotalNumberOfStars, NumberOfStars);
 
   /* Copy FromGrids' stars to new grid. */

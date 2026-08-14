@@ -140,7 +140,7 @@ int grid::TracerParticleOutputData(FILE *fptr, FLOAT WriteOutTime)
 
     // double check to make sure we didn't screw up
     if((numberofcountedparticles != NumberOfTracerParticles) || (fillindex/GridRank != NumberOfTracerParticles)){
-      ENZO_VFAIL("error in grid->TracerParticleOutputData:  Particle num wrong! %"ISYM" %"ISYM" %"ISYM" %"ISYM"\n",
+      ENZO_VFAIL("error in grid->TracerParticleOutputData:  Particle num wrong! %" ISYM" %" ISYM" %" ISYM" %" ISYM"\n",
 		 numberofcountedparticles, NumberOfTracerParticles, fillindex, GridRank)
 	}
 
@@ -154,7 +154,7 @@ int grid::TracerParticleOutputData(FILE *fptr, FLOAT WriteOutTime)
   /* Write floatpoint data (this is (2+GridRank) x NumberOfTracerParticles). */
  
   if (fwrite((void*) TracerParticleData, sizeof(float), BufferSize, fptr) != BufferSize) {
-    ENZO_VFAIL("P(%"ISYM") Error writing tracer particle data\n",
+    ENZO_VFAIL("P(%" ISYM") Error writing tracer particle data\n",
 	       MyProcessorNumber)
       }
 
@@ -165,7 +165,7 @@ int grid::TracerParticleOutputData(FILE *fptr, FLOAT WriteOutTime)
     /* write more floating point data (which is GridRank x NumberOfTracerParticles).  This
        happens to be particle velocity. */
     if (fwrite((void*) TracerParticleVelocityData, sizeof(float), PartVelBufferSize, fptr) != PartVelBufferSize) {
-      ENZO_VFAIL("P(%"ISYM") Error writing tracer particle data (2)\n", 
+      ENZO_VFAIL("P(%" ISYM") Error writing tracer particle data (2)\n", 
 		 MyProcessorNumber)
 	}
 

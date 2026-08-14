@@ -84,7 +84,7 @@ int mbh_maker(int *nx, int *ny, int *nz, int *size, float *d, float *u,
 
 	/* order: MBH mass (in Ms), MBH position[3], MBH creation time (w.r.t. the current time) */
 
-	if (sscanf(line, " %"FSYM"  %"PSYM"  %"PSYM"  %"PSYM"  %"FSYM, 
+	if (sscanf(line, " %" FSYM"  %" PSYM"  %" PSYM"  %" PSYM"  %" FSYM, 
 		   &dummy_float[0], &dummy_double[0], &dummy_double[1],
 		   &dummy_double[2], &dummy_float[1]) != 5) {
 	  fprintf(stderr, "mbh_maker: File structure wrong in %s\n", MBHInsertLocationFilename);
@@ -166,7 +166,7 @@ int mbh_maker(int *nx, int *ny, int *nz, int *size, float *d, float *u,
 
 
   if ((ii-*np) > 0)
-    fprintf(stdout, "mbh_maker: %"ISYM" new mbh particle(s)\n", ii-*np);
+    fprintf(stdout, "mbh_maker: %" ISYM" new mbh particle(s)\n", ii-*np);
 
   if ((ii-*np) >= *nmax) {
     fprintf(stdout, "mbh_maker: reached max new particle count");

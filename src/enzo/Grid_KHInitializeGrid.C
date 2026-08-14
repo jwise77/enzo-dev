@@ -95,10 +95,10 @@ int grid::KHInitializeGrid(float KHInnerDensity,
   }
       
   if (debug) {
-    fprintf(stderr, "GKHIG: BF[2][0]:%"FSYM" BF[2][size/2]: %"FSYM"\n", 
+    fprintf(stderr, "GKHIG: BF[2][0]:%" FSYM" BF[2][size/2]: %" FSYM"\n", 
             BaryonField[Vel1Num][0], BaryonField[Vel1Num][size/2]);
 
-    fprintf(stderr, "GKHIG: BF[3][0]:%"FSYM" BF[3][size/2]: %"FSYM"\n", 
+    fprintf(stderr, "GKHIG: BF[3][0]:%" FSYM" BF[3][size/2]: %" FSYM"\n", 
             BaryonField[Vel2Num][0], BaryonField[Vel2Num][size/2]);
   }
   return SUCCESS;

@@ -84,7 +84,7 @@ int grid::TestGravitySphereCheckResults(FILE *fptr)
  
     /* Output results. */
  
-    fprintf(fptr, "%"FSYM"  %e   %e   %e\n", r, ftang, -fradial, fanalytic);
+    fprintf(fptr, "%" FSYM"  %e   %e   %e\n", r, ftang, -fradial, fanalytic);
  
   } // end loop over particles.
  

@@ -461,8 +461,8 @@ float grid::CenAccretionRate(float density, FLOAT AccretionRadius,
     AccretionRadius*LengthUnits * pow(lambda, -7.0/3.0);
   
   //    if (mdot > 0.0) {
-  // 	fprintf(stdout, "BH Accretion[%"ISYM"]: time = %"FSYM", mdot = %"GSYM" Msun/yr, "
-  // 		"M_BH = %lf Msun, rho = %"GSYM" g/cm3, c_s = %"GSYM" cm/s, T = %"GSYM" K\n",
+  // 	fprintf(stdout, "BH Accretion[%" ISYM"]: time = %" FSYM", mdot = %" GSYM" Msun/yr, "
+  // 		"M_BH = %lf Msun, rho = %" GSYM" g/cm3, c_s = %" GSYM" cm/s, T = %" GSYM" K\n",
   // 		Identifier, time, mdot*yr, Mass, density*DensityUnits, c_s, temperature[index]);
   //	this->PrintInfo();  
   //    }

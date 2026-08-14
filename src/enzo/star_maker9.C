@@ -121,7 +121,7 @@ int star_maker9(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
   //BigStarFormationDone = CommunicationMaxValue(BigStarFormationDone);
 
   /* Loop over grid looking for a cell with mass larger than massthres */
-  //printf("BigStarFormationDone = %"ISYM" MyProcessorNumber = %"ISYM"\n", BigStarFormationDone,MyProcessorNumber);
+  //printf("BigStarFormationDone = %" ISYM" MyProcessorNumber = %" ISYM"\n", BigStarFormationDone,MyProcessorNumber);
   if(BigStarFormationDone == 0){
     if (*level == MaximumRefinementLevel) {
       float oldrho;
@@ -165,7 +165,7 @@ int star_maker9(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 		}
 
 	      } // ENDFOR old particles
-	      //printf("star_maker9: nearest old star = %"FSYM"\n",POW(nearestdx2,0.5) );
+	      //printf("star_maker9: nearest old star = %" FSYM"\n",POW(nearestdx2,0.5) );
 
 	      if (ii < *nmax) {
 
@@ -190,8 +190,8 @@ int star_maker9(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 		  /* Remove mass from grid */
 	    
 // 		  d[index] = maxdens;
-		  printf("BigStarFormation: Star made at %"FSYM", %"FSYM", %"FSYM" \n ", xpos, ypos, zpos);
-		  //printf("now BigStarFormation = %"ISYM"\n", BigStarFormation);
+		  printf("BigStarFormation: Star made at %" FSYM", %" FSYM", %" FSYM" \n ", xpos, ypos, zpos);
+		  //printf("now BigStarFormation = %" ISYM"\n", BigStarFormation);
 
 		  if (*imethod == 2) {
 		    ugrid = 0.5*(u[index] + u[index+xo]);
@@ -221,7 +221,7 @@ int star_maker9(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 		  }
 
 
-		  printf("star_maker9: making new star, type = %"ISYM"\n",*ctype );
+		  printf("star_maker9: making new star, type = %" ISYM"\n",*ctype );
 		  mp[ii] = 0.0; //adddens;
 		  type[ii] = -*ctype;
 	      
@@ -261,7 +261,7 @@ int star_maker9(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
   } // if BigStarForm
 
   if (ii > 0)
-    printf("P(%"ISYM"): star_maker9[add]: %"ISYM" new sink particles\n", *nproc, ii);
+    printf("P(%" ISYM"): star_maker9[add]: %" ISYM" new sink particles\n", *nproc, ii);
 
   if (ii >= *nmax) {
     fprintf(stdout, "star_maker9: reached max new particle count");

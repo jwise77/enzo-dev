@@ -339,7 +339,7 @@ int SendAllBaryonFields = FALSE;
     if (MyProcessorNumber == FromProcessor) {
 #ifdef MPI_INSTRUMENTATION
       if (traceMPI) 
-	fprintf(tracePtr, "CRR RF: Sending %"ISYM" floats from %"ISYM" to %"ISYM"\n", 
+	fprintf(tracePtr, "CRR RF: Sending %" ISYM" floats from %" ISYM" to %" ISYM"\n", 
 		TransferSize, FromProcessor, ProcessorNumber);
 #endif
       CommunicationBufferedSend(buffer, TransferSize, DataType, ProcessorNumber, 

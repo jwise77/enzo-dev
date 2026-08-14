@@ -158,7 +158,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 #endif
 //  if (cstar->level > level) {
 //    printf("Reducing ejecta density and energy by 10%% on "
-//	   "level %"ISYM" to avoid crashing.\n", level);
+//	   "level %" ISYM" to avoid crashing.\n", level);
 //    EjectaDensity *= 0.1;
 //    EjectaMetalDensity *= 0.1;
 //    EjectaThermalEnergy *= 0.1;
@@ -398,7 +398,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 		OldDensity / BaryonField[DensNum][index];
 #endif
 
-//	      printf("grid::AddFS: rho= %"GSYM"->%"GSYM", TE= %"GSYM"->%"GSYM", drho= %"GSYM", dE= %"GSYM"\n", 
+//	      printf("grid::AddFS: rho= %" GSYM"->%" GSYM", TE= %" GSYM"->%" GSYM", drho= %" GSYM", dE= %" GSYM"\n", 
 //		     OldDensity, BaryonField[DensNum][index], 
 //		     BaryonField[TENum][index], newGE, EjectaDensity, EjectaThermalEnergy * 1/radius2); 
 
@@ -990,7 +990,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 	}  // END i-direction
       }  // END j-direction
     }  // END k-direction
-    fprintf(stderr, "CellsModified: %"ISYM"\n", CellsModified2);
+    fprintf(stderr, "CellsModified: %" ISYM"\n", CellsModified2);
   }
 
   /* Now it's done, unmark. */

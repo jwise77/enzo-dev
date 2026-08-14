@@ -151,7 +151,7 @@ int grid::AGNDiskInitializeGrid(float BlackHoleMass,
 	      temperature = DiskTemperature;
 	      double DiskMass = 2.0*M_PI*DiskDensity*DiskHeight*DiskRadius*(R-DiskHeight*log(R/DiskHeight+1))*MassUnits;
 	      double Mass = BlackHoleMass*SolarMass + DiskMass;
-	      printf("BH=%"GSYM", Disk=%"GSYM", r=%"GSYM"\n", BlackHoleMass, DiskMass/SolarMass, R);
+	      printf("BH=%" GSYM", Disk=%" GSYM", r=%" GSYM"\n", BlackHoleMass, DiskMass/SolarMass, R);
 	      vrot = sqrt(GravConst*Mass/(max(R,5*CellWidth[0][0])*LengthUnits))/VelocityUnits;
 	      Velocity[0] = -vrot*sinphi;
 	      Velocity[1] = vrot*cosphi;

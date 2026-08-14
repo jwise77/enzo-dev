@@ -85,7 +85,7 @@ int StarParticleMergeMBH(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
     for (OtherStar = ThisStar->NextStar; OtherStar;
 	 OtherStar = OtherStar->NextStar) {
       if (ThisStar->ReturnID() == OtherStar->ReturnID()) {
-	ENZO_VFAIL("%"ISYM" -- merging duplicate particle??\n", ThisStar->ReturnID())
+	ENZO_VFAIL("%" ISYM" -- merging duplicate particle??\n", ThisStar->ReturnID())
       }
 
       /* To merge two MBH particles you should satisfy 3 conditions 
@@ -112,7 +112,7 @@ int StarParticleMergeMBH(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 	ThisStar->Merge(OtherStar);
 	OtherStar->MarkForDeletion();
 
-	printf("Merging stars %"ISYM" and %"ISYM"\n", ThisStar->ReturnID(),
+	printf("Merging stars %" ISYM" and %" ISYM"\n", ThisStar->ReturnID(),
 	       OtherStar->ReturnID());  
 	printf("Merging stars candidates: mergableMBH = %d, Separation2 = %g, rmerge2 = %g, RelVel2 = %g, vcirc2 = %g \n", 
 	       ThisStar->MergableMBH(OtherStar), ThisStar->Separation2(OtherStar), rmerge2,

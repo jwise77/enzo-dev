@@ -248,12 +248,12 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
       FromNumber = Mover->FromGrid->ReturnNumberOfPhotonPackages();
       Mover->FromGrid->SetNumberOfPhotonPackages(FromNumber-1);
 
-//      printf("CTPh(P%"ISYM"): Photon %"ISYM" (=>P%"ISYM") :: lvl %"ISYM", grid %"ISYM", srcid=%"ISYM", L = %"GSYM"\n",
+//      printf("CTPh(P%" ISYM"): Photon %" ISYM" (=>P%" ISYM") :: lvl %" ISYM", grid %" ISYM", srcid=%" ISYM", L = %" GSYM"\n",
 //	     MyProcessorNumber, ToCount, ToProc, TempLevel, TempGridNum,
 //	     SendList[ToProc][ToCount].buffer.SuperSourceID,
 //	     SendList[ToProc][ToCount].buffer.Photons);
       if (DEBUG > 1)
-	printf("CTPh(P%"ISYM"): Photon %"ISYM" (=>P%"ISYM") :: lvl %"ISYM", grid %"ISYM", L = %"GSYM"\n",
+	printf("CTPh(P%" ISYM"): Photon %" ISYM" (=>P%" ISYM") :: lvl %" ISYM", grid %" ISYM", L = %" GSYM"\n",
 	       MyProcessorNumber, ToCount, ToProc, TempLevel, TempGridNum,
 	       SendList[ToProc][ToCount].buffer.Photons);
 
@@ -274,10 +274,10 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
   if (DEBUG) {
     for (proc = 0; proc < NumberOfProcessors; proc++)
       if (PhotonCounter[proc])
-	printf("CTPh(P%"ISYM"): Packed %"ISYM" photons into COMM buffer #%"ISYM".\n", 
+	printf("CTPh(P%" ISYM"): Packed %" ISYM" photons into COMM buffer #%" ISYM".\n", 
 	       MyProcessorNumber, PhotonCounter[proc], proc);
     if (localCounter)
-      printf("CTPh(P%"ISYM"): Transferred %"ISYM" photons locally.\n", 
+      printf("CTPh(P%" ISYM"): Transferred %" ISYM" photons locally.\n", 
 	     MyProcessorNumber, localCounter);  
   }
 
@@ -328,7 +328,7 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
       //tag = MPI_PHOTONGROUP_TAG*10 + nPhoton[proc];
       tag = MPI_PHOTONGROUP_TAG;
       if (DEBUG && NumberOfMessages > 0)
-	printf("CTPh(P%"ISYM"): Sending %"ISYM" photons to P%"ISYM" (%d messages, TAG=%d)\n", 
+	printf("CTPh(P%" ISYM"): Sending %" ISYM" photons to P%" ISYM" (%d messages, TAG=%d)\n", 
 	       MyProcessorNumber, nPhoton[proc], proc, NumberOfMessages, tag);
       for (i = 0; i < NumberOfMessages; i++) {
 	Offset = i*PHOTON_BUFFER_SIZE;

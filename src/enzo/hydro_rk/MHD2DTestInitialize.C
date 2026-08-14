@@ -83,40 +83,40 @@ int MHD2DTestInitialize(FILE *fptr, FILE *Outfptr,
     ret = 0;
 
     /* read parameters */
-    ret += sscanf(line, "RefineAtStart = %"ISYM, 
+    ret += sscanf(line, "RefineAtStart = %" ISYM, 
 		  &RefineAtStart);
-    ret += sscanf(line, "LowerVelocityX = %"FSYM,
+    ret += sscanf(line, "LowerVelocityX = %" FSYM,
 		  &LowerVelocityX);
-    ret += sscanf(line, "LowerVelocityY = %"FSYM,
+    ret += sscanf(line, "LowerVelocityY = %" FSYM,
 		  &LowerVelocityY);
-    ret += sscanf(line, "LowerPressure = %"FSYM, 
+    ret += sscanf(line, "LowerPressure = %" FSYM, 
 		  &LowerPressure);
-    ret += sscanf(line, "LowerDensity = %"FSYM, 
+    ret += sscanf(line, "LowerDensity = %" FSYM, 
 		  &LowerDensity);
-    ret += sscanf(line, "LowerBx = %"FSYM,
+    ret += sscanf(line, "LowerBx = %" FSYM,
 		  &LowerBx);
-    ret += sscanf(line, "LowerBy = %"FSYM,
+    ret += sscanf(line, "LowerBy = %" FSYM,
 		  &LowerBy);
-    ret += sscanf(line, "UpperVelocityX = %"FSYM, 
+    ret += sscanf(line, "UpperVelocityX = %" FSYM, 
 		  &UpperVelocityX);
-    ret += sscanf(line, "UpperVelocityY = %"FSYM, 
+    ret += sscanf(line, "UpperVelocityY = %" FSYM, 
 		  &UpperVelocityY);
-    ret += sscanf(line, "UpperPressure = %"FSYM, 
+    ret += sscanf(line, "UpperPressure = %" FSYM, 
 		  &UpperPressure);
-    ret += sscanf(line, "UpperDensity = %"FSYM,
+    ret += sscanf(line, "UpperDensity = %" FSYM,
                   &UpperDensity);
-    ret += sscanf(line, "UpperBx = %"FSYM,
+    ret += sscanf(line, "UpperBx = %" FSYM,
 		  &UpperBx);
-    ret += sscanf(line, "UpperBy = %"FSYM,
+    ret += sscanf(line, "UpperBy = %" FSYM,
 		  &UpperBy);
-    ret += sscanf(line, "MHD2DProblemType = %"ISYM,
+    ret += sscanf(line, "MHD2DProblemType = %" ISYM,
 		  &MHD2DProblemType);
-    ret += sscanf(line, "RampWidth = %"FSYM,
+    ret += sscanf(line, "RampWidth = %" FSYM,
 		  &RampWidth);
-    ret += sscanf(line, "UseColour = %"ISYM, 
+    ret += sscanf(line, "UseColour = %" ISYM, 
 		  &UseColour);
     
-    //        fprintf(stderr, "%"ISYM" MHD2DTestInitialize !!!!!!!!!!\n", RefineAtStart);
+    //        fprintf(stderr, "%" ISYM" MHD2DTestInitialize !!!!!!!!!!\n", RefineAtStart);
     /* if the line is suspicious, issue a warning */
 
     /*
@@ -185,7 +185,7 @@ int MHD2DTestInitialize(FILE *fptr, FILE *Outfptr,
        and re-initialize the level after it is created. */
 
     for (level = 0; level < MaximumRefinementLevel; level++) {
-      printf("In level %"ISYM"\n", level);
+      printf("In level %" ISYM"\n", level);
       if (RebuildHierarchy(&MetaData, LevelArray, level) == FAIL) {
 	fprintf(stderr, "Error in RebuildHierarchy.\n");
 	return FAIL;

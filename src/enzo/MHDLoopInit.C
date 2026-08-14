@@ -90,15 +90,15 @@ int MHDLoopInit(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
     ret = 0;
-    ret += sscanf(line, "MHDLoopDensity = %"PSYM, &Density);
-    ret += sscanf(line, "MHDLoopPressure = %"PSYM, &Pressure);
-    ret += sscanf(line, "MHDLoopVx = %"PSYM, &Vx);
-    ret += sscanf(line, "MHDLoopVy = %"PSYM, &Vy);
-    ret += sscanf(line, "MHDLoopVz = %"PSYM, &Vz);
-    ret += sscanf(line, "MHDLoopB0 = %"PSYM, &B0);
-    ret += sscanf(line, "MHDLoopR0 = %"PSYM, &R0);
-    ret += sscanf(line, "MHDLoopCurrentAxis = %d", &CurrentAxis);
-    ret += sscanf(line, "MHDLoopCenter = %"PSYM" %"PSYM" %"PSYM, 
+    ret += sscanf(line, "MHDLoopDensity = %" PSYM, &Density);
+    ret += sscanf(line, "MHDLoopPressure = %" PSYM, &Pressure);
+    ret += sscanf(line, "MHDLoopVx = %" PSYM, &Vx);
+    ret += sscanf(line, "MHDLoopVy = %" PSYM, &Vy);
+    ret += sscanf(line, "MHDLoopVz = %" PSYM, &Vz);
+    ret += sscanf(line, "MHDLoopB0 = %" PSYM, &B0);
+    ret += sscanf(line, "MHDLoopR0 = %" PSYM, &R0);
+    ret += sscanf(line, "MHDLoopCurrentAxis = %" ISYM, &CurrentAxis);
+    ret += sscanf(line, "MHDLoopCenter = %" PSYM" %" PSYM" %" PSYM, 
 		  Center, Center+1, Center+2);
     
   }  
