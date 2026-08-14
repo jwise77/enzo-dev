@@ -777,7 +777,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 
     ret += sscanf(line, "Debug2 = %"ISYM, &debug2);
 
-    ret += sscanf(line, "MemoryLimit = %lld", &MemoryLimit);
+    ret += sscanf(line, "MemoryLimit = %" ISYM, &MemoryLimit);
 
 #ifdef STAGE_INPUT
     ret += sscanf(line, "StageInput = %"ISYM, &StageInput);

@@ -781,7 +781,7 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
   fprintf(fptr, "Debug1                          = %"ISYM"\n", debug1);
   fprintf(fptr, "Debug2                          = %"ISYM"\n", debug2);
 
-  fprintf(fptr, "MemoryLimit                     = %lld\n", MemoryLimit);
+  fprintf(fptr, "MemoryLimit                     = %" ISYM "\n", MemoryLimit);
 
 #ifdef STAGE_INPUT
   fprintf(fptr, "StageInput                      = %"ISYM"\n", StageInput);

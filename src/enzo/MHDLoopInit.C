@@ -97,7 +97,7 @@ int MHDLoopInit(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
     ret += sscanf(line, "MHDLoopVz = %"PSYM, &Vz);
     ret += sscanf(line, "MHDLoopB0 = %"PSYM, &B0);
     ret += sscanf(line, "MHDLoopR0 = %"PSYM, &R0);
-    ret += sscanf(line, "MHDLoopCurrentAxis = %d", &CurrentAxis);
+    ret += sscanf(line, "MHDLoopCurrentAxis = %" ISYM, &CurrentAxis);
     ret += sscanf(line, "MHDLoopCenter = %"PSYM" %"PSYM" %"PSYM, 
 		  Center, Center+1, Center+2);
     

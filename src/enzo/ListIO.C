@@ -24,7 +24,7 @@ int ReadListOfInts(FILE *fptr, int N, int nums[])
 {
   for (int i = 0; i < N; i++)
     if (fscanf(fptr, "%d", nums + i) != 1) {
-      fprintf(stderr, "ReadListOfInts called with %i numbers to read. %i %i %i %i %i",N,nums);
+      fprintf(stderr, "ReadListOfInts called with %d numbers to read.\n", N);
       throw(EnzoFatalException("Error in: "__FILE__));
  }
   fscanf(fptr, "\n");

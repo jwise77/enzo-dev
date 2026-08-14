@@ -54,7 +54,7 @@ int DetermineSubgridSizeExtrema(long_int NumberOfCells, int level, int MaximumSt
 
   if (debug)
     printf("DetermineSGSize: MaxSubgridSize = %"ISYM", MinSubgridEdge = %"
-	   ISYM", ncells = %lld\n",
+	   ISYM", ncells = %"ISYM"\n",
 	   MaximumSubgridSize, MinimumSubgridEdge, NumberOfCells);
 
   return SUCCESS;

@@ -62,9 +62,9 @@ int PoissonSolverTestInitialize(FILE *fptr, FILE *Outfptr,
 
     /* read parameters */
 
-    ret += sscanf(line, "PoissonSolverTestType = %d", &TestType);
-    ret += sscanf(line, "PoissonSolverTestGeometryControl = %f", &TestGeometryControl);
-    ret += sscanf(line, "PoissonSolverTestRefineAtStart = %d", &RefineAtStart);
+    ret += sscanf(line, "PoissonSolverTestType = %" ISYM, &TestType);
+    ret += sscanf(line, "PoissonSolverTestGeometryControl = %" FSYM, &TestGeometryControl);
+    ret += sscanf(line, "PoissonSolverTestRefineAtStart = %" ISYM, &RefineAtStart);
     /* if the line is suspicious, issue a warning */
 
   } // end input from parameter file
