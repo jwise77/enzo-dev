@@ -511,7 +511,7 @@ int grid::InterpolateBoundaryFromParent(grid *ParentGrid)
       
        int MHDParentTempDims[3][3], MHDChildTempDims[3][3], MHDParentDims[3][3];
 
-       int MHDParentTempSize[3]={1,1,1}, MHDChildTempSize[3]={1,1,1}, One[3] = {1,1,1};
+       int MHDParentTempSize[3]={1,1,1}, MHDChildTempSize[3]={1,1,1};
       
        *dummy = 1;
 

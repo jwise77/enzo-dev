@@ -292,15 +292,13 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
   FLOAT When, GridTime;
   //float dtThisLevelSoFar = 0.0, dtThisLevel, dtGrid, dtActual, dtLimit;
   //float dtThisLevelSoFar = 0.0, dtThisLevel;
-  int cycle = 0, counter = 0, grid1, subgrid, grid2;
-  HierarchyEntry *NextGrid;
-  int dummy_int, OutputNow = FALSE;
+  int cycle = 0, grid1;
+  int OutputNow = FALSE;
 
   char level_name[MAX_LINE_LENGTH];
   sprintf(level_name, "Level_%02" ISYM, level);
     
   // Update lcaperf "level" attribute
-  Eint32 lcaperf_level = level;
 #ifdef USE_LCAPERF
   lcaperf.attribute ("level",&lcaperf_level,LCAPERF_INT);
 #endif
@@ -613,7 +611,6 @@ int EvolveLevel(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
                 /* Gravity: compute acceleration field for grid and particles. */
                 if (RK2SecondStepBaryonDeposit && SelfGravity) {
-                    int Dummy;
                     if (level <= MaximumGravityRefinementLevel) {
                         if (level > 0) 
                             Grids[grid1]->GridData->SolveForPotential(level) ;

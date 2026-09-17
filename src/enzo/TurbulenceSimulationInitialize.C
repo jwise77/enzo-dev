@@ -92,8 +92,7 @@ int TurbulenceSimulationInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
  
   char line[MAX_LINE_LENGTH];
-  int i, j, dim, gridnum, ret, SubgridsAreStatic, region;
-  HierarchyEntry *Subgrid;
+  int i, j, dim, gridnum, ret;
  
   char *DensityName = NULL, *TotalEnergyName = NULL, *GasPressureName = NULL, *GasEnergyName = NULL,
        *VelocityNames[MAX_DIMENSION],
@@ -452,11 +451,7 @@ int TurbulenceSimulationReInitialize(HierarchyEntry *TopGrid,
   /* Declarations. */
  
   int dim, gridnum = 0;
-  char *DensityName = NULL, *TotalEnergyName = NULL,*GasPressureName = NULL, *GasEnergyName = NULL,
-       *ParticlePositionName = NULL, *ParticleVelocityName = NULL, 
-       *ParticleMassName = NULL, *VelocityNames[MAX_DIMENSION], 
-    *RandomForcingNames[MAX_DIMENSION],
-    *MagneticNames[MAX_DIMENSION];
+  char *DensityName = NULL, *TotalEnergyName = NULL, *GasPressureName = NULL, *GasEnergyName = NULL, *VelocityNames[MAX_DIMENSION], *RandomForcingNames[MAX_DIMENSION], *MagneticNames[MAX_DIMENSION];
 
   for (dim = 0; dim < MAX_DIMENSION; dim++) {
     VelocityNames[dim] = NULL;

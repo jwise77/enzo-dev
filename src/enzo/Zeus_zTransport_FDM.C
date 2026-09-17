@@ -51,12 +51,8 @@ int Zeus_zTransport_FDM(float *d, float *e, float *u, float *v, float *w,
 
   /* Locals */
 
-  int i, j, k, im1, jm1, k1, k2, n, dim, idim, jdim, offset, ic,
-      fistart, fjstart, fiend, fjend, lface, rface;
-  float dnew, q[ijk], div[ijk], f2[ijk], f3[ijk], f4[ijk],
-        dstar[ijk], estar[ijk], ustar[ijk], vstar[ijk], wstar[ijk],
-        uavgi[ijk], uavgj[ijk], uavgk[ijk], df, ueff[ijk];
-  int km1, kp1, km2, km3, kp2;
+  int i, j, k, im1, jm1, k1, k2, n, dim, idim, jdim, offset, fistart, fjstart, fiend, fjend, lface, rface;
+  float dnew, f2[ijk], f3[ijk], f4[ijk], dstar[ijk], ustar[ijk], vstar[ijk], wstar[ijk], uavgi[ijk], uavgj[ijk], uavgk[ijk], ueff[ijk];
 
 //=======================================================================
 
@@ -81,7 +77,6 @@ int Zeus_zTransport_FDM(float *d, float *e, float *u, float *v, float *w,
 //    Compute mass flux
       
       for (k = ks-2; k <= ke+3; k++) {
-	km1 = max(k-1, ks-2);
 	f1[IDX(i,j,k)] = dstar[k]*ueff[k];
 	if (fabs(w[IDX(i,j,k)]) > 0.5*dz[k]/dt) {
 	  printf("zt problem 1: w=%" GSYM",%" GSYM",%" GSYM"  dstar=%" GSYM",%" GSYM",%" GSYM"  i,j,k=%" ISYM",%" ISYM",%" ISYM"\n",

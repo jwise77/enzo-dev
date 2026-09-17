@@ -137,12 +137,10 @@ int MHDBlastInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
     TotalEnergyB = 1.0;
 
   float MetalDensityA = 0.0, MetalDensityB=0.0;
-  float PressureA, PressureB;
   float VelocityA[3] = {0.666, 0.666, 0.666};
   float VelocityB[3] = {0.3666, 0.3666, 0.3666};
   float BA[3]  = {0.5, 0.0, 0.0};
   float BB[3]  = {0.5, 0.0, 0.0};
-  float EnergyA, EnergyB;
   float Radius = 4.0;
   int InitStyle = 0, PerturbMethod = -1;
   float MHDBlastCenter[3] = {0.5,0.5,0.5};
@@ -154,8 +152,7 @@ int MHDBlastInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   
   //Obsolete variable names.
   float Pressure0, Pressure1;
-  float B0[3],B1[3],Energy0, Energy1;
-  float Density0,Density1, GasEnergy0, GasEnergy1, TotalEnergy0,TotalEnergy1;
+  float Energy0, Energy1;
     
   //
   // Read Parameter File.

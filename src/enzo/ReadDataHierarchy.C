@@ -51,7 +51,6 @@ int ReadDataHierarchy(FILE *fptr, hid_t Hfile_id, HierarchyEntry *Grid, int Grid
 
   //dcollins, August 5 2009.  Updated failsafe for old files that don't have Task defined.
   int NewProc = ReadDataGridCounter % NumberOfProcessors;
-  int ProcMap = ABS(NewProc - NumberOfProcessors) % NumberOfProcessors;
   
   FILE * ptr_task_check = fptr;
   

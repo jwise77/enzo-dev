@@ -50,7 +50,6 @@ int ReadFile(char *name, int Rank, int Dim[], int StartIndex[],
   hsize_t     mem_stride, mem_count, mem_block;
   hsize_t     file_stride[4], file_count[4], file_block[4];
   hsize_t     slab_stride[4], slab_count[4], slab_block[4];
-  hsize_t     attr_count;
  
   hsize_t    mem_offset;
   hsize_t    file_offset[4];

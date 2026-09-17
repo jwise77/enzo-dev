@@ -105,17 +105,7 @@ int grid::ElectronFractionEstimate(float dt)
   dbase1 = DensityUnits * pow((afloat*aUnits), 3);
   CoolUnit = (pow(aUnits,5) * pow(xbase1,2) * pow(mh,2)) /
     (pow(TimeUnits,3) * dbase1);
-  float a3 = afloat*afloat*afloat;
-  float dom = DensityUnits * a3 / mh;
-  double rtunits = erg_eV / TimeUnits / CoolUnit;
 
-  float proper_d, proper_de, proper_hi, proper_hii, proper_hei, proper_heii,
-    proper_heiii, pressure, temperature, max_edotplus;
-  float logtem, logtem0, logtem9, dlogtem, t1, t2, tdef;
-  float ceHI, ceHeI, ceHeII, ceHeIII, ciHI, ciHeI, ciHeII, ciHeIS, reHII,
-    reHeII1, reHeII2, reHeIII;
-  float edot, edotplus, brem;
-  int cindex;
 
   for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
     for (j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {

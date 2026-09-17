@@ -205,8 +205,7 @@ int GalaxyDiskInitialize(FILE *fptr, FILE *Outfptr,
 
   } // end input from parameter file
 
-  float DensityUnits = 1.0, LengthUnits = 1.0, TemperatureUnits = 1, TimeUnits, 
-    VelocityUnits, CriticalDensity = 1, BoxLength = 1, mu = 0.6;
+  float DensityUnits = 1.0, LengthUnits = 1.0, TemperatureUnits = 1, TimeUnits, VelocityUnits;
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	   &TimeUnits, &VelocityUnits, 1);
   float MagneticUnits = sqrt(DensityUnits*4.0*M_PI)*VelocityUnits;

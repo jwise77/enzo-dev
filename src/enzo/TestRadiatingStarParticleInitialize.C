@@ -32,12 +32,6 @@
 #include "Hierarchy.h"
 #include "TopGridData.h"
 
-static float TestStarParticleInitialFractionHII   = 1.2e-5;
-static float TestStarParticleInitialFractionHeII  = 1.0e-14;
-static float TestStarParticleInitialFractionHeIII = 1.0e-17;
-static float TestStarParticleInitialFractionHM    = 2.0e-9;
-static float TestStarParticleInitialFractionH2I   = 2.0e-20;
-static float TestStarParticleInitialFractionH2II  = 3.0e-14;
 
 int TestRadiatingStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 			       TopGridData &MetaData,float *Initialdt)
@@ -77,7 +71,7 @@ int TestRadiatingStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntr
 
   char  line[MAX_LINE_LENGTH];
   char *dummy = new char[MAX_LINE_LENGTH];
-  int   dim, ret, i, source;
+  int ret;
   dummy[0] = 0;
 
   /* Error check. */
@@ -90,7 +84,6 @@ int TestRadiatingStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntr
   float TestStarParticleVelocity[3] = {0.0, 0.0, 0.0};
   FLOAT TestStarParticleStarVelocity[3] = {0.0, 0.0, 0.0};
   FLOAT TestStarParticleStarPosition[3] = {0.5, 0.5, 0.5};
-   float TestStarParticleBField[3]   = {0.0, 0.0, 0.0};
   float TestStarParticleStarMass    = 100.0;
   int TestProblemUseMetallicityField = 1;
   float TestProblemInitialMetallicityFraction = 2e-3; // 0.1 Zsun

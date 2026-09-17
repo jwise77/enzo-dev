@@ -344,7 +344,6 @@ EnzoArray<FLOAT> *grid::CreateFieldArrayFLOAT(field_type field){
   int i, dims[MAX_DIMENSION], sindex[MAX_DIMENSION], eindex[MAX_DIMENSION];
   EnzoArray<FLOAT> *array = NULL;
   //  float cell_width[] = {0, 0, 0};
-  field_type field_index;
   
   //  for(i = 0; i < this->GridRank; i++){
   //    cell_width[i] = this->CellWidth[i][0];
@@ -376,7 +375,6 @@ EnzoArray<int> *grid::CreateFieldArrayInt(field_type field){
   int i, dims[MAX_DIMENSION], sindex[MAX_DIMENSION], eindex[MAX_DIMENSION];
   EnzoArray<int> *array = NULL;
   FLOAT cell_width[] = {0, 0, 0};
-  field_type field_index;
   
   for(i = 0; i < this->GridRank; i++){
     cell_width[i] = this->CellWidth[i][0];
@@ -418,7 +416,6 @@ EnzoArray<PINT> *grid::CreateFieldArrayPINT(field_type field){
   int i, dims[MAX_DIMENSION], sindex[MAX_DIMENSION], eindex[MAX_DIMENSION];
   EnzoArray<PINT> *array = NULL;
   FLOAT cell_width[] = {0, 0, 0};
-  field_type field_index;
   
   for(i = 0; i < this->GridRank; i++){
     cell_width[i] = this->CellWidth[i][0];
@@ -444,10 +441,9 @@ EnzoArray<PINT> *grid::CreateFieldArrayPINT(field_type field){
 
 EnzoArray<bool> *grid::CreateFieldArrayBool(field_type field){
 
-  int i, dims[MAX_DIMENSION], sindex[MAX_DIMENSION], eindex[MAX_DIMENSION];
+  int i;
   EnzoArray<bool> *array = NULL;
   FLOAT cell_width[] = {0, 0, 0};
-  field_type field_index;
   
   for(i = 0; i < this->GridRank; i++){
     cell_width[i] = this->CellWidth[i][0];

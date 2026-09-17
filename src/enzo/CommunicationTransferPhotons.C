@@ -103,7 +103,6 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
 
 #ifdef USE_MPI
 
-  MPI_Status status;
   
   /* Generate a new MPI type corresponding to the PhotonList struct. */
   
@@ -116,9 +115,7 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
   /* If parallel, Partition photons into linked lists that are
      transferred to the same grid */
 
-  float value;
-  int ivalue, GridNum, level, i, dim, proc;
-  int NumberOfGrids = 0, count = 0;
+  int i, dim, proc;
 
   GroupPhotonList **SendList = new GroupPhotonList*[NumberOfProcessors];
   int *PhotonCounter = new int[NumberOfProcessors];
@@ -133,11 +130,9 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
 
   /* Count photons to move */
 
-  int NumberToMove = 0;
   ListOfPhotonsToMove *TempList = (*AllPhotons)->NextPackageToMove;
   while (TempList != NULL) {
     nPhoton[TempList->ToProcessor]++;
-    NumberToMove++;
     TempList = TempList->NextPackageToMove;
   }
   nPhoton[MyProcessorNumber] = 0;
@@ -165,12 +160,10 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
 
   /* Collect photons into lists groups by ToProcessor */
 
-  ListOfPhotonsToMove *LastMover;
   PhotonPackageEntry *dummy;
   int ToProc, ToCount, TempLevel, TempGridNum, FromNumber;
   int localCounter = 0;
 
-  LastMover = *AllPhotons;
   Mover = (*AllPhotons)->NextPackageToMove;
   while (Mover != NULL) {
 
@@ -259,7 +252,6 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
 
     }  /* ENDELSE different processor */
 
-    LastMover = Mover;
     Mover = Mover->NextPackageToMove;
 
   } /* ENDWHILE Mover */

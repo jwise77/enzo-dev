@@ -60,13 +60,13 @@ int grid::CRTransportTestInitializeGrid(int test_type, float center,
       BaryonField[field] = new float[size];
   
   /* transform pressure to total energy */
-  float etot, Ecr, v2, Bx, By,Bz, B2, gauss, r2, r, phi, Rho;
+  float etot, Ecr, v2, Bx, By, Bz, B2, r2, r, phi, Rho;
   v2 = vx * vx + vy * vy + vz * vz;
   etot = pg; // / ((Gamma-1.0)*rho) + 0.5*v2;
 
   FLOAT x, y, z;
   float D = 0.05;
-  int i, j, k, igrid;
+  int igrid;
   for (int k = 0; k < GridDimension[2]; k++) {
     for (int j = 0; j < GridDimension[1]; j++) {
       for (int i = 0; i < GridDimension[0]; i++) {

@@ -60,8 +60,7 @@ int CommunicationTransferActiveParticles
   int *GridMap = new int[NumberOfGrids];
   int *StartIndex[MAX_DIMENSION];
   int Layout[MAX_DIMENSION], LayoutTemp[MAX_DIMENSION];
-  int Rank, grid_num, bin, CenterIndex;
-  int *pbin;
+  int Rank, grid_num, CenterIndex;
   int GridPosition[MAX_DIMENSION], Dims[MAX_DIMENSION];
   FLOAT Left[MAX_DIMENSION], Right[MAX_DIMENSION];
 

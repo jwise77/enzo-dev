@@ -48,7 +48,6 @@ int KHInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
   /* parameter declarations */
 
-  FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
   
   /* local declarations */
 

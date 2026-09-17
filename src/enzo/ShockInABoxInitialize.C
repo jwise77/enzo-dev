@@ -182,15 +182,11 @@ int ShockInABoxInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   DataUnits[labelCounter] = NULL; 
   DataLabel[labelCounter++] = Vel1Name;
   // Velocity 2
-  int Vel2Num = -1;
-  int Vel3Num = -1;
   if (TopGrid.GridData->GetGridRank() > 1 || HydroMethod > 2) {
-    Vel2Num = labelCounter;
     DataUnits[labelCounter] = NULL; 
     DataLabel[labelCounter++] = Vel2Name;
     // Velocity 3
     if (TopGrid.GridData->GetGridRank() > 2 || HydroMethod > 2) {
-      Vel3Num = labelCounter;
       DataUnits[labelCounter] = NULL; 
       DataLabel[labelCounter++] = Vel3Name;
     }

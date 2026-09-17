@@ -65,7 +65,6 @@ int grid::WriteHierarchyInformationHDF5(char *base_name, hid_t level_group_id, i
   char BaryonFileName[MAX_LINE_LENGTH], *ParticleFileName = BaryonFileName;
   char LinkName[MAX_LINE_LENGTH], TargetName[MAX_LINE_LENGTH];
 
-  int dim;
   int GridGlobalPosition[MAX_DIMENSION];
   
   hid_t       group_id, subgroup_id;

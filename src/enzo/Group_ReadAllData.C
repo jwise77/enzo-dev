@@ -102,26 +102,17 @@ int Group_ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData
 
   FILE *log_fptr;
   FILE *fptr;
-  FILE *tptr;
-  FILE *mptr;
 
   hid_t       file_id, Hfile_id;
-  hid_t       attr_id, dset_id;
-  hid_t       file_acc_template;
-  size_t      memory_increment; // in bytes
-  hbool_t     dump_flag;
 
   herr_t      h5_status;
   herr_t      h5_error = -1;
 
   int GridID = 1;
-  int GridKD = 1;
 
 
-  float dummy;
   int dummy_int;
 
-  int *NumberOfSubgridCells;
 
   int io_log = 0;
 #ifdef IO_LOG

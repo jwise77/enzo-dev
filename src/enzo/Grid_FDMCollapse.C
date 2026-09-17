@@ -53,9 +53,8 @@ int grid::FDMCollapseInitializeGrid(int UseParticles, float ParticleMeanDensity)
 {
   /* declarations */
 
-  int dim, i, j, k, m, field, sphere, size, iden;
+  int dim, i, size;
   int RePsiNum, ImPsiNum, FDMDensNum;
-  float xdist,ydist,zdist;
 
   /* create fields */
 
@@ -63,7 +62,6 @@ int grid::FDMCollapseInitializeGrid(int UseParticles, float ParticleMeanDensity)
   FieldType[NumberOfBaryonFields++] = Density;
   FieldType[NumberOfBaryonFields++] = TotalEnergy;
 
-  int ivel = NumberOfBaryonFields;
   FieldType[NumberOfBaryonFields++] = Velocity1;
   if (GridRank > 1) 
     FieldType[NumberOfBaryonFields++] = Velocity2;
@@ -79,8 +77,7 @@ int grid::FDMCollapseInitializeGrid(int UseParticles, float ParticleMeanDensity)
     FieldType[NumberOfBaryonFields++] = GravPotential;
 
   /* Set various units. */
-  float DensityUnits, LengthUnits, TemperatureUnits, TimeUnits, 
-    VelocityUnits, CriticalDensity = 1, BoxLength = 1, mu = 0.6;
+  float DensityUnits, LengthUnits, TemperatureUnits, TimeUnits, VelocityUnits;
 
   FLOAT a, dadt, ExpansionFactor = 1;
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits, &TimeUnits, 
@@ -88,11 +85,7 @@ int grid::FDMCollapseInitializeGrid(int UseParticles, float ParticleMeanDensity)
   if (ComovingCoordinates) {
     CosmologyComputeExpansionFactor(Time, &a, &dadt);
     ExpansionFactor = a/(1.0+InitialRedshift);
-    CriticalDensity = 2.78e11*pow(HubbleConstantNow, 2); // in Msolar/Mpc^3
-    BoxLength = ComovingBoxSize*ExpansionFactor/HubbleConstantNow;  // in Mpc
   } else {
-    CriticalDensity = 2.78e11*pow(0.74,2); // in Msolar/Mpc^3 for h=0.74
-    BoxLength = LengthUnits / 3.086e24;
     HubbleConstantNow = 1.0;
     OmegaMatterNow = 1.0;
 	a = 1.0;
@@ -104,15 +97,12 @@ int grid::FDMCollapseInitializeGrid(int UseParticles, float ParticleMeanDensity)
  
   for (dim = 0; dim < GridRank; dim++)
         size *= GridDimension[dim];
-  int ReadData = TRUE, Offset[] = {0,0,0};
+  int Offset[] = {0,0,0};
   inits_type *tempbuffer = NULL;
   
 // Allocate Fields
   for (int field = 0; field < NumberOfBaryonFields; field++)
     BaryonField[field] = new float[size];
-
- double afloat = double(a);
- double hmcoef = 5.9157166856e27*TimeUnits/POW(LengthUnits/afloat,2)/FDMMass;
 
 if(FDMCollapseAbsorbingBoundary){
 // Read Density, use it as the absorption coefficient on the boundary
@@ -142,9 +132,6 @@ if(FDMCollapseAbsorbingBoundary){
   int CollapseTestParticleCount = 0;
   int SetupLoopCount, npart = 0;
   int ParticleCount = 0;
-  int ind, indxp, indxn, indyp, indyn, indzp, indzn;
-  int ip,in,jp,jn,kp,kn;
-  double x,y,z,vx,vy,vz;
   double cluster_size = kpc_cm/LengthUnits;
 
   if (UseParticles > 0){
@@ -178,7 +165,6 @@ if(FDMCollapseAbsorbingBoundary){
 	        ParticleNumber[npart] = CollapseTestParticleCount++;
             ParticleType[npart] = PARTICLE_TYPE_DARK_MATTER;
          // Set random position within cell.
-		    double theta = 3.1415927/6./1000*npart;
 		    ParticlePosition[0][npart] = 0.5 + cluster_size*(FLOAT(rand())/FLOAT(RAND_MAX) - 0.5);
 		    ParticlePosition[1][npart] = 0.5 + cluster_size*(FLOAT(rand())/FLOAT(RAND_MAX) - 0.5);
 		    ParticlePosition[2][npart] = 0.5 + cluster_size*(FLOAT(rand())/FLOAT(RAND_MAX) - 0.5);

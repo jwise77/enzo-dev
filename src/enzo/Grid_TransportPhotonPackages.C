@@ -44,7 +44,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
 				  grid *ParentGrid, grid *CurrentGrid)
 {
 
-  int i,j,k, dim, index, count;
+  int i, dim, count;
   grid *MoveToGrid;
 
   if (MyProcessorNumber != ProcessorNumber)

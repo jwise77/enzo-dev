@@ -128,8 +128,7 @@ int AdiabaticExpansionInitialize(FILE *fptr, FILE *Outfptr,
  
   /* Get the units so we can convert temperature later. */
  
-  float DensityUnits=1, LengthUnits=1, TemperatureUnits=1, TimeUnits=1,
-    VelocityUnits=1, PressureUnits=1.,MagneticUnits=1., a=1,dadt=0,CRUnits=1;
+  float DensityUnits=1, LengthUnits=1, TemperatureUnits=1, TimeUnits=1, VelocityUnits=1, PressureUnits=1., MagneticUnits=1., CRUnits=1;
 
   if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	       &TimeUnits, &VelocityUnits, InitialTimeInCodeUnits) == FAIL) {

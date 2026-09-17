@@ -65,7 +65,6 @@ int RadiativeTransferComputeTimestep(LevelHierarchyEntry *LevelArray[],
   const float MaxDTDecrease = 1e-10;
 
   LevelHierarchyEntry *Temp;
-  bool InitialTimestep;
   int l, maxLevel, ncells_rad;
   FLOAT HydroTime;
   float ThisPhotonDT;
@@ -99,10 +98,8 @@ int RadiativeTransferComputeTimestep(LevelHierarchyEntry *LevelArray[],
   }
 
   // Determine if this is the first timestep (not in restart)
-  InitialTimestep = true;
   for (l = 0; l < MAX_DEPTH_OF_HIERARCHY-1; l++)
     if (LevelCycleCount[l] > 0) {
-      InitialTimestep = false;
       break;
     }
 

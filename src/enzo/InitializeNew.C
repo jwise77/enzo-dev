@@ -952,8 +952,6 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
   // Walk the grids
   
   HierarchyEntry *CurrentGrid;
-  FLOAT WT = -1.0;
-  int GP = 1;
   int gridcounter = 0;
   
   CurrentGrid = &TopGrid;

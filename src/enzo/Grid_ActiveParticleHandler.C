@@ -126,7 +126,6 @@ int grid::ActiveParticleHandler_Convert(HierarchyEntry* SubgridPointer, int leve
     return SUCCESS; 
   if (NumberOfBaryonFields == 0)
     return SUCCESS;
-  int totalconverted = 0;  //static
   struct ActiveParticleFormationData supplemental_data = data_default;
   supplemental_data.level = level;
   supplemental_data.GridID = this->ID;
@@ -141,7 +140,6 @@ int grid::ActiveParticleHandler_Convert(HierarchyEntry* SubgridPointer, int leve
   
   LCAPERF_START("grid_ActiveParticleHandler_Convert");
  
-  float LifetimeFactor = 1.;
   int particles2convert = 0;
 
   int *hasharray = new int[NumberOfParticles];
@@ -196,7 +194,6 @@ int grid::ActiveParticleHandler_Convert(HierarchyEntry* SubgridPointer, int leve
   /* Now we copy the particles from NewParticles into a statically allocated
    * array */
  
-  totalconverted += supplemental_data.NumberOfNewParticles;
   //if(totalconverted)
   // printf("%s: Adding %" ISYM " new active particles to grid (total = %" ISYM ")\n", __FUNCTION__,
   //	   supplemental_data.NumberOfNewParticles, totalconverted); fflush(stdout);

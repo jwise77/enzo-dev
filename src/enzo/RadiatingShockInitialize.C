@@ -100,8 +100,7 @@ int RadiatingShockInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   /* local declarations */
  
   char line[MAX_LINE_LENGTH];
-  int  i, j, k, dim, ret, NumberOfSubgridZones[MAX_DIMENSION],
-    SubgridDims[MAX_DIMENSION];
+  int i, j, dim, ret, NumberOfSubgridZones[MAX_DIMENSION], SubgridDims[MAX_DIMENSION];
  
   /* make sure it is 2D or 3D */
  

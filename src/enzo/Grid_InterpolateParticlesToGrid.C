@@ -62,7 +62,7 @@ int grid::InterpolateParticlesToGrid(FOFData *D)
   int ActiveDim[MAX_DIMENSION];
   int min_slab, max_slab, NumberOfFields = 0;
   int i, j, k, n, field, dim, proc, size;
-  int DensNum, VrmsNum, Vel1Num, Vel2Num, Vel3Num;
+  int DensNum, VrmsNum, Vel1Num, Vel3Num;
 
 #ifdef USE_MPI
   MPI_Datatype DataType = (sizeof(float) == 4) ? MPI_FLOAT : MPI_DOUBLE;
@@ -105,7 +105,6 @@ int grid::InterpolateParticlesToGrid(FOFData *D)
   DensNum = 0;
   VrmsNum = 1;
   Vel1Num = 2;
-  Vel2Num = 3;
   Vel3Num = 4;
 
   size = 1;

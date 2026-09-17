@@ -88,7 +88,7 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 {
   /* declarations */
 
-  int dim, i, j, k, m, field, sphere, size, active_size, index, cindex;
+  int dim, i, j, k, m, sphere, active_size, index, cindex;
   int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
     DINum, DIINum, HDINum,  kphHINum, gammaNum, kphHeINum,
     kphHeIINum, kdissH2INum, kdissH2IINum, kphHMNum, RPresNum1, RPresNum2, RPresNum3; 
@@ -1039,6 +1039,5 @@ double ph_Maxwellian(double c_tilda, double vel_unit, double mu, double gamma)
    double u2 = rand();
    u2 = u2/RAND_MAX;
    double x1 = mean + stdev*sqrt(-2*log(u1))*cos(2*pi*u2);
-   double x2 = mean + stdev*sqrt(-2*log(u1))*sin(2*pi*u2);
    return (x1/vel_unit);
 }

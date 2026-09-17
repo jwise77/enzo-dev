@@ -58,15 +58,8 @@ int grid::AccreteOntoAccretingParticle(
   FLOAT KernelRadius, radius2;
 
   int i, j, k, dim, index;
-  int size = this->GetGridSize(), maxexcluded=0;
-  float lambda_c = 0.25*exp(1.5), CellMass, CellVolume = 1., SmallRhoFac = 10.,
-    SmallEFac = 10., SmEint = 0, AccretedMass = 0, AccretedMomentum[3],
-    RhoInfinity, vgas[3], mcell, etot, eint, ke, Weight, maccreted,
-    rhocell, pcell[3], etotnew, rhonew, reff[3], rsqr,
-    rdotp, prad[3], ptrans[3], pradnew[3], ptransnew[3], eintnew,
-    kenew, xdist, ydist, zdist, dist, jsp[3], jspsqr, esp, efac, rmin,
-    dxmin, huge = 1.0e30, WeightedSum = 0, SumOfWeights = 0, 
-    AverageDensity = 0, PressureUnits = 0, GEUnits = 0;
+  int size = this->GetGridSize();
+  float lambda_c = 0.25*exp(1.5), CellVolume = 1., SmallRhoFac = 10., SmallEFac = 10., SmEint = 0, AccretedMass = 0, AccretedMomentum[3], RhoInfinity, vgas[3], mcell, etot, eint, ke, Weight, maccreted, rhocell, pcell[3], etotnew, rhonew, reff[3], rsqr, prad[3], ptrans[3], pradnew[3], ptransnew[3], eintnew, kenew, jsp[3], WeightedSum = 0, SumOfWeights = 0, AverageDensity = 0, PressureUnits = 0, GEUnits = 0;
 
   int offset[] =
     {1, GridDimension[0], GridDimension[0]*GridDimension[1]};

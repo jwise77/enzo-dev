@@ -30,9 +30,6 @@ void my_exit(int status);
 int grid::WriteMemoryMap(FILE *fptr, char *base_name, int grid_id)
 {
  
-  int i, j, k;
-  int file_status;
-  int output_cube;
 
   if (MyProcessorNumber == ROOT_PROCESSOR) {
 

@@ -31,7 +31,6 @@ int Collapse3DInitialize(FILE *fptr, FILE *Outfptr,
   char *Vel1Name = "x-velocity";
   char *Vel2Name = "y-velocity";
   char *Vel3Name = "z-velocity";
-  char *ColourName = "colour";
   char *ElectronName = "Electron_Density";
   char *HIName    = "HI_Density";
   char *HIIName   = "HII_Density";

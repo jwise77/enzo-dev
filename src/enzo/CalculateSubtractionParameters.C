@@ -44,14 +44,13 @@ int CalculateSubtractionParameters(LevelHierarchyEntry *LevelArray[], int level,
 				   float &Radius, double &Subtraction)
 {
 
-  const double h=0.70;
 
   float mdot, AccretedMass, SafetyFactor;
   float MassEnclosed = 0, Metallicity = 0, ColdGasMass = 0, OneOverRSquaredSum, AvgVelocity[MAX_DIMENSION];
-  float *temperature, density, old_mass, mu, number_density;
+  float old_mass;
   
-  int igrid[MAX_DIMENSION], dim, l, index, c_s;
-  int size=1, FirstLoop = TRUE;
+  int dim, l, c_s;
+  int FirstLoop = TRUE;
   LevelHierarchyEntry *Temp, *Temp2;
   FLOAT Time;
 

@@ -60,20 +60,16 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 {
  
   int i, j, k, dim, field, size, active_size, ActiveDim[MAX_DIMENSION];
-  int file_status;
  
   int WriteStartIndex[MAX_DIMENSION], WriteEndIndex[MAX_DIMENSION];
 
-  float *temp, *temp_VelAnyl;
+  float *temp;
   float *temperature, *dust_temperature,
     *cooling_time;
  
-  FILE *log_fptr;
-  FILE *procmap_fptr;
  
   hid_t       group_id, dset_id;
-  hid_t       float_type_id, FLOAT_type_id;
-  hid_t       file_type_id, FILE_type_id;
+  hid_t file_type_id;
   hid_t       file_dsp_id;
   hid_t       old_fields, acc_node;
  
@@ -488,7 +484,6 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       int MHDWriteStartIndex[3], MHDWriteEndIndex[3];
       int BiggieSize = (GridDimension[0]+1)*(GridDimension[1]+1)*(GridDimension[2]+1);
       float *MHDtmp = new float[BiggieSize];
-      int index1, index2;
 
       for(field=0;field<nBfields;field++){
         if( WriteBoundary == TRUE){
@@ -600,7 +595,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
       cooling_time = new float[size];
  
       float TemperatureUnits = 1, DensityUnits = 1, LengthUnits = 1,
-	VelocityUnits = 1, TimeUnits = 1, aUnits = 1;
+	VelocityUnits = 1, TimeUnits = 1;
 
       GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	       &TimeUnits, &VelocityUnits, Time);
@@ -996,7 +991,7 @@ int grid::WriteFluxGroup(hid_t top_group, fluxes *fluxgroup)
   hid_t h5_error = -1;
   hid_t axis_group = h5_error;
   hid_t left_group, right_group;
-  int i, j, field, dim;
+  int j, field, dim;
   hsize_t size;
 
   char name[255];

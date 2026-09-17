@@ -88,7 +88,7 @@ int grid::SchrodingerSolver( int nhy )
   if (ProcessorNumber != MyProcessorNumber)
     return SUCCESS;
 
-  int i, ie, is, j, je, js, k, ks, ke, n, ixyz, ret;
+  int i, j, k;
   int dim;
 
   /* compute global start index for left edge of entire grid 
@@ -130,7 +130,7 @@ int grid::SchrodingerSolver( int nhy )
 
   /* Prepare Gravity. */
 
-  int GravityOn = 0, FloatSize = sizeof(float);
+  int GravityOn = 0;
   if (SelfGravity || UniformGravity || PointSourceGravity || DiskGravity || ExternalGravity )
     GravityOn = 1;
 #ifdef TRANSFER
@@ -216,7 +216,7 @@ int grid::SchrodingerSolver( int nhy )
 
   if (PointSourceGravity > 0) {
 
-    FLOAT a = 1.0, potential, auxre, auxim, radius, rcubed, rsquared, xpos, ypos = 0.0, zpos = 0.0, rcore,x;
+    FLOAT potential, auxre, auxim, radius, rsquared, xpos, ypos = 0.0, zpos = 0.0, rcore;
 	FLOAT r0squared, r0, xh, yh, rproj, worb2;
 
     int n = 0;

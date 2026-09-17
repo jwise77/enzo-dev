@@ -82,7 +82,7 @@ int grid::ClusterSMBHFeedback(int level)
   jet_dim = ClusterSMBHJetDim % 3;
   float JetScaleRadius; // cellwidths
   float JetMdot; // Jet mass flow in SolarMass/year (need to convert units)-- gets value from parameter ClusterSMBHJetMdot
-  float JetVelocity, FastJetVelocity; // Jet Velocity in km/s (should make parameter)-- gets value from parameter ClusterSMBHJetVelocity
+  float JetVelocity;
   JetScaleRadius = ClusterSMBHJetRadius/2.0;  //JetScaleRadius is half the radius of the jet launch region in cellwidths
   float DiskRadius; //ClusterSMBHDiskRadius = 0.5;  //ClusterSMBHDiskRadiu now a parameter
   DiskRadius = ClusterSMBHDiskRadius*kpc_cm/LengthUnits; //from kpc to codeunits 

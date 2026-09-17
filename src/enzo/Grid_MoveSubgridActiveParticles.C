@@ -38,7 +38,7 @@ int grid::MoveSubgridActiveParticles(int NumberOfSubgrids, grid* ToGrids[],
   if (NumberOfActiveParticles == 0 || NumberOfSubgrids == 0)
     return SUCCESS;
 
-  int i, j, dim, index, index1, index2, n;
+  int i, dim, index;
 
   /* Initialize. */
 
@@ -60,7 +60,6 @@ int grid::MoveSubgridActiveParticles(int NumberOfSubgrids, grid* ToGrids[],
   int i0 = 0, j0 = 0, k0 = 0;
   int NumberToMoveLocal = 0;
   ActiveParticleType *np;
-  ActiveParticleList<ActiveParticleType> *OldParticles = NULL;
 
   if (MyProcessorNumber == ProcessorNumber) {
     for (i = 0; i < NumberOfActiveParticles; i++) {

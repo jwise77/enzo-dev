@@ -75,11 +75,9 @@ int FreeExpansionInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   float FreeExpansionMass    = 1.0;   // Msun
   double FreeExpansionEnergy        = 1e51;   // ergs
   float FreeExpansionTemperature = 100;  // K
-  float dx = (DomainRightEdge[0] - DomainLeftEdge[0]) / MetaData.TopGridDims[0];
 
   /* Use 3.5 zones on the finest level to resolve the initial explosion at t=0. */
 
-  float dr = 3.5*dx*max(POW(RefineBy,-MaximumRefinementLevel), 0.25);
 
   /* set no subgrids by default. */
 

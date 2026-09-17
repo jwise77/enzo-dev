@@ -71,8 +71,7 @@ int OutputFromEvolveLevel(LevelHierarchyEntry *LevelArray[],TopGridData *MetaDat
 #endif
 			  ){
 
-  int WriteOutput = FALSE, ExitEnzo = FALSE, NumberOfGrids;
-  int PackedStatus = 0;
+  int WriteOutput = FALSE, ExitEnzo = FALSE;
   int CheckpointDump = FALSE;
   WriteOutput = OutputNow;
 

@@ -44,8 +44,7 @@ int Star::FindFeedbackSphere(LevelHierarchyEntry *LevelArray[], int level,
 
   float values[7];
   float AccretedMass, DynamicalTime = 0, AvgDensity, AvgVelocity[MAX_DIMENSION];
-  int StarType, i, l, dim, FirstLoop = TRUE, SphereTooSmall, 
-    MBHFeedbackThermalRadiusTooSmall;
+  int StarType, l, dim, SphereTooSmall;
   float MassEnclosed, Metallicity2, Metallicity3, ColdGasMass, 
     ColdGasFraction, initialRadius, tdyn_code;
   float ShellMass, ShellMetallicity2, ShellMetallicity3, ShellColdGasMass, 

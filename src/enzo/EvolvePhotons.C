@@ -379,9 +379,8 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     PhotonsToMove->NextPackageToMove = NULL;
 
     int keep_transporting = 1;
-    int local_keep_transporting = 1, last_keep_transporting;
+    int local_keep_transporting = 1;
     int secondary_kt_check = TRUE, iteration = 0;
-    bool initial_call = true;
     char *kt_global = NULL;
 
     HierarchyEntry **Temp0;
@@ -412,7 +411,6 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 #ifndef NONBLOCKING_RT
       InitializePhotonMessages();
 #endif
-      last_keep_transporting = local_keep_transporting;
       keep_transporting = 0;
       PhotonsToMove->NextPackageToMove = NULL;
       START_PERF();

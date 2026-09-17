@@ -77,10 +77,8 @@ int grid::TurbulenceSimulationInitializeGrid(
  
   /* declarations */
  
-  int idim, dim, i, j, vel, ibx;
-  int DeNum;
+  int dim, i, vel;
  
-  int ExtraField[2];
  
   inits_type *tempbuffer = NULL;
  
@@ -149,7 +147,6 @@ int grid::TurbulenceSimulationInitializeGrid(
     if (GridRank > 2)
       FieldType[NumberOfBaryonFields++] = Velocity3;
     if (UseMHD) {
-        ibx = NumberOfBaryonFields;
       FieldType[NumberOfBaryonFields++] = Bfield1;
       FieldType[NumberOfBaryonFields++] = Bfield2;
       FieldType[NumberOfBaryonFields++] = Bfield3;
@@ -158,11 +155,9 @@ int grid::TurbulenceSimulationInitializeGrid(
       FieldType[NumberOfBaryonFields++] = PhiField;
     }
    
-    int idrivex, idrivey, idrivez;
+    int idrivex;
     if (UseDrivingField && (HydroMethod == HD_RK || HydroMethod == MHD_RK)) {
       idrivex = NumberOfBaryonFields;
-      idrivey = idrivex + 1;
-      idrivez = idrivex + 2;
       FieldType[NumberOfBaryonFields++] = DrivingField1;
       FieldType[NumberOfBaryonFields++] = DrivingField2;
       FieldType[NumberOfBaryonFields++] = DrivingField3;

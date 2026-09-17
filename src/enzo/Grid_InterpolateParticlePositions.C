@@ -34,7 +34,7 @@ int grid::InterpolateParticlePositions(grid *FromGrid, int DifferenceType)
  
   /* Loop over all active dimensions */
 
-  int dim, dim1;
+  int dim1;
  
   for (int dim = 0; dim < GridRank+ComputePotential; dim++) {
  

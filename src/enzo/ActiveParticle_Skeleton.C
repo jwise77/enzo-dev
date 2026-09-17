@@ -60,27 +60,16 @@ int ActiveParticleType_Skeleton::EvaluateFormation(grid *thisgrid_orig, ActivePa
   SkeletonGrid *thisGrid =
     static_cast<SkeletonGrid *>(thisgrid_orig);
 
-  int i, j, k, dim, index, offset_y, offset_z;
-  int NumberOfNewParticles = 0;
+  int i, j, k, index, offset_y, offset_z;
 
   float *density = thisGrid->BaryonField[data.DensNum];
   float *velx = thisGrid->BaryonField[data.Vel1Num];
   float *vely = thisGrid->BaryonField[data.Vel2Num];
   float *velz = thisGrid->BaryonField[data.Vel3Num];
-  float *totalenergy = thisGrid->BaryonField[data.TENum];
-  float *gasenergy = thisGrid->BaryonField[data.GENum];
-  float *metals = thisGrid->BaryonField[data.MetalNum];
-  float dt = thisGrid->dtFixed;
-  FLOAT dx = data.LengthUnits * thisGrid->CellWidth[0][0];
 
-  FLOAT CurrentTime = thisGrid->Time;
-  FLOAT xstart = thisGrid->CellLeftEdge[0][0];
-  FLOAT ystart = thisGrid->CellLeftEdge[1][0];
-  FLOAT zstart = thisGrid->CellLeftEdge[2][0];
 
   bool HasMetalField = (data.MetalNum != -1 || data.ColourNum != -1);
 
-  int NumberOfGhostZones = thisGrid->GridStartIndex[0];
   int GridDimension[3] = {thisGrid->GridDimension[0],
                           thisGrid->GridDimension[1],
                           thisGrid->GridDimension[2]};
@@ -164,20 +153,10 @@ int ActiveParticleType_Skeleton::EvaluateFeedback
   SkeletonGrid *thisGrid =
     static_cast<SkeletonGrid *>(thisGrid_orig);
 
-  float *density = thisGrid->BaryonField[data.DensNum];
-  float *velx = thisGrid->BaryonField[data.Vel1Num];
-  float *vely = thisGrid->BaryonField[data.Vel2Num];
-  float *velz = thisGrid->BaryonField[data.Vel3Num];
-  float *totalenergy = thisGrid->BaryonField[data.TENum];
-  float *gasenergy = thisGrid->BaryonField[data.GENum];
-  float *metals = thisGrid->BaryonField[data.MetalNum];
-  float dt = thisGrid->dtFixed;
-  float dx = float(thisGrid->CellWidth[0][0]);
 
   FLOAT xpos, ypos, zpos;
   float xvel, yvel, zvel;
 
-  FLOAT CurrentTime = thisGrid->Time;
   FLOAT xstart = thisGrid->CellLeftEdge[0][0];
   FLOAT ystart = thisGrid->CellLeftEdge[1][0];
   FLOAT zstart = thisGrid->CellLeftEdge[2][0];
@@ -186,11 +165,6 @@ int ActiveParticleType_Skeleton::EvaluateFeedback
   int GridXSize = thisGrid->GridDimension[0];
   int GridYSize = thisGrid->GridDimension[1];
   int GridZSize = thisGrid->GridDimension[2];
-  int NumberOfGhostZones = thisGrid->GridStartIndex[0];
-  int GridDimension[3] = {thisGrid->GridDimension[0],
-			  thisGrid->GridDimension[1],
-			  thisGrid->GridDimension[2]};
-
   int n,i,j,k;
 
   for (n=0; n < npart; n++)
@@ -207,10 +181,6 @@ int ActiveParticleType_Skeleton::EvaluateFeedback
     yvel = particle->vel[1];
     zvel = particle->vel[2];
 
-    float ParticleBirthTime = particle->BirthTime;
-    float ParticleDynamicalTimeAtBirth = particle->DynamicalTime;
-    float ParticleMass = particle->Mass;
-    float ParticleMetalFraction = particle->Metallicity;
 
     i = int((xpos - xstart)/thisGrid->CellWidth[0][0]);
     j = int((ypos - ystart)/thisGrid->CellWidth[1][0]);
@@ -225,7 +195,6 @@ int ActiveParticleType_Skeleton::EvaluateFeedback
 
     // Calculate serial index
 
-    int index = GRIDINDEX_NOGHOST(i,j,k);
 
     // physics goes here.
 

@@ -70,7 +70,7 @@ int CosmoIonizationInitialize(FILE *fptr, FILE *Outfptr,
  
   // local declarations
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret;
+  int ret;
  
   // Setup and parameters:
   float RadHydroX0Velocity           = 0.0;

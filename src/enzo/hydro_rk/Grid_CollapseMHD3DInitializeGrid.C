@@ -69,7 +69,7 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
 
   /* declarations */
 
-  int dim, i, j, k, m, field, sphere, size, activesize;
+  int dim, i, j, k, sphere, activesize;
 
   int phip_num;
   NumberOfBaryonFields = 0;
@@ -145,9 +145,7 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
   float MagneticUnits = sqrt(4.0*M_PI*DensityUnits)*VelocityUnits;
   double G = 6.67e-8;
 
-  size = 1;
   for (dim = 0; dim < GridRank; dim++) {
-    size *= GridDimension[dim];
   }
   activesize = 1;
   for (dim = 0; dim < GridRank; dim++) {
@@ -214,7 +212,7 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
     fclose(fptr);
   }
 
-  float rho, vel[3], eint, etot, h, cs, dpdrho, dpde, v2, B2, Bx, By, Bz;
+  float rho, vel[3], eint, h, cs, dpdrho, dpde, v2, B2, Bx, By, Bz;
   FLOAT phi, theta, x=0., y=0., z=0.;
   int n = 0;
   
@@ -262,20 +260,16 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
 
 	  if (r < r_sphere[sphere]) {
 
-            FLOAT xpos=0., ypos=0., zpos=0., drad;
+            FLOAT xpos=0., ypos=0., zpos=0.;
 
 	    xpos = x-sphere_position[sphere][0];
 	    if (GridRank > 1) ypos = y-sphere_position[sphere][1];
 	    if (GridRank > 2) zpos = z-sphere_position[sphere][2];
 
-	    // compute the azimuthal angle
-	    FLOAT cosphi = xpos/sqrt(xpos*xpos+ypos*ypos);
-	    FLOAT sinphi = ypos/sqrt(xpos*xpos+ypos*ypos);
 
 	    /* Compute the azimuthal and polar angles */
 	    phi   = acos(xpos/sqrt(xpos*xpos+ypos*ypos));
 	    if (ypos < 0) phi = 2.0*M_PI-phi;
-	    FLOAT R1 = sqrt(xpos*xpos+ypos*ypos);
 	    theta = acos(zpos/r);
 	    /*if (fabs(zpos) < 1e-3) {
 	      theta = acos(zpos/r);
@@ -296,7 +290,6 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
 
 	    if (sphere_type[sphere] == 0) {
 	      rho  = rho_sphere[sphere];
-	      FLOAT cos2phi = cosphi*cosphi -sinphi*sinphi;
 	      //	      rho *= (1.0 + 0.2*cos2phi);
 	      // Burkert & Bodenheimer (1993) m=2 perturbation: 	      
 	      float m2mode = 1. + 0.1*cos(2.*phi);
@@ -413,7 +406,6 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
 	    /* Rotating Gaussian of Truelove et al 1997 */
 
 	    if (sphere_type[sphere] == 7) {
-	      float m2mode = 1. + 0.1*cos(2.*phi);
 	      rho = rho_sphere[sphere] * exp(-pow(r/r_sphere[sphere]/0.58,2));
 
 	      //	      rho *= m2mode;
@@ -457,7 +449,7 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
 	      // Cooling Sphere from Volker Springel
 	      // 
 	      // 
-	      float p, cs, h, dpdrho, dpde, a2, rho0;
+	      float a2;
 	      a2 = PointSourceGravityCoreRadius*PointSourceGravityCoreRadius;
 	      rho = rho_sphere[sphere]*a2/(a2+xpos*xpos);
 	      eint = .75 * PointSourceGravityConstant;
@@ -536,7 +528,6 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
 
 
     /* Set turbulent velocity field */
-  FLOAT x,y,z;
   int igrid;
     n = 0;
     /*    for (k = 0; k < GridDimension[2]; k++) {
@@ -577,7 +568,6 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
     double a = 0.2;
     double dx = CellWidth[0][0];
     double den_p = mass_p / pow(dx,3);
-    double t_dyn = sqrt(3 * M_PI / den_p);
 
 
     NumberOfParticles = 2;
@@ -627,8 +617,6 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
     mass_p /= MassUnits;
     double dx = CellWidth[0][0];
     double den_p = mass_p / pow(dx,3);
-    double t_dyn = sqrt(3*M_PI/(6.672e-8*den_p*DensityUnits));
-    t_dyn /= TimeUnits;
 
 
     NumberOfParticles = 1;

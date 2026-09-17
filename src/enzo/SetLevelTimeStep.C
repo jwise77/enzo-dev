@@ -32,7 +32,7 @@ int SetLevelTimeStep(HierarchyEntry *Grids[], int NumberOfGrids, int level,
 		     float *dtThisLevelSoFar, float *dtThisLevel,
 		     float dtLevelAbove)
 {
-  float dtGrid, dtActual, dtLimit;
+  float dtGrid, dtActual;
   int grid1;
 
   LCAPERF_START("SetLevelTimeStep"); // SetTimeStep()

@@ -40,8 +40,7 @@ int ConductionCloudInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid
   }
 
   char line[MAX_LINE_LENGTH];
-  float LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
-  int i, j, dim, ret;
+  int i, j, ret;
 
   float ConductionCloudDensity = 1.0;
   float ConductionCloudTemperature = 1.0;

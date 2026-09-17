@@ -178,7 +178,6 @@ int grid::RHIonizationClumpInitializeGrid(int NumChemicals,
     
     // initialize clump-dependent quantities
     float TotDens=0.0;
-    float Vint, Vext;
     float gridx0l = GridLeftEdge[0];
     float gridx0r = GridRightEdge[0];
     float gridx1l = GridLeftEdge[1];

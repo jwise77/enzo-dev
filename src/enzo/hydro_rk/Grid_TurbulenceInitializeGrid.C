@@ -39,11 +39,10 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
 
   /* declarations */
 
-  int dim, i, j, k,l, m, n, field, sphere, size, igrid, activesize;
+  int dim, i, j, k, l, n, size, igrid, activesize;
   int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
     DINum, DIINum, HDINum,  kphHINum, gammaNum, kphHeINum,
     kphHeIINum, kdissH2INum, RPresNum1, RPresNum2, RPresNum3;
-  int ColourNum;
 
   NumberOfBaryonFields = 0;
   FieldType[NumberOfBaryonFields++] = Density;
@@ -208,9 +207,7 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
     } */
 
   /* Cloud center is box center. */
-  FLOAT xc = 0.5, yc = 0.5, zc = 0.5, xpos, ypos, zpos,
-    cosphi, sinphi, x, y, z, r;
-  FLOAT costheta = cos(17.5*M_PI/180.0), sintheta = sin(17.5*M_PI/180);
+  FLOAT xc = 0.5, yc = 0.5, zc = 0.5, xpos, ypos, x, y, z, r;
   float Density, eint, Velx, Vely, Velz;
   n = 0;
   for (k = 0; k < GridDimension[2]; k++) {
@@ -225,11 +222,8 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
 
 	xpos = x - xc;
 	ypos = y - yc;
-	zpos = z - zc;
 
 	/* compute the azimuthal angle */
-	cosphi = xpos/sqrt(xpos*xpos+ypos*ypos);
-	sinphi = ypos/sqrt(xpos*xpos+ypos*ypos);
 
 	Velx = Vely = Velz = 0.0;
 
@@ -679,11 +673,8 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
     mass_s /= MassUnits;
     double dx = CellWidth[0][0];
     double den_m = mass_m / pow(dx,3);
-    double den_s = mass_s / pow(dx,3);
     double t_dyn_m = sqrt(3*M_PI/(6.672e-8*den_m*DensityUnits));
-    double t_dyn_s = sqrt(3*M_PI/(6.672e-8*den_s*DensityUnits));
     t_dyn_m /= TimeUnits;
-    t_dyn_s /= TimeUnits;
     double dxm = dx / pow(RefineBy, MaximumRefinementLevel);
 
     //    MaximumParticleNumber = 1;
@@ -744,9 +735,6 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
     mass_m /= MassUnits;
     double dx = CellWidth[0][0];
     double den_m = mass_m / pow(dx,3);
-    double t_dyn_m = sqrt(3*M_PI/(6.672e-8*den_m*DensityUnits));
-    t_dyn_m /= TimeUnits;
-    double dxm = dx / pow(RefineBy, MaximumRefinementLevel);
 
     for (k=0; k<4; k++){
       for (j=0; j<4; j++){
@@ -837,10 +825,7 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
     mass_p /= MassUnits;
     double dx = CellWidth[0][0];
     double den_p = mass_p / pow(dx,3);
-    double t_dyn = sqrt(3*M_PI/(6.672e-8*den_p*DensityUnits));
-    t_dyn /= TimeUnits;
 
-    double dxm = dx / pow(2.0, MaximumRefinementLevel);
 
     NumberOfParticles = 4;
     NumberOfStars = 4;

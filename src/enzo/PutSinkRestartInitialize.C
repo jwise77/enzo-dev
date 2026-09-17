@@ -59,7 +59,7 @@ int PutSinkRestartInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
  
   char line[MAX_LINE_LENGTH];
-  int dim, level, ret;
+  int level, ret;
   float dummyf;
   /* Set default supernova parameters. */
  
@@ -165,7 +165,6 @@ int PutSinkRestartInitialize(FILE *fptr, FILE *Outfptr,
      radius in pc, and energy in 10^51 erg; otherwise do no conversion.*/
  
  
-  double MassConversion = 1, LengthConversion = 1, EnergyConversion = 1;
   float DensityUnits = 1, LengthUnits = 1, VelocityUnits = 1, TimeUnits = 1,
     TemperatureUnits = 1;
  
@@ -177,9 +176,6 @@ int PutSinkRestartInitialize(FILE *fptr, FILE *Outfptr,
  
   if (ComovingCoordinates) {
  
-    LengthConversion = pc_cm;     // pc
-    MassConversion   = SolarMass;        // solar masses
-    EnergyConversion = 1.0e51;      // 10^51 erg
  
   }
  

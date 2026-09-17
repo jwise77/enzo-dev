@@ -31,7 +31,6 @@ Star* StarBufferToList(StarBuffer *buffer, int n);
 int grid::MoveAllStars(int NumberOfGrids, grid* FromGrid[], int TopGridDimension)
 {
 
-  StarBuffer *buffer;
   Star *NewStar, *cstar;
 
   if (NumberOfGrids < 1) {
@@ -41,7 +40,7 @@ int grid::MoveAllStars(int NumberOfGrids, grid* FromGrid[], int TopGridDimension
   /* Determine total number of stars. */
 
   int TotalNumberOfStars = NumberOfStars;
-  int i, j, grid, dim;
+  int grid;
 
   for (grid = 0; grid < NumberOfGrids; grid++)
     TotalNumberOfStars += FromGrid[grid]->NumberOfStars;
@@ -125,7 +124,6 @@ int grid::MoveAllStars(int NumberOfGrids, grid* FromGrid[], int TopGridDimension
 int grid::MoveAllStarsOld(int NumberOfGrids, grid* FromGrid[], int TopGridDimension)
 {
 
-  StarBuffer *buffer;
   Star *NewStar, *cstar;
 
   if (NumberOfGrids < 1) {
@@ -135,7 +133,7 @@ int grid::MoveAllStarsOld(int NumberOfGrids, grid* FromGrid[], int TopGridDimens
   /* Determine total number of stars. */
 
   int TotalNumberOfStars = NumberOfStars;
-  int i, j, grid, dim;
+  int grid;
 
   for (grid = 0; grid < NumberOfGrids; grid++)
     TotalNumberOfStars += FromGrid[grid]->NumberOfStars;

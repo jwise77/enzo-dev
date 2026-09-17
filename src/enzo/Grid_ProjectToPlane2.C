@@ -68,12 +68,12 @@ int grid::ProjectToPlane2(FLOAT ProjectedFieldLeftEdge[],
   const int MetalLumField = 17;
   const int NumberOfMetalLines = 11;
   const int NumberOfLuminosityFields = 18;
-  int i, j, k, n, dim, start, stop, Index[MAX_DIMENSION];
+  int i, n, dim, start, stop;
   float LeftCellFraction, RightCellFraction, ConversionFactor;
   float *temp_field = NULL, *temperature = NULL;
   float *spin_temp = NULL, *bright_temp = NULL, *all_luminosities = NULL;
   float *first_field, *second_field;
-  float kappa, gamma_p, gamma_e, C_e, C_H, C_p, y21, v_i, ri;
+  float kappa, gamma_p, gamma_e, C_e, C_H, C_p, y21;
   
 
   /* Check To see if grid overlaps the projected field. */
@@ -401,7 +401,7 @@ int grid::ProjectToPlane2(FLOAT ProjectedFieldLeftEdge[],
 
     const float t_star = 0.068;  // Energy difference between hyperfine levels
     const float A_em = 2.85e-15; // Spont. emission rate [/s]
-    float nu0, phi, Delta_nu, Delta_nuD, hz, prefactor, Tcmb, high_dt, logT;
+    float nu0, hz, prefactor, Tcmb, high_dt;
 
     // 21 cm redshifted to box redshift [Hz]
     nu0 = 1.4204e9 / (1 + CurrentRedshift);

@@ -48,7 +48,7 @@ int start;
   if (FromGrid->NumberOfParticles == 0)
     return SUCCESS;
  
-  int i, j, k, dim;
+  int i, k, dim;
  
   /* To begin, set all particles to move. */
  
@@ -151,7 +151,6 @@ int start;
   start = *Counter;
   printf("Counter %" ISYM"\n",start);
  
-  j = 0;
   for (i = 0; i < FromGrid->NumberOfParticles; i++)
  
     if (MoveParticle[i] == TRUE) {
@@ -183,7 +182,6 @@ int start;
         X_Attribute[k][start] = FromGrid->ParticleAttribute[k][i];
       }
  
-      j++;   // increment moved particle counter
       start++;
  
       FromGrid->ParticleMass[i] = FLOAT_UNDEFINED; // erase old one

@@ -44,7 +44,7 @@ int grid::UpdateParticleVelocity(float TimeStep)
 #if defined(VELOCITY_METHOD1) || defined(VELOCITY_METHOD2)
   float VelocityMidStep;
 #endif
-  int i, dim , dim1;
+  int i, dim;
 
   FLOAT coef, coef1, coef2;
 

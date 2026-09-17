@@ -61,13 +61,11 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 
   
   float dx = float(this->CellWidth[0][0]);
-  FLOAT dV = POW(dx, 3.0);
   float dt = float(this->ReturnTimeStep());
   /* Set the units. */
  
   float DensityUnits = 1, LengthUnits = 1, TemperatureUnits = 1,
-    TimeUnits = 1, VelocityUnits = 1, MassUnits = 1,
-    PressureUnits = 0, GEUnits = 0, VelUnits = 0;
+    TimeUnits = 1, VelocityUnits = 1, MassUnits = 1;
   if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	       &TimeUnits, &VelocityUnits, this->ReturnTime()) == FAIL) {
         ENZO_FAIL("Error in GetUnits.");
@@ -91,7 +89,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
     }
   if(SS->AccretionRate[SS->TimeIndex] <= 0.0) {
     float mdot = SS->AccretionRate[SS->TimeIndex];  //CodeMass/CodeTime
-    float MassConversion = (float) (dx*dx*dx * double(MassUnits));  //convert to g         
     float accrate = mdot*MassUnits/(SolarMass*TimeUnits)*3.154e7; //in Msolar/s      
     printf("%s: AccretionRate = %e Msolar/yr %e (code)\n", __FUNCTION__,
            accrate, SS->AccretionRate[SS->TimeIndex]);
@@ -124,7 +121,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
     float maxGE = MAX_TEMPERATURE / (TemperatureUnits * (Gamma-1.0) * 0.6);
    
     FLOAT radius2 = 0.0;
-    float EjectaVolumeCGS = 4.0/3.0 * PI * pow(SS->AccretionRadius*LengthUnits, 3);
     float EjectaVolume = 4.0/3.0 * PI * pow(SS->AccretionRadius, 3);
     printf("%s: OuterRadius = %e\n", __FUNCTION__, sqrt(outerRadius2)*LengthUnits/pc_cm);
     CellsModified = 0;
@@ -281,9 +277,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
   int ii = 0, jj = 0, kk = 0, r_s = 0, ic = 0, sign = 0;
   float m_cell_inside = 0.0, m_cell_edge = 0.0;
   float L_x, L_y, L_z, L_s, nx_L = 0.0, ny_L = 0.0, nz_L = 0.0, costheta = cos(OPENING_ANGLE);
-  float SSMass = SS->ReturnMass();
-  float totalenergybefore = 0.0, totalenergyafter = 0.0, totalenergyadded = 0.0;
-  float sumkeadded = 0.0;
+  float totalenergybefore = 0.0;
  
   if (SmartStarBHJetFeedback == FALSE || SS->MassToBeEjected*MassUnits/SolarMass < 1e-10) {
     return SUCCESS;
@@ -507,8 +501,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
     for (ic = 0; ic < n_cell_edge; ic++) {
       
       int index = ind_cell_edge[ic];
-      float angle = anglefactor[ic];
-      float cellnumberdensity = this->BaryonField[DensNum][index]*DensityUnits/mh;
      
       /* Update velocities and TE; note that we now have kinetic (jet) energy added, so 
 	 for DualEnergyFormalism = 0 you don't have to update any energy field */
@@ -518,11 +510,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
       /* Calculate grid velocity: the actual veloctiy injected in supercell edges.
 	 This is different from MBHJetsVelocity because it is the mass-weighted average 
 	 between MBHJetsVelocity and the original veloctiy in grid */  
-      float oldvel[3] = {this->BaryonField[Vel1Num][index], 
-			 this->BaryonField[Vel2Num][index],
-			 this->BaryonField[Vel3Num][index]};
-      float oldcellmass = this->BaryonField[DensNum][index] * pow(this->GetCellWidth(0,0), 3);
-      float energybefore = this->BaryonField[TENum][index];
+
      
      
 #if DENSITY_WEIGHTED
@@ -552,11 +540,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 	                                       (this->BaryonField[DensNum][index] + 
 					       MassEjected / ((float)n_cell_edge*pow(this->GetCellWidth(0,0), 3)));
 
-      float newvel[3] = {this->BaryonField[Vel1Num][index], 
-			 this->BaryonField[Vel2Num][index],
-			 this->BaryonField[Vel3Num][index]};
-      float newvelmag = sqrt(newvel[0]*newvel[0] + newvel[1]*newvel[1] + newvel[2]*newvel[2]);
-      float energytoadd = 0.5*newvelmag*newvelmag;
+
 
       if (GENum >= 0 && DualEnergyFormalism) 
 	for (dim = 0; dim < GridRank; dim++)

@@ -56,7 +56,7 @@ int MHDTurbulenceInitialize(FILE *fptr, FILE *Outfptr,
   char *Drive3Name = "DrivingField3";
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, sphere, i;
+  int level, i;
 
   /* set default parameters */
 
@@ -68,16 +68,15 @@ int MHDTurbulenceInitialize(FILE *fptr, FILE *Outfptr,
   rewind(fptr);
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     /* read parameters */
 
-    ret += sscanf(line, "RefineAtStart = %" ISYM, &RefineAtStart);
-    ret += sscanf(line, "Density = %" FSYM, &rho_medium);
-    ret += sscanf(line, "SoundVelocity = %" FSYM, &cs);
-    ret += sscanf(line, "MachNumber = %" FSYM, &mach);
-    ret += sscanf(line, "InitialBfield = %" FSYM, &Bnaught);
-    ret += sscanf(line, "RandomSeed = %" ISYM, &RandomSeed);
+    sscanf(line, "RefineAtStart = %" ISYM, &RefineAtStart);
+    sscanf(line, "Density = %" FSYM, &rho_medium);
+    sscanf(line, "SoundVelocity = %" FSYM, &cs);
+    sscanf(line, "MachNumber = %" FSYM, &mach);
+    sscanf(line, "InitialBfield = %" FSYM, &Bnaught);
+    sscanf(line, "RandomSeed = %" ISYM, &RandomSeed);
 
   } // end input from parameter file
 

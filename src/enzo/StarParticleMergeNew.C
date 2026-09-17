@@ -44,10 +44,9 @@ int StarParticleMergeNew(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 {
 
   Star *ThisStar, *OtherStar, *LastStar, *MoveStar;
-  LevelHierarchyEntry *Temp;
   float rmerge2, rmerge2o, dx, dx2;
   FLOAT TimeNow;
-  int dim, level;
+  int level;
 
   /* Get the time at the finest level */
   

@@ -49,83 +49,28 @@ int WriteStringAttr(hid_t dset_id, char *Alabel, char *String, FILE *log_fptr);
  
 int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
 {
-
-  int i, j, k, dim, field, size, ActiveDim[MAX_DIMENSION];
-  int file_status;
-  int output_cube;
+#ifdef PARALLEL_HDF5
  
-  int nop[MAX_NUMBER_OF_TASKS], nopout[MAX_NUMBER_OF_TASKS];
-  int pof[MAX_NUMBER_OF_TASKS];
-  int TCount;
-  int npe, ipe;
  
-  float32 *temp;
-  int *tempint;
-  PINT *tempPINT;
  
-  FILE *log_fptr;
  
-  hid_t       file_id, dset_id;
-  hid_t       float_type_id, FLOAT_type_id;
-  hid_t       file_type_id, FILE_type_id;
-  hid_t       mem_type_id;
-  hid_t       mem_dsp_id, file_dsp_id;
-  hid_t       attr_id, attr_type, attr_dsp_id;
  
-  hid_t       file_access_template;
-  hid_t       xfer_prop_list;
  
-  hsize_t     OutDim[MAX_DIMENSION];
-  hsize_t     InDim[MAX_DIMENSION];
-  hsize_t     TempIntArray[1];
  
-  hsize_t     dbuff_size;
-  hsize_t     gbuff_size;
-  hsize_t     m_size, l_size;
  
-  hsize_t     mem_stride, mem_count;
-  hsize_t     m_file_stride, m_file_count;
-  hsize_t     file_stride[3], file_count[3], file_block[3];
-  hsize_t     cube_stride[3], cube_count[3], cube_block[3];
  
-  hssize_t    mem_offset;
-  hssize_t    m_file_offset;
-  hssize_t    file_offset[3];
-  hssize_t    cube_offset[3];
  
-  herr_t      h5_status;
-  herr_t      h5_error = -1;
  
-  int gridsize[3];
-  int ndims;
-  int StartIndex[3], EndIndex[3];
  
-  float Left[3];
-  float Right[3];
-  float eps = 1.0e-06;
  
-  char id[10];
-  char FieldName[80+1];
-  char GlueFile[80+1];
-  char PartName[80+1];
-  char LogName[80+1];
  
-  char *ParticlePositionLabel[] =
-     {"particle_position_x", "particle_position_y", "particle_position_z"};
  
-  char *ParticleVelocityLabel[] =
-     {"particle_velocity_x", "particle_velocity_y", "particle_velocity_z"};
  
-  char *ParticleMassLabel = "particle_mass";
-  char *ParticleTypeLabel = "particle_type";
-  char *ParticleIndexLabel = "particle_index";
 #ifdef WINDS
     char *ParticleAttributeLabel[] = 
       {"creation_time", "dynamical_time", "metallicity_fraction", "particle_jet_x", 
        "particle_jet_y", "particle_jet_z", "typeia_fraction"};
 #else
-    char *ParticleAttributeLabel[] = 
-      {"creation_time", "dynamical_time", "metallicity_fraction", "typeia_fraction"};
 #endif
 #ifdef IO_LOG
   int         io_log = 1;
@@ -137,8 +82,6 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
   io_log = 1;
  
 // Begin
- 
-#ifdef PARALLEL_HDF5
  
   int ii = sizeof(float32);
  

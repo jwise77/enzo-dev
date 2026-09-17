@@ -57,8 +57,7 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
 					  TopGridData *MetaData, int level)
 {
 
-  int proc, i, j, k, jstart, jend, TotalNumber, TotalStars, APTotalNumber;
-  int particle_data_size, star_data_size;
+  int i, j, jstart, jend, TotalNumber, TotalStars;
   int Zero = 0;
 
   HierarchyEntry **Grids;
@@ -177,11 +176,9 @@ int CommunicationTransferSubgridParticles(LevelHierarchyEntry *LevelArray[],
 
   TotalNumber = 0;
   TotalStars  = 0;
-  APTotalNumber = 0;
   for (j = 0; j < NumberOfProcessors; j++) {
     TotalNumber += NumberToMove[j];
     TotalStars  += StarsToMove[j];
-    APTotalNumber += APNumberToMove[j];
     NumberToMove[j] = 0;  // Zero-out to use in the next step
     StarsToMove[j]  = 0;
     APNumberToMove[j] = 0;

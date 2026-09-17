@@ -82,7 +82,7 @@ int GalaxySimulationInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, disk, i;
+  int dim, ret, level, i;
 
   /* make sure it is 3D */
   
@@ -141,7 +141,6 @@ int GalaxySimulationInitialize(FILE *fptr, FILE *Outfptr,
   int   GalaxySimulationRefineAtStart,
     GalaxySimulationUseMetallicityField;
  
-  FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
 
   /* Default Values */
 

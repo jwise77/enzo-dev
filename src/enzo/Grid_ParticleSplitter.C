@@ -58,16 +58,14 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
 
   /* Initialize */
  
-  int dim, i, j, k, index, size, field, GhostZones = NumberOfGhostZones;
-  int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num, B1Num, B2Num, B3Num,H2INum, H2IINum;
+  int dim, i, j;
+  int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num, B1Num, B2Num, B3Num;
 
   LCAPERF_START("grid_ParticleSplitter");
  
   /* Compute size (in floats) of the current grid. */
  
-  size = 1;
   for (dim = 0; dim < GridRank; dim++)
-    size *= GridDimension[dim];
  
   /* Find fields: density, total energy, velocity1-3. */
  
@@ -92,11 +90,9 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
 
   /* Compute the redshift. */
  
-  float zred;
   FLOAT a = 1, dadt;
   if (ComovingCoordinates)
     CosmologyComputeExpansionFactor(Time, &a, &dadt);
-  zred = 1.0*(1.0+InitialRedshift)/a - 1.0;
  
   /* Set the units. */
  

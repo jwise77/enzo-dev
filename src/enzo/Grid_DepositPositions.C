@@ -46,7 +46,7 @@ int grid::DepositPositions(FLOAT *Position[], float *Mass, int Number,
   /* DepositField specifies where the particles should go.  Set LeftEdge,
      Dimension, CellSize, DepositFieldPointer according to it. */
  
-  float *DepositFieldPointer, CellSize, CloudSize;
+  float *DepositFieldPointer, CellSize;
   FLOAT LeftEdge[MAX_DIMENSION];
   int   dim, Dimension[MAX_DIMENSION];
  

@@ -52,7 +52,6 @@ int grid::KHInitializeGrid(float KHInnerDensity,
 
   int size = 1, dim;
   float rand_x, rand_y;
-  unsigned_long_int random_int;
 
   /* initialize random number generator from seed */
   mt_init(((unsigned_int) KHRandomSeed)); 

@@ -44,12 +44,11 @@ int FLDCorrectForImpulses(int field, LevelHierarchyEntry *LevelArray[],
   Star *cstar = NULL;
 
   int nbins;
-  FLOAT TimeNow, BirthTime, *Position;
+  FLOAT BirthTime, *Position;
   double Luminosity, LConv, LL[MAX_ENERGY_BINS], sigma;
   float TimeFraction, Lifetime, energies[MAX_ENERGY_BINS];
   LevelHierarchyEntry *Temp;
 
-  TimeNow = LevelArray[level]->GridData->ReturnTime();
 
   switch (field) {
   case kdissH2I:

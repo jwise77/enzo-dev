@@ -43,7 +43,7 @@ int grid::SetParticleMassFlaggingField(int StartProc, int EndProc, int level,
 {
 
   //printf("grid::SetParticleMassFlaggingField called \n");
-  int i, irecv, dim, size, proc, MPI_Tag;
+  int i, dim, size, proc;
   bool and_flag;
 
   /* Return if we're not needed here */
@@ -77,7 +77,7 @@ int grid::SetParticleMassFlaggingField(int StartProc, int EndProc, int level,
 
   if (CommunicationDirection == COMMUNICATION_SEND) {
 
-    int method, NumberOfFlaggedCells;
+    int NumberOfFlaggedCells;
     bool KeepFlaggingField;
 
     /* Calculate the flagging field only if 

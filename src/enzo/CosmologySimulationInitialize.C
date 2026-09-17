@@ -413,8 +413,7 @@ int CosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
     CosmologySimulationInitialTemperature = 550.0 *
       POW((1.0 + InitialRedshift)/(1.0 + 200), 2);
  /* Convert from Gauss */
-  float DensityUnits=1, LengthUnits=1, TemperatureUnits=1, TimeUnits=1,
-    VelocityUnits=1, PressureUnits=1.,MagneticUnits=1., a=1,dadt=0;
+  float DensityUnits=1, LengthUnits=1, TemperatureUnits=1, TimeUnits=1, VelocityUnits=1, PressureUnits=1., MagneticUnits=1.;
   if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	       &TimeUnits, &VelocityUnits, InitialTimeInCodeUnits) == FAIL) {
         ENZO_FAIL("Error in GetUnits.");

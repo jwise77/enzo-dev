@@ -81,12 +81,12 @@ int InitializeMovieFile(TopGridData &MetaData, HierarchyEntry &TopGrid)
   strcat(AmiraFileName, pid);
   strcat(AmiraFileName, ".hdf5");
 
-  int field, nBaryonFields;
+  int field;
   int nFields = 0;
   while (MovieDataField[nFields] != INT_UNDEFINED)
     nFields++;
 
-  nBaryonFields = TopGrid.GridData->ReturnNumberOfBaryonFields();
+  TopGrid.GridData->ReturnNumberOfBaryonFields();
 
   char **FieldNames = new char*[nFields];
   for (field = 0; field < nFields; field++) {

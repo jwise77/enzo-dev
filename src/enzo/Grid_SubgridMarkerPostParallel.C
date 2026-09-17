@@ -43,7 +43,7 @@ int grid::SubgridMarkerPostParallel(HierarchyEntry **Grids[], int *NumberOfGrids
   /* declarations */
     
   const int mask = (1 << LEVEL_BIT_OFFSET) - 1;
-  int i, j, k, dim, index, size, GridID, GridLevel;
+  int dim, index, size, GridID, GridLevel;
   long packed_int;
   
   for (dim = 0, size = 1; dim < GridRank; dim++)

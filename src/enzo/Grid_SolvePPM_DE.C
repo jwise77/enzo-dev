@@ -40,7 +40,6 @@ int grid::SolvePPM_DE(int CycleNumber, int NumberOfSubgrids,
               float MinimumSupportEnergyCoefficient)
 {
 
-  int DensNum, GENum, Vel1Num, Vel2Num, Vel3Num, TENum;
   
 
 

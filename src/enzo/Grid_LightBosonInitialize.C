@@ -91,7 +91,6 @@ int grid::LightBosonInitializeGrid(float CenterPosition, int LightBosonProblemTy
   float a = 0.1;  // offset of Gaussian packets for (4) collision
   float expa, expb;
   float k1 = 2*pi;
-  float k2 = 2*pi;
 
   int i,j,k;
   for (k = 0; k < GridDimension[2]; k++) {

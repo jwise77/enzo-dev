@@ -118,23 +118,19 @@ int WriteAllData(char *basename, int filenumber,
   char mtname[MAX_LINE_LENGTH];
  
   int unixresult;
-  int status;
   int local, global;
-  int file_status;
   int ii, pe, nn;
  
   char pid[MAX_TASK_TAG_SIZE];
  
   FILE *fptr;
   FILE *sptr;
-  FILE *tptr;
   FILE *mptr;
   FILE *optr;
  
   int GridID = 1;
   int GridJD = 1;
   int GridKD = 1;
-  int GridLD = 1;
  
   /* If this is an interpolated time step, then temporary replace  the time
      in MetaData.  Note:  Modified 6 Feb 2006 to fix interpolated  data outputs. */

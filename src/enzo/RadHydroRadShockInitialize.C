@@ -53,7 +53,6 @@ int RadHydroRadShockInitialize(FILE *fptr, FILE *Outfptr,
   char *RadName   = "Grey_Radiation_Energy";
 
   // local declarations
-  int dim;
 
   // Setup and parameters:
   //  1. ambient density (g/cc)
@@ -73,19 +72,17 @@ int RadHydroRadShockInitialize(FILE *fptr, FILE *Outfptr,
 
   // overwrite parameters from RadHydroParamFile file, if it exists
   char line[MAX_LINE_LENGTH];
-  int  ret;
   if (MetaData.RadHydroParameterFname != NULL) {
     FILE *RHfptr;
     if ((RHfptr = fopen(MetaData.RadHydroParameterFname, "r")) != NULL) {
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
-	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "DensityConstant = %" FSYM, &DensityConstant);
-	ret += sscanf(line, "GasTempConstant = %" FSYM, &GasTempConstant);
-	ret += sscanf(line, "RadTempConstant = %" FSYM, &RadTempConstant);
-	ret += sscanf(line, "VelocityConstant = %" FSYM, &VelocityConstant);
-	ret += sscanf(line, "ShockDir = %" ISYM, &ShockDir);
-	ret += sscanf(line, "CGSType = %" ISYM, &CGSType);
+	sscanf(line, "DensityConstant = %" FSYM, &DensityConstant);
+	sscanf(line, "GasTempConstant = %" FSYM, &GasTempConstant);
+	sscanf(line, "RadTempConstant = %" FSYM, &RadTempConstant);
+	sscanf(line, "VelocityConstant = %" FSYM, &VelocityConstant);
+	sscanf(line, "ShockDir = %" ISYM, &ShockDir);
+	sscanf(line, "CGSType = %" ISYM, &CGSType);
       } // end input from parameter file
       fclose(RHfptr);
     }

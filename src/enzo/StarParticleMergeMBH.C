@@ -44,11 +44,10 @@ int StarParticleMergeMBH(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 {
 
   Star *ThisStar, *OtherStar, *MoveStar, *LastStar;
-  LevelHierarchyEntry *Temp;
   float rmerge2;
   double vcirc2;
   FLOAT TimeNow;
-  int dim, level;
+  int level;
   bool MBH_Exists = false;
 
   for (ThisStar = AllStars; ThisStar; ThisStar = ThisStar->NextStar)

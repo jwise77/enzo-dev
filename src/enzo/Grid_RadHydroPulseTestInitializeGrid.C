@@ -106,7 +106,6 @@ int grid::RadHydroPulseTestInitializeGrid(float DensityConstant,
     int i, j, k;
 
     float StBz=5.6704e-5;
-    float mH       = 1.66053e-24;
     float RadCon = 4.0*StBz/clight;
 
     float IEConstant = 1.0/(Gamma-1.0)/DEFAULT_MU*sqrt(sqrt((EgConstant/RadCon)));

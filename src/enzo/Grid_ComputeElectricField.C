@@ -185,9 +185,6 @@ int grid::ComputeElectricField(float dT, float ** Fluxes){
   //                       
   // Li_B indicies are the relevant elements in the flux array. 
   
-  int size = GridDimension[0]*
-    ((GridRank > 1 ) ? GridDimension[1] : 1 )*
-    ((GridRank > 2 ) ? GridDimension[2] : 1 );
   
   int Li_B[3][2] = { {1,1},{1,0},{0,0}};
   //Pointers (and one macro) for brevity.

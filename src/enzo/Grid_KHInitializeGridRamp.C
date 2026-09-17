@@ -60,7 +60,7 @@ int grid::KHInitializeGridRamp(float KHInnerDensity,
     ENZO_FAIL("Error in IdentifyPhysicalQuantities.\n");
   }
 
-  int index, jndex, i, j, k, n = 0;
+  int i, j, k, n = 0;
   FLOAT x, y, KHRampWidth2, DensityDiff, VelocityDiff;
   KHRampWidth2 = KHRampWidth*KHRampWidth;
   DensityDiff = (KHInnerDensity - KHOuterDensity);

@@ -42,8 +42,6 @@ int HDF5_WriteDataset(hid_t group_id, const char *DatasetName, int *Dataset, int
 int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData MetaData, LevelHierarchyEntry *LevelArray[]) {
   char FileName[MAX_LINE_LENGTH];
   char GroupName[MAX_LINE_LENGTH];
-  char DatasetName[MAX_LINE_LENGTH];
-  char AttributeName[MAX_LINE_LENGTH];
 
   int level, i;
   int FinestLevel=0;
@@ -56,14 +54,10 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
   LevelHierarchyEntry *LTemp;
   HierarchyEntry *HTemp, *HTemp2;
 
-  hid_t       file_id, group_id, dset_id, attr_id;
-  hid_t       dspace_id;
-  hid_t       int_file_type_id, int_mem_type_id;  
+  hid_t file_id, group_id;
 
-  hsize_t     OutDims[MAX_DIMENSION];
 
   herr_t      h5_status;
-  herr_t      h5_error = -1;  
 
   int io_log = 0;
 #ifdef IO_LOG
@@ -74,13 +68,9 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
   switch(jj)  {
     
   case 4:
-    int_mem_type_id = HDF5_I4;
-    int_file_type_id = HDF5_FILE_I4;
     break;
     
   case 8:
-    int_mem_type_id = HDF5_I8;
-    int_file_type_id = HDF5_FILE_I8;
     break;
     
   default:

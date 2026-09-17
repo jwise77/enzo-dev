@@ -37,7 +37,7 @@ int grid::SetFlaggingFieldMultiRefineRegions(int level)
   /* declarations */
 
   int i, j, k, index, dim, region;
-  float xpos, ypos, zpos, ring_width, rad, dr;
+  float xpos, ypos, zpos, rad, dr;
   int LocalMaximumRefinementLevel = 0;
 
 

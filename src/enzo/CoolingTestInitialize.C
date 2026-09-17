@@ -63,26 +63,18 @@ int CoolingTestInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
    /* parameter declarations */
  
-  FLOAT ConstantDensitySubgridLeft, ConstantDensitySubgridRight;
-  FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
 
-  float ConstantDensityVelocity[3]   = {0.0, 0.0, 0.0};
 
   /* local declarations */
  
   char line[MAX_LINE_LENGTH];
-  int  i, j, dim, ret, NumberOfSubgridZones[MAX_DIMENSION],
-    SubgridDims[MAX_DIMENSION];
+  int i, j, dim, ret;
 
   MaximumRefinementLevel = 0;
 
-  float dx = (DomainRightEdge[0] - DomainLeftEdge[0])/
-     MetaData.TopGridDims[0];
  
 //   /* set no subgrids by default. */
  
-  ConstantDensitySubgridLeft         = 0.0;    // start of subgrid(s)
-  ConstantDensitySubgridRight        = 0.0;    // end of subgrid(s)
 
   TestProblemData.MultiSpecies = MultiSpecies;  // set this from global data (kind of a hack, but necessary)
 

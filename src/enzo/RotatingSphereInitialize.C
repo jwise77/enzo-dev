@@ -69,7 +69,6 @@ int RotatingSphereInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
    /* parameter declarations */
  
    FLOAT RotatingSphereSubgridLeft[MAX_DIMENSION], RotatingSphereSubgridRight[MAX_DIMENSION];
-   FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
 
    float RotatingSphereNFWMass;
    float RotatingSphereNFWConcentration;
@@ -86,8 +85,7 @@ int RotatingSphereInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
    // Local variable declarations
    char line[MAX_LINE_LENGTH];
-   int   i, j, dim, ret, NumberOfSubgridZones[MAX_DIMENSION],
-      SubgridDims[MAX_DIMENSION];
+   int i, j, ret;
 
    // Initialize parameters to default values
    RotatingSphereNFWMass = 1.0e7;

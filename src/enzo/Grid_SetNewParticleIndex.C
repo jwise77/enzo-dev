@@ -47,8 +47,7 @@ void grid::SetNewParticleIndex(int &NumberCount1, PINT &NumberCount2)
 void grid::SetNewActiveParticleIndex(PINT &next_id)
 {
 
-  int n, abstype;
-  int ori_count = next_id;
+  int n;
 
   for (n = 0; n < NumberOfActiveParticles; n++)
     if (ActiveParticles[n]->Identifier == INT_UNDEFINED) {

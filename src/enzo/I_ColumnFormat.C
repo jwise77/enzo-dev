@@ -12,7 +12,6 @@ int i,j;
 #ifdef IO_LOG
   int         io_log = 1;
 #else
-  int         io_log = 0;
 #endif
  
 //if (io_log)

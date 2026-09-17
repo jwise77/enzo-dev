@@ -55,7 +55,7 @@ void grid::PrepareGrid(int Rank, int GridDim[],
   }
 */
 
-  int field, dim; 
+  int dim;
 
   /* Set Particle quantities. */
  
@@ -84,14 +84,10 @@ void grid::PrepareGrid(int Rank, int GridDim[],
  
   this->PrepareGridDerivedQuantities();
 
-  int activesize = 1;
   for (int dim = 0; dim < GridRank; dim++) {
-    activesize *= (GridDimension[dim] - 2 * NumberOfGhostZones);
   }
   
-  int size = 1;
   for (int dim = 0; dim < GridRank; dim++) {
-    size *= GridDimension[dim];
   }
   
 

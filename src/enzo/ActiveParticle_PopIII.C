@@ -47,7 +47,7 @@ int ActiveParticleType_PopIII::EvaluateFormation
   PopIIIGrid *tg = static_cast<PopIIIGrid *>(thisgrid_orig);
 
   float bmass, div, dtot, tdyn, LifetimeInYears;
-  int i, j, k, dim, index, offset_y, offset_z;
+  int i, j, k, index, offset_y, offset_z;
   int NumberOfNewParticles = 0;
 
   /* Make it pretty */
@@ -225,8 +225,6 @@ int ActiveParticleType_PopIII::CreateParticle(grid *thisgrid_orig,
 					      int particle_index)
 {
   //printf("Brute force particle creation of PopIII");
-  PopIIIGrid *thisGrid =
-    static_cast<PopIIIGrid *>(thisgrid_orig);
 
   ActiveParticleType_PopIII *np = new ActiveParticleType_PopIII();
   data.NumberOfNewParticles++;

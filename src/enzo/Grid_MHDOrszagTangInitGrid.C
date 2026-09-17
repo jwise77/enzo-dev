@@ -63,7 +63,7 @@ int grid::MHDOrszagTangInitGrid(float DensityIn,float Pressure, float V0, float 
     return SUCCESS;
 
   float X, Y, Vx, Vy, GasEnergy=Pressure/(Gamma-1), TotalEnergy=0; 
-  int index, size=1, i,j,k, field;
+  int index, i, j, k, field;
   float Scale[3];
 
   //In order to ensure a good comparison, we use the MHD-CT initialization
@@ -77,7 +77,6 @@ int grid::MHDOrszagTangInitGrid(float DensityIn,float Pressure, float V0, float 
   this->AllocateGrids();  
 
   for(i=0;i<GridRank;i++){
-    size*=GridDimension[i];
     Scale[i]=(GridRightEdge[i]-GridLeftEdge[i])/(GridDimension[i]-2*NumberOfGhostZones);
   }
 

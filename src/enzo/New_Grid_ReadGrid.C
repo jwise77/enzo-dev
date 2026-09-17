@@ -51,7 +51,6 @@ int ReadListOfFloats(FILE *fptr, int N, FLOAT floats[]);
 int ReadListOfInts(FILE *fptr, int N, int nums[]);
  
 void MHDCTSetupFieldLabels(void);
-static int GridReadDataGridCounter = 0;
  
  
 #ifdef NEW_GRID_IO
@@ -61,22 +60,15 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 			 int ReadEverything)
 {
  
-  int i, j, k, field, size, active_size, dim;
-  char name[MAX_LINE_LENGTH], dummy[MAX_LINE_LENGTH];
-  char logname[MAX_LINE_LENGTH], unused_string[MAX_LINE_LENGTH];
+  int i, j, field, size, active_size;
+  char name[MAX_LINE_LENGTH];
+  char unused_string[MAX_LINE_LENGTH];
   char procfilename[MAX_LINE_LENGTH];
  
-  char id[MAX_GROUP_TAG_SIZE];
-  char pid[MAX_TASK_TAG_SIZE];
-  char gpid[MAX_TASK_TAG_SIZE];
  
   int ActiveDim[MAX_DIMENSION];
  
-  FILE *log_fptr;
- 
   hid_t       group_id, dset_id, old_fields;
-  hid_t       file_dsp_id;
-  hid_t       num_type;
  
   hsize_t     OutDims[MAX_DIMENSION];
   hsize_t     FullOutDims[MAX_DIMENSION];
@@ -85,7 +77,6 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
   herr_t      h5_status;
   herr_t      h5_error = -1;
  
-  int         num_size;
  
   char *ParticlePositionLabel[] =
     {"particle_position_x", "particle_position_y", "particle_position_z"};
@@ -349,7 +340,6 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
         hsize_t MHDOutDims[3];
         int BiggieSize = (GridDimension[0]+1)*(GridDimension[1]+1)*(GridDimension[2]+1);
         float *MHDtmp = new float[BiggieSize];	
-        bool io_log = (log_fptr != NULL);
 
         //
         // Read Magnetic Field.
@@ -618,12 +608,12 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
        && ReadData ){
  
     if (ReadEverything == TRUE) this->ReadExtraFields(group_id);
-    h5_status = H5Gclose(group_id);
+    H5Gclose(group_id);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
 
 #ifndef SINGLE_HDF5_OPEN_ON_INPUT 
 
-    h5_status = H5Fclose(file_id);
+    H5Fclose(file_id);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
 
 #endif
@@ -643,7 +633,7 @@ int grid::read_dataset(int ndims, hsize_t *dims, const char *name, hid_t group,
   hid_t dset_id;
   hid_t h5_status;
   herr_t      h5_error = -1;
-  int i, j, k, dim;
+  int i, j, k;
   /* get data into temporary array */
 
   file_dsp_id = H5Screate_simple((Eint32) ndims, dims, NULL);
@@ -734,7 +724,7 @@ int grid::ReadFluxGroup(hid_t flux_group, fluxes *fluxgroup)
   hid_t h5_error = -1;
   hid_t axis_group = h5_error;
   hid_t left_group, right_group;
-  int i, j, field, dim;
+  int j, field, dim;
   hsize_t size;
 
   char name[255];

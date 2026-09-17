@@ -31,9 +31,6 @@ void my_exit(int status);
 int grid::WriteTaskMap(FILE *fptr, char *base_name, int grid_id)
 {
  
-  int i, j, k;
-  int file_status;
-  int output_cube;
 
 /*
   int crap1 = MyProcessorNumber;

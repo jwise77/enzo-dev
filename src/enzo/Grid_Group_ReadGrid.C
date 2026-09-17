@@ -46,7 +46,6 @@ void my_exit(int status);
 int ReadListOfFloats(FILE *fptr, int N, FLOAT floats[]);
 int ReadListOfInts(FILE *fptr, int N, int nums[]);
  
-static int GridReadDataGridCounter = 0;
  
  
 #ifndef NEW_GRID_IO

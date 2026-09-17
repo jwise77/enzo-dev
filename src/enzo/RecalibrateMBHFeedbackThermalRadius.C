@@ -47,7 +47,7 @@ int RecalibrateMBHFeedbackThermalRadius(FLOAT star_pos[], LevelHierarchyEntry *L
 
   float AvgVelocity[MAX_DIMENSION], MassEnclosed = 0, Metallicity = 0, ColdGasMass = 0;
   float OneOverRSquaredSum, initialRadius; 
-  int i, l, dim, FirstLoop = TRUE, MBHFeedbackThermalRadiusTooSmall;
+  int l, dim, FirstLoop = TRUE, MBHFeedbackThermalRadiusTooSmall;
   LevelHierarchyEntry *Temp, *Temp2;
   FLOAT Time;
 

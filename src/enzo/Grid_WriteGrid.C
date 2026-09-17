@@ -66,7 +66,6 @@ int grid::WriteGrid(FILE *fptr, char *base_name, int grid_id)
   printf("In WriteGrid**");
  
   int i, j, k, dim, field, size, active_size, ActiveDim[MAX_DIMENSION];
-  int file_status;
   float *temperature, *dust_temperature,
     *cooling_time;
 
@@ -339,10 +338,8 @@ int grid::WriteGrid(FILE *fptr, char *base_name, int grid_id)
 
     if( UseMHDCT ){
 
-      hsize_t MHDOutDims[3];
       int MHDActive[3], MHDWriteStartIndex[3], MHDWriteEndIndex[3];
       int BiggieSize = (GridDimension[0]+1)*(GridDimension[1]+1)*(GridDimension[2]+1);
-      int index1, index2;
       io_type *MHDtmp = new io_type[BiggieSize];
       int WriteBoundary = FALSE; 
 
@@ -727,7 +724,7 @@ int grid::WriteGrid(FILE *fptr, char *base_name, int grid_id)
       cooling_time = new float[size];
  
       float TemperatureUnits = 1, DensityUnits = 1, LengthUnits = 1,
-	VelocityUnits = 1, TimeUnits = 1, aUnits = 1;
+	VelocityUnits = 1, TimeUnits = 1;
 
       GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	       &TimeUnits, &VelocityUnits, Time);

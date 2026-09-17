@@ -63,9 +63,7 @@ int grid::AccreteOntoSmartStarParticle(
 
   /* Set the units. */
  
-  float DensityUnits = 1, LengthUnits = 1, TemperatureUnits = 1,
-    TimeUnits = 1, VelocityUnits = 1,
-    PressureUnits = 0, GEUnits = 0, VelUnits = 0;
+  float DensityUnits = 1, LengthUnits = 1, TemperatureUnits = 1, TimeUnits = 1, VelocityUnits = 1;
   double MassUnits = 1;
   if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	       &TimeUnits, &VelocityUnits, Time) == FAIL) {

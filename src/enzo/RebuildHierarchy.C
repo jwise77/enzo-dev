@@ -114,7 +114,7 @@ int RebuildHierarchy(TopGridData *MetaData,
     }
   }
 
-  double tt0, tt1, tt2, tt3;
+  double tt0, tt1;
  
   /* declarations */
 

@@ -159,7 +159,7 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
  
   float dt;
  
-  int i, dim, Stop = FALSE;
+  int i, Stop = FALSE;
   int StoppedByOutput = FALSE;
   int Restart = FALSE;
   double tlev0, tlev1, treb0, treb1, tloop0, tloop1, tentry, texit;

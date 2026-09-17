@@ -62,17 +62,15 @@ int RadHydroGreyMarshakWaveInitialize(FILE *fptr, FILE *Outfptr,
 
   // overwrite parameters from RadHydroParamFile file, if it exists
   char line[MAX_LINE_LENGTH];
-  int  dim, ret;
   if (MetaData.RadHydroParameterFname != NULL) {
     FILE *RHfptr;
     if ((RHfptr = fopen(MetaData.RadHydroParameterFname, "r")) != NULL) {
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
-	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "RadHydroDensity = %" FSYM, &RadHydroDensity);
-	ret += sscanf(line, "RadHydroGasEnergy = %" FSYM, &RadHydroGasEnergy);
-	ret += sscanf(line, "RadHydroRadEnergy = %" FSYM, &RadHydroRadEnergy);
-	ret += sscanf(line, "GreyMarshDir = %" ISYM, &GreyMarshDir);
+	sscanf(line, "RadHydroDensity = %" FSYM, &RadHydroDensity);
+	sscanf(line, "RadHydroGasEnergy = %" FSYM, &RadHydroGasEnergy);
+	sscanf(line, "RadHydroRadEnergy = %" FSYM, &RadHydroRadEnergy);
+	sscanf(line, "GreyMarshDir = %" ISYM, &GreyMarshDir);
       } // end input from parameter file
       fclose(RHfptr);
     }

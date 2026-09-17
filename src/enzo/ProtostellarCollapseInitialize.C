@@ -43,7 +43,6 @@ int ProtostellarCollapseInitialize(FILE *fptr, FILE *Outfptr,
   char *Vel1Name = "x-velocity";
   char *Vel2Name = "y-velocity";
   char *Vel3Name = "z-velocity";
-  char *GPotName = "Grav_Potential";
 
   /* parameter declarations */
 
@@ -53,9 +52,7 @@ int ProtostellarCollapseInitialize(FILE *fptr, FILE *Outfptr,
   /* local declarations */
 
   char line[MAX_LINE_LENGTH];
-  int  dim, ret, NumberOfSubgridZones[MAX_DIMENSION],
-                          SubgridDims[MAX_DIMENSION],
-                                  xyz[MAX_DIMENSION];
+  int dim, ret, NumberOfSubgridZones[MAX_DIMENSION], SubgridDims[MAX_DIMENSION];
   float TopCell[MAX_DIMENSION];
 
   /* make sure it is 3D */
@@ -86,8 +83,6 @@ int ProtostellarCollapseInitialize(FILE *fptr, FILE *Outfptr,
   float ProtostellarCollapseOuterEnergy     = 1e3;
   float ProtostellarCollapseCoreRadius      = 0.005;
   float ProtostellarCollapseAngularVelocity = 0.0;
-  float dx = (DomainRightEdge[0] - DomainLeftEdge[0])/
-                                                   MetaData.TopGridDims[0];
 
   /* set no subgrids by default. */
 

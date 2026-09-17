@@ -70,7 +70,6 @@ int WriteDataset(hid_t WriteLoc, float * data_buffer, io_type * tmp_buffer,
   hsize_t     OutDims[MAX_DIMENSION];
   for (dim = 0; dim < GridRank; dim++)
     OutDims[GridRank-dim-1] = WriteDims[dim];
-  io_type dbg_temp;
   for (k = WriteStartIndex[2]; k <= WriteEndIndex[2]; k++)
     for (j = WriteStartIndex[1]; j <= WriteEndIndex[1]; j++)
       for (i = WriteStartIndex[0]; i <= WriteEndIndex[0]; i++){

@@ -44,8 +44,7 @@ int ConductionBubbleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
   }
 
   char line[MAX_LINE_LENGTH];
-  float LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
-  int i, j, dim, ret;
+  int i, j, ret;
 
   float ConductionBubbleDensity = 1.0;
   float ConductionBubbleTotalEnergy = 1.0;

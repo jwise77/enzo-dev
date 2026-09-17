@@ -51,7 +51,7 @@ void grid::Gadgetfind_abundances_and_rates(float logT, float rho, float *ne_gues
 
   float neold, nenew;
   int j, niter;
-  float Tlow, Thi, flow, fhi, t;
+  float Tlow, flow, fhi, t;
   float necgs;
   float logT_input, rho_input, ne_input;
 
@@ -95,7 +95,6 @@ void grid::Gadgetfind_abundances_and_rates(float logT, float rho, float *ne_gues
   j = (int) t;
   //if(debug) printf("t:  %lf   j: %" ISYM "\n",t,j);
   Tlow = Tmin + deltaT * j;
-  Thi = Tlow + deltaT;
   fhi = t - j;
   flow = 1 - fhi;
 

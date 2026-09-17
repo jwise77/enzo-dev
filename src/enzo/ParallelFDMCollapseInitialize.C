@@ -61,34 +61,18 @@ int ParallelFDMCollapseInitialize(FILE *fptr, FILE *Outfptr,
 {
   const char *DensName = "Density";
   const char *TEName   = "TotalEnergy";
-  const char *GEName   = "GasEnergy";
   const char *Vel1Name = "x-velocity";
   const char *Vel2Name = "y-velocity";
   const char *Vel3Name = "z-velocity";
-  const char *ColourName = "SN_Colour";
-  const char *ElectronName = "Electron_Density";
-  const char *HIName    = "HI_Density";
-  const char *HIIName   = "HII_Density";
-  const char *HeIName   = "HeI_Density";
-  const char *HeIIName  = "HeII_Density";
-  const char *HeIIIName = "HeIII_Density";
-  const char *HMName    = "HM_Density";
-  const char *H2IName   = "H2I_Density";
-  const char *H2IIName  = "H2II_Density";
-  const char *DIName    = "DI_Density";
-  const char *DIIName   = "DII_Density";
-  const char *HDIName   = "HDI_Density";
-  const char *MetalName = "Metal_Density";
-  const char *RePsiName = "Re_Psi"; 
+  const char *RePsiName = "Re_Psi";
   const char *ImPsiName = "Im_Psi"; 
-  const char *FDMDensName = "FDMDensity"; 
+  const char *FDMDensName = "FDMDensity";
   const char *GravPotName = "GravPotential";
 
   /* declarations */
 
   char line[MAX_LINE_LENGTH];
-  int i, j, dim, gridnum, ret, SubgridsAreStatic, region;
-  HierarchyEntry *Subgrid;
+  int i, dim, gridnum, ret;
   gridnum = 0;
  
   char *RealPsiName = NULL, *ImagPsiName = NULL, *AbsBdName = NULL;
@@ -208,7 +192,7 @@ int ParallelFDMCollapseInitialize(FILE *fptr, FILE *Outfptr,
 
 int ParallelFDMCollapseReInitialize(HierarchyEntry *TopGrid, TopGridData &MetaData)
 {
-  int dim, gridnum = 0;
+  int gridnum = 0;
   char *RealPsiName = NULL, *ImagPsiName = NULL, *AbsBdName = NULL;
 
   if (MyProcessorNumber == ROOT_PROCESSOR)

@@ -571,7 +571,7 @@ void Star::StarListToBuffer(StarBuffer *&result, int n)
 
 void Star::StarToBuffer(StarBuffer *result)
 {
-  int i, count = 0;
+  int i;
   Star *tmp = this;
   for (i = 0; i < MAX_DIMENSION; i++) {
     result->pos[i] = tmp->pos[i];

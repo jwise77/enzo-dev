@@ -37,7 +37,6 @@ int grid::MHD_Diagnose(char * label, float * &DivB)
   float TotalEnergy = 0;
   float Kinetic = 0;
   float MagneticCentered = 0;
-  float MagneticFace = 0;
   float Mass = 0;
   float GasEnergy = 0;
   float AbsDivB = 0;

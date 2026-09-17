@@ -56,8 +56,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
   Star *cstar;
   bool MarkedSubgrids = false;
   bool SphereCheck;
-  int i, l, dim, temp_int, SkipMassRemoval, SphereContained,
-      SphereContainedNextLevel, dummy, count;
+  int l, SkipMassRemoval, SphereContained, SphereContainedNextLevel, dummy, count;
   float influenceRadius, RootCellWidth, SNe_dt, dtForThisStar, MassLoss;
   double EjectaThermalEnergy, EjectaDensity, EjectaMetalDensity;
   FLOAT Time;

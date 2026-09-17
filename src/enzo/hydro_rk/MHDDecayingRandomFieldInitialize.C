@@ -51,12 +51,9 @@ int MHDDecayingRandomFieldInitialize(FILE *fptr, FILE *Outfptr,
   char *ByName = "By";
   char *BzName = "Bz";
   char *PhiName = "Phi";
-  char *Drive1Name = "DrivingField1";
-  char *Drive2Name = "DrivingField2";
-  char *Drive3Name = "DrivingField3";
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, sphere, i;
+  int level, i;
 
   /* set default parameters */
 
@@ -69,20 +66,19 @@ int MHDDecayingRandomFieldInitialize(FILE *fptr, FILE *Outfptr,
   rewind(fptr);
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     /* read parameters */
 
-    ret += sscanf(line, "RefineAtStart = %" ISYM, &RefineAtStart);
-    ret += sscanf(line, "MHDDRF-Density = %" FSYM, &rho_medium);
-    ret += sscanf(line, "MHDDRF-SoundVelocity = %" FSYM, &cs);
-    ret += sscanf(line, "MHDDRF-InitialBfield = %" FSYM, &Bnaught);
-    ret += sscanf(line, "MHDDRF-RandomSeed = %" ISYM, &RandomSeed);
+    sscanf(line, "RefineAtStart = %" ISYM, &RefineAtStart);
+    sscanf(line, "MHDDRF-Density = %" FSYM, &rho_medium);
+    sscanf(line, "MHDDRF-SoundVelocity = %" FSYM, &cs);
+    sscanf(line, "MHDDRF-InitialBfield = %" FSYM, &Bnaught);
+    sscanf(line, "MHDDRF-RandomSeed = %" ISYM, &RandomSeed);
     // parameters that specify the spectrum. See Turbulence_Generator.C for definitions.
-    ret += sscanf(line, "MHDDRF-RMSAlfvenSpeed = %" FSYM, &mach);
-    ret += sscanf(line, "MHDDRF-MinimumWaveNumber = %" FSYM, &Skmin);
-    ret += sscanf(line, "MHDDRF-MaximumWaveNumber = %" FSYM, &Skmax);
-    ret += sscanf(line, "MHDDRF-SpectralIndex = %" FSYM, &Sindex);
+    sscanf(line, "MHDDRF-RMSAlfvenSpeed = %" FSYM, &mach);
+    sscanf(line, "MHDDRF-MinimumWaveNumber = %" FSYM, &Skmin);
+    sscanf(line, "MHDDRF-MaximumWaveNumber = %" FSYM, &Skmax);
+    sscanf(line, "MHDDRF-SpectralIndex = %" FSYM, &Sindex);
 
   } // end input from parameter file
 

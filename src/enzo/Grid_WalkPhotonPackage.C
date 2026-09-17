@@ -76,28 +76,27 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
   const int offset[] = {1, GridDimension[0], GridDimension[0]*GridDimension[1]};
 
   int i, index, dim, splitMe, direction;
-  int keep_walking, count, H2Thin, TemperatureField; 
+  int keep_walking, TemperatureField;
   int type = (*PP)->Type;
-  int g[3], celli[3], u_dir[3], u_sign[3];
+  int g[3], u_dir[3], u_sign[3];
   int cindex;
   float m[3], slice_factor, slice_factor2, sangle_inv;
   float MinTauIfront, PhotonEscapeRadius[3], c, c_inv, tau, taua;
   float DomainWidth[3], dx, dx2, dxhalf, fraction, dColumnDensity;
-  float shield1, shield2, solid_angle, midpoint, nearest_edge;
+  float solid_angle, midpoint, nearest_edge;
   float tau_delete, flux_floor;
   double dN;
   FLOAT radius, oldr, cdt, dr;
   FLOAT CellVolume = 1, Volume_inv, Area_inv, SplitCriteron, SplitWithinRadius;
-  FLOAT SplitCriteronIonized, PauseRadius, r_merge, d_ss, d2_ss, u_dot_d, sqrt_term;
+  FLOAT PauseRadius, r_merge, d_ss, d2_ss, u_dot_d, sqrt_term;
   FLOAT sigma[H2II + 1]; //Accounts for all of the cross sections needed
-  FLOAT ddr, dP, dP1, dp2,EndTime;
+  FLOAT ddr, dP, dP1, EndTime;
   FLOAT dPi[H_SPECIES + 1], dPXray[H_SPECIES + 1];  //+ 1 is to account for Compton
   FLOAT thisDensity, min_dr;
   FLOAT ce[3], nce[3];
   FLOAT s[3], f[3], u_inv[3], r[3], dri[3];
   double dir_vec[3], u[3];
   static int secondary_flag = 1, compton_flag = 1;
-  static int photoncounter = 0;
 
   /* Check for early termination */
 
@@ -120,7 +119,6 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
     ENZO_FAIL("Error in GetUnits.\n");
   }
   // Convert from #/s to RT units
-  double LConv = (double) TimeUnits / POW(LengthUnits,3);
   /* This controls the splitting condition, where this many rays must
      exist in each cell */
 
@@ -311,7 +309,6 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
   dx2 = dx*dx;
   dxhalf = 0.5f * dx;
   SplitCriteron = dx2 / RaysPerCell;
-  SplitCriteronIonized = dx2;
   Volume_inv = 1.0 / CellVolume;
   Area_inv = 1.0 / dx2;
 
@@ -398,7 +395,6 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
   /*                       MAIN RAY TRACING LOOP                          */
   /************************************************************************/
 
-  count = 0;
   keep_walking = 1;
   //cindex = GRIDINDEX_NOGHOST(g[0],g[1],g[2]);
   while (keep_walking) {
@@ -889,7 +885,6 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
       return SUCCESS;
     }
 
-    count++;
     
     g[direction] += u_sign[direction];
     cindex += u_sign[direction] * offset[direction];

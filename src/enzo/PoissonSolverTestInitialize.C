@@ -45,7 +45,7 @@ int PoissonSolverTestInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, sphere, i;
+  int i;
 
   /* set default parameters */
 
@@ -58,13 +58,12 @@ int PoissonSolverTestInitialize(FILE *fptr, FILE *Outfptr,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     /* read parameters */
 
-    ret += sscanf(line, "PoissonSolverTestType = %" ISYM, &TestType);
-    ret += sscanf(line, "PoissonSolverTestGeometryControl = %" FSYM, &TestGeometryControl);
-    ret += sscanf(line, "PoissonSolverTestRefineAtStart = %" ISYM, &RefineAtStart);
+    sscanf(line, "PoissonSolverTestType = %" ISYM, &TestType);
+    sscanf(line, "PoissonSolverTestGeometryControl = %" FSYM, &TestGeometryControl);
+    sscanf(line, "PoissonSolverTestRefineAtStart = %" ISYM, &RefineAtStart);
     /* if the line is suspicious, issue a warning */
 
   } // end input from parameter file

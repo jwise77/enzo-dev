@@ -62,9 +62,8 @@ int grid::MHDLoopInitGrid(float LoopDensity,float Pressure, float Vx, float Vy, 
 
 
 
-  float One=1.0;
   float R,X, Y, GasEnergy=Pressure/(Gamma-1), LoopTotalEnergy=0; 
-  int index, size=1, i,j,k, Three=3,TENum=1; 
+  int index, i, j, k;
   float Scale[3];
 
   //In order to ensure a good comparison, we use the MHD-CT initialization
@@ -76,7 +75,6 @@ int grid::MHDLoopInitGrid(float LoopDensity,float Pressure, float Vx, float Vy, 
   this->AllocateGrids();  
 
   for(i=0;i<GridRank;i++){
-    size*=GridDimension[i];
     Scale[i]=(GridRightEdge[i]-GridLeftEdge[i])/(GridDimension[i]-2*NumberOfGhostZones);
   }
   for( i=GridRank; i<3; i++){

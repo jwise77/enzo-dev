@@ -186,7 +186,7 @@ int LoadBalanceHilbertCurve(HierarchyEntry *GridHierarchyPointer[],
      Hilbert curve. */
 
   const double CriticalBalance = 0.1 / NumberOfProcessors;
-  double div_hkey, min_hkey, max_hkey, global_min_hkey;
+  double div_hkey, min_hkey, max_hkey;
   double hkey_boundary;
   char direction;
   int LoadedBlock, UnloadedBlock, WorkDifference;
@@ -370,7 +370,7 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
   int GridMemory, NumberOfCells, CellsTotal, NumberOfParticles;
   int iter;
 
-  double tt0, tt1;
+  double tt0;
   CommunicationBarrier();
   tt0 = ReturnWallTime();
 
@@ -479,7 +479,7 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
      Hilbert curve. */
 
   const double CriticalBalance = 0.1 / NumberOfProcessors;
-  double div_hkey, min_hkey, max_hkey, global_min_hkey;
+  double div_hkey, min_hkey, max_hkey;
   double hkey_boundary;
   char direction;
   int LoadedBlock, UnloadedBlock, WorkDifference;
@@ -603,12 +603,10 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
   FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
   FLOAT BoundingBox[2][MAX_DIMENSION];
   FLOAT BoundingBoxWidthInv[MAX_DIMENSION];
-  float GridVolume, AxialRatio;
   float TotalWork, WorkThisProcessor, WorkPerProcessor, WorkLeft;
-  int GridMemory, NumberOfCells, CellsTotal, NumberOfParticles;
-  int iter, GridsThisProcessor, GridsPerProcessor;
+  int GridsThisProcessor, GridsPerProcessor;
 
-  double tt0, tt1;
+  double tt0;
   tt0 = ReturnWallTime();
 
   /* Find the bounding box of the grids */
@@ -733,12 +731,6 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
      by moving grids to adjacent processors within some epsilon on the
      Hilbert curve. */
 
-  const double CriticalBalance = 0.1 / NumberOfProcessors;
-  double div_hkey, min_hkey, max_hkey, global_min_hkey;
-  double hkey_boundary;
-  char direction;
-  int LoadedBlock, UnloadedBlock;
-  float WorkDifference, MinWork, MaxWork, WorkImbalance;
 
 #ifdef UNUSED
   for (iter = 0; iter < FUZZY_ITERATIONS; iter++) {

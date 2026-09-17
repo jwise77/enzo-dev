@@ -66,11 +66,10 @@ int CommunicationMergeStarParticle(HierarchyEntry *Grids[],
 {
   //printf("CommunicationMergeStarParticle running......................\n");
 #ifdef USE_MPI
-  double time1 = ReturnWallTime();
 
   /* count particles on this processor */
 
-  int i, n, dim, grid;
+  int i, dim, grid;
   Eint32 ParticlesToSend = 0;
 
   for (grid = 0; grid < NumberOfGrids; grid++) {

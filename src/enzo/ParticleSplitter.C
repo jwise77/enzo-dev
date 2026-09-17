@@ -90,7 +90,6 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
   if (ParticleSplitterMustRefine &&
       ParticleSplitterMustRefineIDFile != NULL) {
 
-    int NumberOfMustRefineIDs;
     hid_t file_id, dataset_id, dataspace_id;
     herr_t status;
     hsize_t dims[1], maxdims[1];

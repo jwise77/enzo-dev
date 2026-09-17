@@ -106,8 +106,7 @@ int NonUnigridCommunicationTranspose(region *FromRegion, int NumberOfFromRegions
 
   /* Declarations. */
  
-  int dim, n, i, j, size, index, Zero[] = {0,0,0};
-  int LeftIndex[MAX_DIMENSION], RightIndex[MAX_DIMENSION];
+  int n, i, j, index, Zero[] = {0,0,0};
   float *ReceiveBuffer, *SendBuffer;
  
   //  fprintf(stderr, "CT(%" ISYM"): start From=%" ISYM"  To=%" ISYM"\n", MyProcessorNumber,
@@ -315,8 +314,7 @@ int OptimizedUnigridCommunicationTranspose(
 			   int TransposeOrder)
 {
  
-  int dim, n, i, j, size, index, Zero[] = {0,0,0};
-  int LeftIndex[MAX_DIMENSION], RightIndex[MAX_DIMENSION];
+  int n, i, j, index, Zero[] = {0,0,0};
   float *ReceiveBuffer, *SendBuffer;
  
   int sends, receives;
@@ -348,7 +346,6 @@ int OptimizedUnigridCommunicationTranspose(
 
   // Loop over processor jumps (number of processors ahead to send)
 
-  int MaxRegions = max(NumberOfFromRegions, NumberOfToRegions);
  
   int *jtrue = new int[NumberOfFromRegions];
   int *itrue = new int[NumberOfToRegions];
@@ -529,7 +526,7 @@ int OptimizedUnigridCommunicationTranspose(
 
 
 
-  int m, l, k;
+  int m, l;
 
   if ( MyProcessorNumber == -4 )
   if ( First_Pass == 5 ) {
@@ -787,8 +784,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
 #ifdef USE_MPI
   /* Declarations. */
  
-  int dim, n, ni, i, ii, j, jj, size, index, Zero[] = {0,0,0};
-  int LeftIndex[MAX_DIMENSION], RightIndex[MAX_DIMENSION];
+  int n, ni, i, ii, j, jj, index, Zero[] = {0,0,0};
   float *ReceiveBuffer[PROCS_PER_LOOP], *SendBuffer[PROCS_PER_LOOP];
   bool ReceiveMode;
   int sends, receives, request;

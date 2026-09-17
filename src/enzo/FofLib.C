@@ -267,8 +267,7 @@ static FLOAT maxarg1,maxarg2;
 static FLOAT minarg1,minarg2;
 #define FMIN(a,b) (minarg1=(a),minarg2=(b), (minarg1) < (minarg2) ? (minarg1) : (minarg2))
 
-static int imaxarg1,imaxarg2;
-#define IMAX(a,b) (imaxarg1=(a),imaxarg2=(b), (imaxarg1) > (imaxarg2) ? (imaxarg1) : (imaxarg2))
+#define IMAX(a,b) ((a) > (b) ? (a) : (b))
 
 static int iminarg1,iminarg2;
 #define IMIN(a,b) (iminarg1=(a),iminarg2=(b), (iminarg1) < (iminarg2) ? (iminarg1) : (iminarg2))
@@ -304,7 +303,7 @@ static void QuickSort(unsigned long n, FLOAT arr[])
 {
   unsigned long i,ir=n,j,k,l=1,*istack;
   int jstack=0;
-  FLOAT a,temp;
+  FLOAT a;
 
   if (!(istack=(unsigned long *) calloc(NSTACK,sizeof(long))))
     ErrorHandler("unable to allocate workspace in QuickSort");
@@ -370,7 +369,6 @@ static void ParticleSort(struct treenode node, FLOAT *x) {
      particle at exactly that position will wind up in the middle. */
   int leftend, rightend, leftptr, rightptr, middle;
   FLOAT splitval;
-  int n;
 
   /* Initialize */
   leftend=0;
@@ -415,7 +413,6 @@ static struct treenode *BuildTree(FLOAT *x, int nidx, int *idxlist,
 				  int leafsize) {
   /* Routine to build a binary tree of particle positions. */
   int i, n, nodes, leaves, curnode;
-  int splitptr=0, splitidx;
   FLOAT width;
   struct treenode *tree;
 
@@ -504,7 +501,6 @@ static struct treenode *BuildVarTree(FLOAT *x, FLOAT *link, int
 {
   /* Routine to build a binary tree of particle positions. */
   int i, n, nodes, leaves, curnode;
-  int splitptr=0, splitidx;
   FLOAT width;
   FLOAT leftsplit, rightsplit;
   struct treenode *tree;
@@ -1046,8 +1042,7 @@ int FofVar(int npart, FLOAT *x, FLOAT *link, int *group, int
      link. */
   int *fifo, fifohead, fifotail, *idxlist;
   int groupnum=0;
-  int n, m;
-  FLOAT xmin[3], xmax[3];
+  int n;
   struct treenode *root;
   
   /* First allocate workspace and maximum size for output array
@@ -1101,7 +1096,7 @@ int FofVarList(int npart, FLOAT *x, FLOAT *link, int *group, int
 	**groupsize, int ***grouplist) {
   int fifohead, fifotail, *idxlist;
   int groupnum=0;
-  int n, m;
+  int n;
   struct treenode *root;
   
   /* First allocate workspace and maximum size for output array
@@ -1162,8 +1157,7 @@ int Fof(int npart, FLOAT *x, FLOAT link, int *group, int **groupsize)
 {
   int *fifo, fifohead, fifotail, *idxlist;
   int groupnum=0;
-  int n, m;
-  FLOAT xmin[3], xmax[3];
+  int n;
   struct treenode *root;
   
   /* First allocate workspace and maximum size for output array
@@ -1217,7 +1211,7 @@ int FofList(int npart, FLOAT *x, FLOAT link, int *group, int
 {
   int fifohead, fifotail, *idxlist;
   int groupnum=0;
-  int n, m;
+  int n;
   struct treenode *root;
   
   /* First allocate workspace and maximum size for output array

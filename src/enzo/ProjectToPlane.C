@@ -59,7 +59,7 @@ int ProjectToPlane(TopGridData &MetaData, LevelHierarchyEntry *LevelArray[],
 		   int ProjectionSmooth, ExternalBoundary *Exterior)
 {
  
-  int i, j, dim, field, level, ret, size = 1;
+  int i, j, dim, field, level, size = 1;
   int ProjectDim[MAX_DIMENSION];
   float *ProjectedField[NUMBER_OF_PROJECTED_FIELDS], TempCellWidth;
   FLOAT ProjectLeft[MAX_DIMENSION], ProjectRight[MAX_DIMENSION];
@@ -69,7 +69,7 @@ int ProjectToPlane(TopGridData &MetaData, LevelHierarchyEntry *LevelArray[],
   char *dset_name;
  
   hid_t       file_id, dset_id;
-  hid_t       float_type_id, FLOAT_type_id;
+  hid_t float_type_id;
   hid_t       file_type_id, FILE_type_id;
   hid_t       file_dsp_id;
  
@@ -107,17 +107,14 @@ int ProjectToPlane(TopGridData &MetaData, LevelHierarchyEntry *LevelArray[],
   {
  
     case 4:
-      FLOAT_type_id = HDF5_R4;
       FILE_type_id = HDF5_FILE_R4;
       break;
  
     case 8:
-      FLOAT_type_id = HDF5_R8;
       FILE_type_id = HDF5_FILE_R8;
       break;
  
     case 16:
-      FLOAT_type_id = HDF5_R16;
       FILE_type_id = H5Tcopy(HDF5_FILE_B8);
                      H5Tset_size(FILE_type_id,16);
       break;

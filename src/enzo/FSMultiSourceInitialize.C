@@ -56,7 +56,7 @@ int FSMultiSourceInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
   // local declarations
   char line[MAX_LINE_LENGTH];
-  int  dim, ret;
+  int ret;
 
   // Setup and parameters:
   float Density              = 10.0;

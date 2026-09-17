@@ -128,21 +128,17 @@ int ActiveParticleType_SmartStar::EvaluateFormation
   float* velx = thisGrid->BaryonField[data.Vel1Num];
   float* vely = thisGrid->BaryonField[data.Vel2Num];
   float* velz = thisGrid->BaryonField[data.Vel3Num];
-  float div = 0.0, divx = 0.0, divy = 0.0, divz = 0.0, dtot = 0.0, tdyn = 0.0;
+  float div = 0.0, divx = 0.0, divy = 0.0, divz = 0.0;
   float mass = 0.0;
   float JeansDensityUnitConversion = (Gamma*pi*kboltz) / (Mu*mh*GravConst);
   float CellTemperature = 0;
   float JeansDensity = 0, JeansMass = 0;
-  float MassRefinementDensity = 0;
   float DensityThreshold = ActiveParticleDensityThreshold*mh/data.DensityUnits;   //in code density
   float ExtraDensity = 0;
-  float GravitationalMinimum = 0.0;
-  float ThermalEnergy = 0.0, GravitationalEnergy = 0.0, KineticEnergy = 0.0, CalcTotalEnergy = 0.0,
-    TotalMass = 0.0;
+  float TotalMass = 0.0;
   int GridDimension[3] = {thisGrid->GridDimension[0],
                           thisGrid->GridDimension[1],
                           thisGrid->GridDimension[2]};
-  int size = GridDimension[0]*GridDimension[1]*GridDimension[2];
   float ConverttoSolar = data.DensityUnits*POW(data.LengthUnits, 3.0)/SolarMass;
   FLOAT dx = thisGrid->CellWidth[0][0], centralpos[3];
 
@@ -152,7 +148,6 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 #if CACLDIRECTPOTENTIAL
   float *PotentialField  = NULL;
 #else
-  float *PotentialField = thisGrid->BaryonField[data.GravPotentialNum];
 #endif
   
   const int offset[] = {1, GridDimension[0], GridDimension[0]*GridDimension[1]};
@@ -517,7 +512,6 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
     }
     // Calculate serial index
 
-    int index = GRIDINDEX_NOGHOST(i,j,k);
     // If using distributed feedback, check if particle is too close 
     // to the boundary and adjust indices accordingly
 
@@ -539,7 +533,6 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
 	  int cellstep = stepj + ABS(ic - i);
 	  int DistIndex = GRIDINDEX_NOGHOST(ic,jc,kc);
 	  if (cellstep <= FeedbackDistCellStep) {
-	    float energybefore = totalenergy[DistIndex];
 	    totalenergy[DistIndex] = ((totalenergy[DistIndex]*density[DistIndex]) + 
 				      LThisTimestep + sn_nrg_thistimestep)/density[DistIndex];
 	    //printf("%s: Accretion Energy added = %e [code energy]\n", __FUNCTION__, LThisTimestep*(StarMass*SolarMass));
@@ -547,7 +540,6 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
 	    //printf("%s: Fractional Energy increase = %e\n", __FUNCTION__,
 	    // (totalenergy[DistIndex] - energybefore)/energybefore);
 	    if (DualEnergyFormalism == 1) {
-	      float energybefore = gasenergy[DistIndex];
 	      gasenergy[DistIndex] = ((gasenergy[DistIndex]*density[DistIndex]) + 
 				      LThisTimestep)/density[DistIndex];
 	      //printf("%s: Fractional Gas Energy increase = %e\n", __FUNCTION__,
@@ -597,7 +589,7 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	   &TimeUnits, &VelocityUnits, Time);
   MassUnits = DensityUnits * POW(LengthUnits,3);
-  int j, dim, ipart, nParticles;
+  int j, ipart, nParticles;
   ActiveParticleList<ActiveParticleType> SmartStarList;
   if(SmartStarFeedback == FALSE)
     return SUCCESS;
@@ -694,34 +686,24 @@ int ActiveParticleType_SmartStar::Accrete(int nParticles,
   FLOAT Time = LevelArray[ThisLevel]->GridData->ReturnTime();
   float DensityUnits, LengthUnits, TemperatureUnits, TimeUnits,
     VelocityUnits;
-  double MassUnits;
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	   &TimeUnits, &VelocityUnits, Time);
-  MassUnits = DensityUnits * POW(LengthUnits,3);
-  double MassConversion = (double) (dx*dx*dx * double(MassUnits));  //convert to g
   /* For each particle, loop over all of the grids and do accretion
      if the grid overlaps with the accretion zone     
   */
   
   int i, NumberOfGrids;
-  int *FeedbackRadius = NULL;
   HierarchyEntry **Grids = NULL;
-  grid *sinkGrid = NULL;
 
-  bool SinkIsOnThisProc, SinkIsOnThisGrid;
 
-  float SubtractedMass, SubtractedMomentum[3] = {};
 
   NumberOfGrids = GenerateGridArray(LevelArray, ThisLevel, &Grids);
 
   for (i = 0; i < nParticles; i++) {
-    float MassInSolar = ParticleList[i]->ReturnMass()*MassConversion/SolarMass;
     AccretionRadius =  static_cast<ActiveParticleType_SmartStar*>(ParticleList[i])->AccretionRadius;
-    int pclass = static_cast<ActiveParticleType_SmartStar*>(ParticleList[i])->ParticleClass;
 
     grid* FeedbackZone = ConstructFeedbackZone(ParticleList[i], int(AccretionRadius/dx),
 					       dx, Grids, NumberOfGrids, ALL_FIELDS);
-    grid* APGrid = ParticleList[i]->ReturnCurrentGrid();
     if (MyProcessorNumber == FeedbackZone->ReturnProcessorNumber()) {
 
       float AccretionRate = 0;
@@ -730,7 +712,6 @@ int ActiveParticleType_SmartStar::Accrete(int nParticles,
 			      AccretionRadius, &AccretionRate) == FAIL)
 	return FAIL;
 
-      FLOAT *pos = ParticleList[i]->ReturnPosition();
 
 
 #if BONDIHOYLERADIUS

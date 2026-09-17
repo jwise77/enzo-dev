@@ -40,7 +40,7 @@ grid* ConstructFeedbackZone(ActiveParticleType* ThisParticle,int FeedbackRadius,
 			    FLOAT dx, HierarchyEntry** Grids, int NumberOfGrids,
 			    int SendField)
 {
-  int i,j,dim,size;
+  int j, dim, size;
   int FeedbackZoneRank;
   FLOAT FBRdx;
   FLOAT ParticlePosition[3] = {ThisParticle->ReturnPosition()[0],

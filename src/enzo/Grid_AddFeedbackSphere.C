@@ -465,8 +465,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
     nz_cell_edge[MAX_SUPERCELL_NUMBER];
   int n_cell_inside = 0, n_cell_edge = 0, ibuff = NumberOfGhostZones;
   int ii, jj, kk, r_s, ic, sign;
-  float m_cell_inside = 0.0, metal_cell_inside = 0.0, colour_cell_inside = 0.0, 
-    metallicity_inside = 0.0, colour_inside = 0.0, rho_inside, rho_metal_inside, rho_colour_inside;
+  float m_cell_inside = 0.0, metal_cell_inside = 0.0, colour_cell_inside = 0.0;
   float m_cell_edge = 0.0, metal_cell_edge = 0.0, colour_cell_edge = 0.0, 
     metallicity_edge = 0.0, colour_edge = 0.0, rho_jet, rho_metal_jet, rho_colour_jet;
   float L_x, L_y, L_z, L_s, nx_L = 0.0, ny_L = 0.0, nz_L = 0.0, costheta = cos(pi/3.9);
@@ -749,7 +748,6 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
     /* Remove ejected mass from star; now that we injected the NotEjectedMass, set it to zero */
 
     double old_mass = cstar->Mass;
-    float old_vel1 = cstar->vel[1];
     cstar->Mass -= cstar->NotEjectedMass; 
     cstar->NotEjectedMass = 0.0;
 
@@ -843,7 +841,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
   ************************************************************************/
 
   int nc;
-  float MinimumTemperature = 1e4, AdditionalEnergy, GasEnergy, rho_change;
+  float rho_change;
   ionizedFraction = 0.999;  // Assume an initial HII region
 
   if (cstar->FeedbackFlag == FORMATION) {

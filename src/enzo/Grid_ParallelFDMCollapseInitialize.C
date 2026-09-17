@@ -72,10 +72,8 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
                                     int TotalRefinement)
 {
   /* declarations */
-  int idim, dim, vel, ibx;
-  int DeNum;
+  int dim;
  
-  int ExtraField[2];
  
   inits_type *tempbuffer = NULL;
  
@@ -120,8 +118,6 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
     for (dim = 0; dim < GridRank; dim++)
       Offset[dim] = nint((GridLeftEdge[dim] - DomainLeftEdge[dim])/CellWidth[dim][0]);
 
-  int i, j, k, m, field, sphere, size, iden;
-  float xdist,ydist,zdist;
 
   /* create fields */
 
@@ -129,7 +125,6 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
   FieldType[NumberOfBaryonFields++] = Density;
   FieldType[NumberOfBaryonFields++] = TotalEnergy;
 
-  int ivel = NumberOfBaryonFields;
   FieldType[NumberOfBaryonFields++] = Velocity1;
   if (GridRank > 1) 
     FieldType[NumberOfBaryonFields++] = Velocity2;
@@ -161,18 +156,15 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
                            Vel2Num, Vel3Num, TENum,
                            B1Num, B2Num, B3Num, PhiNum);
       
-      int RePsiNum = -1, ImPsiNum=-1, FDMDensNum=-1;
+      int RePsiNum = -1, ImPsiNum=-1;
       
       RePsiNum = FindField(RePsi, FieldType, NumberOfBaryonFields);
       ImPsiNum = FindField(ImPsi, FieldType, NumberOfBaryonFields);
-      FDMDensNum = FindField(FDMDensity, FieldType, NumberOfBaryonFields);
 
     /* Determine the size of the fields. */
  
-    int size = 1;
  
     for (dim = 0; dim < GridRank; dim++)
-      size *= GridDimension[dim];
  
     /* Allocate space for the fields. */
  
@@ -211,8 +203,7 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
   if (io_log) fclose(log_fptr);
 
   /* Set various units. */
-  float DensityUnits, LengthUnits, TemperatureUnits, TimeUnits, 
-    VelocityUnits, CriticalDensity = 1, BoxLength = 1, mu = 0.6;
+  float DensityUnits, LengthUnits, TemperatureUnits, TimeUnits, VelocityUnits;
 
   FLOAT a, dadt, ExpansionFactor = 1;
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits, &TimeUnits, 
@@ -220,26 +211,16 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
   if (ComovingCoordinates) {
     CosmologyComputeExpansionFactor(Time, &a, &dadt);
     ExpansionFactor = a/(1.0+InitialRedshift);
-    CriticalDensity = 2.78e11*pow(HubbleConstantNow, 2); // in Msolar/Mpc^3
-    BoxLength = ComovingBoxSize*ExpansionFactor/HubbleConstantNow;  // in Mpc
   } else {
-    CriticalDensity = 2.78e11*pow(0.74,2); // in Msolar/Mpc^3 for h=0.74
-    BoxLength = LengthUnits / 3.086e24;
     HubbleConstantNow = 1.0;
     OmegaMatterNow = 1.0;
 	a = 1.0;
   }
 
-  double afloat = double(a);
-  double hmcoef = 5.9157166856e27*TimeUnits/POW(LengthUnits/afloat,2)/FDMMass;
-
   // If use particle, initial particles according to the FDM values and turn off QuantumPressure
   int CollapseTestParticleCount = 0;
   int SetupLoopCount, npart = 0;
   int ParticleCount = 0;
-  int ind, indxp, indxn, indyp, indyn, indzp, indzn;
-  int ip,in,jp,jn,kp,kn;
-  double x,y,z,vx,vy,vz;
   double r,theta,phi;
   double cluster_radius = 200*3e18/LengthUnits;
 

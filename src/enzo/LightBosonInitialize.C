@@ -44,7 +44,7 @@ int LightBosonInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   /* declarations */
  
   char line[MAX_LINE_LENGTH];
-  int dim, ret;
+  int ret;
  
   /* set default parameters */
  

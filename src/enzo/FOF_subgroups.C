@@ -22,9 +22,7 @@ void find_subgroups(FOFData &D)
 {
   float  *r2list;
   int    *ngblist;
-  int    i,j,k,ind,signal;
-  float  maxdens;
-  int    maxindex;
+  int i, j, k, ind;
   int    *listofdifferent;
   int    head, head_attach, head_s, head_p, ss;
   int    ndiff;
@@ -36,7 +34,7 @@ void find_subgroups(FOFData &D)
 
   listofdifferent = ivector(0, D.DesLinkNgb);
 
-  for (i = D.NumInGroup, D.AnzNodes = 0, signal = 0; i >= 1; i--) {
+  for (i = D.NumInGroup, D.AnzNodes = 0; i >= 1; i--) {
 
     ngb_treefind(D.P, D.P[D.Index[i]].Pos, D.DesLinkNgb, 0, &ngblist, &r2list); 
       

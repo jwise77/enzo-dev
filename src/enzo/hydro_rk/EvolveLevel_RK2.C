@@ -181,7 +181,6 @@ void my_exit(int status);
 /* Counters for performance and cycle counting. */
 
 static int MovieCycleCount[MAX_DEPTH_OF_HIERARCHY];
-static double LevelWallTime[MAX_DEPTH_OF_HIERARCHY];
 static double LevelZoneCycleCount[MAX_DEPTH_OF_HIERARCHY];
 static double LevelZoneCycleCountPerProc[MAX_DEPTH_OF_HIERARCHY];
  
@@ -192,8 +191,6 @@ static float norm = 0.0;            //AK
 static float TopGridTimeStep = 0.0; //AK
 
 int ComputeStochasticForcing(TopGridData *MetaData,HierarchyEntry *Grids[], int NumberOfGrids);
-
-static int StaticSiblingListInitialized = 0;
 
 #ifdef STATIC_SIBLING_LIST
 static SiblingGridList StaticSiblingList[MAX_NUMBER_OF_SUBGRIDS];
@@ -219,11 +216,8 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     fprintf(stderr,"Please contact the Enzo team for assistance if you have added functionality here");
     ENZO_FAIL("EvolveLevel_RK2 has been downsized.")
 
-  float dtGrid;
-  int RefinementFactors[MAX_DIMENSION];
-  int cycle = 0, counter = 0, grid1, subgrid, iLevel;
+  int cycle = 0, counter = 0, grid1;
   HierarchyEntry *NextGrid;
-  double time1 = ReturnWallTime();
   int OutputNow = FALSE;
 
   char level_name[MAX_LINE_LENGTH];
@@ -392,7 +386,6 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
       /* Gravity: compute acceleration field for grid and particles. */
       if (SelfGravity) {
-	int Dummy;
 	if (level <= MaximumGravityRefinementLevel) {
 	  if (level > 0) 
 	    Grids[grid1]->GridData->SolveForPotential(level) ;
@@ -456,7 +449,6 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
       /* Gravity: compute acceleration field for grid and particles. */
       if (RK2SecondStepBaryonDeposit && SelfGravity) {
-	int Dummy;
 	if (level <= MaximumGravityRefinementLevel) {
 	  if (level > 0) 
 	    Grids[grid1]->GridData->SolveForPotential(level) ;
@@ -497,7 +489,6 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 
         } // ENDIF MHD_RK
 
-        time1 = ReturnWallTime();
 
         /* Add viscosity */
 
@@ -602,7 +593,6 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
 	ENZO_FAIL("");
       }
     }
-    time1 = ReturnWallTime();
 
 
     /* Update SubcycleNumber and the timestep counter for the
@@ -683,7 +673,6 @@ int EvolveLevel_RK2(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     if (dtThisLevelSoFar[level] < dtLevelAbove) 
       RebuildHierarchy(MetaData, LevelArray, level);
 
-    time1 = ReturnWallTime();
 
     /* Count up number of grids on this level. */
 

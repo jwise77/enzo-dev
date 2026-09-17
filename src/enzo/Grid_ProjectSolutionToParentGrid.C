@@ -65,10 +65,9 @@ int grid::ProjectSolutionToParentGrid(grid &ParentGrid)
  
   /* compute size of current grid fields */
  
-  int ParentSize = 1, Size = 1;
+  int Size = 1;
   for (dim = 0; dim < GridRank; dim++) {
     Size *= GridDimension[dim];
-    ParentSize *= ParentGrid.GridDimension[dim];
     ParentDim[dim] = ParentGrid.GridDimension[dim];
     Dim[dim] = GridEndIndex[dim] - GridStartIndex[dim] + 1;
   }
@@ -131,7 +130,6 @@ int grid::ProjectSolutionToParentGrid(grid &ParentGrid)
       ParentStartIndex[dim] = 0;
       ParentDim[dim]        = Dim[dim]/Refinement[dim];
       ParentEndIndex[dim]   = ParentDim[dim] - 1;
-      ParentSize *= ParentDim[dim];
     }
     for (field = 0; field < NumberOfBaryonFields; field++) {
       delete [] ParentGrid.BaryonField[field];

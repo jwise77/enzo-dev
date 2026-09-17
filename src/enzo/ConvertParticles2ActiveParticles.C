@@ -72,8 +72,6 @@ int ConvertParticles2ActiveParticles(char *ParameterFile,
 {
 
   
-  const float When = 0.5;
-  LevelHierarchyEntry *Temp;
   HierarchyEntry **Grids;
   int numtypes = 0;
   
@@ -255,7 +253,6 @@ void CollectParticleTypes(char **active_particle_types, int global_active_partic
   }
   return;
   for(int i=0; i<global_active_particles; i++) {
-    int offset = global_active_particles*MyProcessorNumber;
     MPI_Allgather(ap_types[i], MAX_LINE_LENGTH, MPI_CHAR,
 		  ap_types2[i], MAX_LINE_LENGTH, MPI_CHAR, MPI_COMM_WORLD);
   }

@@ -29,7 +29,6 @@ int CRTransportTestInitialize(FILE *fptr, FILE *Outfptr,
 			      HierarchyEntry &TopGrid, TopGridData &MetaData) 
 {
   char *DensName = "Density";
-  char *PresName = "Pressure";
   char *TEName   = "TotalEnergy";
   char *GEName   = "GasEnergy";
   char *Vel1Name = "x-velocity";
@@ -40,12 +39,11 @@ int CRTransportTestInitialize(FILE *fptr, FILE *Outfptr,
   char *BzName = "Bz";
   char *PhiName = "Phi";
   char *CRName = "CREnergyDensity";
-  char *ColourName = "colour";
 
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, sphere, i;
+  int ret, level, i;
 
   /* set default parameters */
 

@@ -78,7 +78,7 @@ int grid::SolveOneZoneFreefall()
   /* If using cosmology, compute the expansion factor and get units. */
 
   float TemperatureUnits = 1, DensityUnits = 1, LengthUnits = 1, 
-    VelocityUnits = 1, TimeUnits = 1, aUnits = 1;
+    VelocityUnits = 1, TimeUnits = 1;
 
   if (ComovingCoordinates) {
 
@@ -87,7 +87,6 @@ int grid::SolveOneZoneFreefall()
             ENZO_FAIL("Error in CosmologyComputeExpansionFactors.");
     }
 
-    aUnits = 1.0/(1.0 + InitialRedshift);
 
   }
 

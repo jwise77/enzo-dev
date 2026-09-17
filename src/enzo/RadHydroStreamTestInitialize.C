@@ -53,7 +53,6 @@ int RadHydroStreamTestInitialize(FILE *fptr, FILE *Outfptr,
   char *RadName   = "Grey_Radiation_Energy";
 
   // local declarations
-  int dim;
 
   printf("Setting up problem with rank = %" ISYM"\n",MetaData.TopGridRank);
 
@@ -70,17 +69,15 @@ int RadHydroStreamTestInitialize(FILE *fptr, FILE *Outfptr,
 
   // overwrite parameters from RadHydroParamFile file, if it exists
   char line[MAX_LINE_LENGTH];
-  int  ret;
   if (MetaData.RadHydroParameterFname != NULL) {
     FILE *RHfptr;
     if ((RHfptr = fopen(MetaData.RadHydroParameterFname, "r")) != NULL) {
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
-	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "RadHydroDensity = %" FSYM, &RadHydroDensity);
-	ret += sscanf(line, "RadHydroRadEnergy = %" FSYM, &RadHydroRadEnergy);
-	ret += sscanf(line, "RadStreamDim = %" ISYM, &RadStreamDim);
-	ret += sscanf(line, "RadStreamDir = %" ISYM, &RadStreamDir);
+	sscanf(line, "RadHydroDensity = %" FSYM, &RadHydroDensity);
+	sscanf(line, "RadHydroRadEnergy = %" FSYM, &RadHydroRadEnergy);
+	sscanf(line, "RadStreamDim = %" ISYM, &RadStreamDim);
+	sscanf(line, "RadStreamDir = %" ISYM, &RadStreamDir);
       } // end input from parameter file
       fclose(RHfptr);
     }

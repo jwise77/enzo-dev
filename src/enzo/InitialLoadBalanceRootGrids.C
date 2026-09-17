@@ -64,7 +64,6 @@ int InitialLoadBalanceRootGrids(FILE *fptr, hid_t Hfile_id, int TopGridRank,
 
   /* Declarations */
 
-  bool FinishedLevelZero;
   char line[MAX_LINE_LENGTH];
   char group_name[MAX_LINE_LENGTH];
   int i, j, dim, GridID, Rank, ThisLevel, dummy, GridDims[MAX_DIMENSION];
@@ -81,8 +80,6 @@ int InitialLoadBalanceRootGrids(FILE *fptr, hid_t Hfile_id, int TopGridRank,
   int DaughterGridDims[MAX_DIMENSION];
   hid_t group_id, dset_id, attr_id;
   hid_t daughter_group_id;
-  herr_t h5_status;
-  herr_t h5_error = -1;
 
   for (dim = 0; dim < MAX_DIMENSION; dim++) {
     Layout[dim] = 0;
@@ -101,9 +98,9 @@ int InitialLoadBalanceRootGrids(FILE *fptr, hid_t Hfile_id, int TopGridRank,
     if (HierarchyFileInputFormat % 2 == 0) {
       group_id = H5Gopen(Hfile_id, "/Level0");
       attr_id = H5Aopen_name(group_id, "NumberOfGrids");
-      h5_status = H5Aread(attr_id, HDF5_INT, &NumberOfRootGrids);
-      h5_status = H5Aclose(attr_id);
-      h5_status = H5Gclose(group_id);
+      H5Aread(attr_id, HDF5_INT, &NumberOfRootGrids);
+      H5Aclose(attr_id);
+      H5Gclose(group_id);
     } // ENDIF HDF5 input
 
     if (HierarchyFileInputFormat == 1) {
@@ -174,49 +171,49 @@ int InitialLoadBalanceRootGrids(FILE *fptr, hid_t Hfile_id, int TopGridRank,
 	group_id = H5Gopen(Hfile_id, group_name);
 	
 	attr_id = H5Aopen_name(group_id, "Task");
-	h5_status = H5Aread(attr_id, HDF5_INT, &ThisTask);
-	h5_status = H5Aclose(attr_id);
+	H5Aread(attr_id, HDF5_INT, &ThisTask);
+	H5Aclose(attr_id);
 	
 	attr_id = H5Aopen_name(group_id, "GridRank");
-	h5_status = H5Aread(attr_id, HDF5_INT, &Rank);
-	h5_status = H5Aclose(attr_id);
+	H5Aread(attr_id, HDF5_INT, &Rank);
+	H5Aclose(attr_id);
 
 	dset_id = H5Dopen(group_id, "GridDimension");
-	h5_status = H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) GridDims);
-	h5_status = H5Dclose(dset_id);
+	H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) GridDims);
+	H5Dclose(dset_id);
 
 	dset_id = H5Dopen(group_id, "GridLeftEdge");
-	h5_status = H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) LeftEdge);
-	h5_status = H5Dclose(dset_id);
+	H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) LeftEdge);
+	H5Dclose(dset_id);
 
 	dset_id = H5Dopen(group_id, "GridRightEdge");
-	h5_status = H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) RightEdge);
-	h5_status = H5Dclose(dset_id);
+	H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) RightEdge);
+	H5Dclose(dset_id);
 
 	// if LoadBalancing == 2 or 3, get number of cells in daughter
 	// grids
 	if (LoadBalancing == 2 || LoadBalancing == 3) {
 	  attr_id = H5Aopen_name(group_id, "NumberOfDaughterGrids");
-	  h5_status = H5Aread(attr_id, HDF5_INT, &NumberOfDaughterGrids);
-	  h5_status = H5Aclose(attr_id);
+	  H5Aread(attr_id, HDF5_INT, &NumberOfDaughterGrids);
+	  H5Aclose(attr_id);
 	  
 	  for (j=0;j<NumberOfDaughterGrids;j++) {
 	    sprintf(group_name,"DaughterGrids/DaughterGrid%" ISYM, j);
 	    daughter_group_id = H5Gopen(group_id, group_name);
 
 	    dset_id = H5Dopen(daughter_group_id, "GridDimensions");
-	    h5_status = H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) DaughterGridDims);
-	    h5_status = H5Dclose(dset_id);
+	    H5Dread(dset_id, HDF5_INT, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) DaughterGridDims);
+	    H5Dclose(dset_id);
 
 	    for (dim = 0, size = 1; dim < Rank; dim++)
 	      size *= GridDims[dim];
 
 	    NumberOfSubgridCells[i] += size;
 	  }
-	  h5_status = H5Gclose(daughter_group_id);
+	  H5Gclose(daughter_group_id);
 	}
 
-	h5_status = H5Gclose(group_id);
+	H5Gclose(group_id);
 
       } // ENDIF HDF5 input
 

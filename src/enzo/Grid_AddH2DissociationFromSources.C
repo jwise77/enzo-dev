@@ -46,10 +46,9 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
   Star *cstar;
   FLOAT DomainWidth[MAX_DIMENSION];
   FLOAT *ddr2[MAX_DIMENSION];
-  FLOAT innerFront, outerFront, innerFront2, outerFront2;
   double Luminosity[MAX_ENERGY_BINS];
   float energies[MAX_ENERGY_BINS], kdiss_r2;
-  int ipart, dim, i, j, k, index, indixe, nbins;
+  int dim, i, j, k, index, nbins;
   int ActiveDims[MAX_DIMENSION];
   int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num, B1Num, B2Num, B3Num;
   int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
@@ -88,9 +87,7 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 
   /* For now, initialize H2 photo-dissociation field. */
 
-  int size = 1;
   for (dim = 0; dim < GridRank; dim++)
-    size *= GridDimension[dim];
 
   // Now done in Grid_InitializeRadiativeTransferFields.C
 //  for (i = 0; i < size; i++)
@@ -101,8 +98,7 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 
   /* If using cosmology, get units. */
 
-  float TemperatureUnits, DensityUnits, LengthUnits, VelocityUnits, 
-    TimeUnits, aUnits = 1;
+  float TemperatureUnits, DensityUnits, LengthUnits, VelocityUnits, TimeUnits;
 
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	   &TimeUnits, &VelocityUnits, PhotonTime);
@@ -123,7 +119,6 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
   // on H2 self-shielding with RadiationShield = 2.
   float dilutionRadius = 4.848e-6 * pc_cm / (double) LengthUnits;  // 1 AU
   float dilRadius2 = dilutionRadius * dilutionRadius;
-  float LightTravelDist = TimeUnits * clight / LengthUnits;
 
   // Convert from #/s to RT units
   double LConv = (double) TimeUnits / pow(LengthUnits,3);
@@ -139,15 +134,13 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 	  PhotonTime > RS->CreationTime + RS->LifeTime)
 	continue;
        for(int ebin = 0; ebin < RS->EnergyBins; ebin++) {
-	float IRSED = 0.0, LWSED = 0.0, H2IISED = 0.0;
+	float IRSED = 0.0, LWSED = 0.0;
 	double LWLuminosity = 0.0, IRLuminosity = 0.0, H2IILuminosity = 0.0;
 	double HMSigma = 0.0, H2IISigma = 0.0;
 	if(RS->Energy[ebin] < 11.2) {
-	  H2IISED = RS->SED[ebin];
 	  IRSED = RS->SED[ebin];
 	}
 	else if(RS->Energy[ebin] < 13.6) {
-	  H2IISED = RS->SED[ebin];
 	  LWSED = RS->SED[ebin];
 	}
 	HMSigma = CalculateIRCrossSection(RS->Energy[ebin]);
@@ -181,7 +174,7 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
       /* Loop over cells */
 
 	double radius2, radius2_yz;
-	double colden = 0.0, shield = 1.0, b = 0.0, b5 = 0.0, XN = 0.0;
+	double shield = 1.0, b = 0.0, b5 = 0.0, XN = 0.0;
 	double H2mass = mh*2.0, alpha = 1.1;
 	double kph_hm = 0.0, kdiss_H2II = 0.0;
 	int TemperatureField = 0;
@@ -310,15 +303,13 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 	  PhotonTime > RS->CreationTime + RS->LifeTime)
 	continue;
       for(int ebin = 0; ebin < RS->EnergyBins; ebin++) {
-	float IRSED = 0.0, LWSED = 0.0, H2IISED = 0.0;
+	float IRSED = 0.0, LWSED = 0.0;
 	double LWLuminosity = 0.0, IRLuminosity = 0.0, H2IILuminosity = 0.0;
 	double HMSigma = 0.0, H2IISigma = 0.0;
 	if(RS->Energy[ebin] < 11.2) {
-	  H2IISED = RS->SED[ebin];
 	  IRSED = RS->SED[ebin];
 	}
 	else if(RS->Energy[ebin] < 13.6) {
-	  H2IISED = RS->SED[ebin];
 	  LWSED = RS->SED[ebin];
 	}
 	HMSigma = CalculateIRCrossSection(RS->Energy[ebin]);
@@ -350,7 +341,7 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 	  }
 
 	double radius2, radius2_yz;
-	double colden = 0.0, shield = 1.0, b = 0.0, b5 = 0.0, XN = 0.0;
+	double shield = 1.0, b = 0.0, b5 = 0.0, XN = 0.0;
 	double H2mass = mh*2.0, alpha = 1.1;
 	double kph_hm = 0.0, kdiss_H2II = 0.0;
 	int TemperatureField = 0;

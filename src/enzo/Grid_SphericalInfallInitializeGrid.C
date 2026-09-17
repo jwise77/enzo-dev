@@ -111,12 +111,10 @@ int grid::SphericalInfallInitializeGrid(float InitialPerturbation,
                 ParticleCenter - index of the particle at the center of pert.
 		DelCenter   - the amount to shift all particles to insure
 		              the center particle is exactly at center. */
-    float volume = 1.;
 
     for (dim = 0; dim < GridRank; dim++) {
       DelParticle[dim]    = (GridRightEdge[dim]-GridLeftEdge[dim])/
 	float(ParticleDimension[dim]);
-      volume *= (GridRightEdge[dim]-GridLeftEdge[dim]);
       ParticleCenter[dim] = int((SphericalInfallCenter[dim]/
 				 DelParticle[dim] - 0.5     ) );
       DelCenter[dim]  = ((SphericalInfallCenter[dim]/DelParticle[dim] - 0.5) -

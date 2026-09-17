@@ -131,13 +131,10 @@ int grid::PoissonSolver(int level)
   int type=UsePoissonDivergenceCleaning;
 
    if(debug){
-   bool badDiv=false;
-    float divSum = 0;
     for (int k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
       for (int j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
 	for (int i = GridStartIndex[0]; i <= GridEndIndex[0]; i++) {
 	  igrid = i + (j + k * GridDimension[1]) * GridDimension[0];
-	  divSum += fabs(divB_p[igrid]/dx[0]);
 	}
       }
     }
@@ -271,7 +268,6 @@ int grid::PoissonCleanStep(int level)
   if (debug){
 
   double *divB_p = new double[size];
-  float divSum = 0;
 
   for (int k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
     for (int j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
@@ -286,7 +282,6 @@ int grid::PoissonCleanStep(int level)
 	if (GridRank > 2)
 	  divB_p[igrid] +=( BaryonField[iBz][igrid + diff[2]] - BaryonField[iBz][igrid - diff[2]] ) / 2.0;
 
-	divSum += fabs(divB_p[igrid]/dx[0]);
 
       }
     }
@@ -705,7 +700,6 @@ int grid::PrintToScreenBoundaries(float *field, char *display, int direction, in
 //   fprintf(fptr, "x\ty\tvalue\twidth\theight\n");
 
   int xD[3]={GridDimension[0],GridDimension[1], GridDimension[2]};
-   int diffs[3]={1, xD[0], xD[1]*xD[0]}; 
  
 
   bool fail=false;
@@ -736,7 +730,6 @@ int grid::PrintToScreenBoundaries(float *field, char *display, int direction, in
     printf( "\n\n*******Processor # %" ISYM " ********\n", ProcessorNumber);
     printf( "\n\n*******Displaying Data (Slice in %" ISYM " on cell %" ISYM ") (TopGrid %d)  ********\n", direction, slice, isTopGrid() );
     
-    bool intertemp;
     
     int ind1, ind2;
     if (direction==0){ ind1=1; ind2=2;}

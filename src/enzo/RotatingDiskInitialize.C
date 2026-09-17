@@ -50,7 +50,7 @@ int RotatingDiskInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   /* local declarations */
  
   char line[MAX_LINE_LENGTH];
-  int  i, j, dim, ret, level;
+  int i, j, ret, level;
      
   float RotatingDiskScaleRadius           = 2265.0; // [pc]
   float RotatingDiskScaleHeight           = 100.0;  // [pc]

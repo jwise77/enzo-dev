@@ -51,7 +51,7 @@ int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int dim, ret;
+  int ret;
 
   /* Error check. */
 

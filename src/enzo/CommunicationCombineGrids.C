@@ -107,8 +107,6 @@ int CommunicationCombineGrids(HierarchyEntry *OldHierarchy,
     }
     /* Copy grid region. */
  
-    int RecvType = ((WriteTime < 0) && (RestartDump == FALSE)) ? 
-                     NEW_ONLY : NEW_AND_OLD;
     int OldProc = OldGrid->ReturnProcessorNumber(),
         NewProc = NewGrid->ReturnProcessorNumber();
     CommunicationDirection = COMMUNICATION_SEND_RECEIVE;

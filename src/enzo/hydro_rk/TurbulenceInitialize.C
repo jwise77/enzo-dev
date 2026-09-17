@@ -52,7 +52,6 @@ int TurbulenceInitialize(FILE *fptr, FILE *Outfptr,
   char *ByName = "By";
   char *BzName = "Bz";
   char *PhiName = "Phi";
-  char *ColourName = "colour";
   char *ElectronName = "Electron_Density";
   char *HIName    = "HI_Density";
   char *HIIName   = "HII_Density";
@@ -82,13 +81,12 @@ int TurbulenceInitialize(FILE *fptr, FILE *Outfptr,
   char *Acce1Name = "AccelerationField1";
   char *Acce2Name = "AccelerationField2";
   char *Acce3Name = "AccelerationField3";
-  char *MetalName = "Metal_Density";
   char *Phi_pName = "Phip";
   
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   ret, level, i;
+  int level, i;
 
   /* set default parameters */
 
@@ -105,19 +103,18 @@ int TurbulenceInitialize(FILE *fptr, FILE *Outfptr,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
-    ret += sscanf(line, "RefineAtStart = %" ISYM, &RefineAtStart);
-    ret += sscanf(line, "PutSink = %" ISYM, &PutSink);
-    ret += sscanf(line, "Density = %" FSYM, &CloudDensity);
-    ret += sscanf(line, "SoundVelocity = %" FSYM, &CloudSoundSpeed);
-    ret += sscanf(line, "MachNumber = %" FSYM, &CloudMachNumber);
-    ret += sscanf(line, "AngularVelocity = %" FSYM, &CloudAngularVelocity);
-    ret += sscanf(line, "CloudRadius = %" PSYM, &CloudRadius);
-    ret += sscanf(line, "SetTurbulence = %" ISYM, &SetTurbulence);
-    ret += sscanf(line, "RandomSeed = %" ISYM, &RandomSeed);
-    ret += sscanf(line, "InitialBfield = %" FSYM, &InitialBField);
-    ret += sscanf(line, "CloudType = %" ISYM, &CloudType);
+    sscanf(line, "RefineAtStart = %" ISYM, &RefineAtStart);
+    sscanf(line, "PutSink = %" ISYM, &PutSink);
+    sscanf(line, "Density = %" FSYM, &CloudDensity);
+    sscanf(line, "SoundVelocity = %" FSYM, &CloudSoundSpeed);
+    sscanf(line, "MachNumber = %" FSYM, &CloudMachNumber);
+    sscanf(line, "AngularVelocity = %" FSYM, &CloudAngularVelocity);
+    sscanf(line, "CloudRadius = %" PSYM, &CloudRadius);
+    sscanf(line, "SetTurbulence = %" ISYM, &SetTurbulence);
+    sscanf(line, "RandomSeed = %" ISYM, &RandomSeed);
+    sscanf(line, "InitialBfield = %" FSYM, &InitialBField);
+    sscanf(line, "CloudType = %" ISYM, &CloudType);
   }
 
   /* Convert to code units */

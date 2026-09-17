@@ -51,7 +51,6 @@ int grid::WriteGridX(FILE *fptr, char *base_name, int grid_id)
 {
  
   int i, j, k, dim, field, size, ActiveDim[MAX_DIMENSION];
-  int file_status;
  
   float32 *temp;
  

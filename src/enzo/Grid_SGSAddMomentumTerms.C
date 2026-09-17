@@ -60,12 +60,10 @@ void grid::SGS_AddMom_nonlinear_kinetic(float **Tau) {
     rho = BaryonField[DensNum];
   }
 
-  int size = 1;
   int StartIndex[MAX_DIMENSION];
   int EndIndex[MAX_DIMENSION];
 
   for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-    size *= GridDimension[dim];
 
     /* we need Tau in the first ghost zone as well
      * as we'll take another derivative later on */
@@ -128,12 +126,10 @@ void grid::SGS_AddMom_nonlinear_kinetic_scaled(float **Tau) {
     rho = BaryonField[DensNum];
   }
 
-  int size = 1;
   int StartIndex[MAX_DIMENSION];
   int EndIndex[MAX_DIMENSION];
 
   for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-    size *= GridDimension[dim];
 
     /* we need Tau in the first ghost zone as well
      * as we'll take another derivative later on */
@@ -200,12 +196,10 @@ void grid::SGS_AddMom_nonliner_magnetic(float **Tau) {
   if (debug1)
     printf("[%" ISYM"] grid::SGS_AddMom_nonliner_magnetic start\n",MyProcessorNumber);
 
-  int size = 1;
   int StartIndex[MAX_DIMENSION];
   int EndIndex[MAX_DIMENSION];
 
   for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-    size *= GridDimension[dim];
 
     /* we need Tau in the first ghost zone as well
      * as we'll take another derivative later on */
@@ -283,12 +277,10 @@ void grid::SGS_AddMom_eddy_viscosity_scaled(float **Tau) {
     rho = BaryonField[DensNum];
   }
 
-  int size = 1;
   int StartIndex[MAX_DIMENSION];
   int EndIndex[MAX_DIMENSION];
 
   for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-    size *= GridDimension[dim];
 
     /* we need Tau in the first ghost zone as well
      * as we'll take another derivative later on */
@@ -354,12 +346,10 @@ void grid::SGS_AddMom_scale_similarity_kinetic(float **Tau) {
   if (debug1)
     printf("[%" ISYM"] grid::SGS_AddMom_scale_similarity_kinetic start\n",MyProcessorNumber);
 
-  int size = 1;
   int StartIndex[MAX_DIMENSION];
   int EndIndex[MAX_DIMENSION];
 
   for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-    size *= GridDimension[dim];
 
     /* we need Tau in the first ghost zone as well
      * as we'll take another derivative later on */
@@ -404,12 +394,10 @@ void grid::SGS_AddMom_scale_similarity_magnetic(float **Tau) {
   if (debug1)
     printf("[%" ISYM"] grid::SGS_AddMom_scale_similarity_magnetic start\n",MyProcessorNumber);
 
-  int size = 1;
   int StartIndex[MAX_DIMENSION];
   int EndIndex[MAX_DIMENSION];
 
   for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-    size *= GridDimension[dim];
 
     /* we need Tau in the first ghost zone as well
      * as we'll take another derivative later on */

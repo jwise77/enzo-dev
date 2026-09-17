@@ -43,7 +43,7 @@ int grid::ComputeCRStreaming(){
 
   // Some locals
   int size = 1, idx, i,j,k; 
-  float *cr, *Bx, *By, *Bz, crOld, rho, inv_sqrt_rho,  stability_factor;
+  float *cr, *Bx, *By, *Bz, rho, inv_sqrt_rho, stability_factor;
   float dCRdt, dCRdx, dCRdy, dCRdz, va_x, va_y, va_z, ecr;
   
   float *dx = new float[GridRank];
@@ -126,7 +126,6 @@ int grid::ComputeCRStreaming(){
     for (j = GridStart[1]; j <= GridEnd[1]; j++) 
       for (i = GridStart[0]; i <= GridEnd[0]; i++) {
 	idx = ELT(i,j,k);
-	crOld = cr[idx];
 
 	dCRdt = 0.5 * (Fcx[ELT(i+1,j,k)]-Fcx[ELT(i-1,j,k)])/dx[0]; 
 	if( GridRank > 1 )

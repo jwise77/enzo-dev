@@ -171,7 +171,7 @@ int grid::RotatingSphereInitializeGrid(float RotatingSphereNFWMass,
 
    // Set up the NFW halo.
    float g_code, nfw_mvir_code, critical_density_code, c, nfw_scale_density, nfw_scale_radius;
-   float nfw_v_circular, nfw_temp, nfw_cs;
+   float nfw_v_circular, nfw_cs;
 
    g_code = GravConst * DensityUnits * pow(TimeUnits, 2.0);
 

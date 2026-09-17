@@ -165,7 +165,6 @@ int Group_ReadDataHierarchy(FILE *fptr, hid_t Hfile_id, HierarchyEntry *Grid,
 
 
   int NewProc = ReadDataGridCounter % NumberOfProcessors;
-  int ProcMap = ABS(NewProc - NumberOfProcessors) % NumberOfProcessors;
 
 #ifdef USE_CYCLIC_CPU_DISTRIBUTION
 

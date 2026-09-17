@@ -44,10 +44,9 @@ int ExternalBoundary::SetMagneticBoundary(int FieldRank, int GridDims[], int Gri
   //      which corrects indexing along the y faces, but not x or z.
   int nb = NumberOfGhostZones;
   int nx = GridDims[0] - 2*nb, ny = GridDims[1] - 2*nb, nz = GridDims[2] - 2*nb;
-  int i,j,k,sign,dbgflag,Bi,Ai, field;
+  int i, j, k, sign, Bi, Ai, field;
   int nxt = nx+2*nb, nyt = ny+2*nb, nzt=nz+2*nb;
   int is,js,ks,ie, je ,ke;
-  bool lx = 1, rx = 0, lxz = 0, rxz = 0, ly=0,ry=0,lz=0,rz=0;
   bool verbose = 0;
   
   //The fields centered on the boundary may require special attention.

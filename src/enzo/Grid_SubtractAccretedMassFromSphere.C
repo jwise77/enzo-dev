@@ -38,11 +38,8 @@ int grid::SubtractAccretedMassFromSphere(Star *cstar, int level, float radius, f
 {
 
   int dim, i, j, k, index;
-  FLOAT delx, dely, delz, radius2, Radius, DomainWidth[MAX_DIMENSION];
-  float coef, speed, maxVelocity;
-  float OldDensity;
-  float r1, norm, ramp, factor, newGE;
-  double old_mass, increase;
+  FLOAT delx, dely, delz, radius2, DomainWidth[MAX_DIMENSION];
+  double increase;
 
   if (MyProcessorNumber != ProcessorNumber)
     return SUCCESS;

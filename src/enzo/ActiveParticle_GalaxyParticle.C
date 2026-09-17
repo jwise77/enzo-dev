@@ -21,7 +21,6 @@ class GalaxyParticleGrid : private grid {
 FLOAT calc_dist2(FLOAT x1, FLOAT y1, FLOAT z1,
     FLOAT x2, FLOAT y2, FLOAT z2, FLOAT period[])
 {
-    int dim;
     float part_dist2, xdist, ydist, zdist;
     // Periodicity
     xdist = fabs(x1 - x2);
@@ -93,22 +92,12 @@ int ActiveParticleType_GalaxyParticle::EvaluateFormation
     return SUCCESS;
   }
 
-  float x, y, z, dens, radius, dist, temp, vx, vy, vz;
-  float xx, yy, zz;
-  int i, j, k, index, mark;
+  float x, y, z, dens, radius, vx, vy, vz;
 
   GalaxyParticleGrid *thisGrid =
     static_cast<GalaxyParticleGrid *>(thisgrid_orig);
 
 
-  int GridDimension[3] = {thisGrid->GridDimension[0],
-                          thisGrid->GridDimension[1],
-                          thisGrid->GridDimension[2]};
-
-  float *density = thisGrid->BaryonField[data.DensNum];
-  float *velx = thisGrid->BaryonField[data.Vel1Num];
-  float *vely = thisGrid->BaryonField[data.Vel2Num];
-  float *velz = thisGrid->BaryonField[data.Vel3Num];
   //float *tvel;
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {

@@ -52,12 +52,8 @@ int Zeus_xTransport_FDM(float *d, float *e, float *u, float *v, float *w,
 
   /* Locals */
 
-  int i, j, k, jm1, km1, i1, i2, n, idim, jdim, dim, offset, ic,
-      fistart, fjstart, fiend, fjend, lface, rface;
-  float dnew, q[ijk], div[ijk], f2[ijk], f3[ijk], f4[ijk], 
-        dstar[ijk], estar[ijk], ustar[ijk], vstar[ijk], wstar[ijk],
-        uavgi[ijk], uavgj[ijk], uavgk[ijk], df, ueff[ijk];
-  int ip1, im2, im3, ip2;
+  int i, j, k, jm1, km1, i1, i2, n, idim, jdim, dim, offset, fistart, fjstart, fiend, fjend, lface, rface;
+  float dnew, f2[ijk], f3[ijk], f4[ijk], dstar[ijk], ustar[ijk], vstar[ijk], wstar[ijk], uavgi[ijk], uavgj[ijk], uavgk[ijk], ueff[ijk];
 
 //=======================================================================
 

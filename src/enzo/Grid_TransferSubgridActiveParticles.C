@@ -36,7 +36,7 @@ int grid::TransferSubgridActiveParticles
  
   /* Declarations. */
 
-  int i, j, index, dim, n1, grid, proc, type;
+  int i, index, dim, n1, proc;
   int i0, j0, k0;
 
   /* ----------------------------------------------------------------- */

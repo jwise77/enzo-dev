@@ -50,21 +50,17 @@ int ZeusSource(float *d, float *e, float *u, float *v, float *w, float *p, float
 
   /* Local declarations */
 
-  int i, j, k, jsm1, ksm1, jep1, kep1, jsm2, ksm2, jep2, kep2, n, nstep;
-  float  alpha, q[ijk], div[ijk], deltav, deltavmax, e1, gamma1, dt1, CRalpha;
+  int i, j, k, jep1, kep1, jsm2, ksm2, n, nstep;
+  float alpha, q[ijk], div[ijk], deltav, e1, gamma1, dt1, CRalpha;
 
   /* ======================================================================= */
 
   /* Compute varients on start indexes */
 
-  jsm1 = max(js-1, 0);
-  ksm1 = max(ks-1, 0);
   jep1 = min(je+1, jn-1);
   kep1 = min(ke+1, kn-1);
   jsm2 = max(js-2, 0);
   ksm2 = max(ks-2, 0);
-  jep2 = min(je+2, jn-1);
-  kep2 = min(ke+2, kn-1);
 
   gamma1 = gamma[0];  // if gamma is a scalar
 

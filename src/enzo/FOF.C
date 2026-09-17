@@ -195,12 +195,9 @@ void save_groups(FOFData &AllVars, int CycleNumber, FLOAT EnzoTime)
   FILE   *fd;
   hid_t  file_id, dset_id, dspace_id, group_id;
   hsize_t hdims[2];
-  herr_t status;
 
-  int    i, gr, offset, dim, index;
-  int    ntot;
+  int i, gr, dim, index;
   int    head, len;
-  char   ctype;
   float cm[3], cmv[3], AM[3], vrms, spin, mtot, mstars, redshift;
   float mvir, rvir;
   double *temp;
@@ -493,9 +490,9 @@ int link_across(FOFData &AllVars)
   MPI_Status status;
 #endif
   FOF_particle_data *buftoleft, *buftoright, *buffer;
-  int    i, j, slab, nl, nr, nbuf, len;
+  int i, j, slab, nl, nr, nbuf;
   int    leftTask, rightTask;
-  int    pp, newid, nlinktot;
+  int nlinktot;
   id_data *iddat;
 
   buftoleft  = new FOF_particle_data[AllVars.NtoLeft[MyProcessorNumber]];
@@ -608,7 +605,7 @@ void compile_group_catalogue(FOFData &AllVars)
 #ifdef USE_MPI
   MPI_Status  status;
 #endif
-  int i, n, gr, tot, count;
+  int i, n, count;
   int nbound, Nbound;
   
   for (n = 1, AllVars.Ngroups = AllVars.Ncontrib = nbound = 0; 

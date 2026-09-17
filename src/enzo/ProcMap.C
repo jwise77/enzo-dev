@@ -18,9 +18,7 @@ int ProcMapper(LevelHierarchyEntry *LevelArray[])
  
   int proc;
   int level;
-  int gridcounter;
  
-  gridcounter = 0;
  
   // Walk the grids
  

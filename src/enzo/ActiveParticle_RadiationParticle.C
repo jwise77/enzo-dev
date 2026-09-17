@@ -105,7 +105,6 @@ int ActiveParticleType_RadiationParticle::BeforeEvolveLevel
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	   &TimeUnits, &VelocityUnits, Time);
   
-  float creation_redshift = 0.0;
   float current_redshift = 0.0;
   FLOAT  a = 0.0, dadt = 0.0;
   InitData *node = Root;
@@ -204,13 +203,12 @@ int ActiveParticleType_RadiationParticle::EvaluateFormation(grid *thisgrid_orig,
   if (CheckForParticleAction(Root) == false)  
     return SUCCESS;  //No particle to form yet
   RadiationParticleGrid *thisGrid = static_cast<RadiationParticleGrid *>(thisgrid_orig);
-  int i = 0, j = 0, k = 0;
+  int i = 0;
   int GhostZones = thisGrid->GridStartIndex[0];
   int mindex = 0;
   int *GridIndices = NULL;
-  float creation_redshift = 0.0;
   FLOAT edge[3], cellwidth=0.0;
-  InitData *node = Root, *pnode = Root, *curnode = NULL;
+  InitData *node = Root, *curnode = NULL;
   FLOAT ppos[3];
   int GridDimension[3] = {thisGrid->GridDimension[0],
                           thisGrid->GridDimension[1],
@@ -226,7 +224,6 @@ int ActiveParticleType_RadiationParticle::EvaluateFormation(grid *thisgrid_orig,
     if(node->Create == true && node->Alive == false) {   
       for(i = 0; i < 3; i++)
 	ppos[i]  = node->Position[i];
-      creation_redshift = node->Redshift;
       /* Find the indices in the grid */
       GridIndices = GetGridIndices(ppos, edge, cellwidth);
       
@@ -306,7 +303,6 @@ int ActiveParticleType_RadiationParticle::EvaluateFormation(grid *thisgrid_orig,
       /* Delete Radiation Source from Global List */
     }
     else {
-      pnode = node;
     }
     
   } //end while

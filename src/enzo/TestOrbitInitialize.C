@@ -46,9 +46,7 @@ int TestOrbitInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret;
-  int   NumberOfSubgridZones[MAX_DIMENSION], SubgridDims[MAX_DIMENSION];
-  FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
+  int ret;
 
   /* Error check. */
 

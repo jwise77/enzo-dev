@@ -31,16 +31,14 @@ int Collapse1DInitialize(FILE *fptr, FILE *Outfptr,
   char *Vel1Name = "x-velocity";
   char *Vel2Name = "y-velocity";
   char *Vel3Name = "z-velocity";
-  char *ColourName = "colour";
 
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, sphere, i;
+  int ret, level, i;
 
   /* set default parameters */
 
-  int n_sphere = 1;
   int RefineAtStart   = TRUE;
   int UseParticles    = FALSE;
   float MediumDensity = 1.0, 

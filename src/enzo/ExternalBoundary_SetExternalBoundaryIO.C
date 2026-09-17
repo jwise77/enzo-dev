@@ -56,7 +56,7 @@ int ExternalBoundary::SetExternalBoundary(int FieldRank, int GridDims[],
   /* declarations */
  
   int i, j, k, dim, Sign, bindex, sign_12, sign_23, area;
-  float *index, q1, q2, q3, temp_index, rho, rho1, rho2, rho3;
+  float *index, q1, q2, q3;
 
 #ifdef OOC_BOUNDARY
   hid_t       file_id, dset_id, attr_id;

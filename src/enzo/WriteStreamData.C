@@ -43,18 +43,13 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
 		    TopGridData *MetaData, int *CycleCount, int open=FALSE) 
 {
 
-  float MaxDensity = -1e20;
   float root_dx = 1.0 / MetaData->TopGridDims[0];
   FLOAT *pos;
-  FLOAT lbbox[] = { huge_number,  huge_number,  huge_number};
-  FLOAT rbbox[] = {-huge_number, -huge_number, -huge_number};
-  FLOAT Left[3], Right[3];
-  int Dims[3], Rank, i, j;
+  int i, j;
 
-  int ilevel, Zero = FALSE;
+  int Zero = FALSE;
   LevelHierarchyEntry *Temp;
 
-  int count;
 
 //  if (debug)
 //    printf("Movie: %" ISYM " %" ISYM "\n", level, CycleCount[level]);

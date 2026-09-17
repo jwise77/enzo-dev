@@ -46,9 +46,7 @@ int EnzoVector::exchange_start()
   // some local variables
   int i, j, k, l, idx;
   MPI_Arg myrank;
-  MPI_Arg one=1;
   MPI_Datatype FDataType = (sizeof(float) == 4) ? MPI_FLOAT : MPI_DOUBLE;
-  MPI_Datatype IDataType = (sizeof(int) == 4) ? MPI_INT : MPI_LONG_LONG_INT;
   int x0len = Nx0 + Ng0l + Ng0r;
   int x1len = Nx1 + Ng1l + Ng1r;
   int x2len = Nx2 + Ng2l + Ng2r;
@@ -65,7 +63,6 @@ int EnzoVector::exchange_start()
   MPI_Arg msg_xch_x2r = 10005;
 
   // allocate MPI status object
-  MPI_Status status;
 
 
   /////////////////////////////////////////////////////////
@@ -581,11 +578,9 @@ int EnzoVector::exchange_start_component(int ivar)
 #ifdef USE_MPI
 
   // some local variables
-  int i, j, k, l, idx;
+  int i, j, k, idx;
   MPI_Arg myrank;
-  MPI_Arg one=1;
   MPI_Datatype FDataType = (sizeof(float) == 4) ? MPI_FLOAT : MPI_DOUBLE;
-  MPI_Datatype IDataType = (sizeof(int) == 4) ? MPI_INT : MPI_LONG_LONG_INT;
   int x0len = Nx0 + Ng0l + Ng0r;
   int x1len = Nx1 + Ng1l + Ng1r;
   int x2len = Nx2 + Ng2l + Ng2r;
@@ -602,7 +597,6 @@ int EnzoVector::exchange_start_component(int ivar)
   MPI_Arg msg_xch_x2r_comp = 10005 + (ivar+1)*10;
 
   // allocate MPI status object
-  MPI_Status status;
 
   // set send buffer sizes
   NborGhosts[0][0] = Ng0r;  NborGhosts[0][1] = Ng0l;

@@ -64,8 +64,6 @@ int ActiveParticleType_CenOstriker::CreateParticle(grid *thisgrid_orig,
 {
   //printf("Brute force particle creation of CenOstriker\n");
  
-  CenOstrikerGrid *thisGrid =
-    static_cast<CenOstrikerGrid *>(thisgrid_orig);
 
   ActiveParticleType_CenOstriker *np = new ActiveParticleType_CenOstriker();
   data.NumberOfNewParticles++;
@@ -99,11 +97,9 @@ int ActiveParticleType_CenOstriker::EvaluateFormation(grid *thisgrid_orig, Activ
   CenOstrikerGrid *thisGrid =
     static_cast<CenOstrikerGrid *>(thisgrid_orig);
   
-  float BaryonMass,VelocityDivergence,TotalDensity,DynamicalTime,
-    IsothermalSoundSpeedSquared,JeansMass,StarFraction, RandomNumber;
+  float BaryonMass, VelocityDivergence, TotalDensity, DynamicalTime, IsothermalSoundSpeedSquared, JeansMass, StarFraction;
   float SoundSpeedConstant = 1.3095e8;
-  int i, j, k, dim, index, offset_y, offset_z;
-  int NumberOfNewParticles = 0;
+  int i, j, k, index, offset_y, offset_z;
 
 
   float *density = thisGrid->BaryonField[data.DensNum];

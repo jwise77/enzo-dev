@@ -78,12 +78,10 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
     return SUCCESS;
 
 
-  int size = 1, activesize = 1, dim;
+  int dim;
   for (dim = 0; dim < GridRank; dim++)
-    size *= GridDimension[dim];
 
   for (dim = 0; dim < GridRank; dim++)
-    activesize *= (GridDimension[dim] - 2*NumberOfGhostZones);
   
   AllocateGrids();
 
@@ -896,7 +894,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
     eint0 = p0/((Gamma-1.0)*rho0);
     eint1 = eint1; // isothermal so same specific energy
 
-    FLOAT x, y, r, xc = 0.2,  xs = 0.6, delx=0.001;
+    FLOAT x, y, xs = 0.6, delx=0.001;
     int igrid;
 
     for (int j = 0; j < GridDimension[1]; j++) {
@@ -953,14 +951,13 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
   /* Kelvin Helmholtz Problem as in Robertson, Kravstov, Gnedin & Abel */ 
   if (MHD2DProblemType == 9) {
     FLOAT x,y;
-    int n=0;
     float omega=vyu; // reusing UpperVelocityY as perturbation amplitude
 
     float ramp,eint;
     float delx=0.05; // range in y over which to apply the ramp
 
     for (int j = 0; j < GridDimension[1]; j++) {
-      for (int i = 0; i < GridDimension[0]; i++, n++) {
+      for (int i = 0; i < GridDimension[0]; i++) {
 	
 	igrid = i + j*GridDimension[0];
 	
@@ -1110,7 +1107,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
   // Absolutely nothing happens inthis test case. Compare to SPH ... 
   if (MHD2DProblemType == 11) { 
 
-    float pres, eintl, eintu, h, cs, dpdrho, dpde;
+    float pres, eintl, h, cs, dpdrho, dpde;
 
     for (int j = 0; j < GridDimension[1]; j++) {
       for (int i = 0; i < GridDimension[0]; i++) {
@@ -1164,7 +1161,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
    overpressured regions launching sound waves. Periodic boundaries. */
   /* Domain goes from 0 0 to 1 1 */
   if (MHD2DProblemType == 12) { 
-    float pres, eintl, eintu, h, cs, dpdrho, dpde;
+    float pres, eintl, h, cs, dpdrho, dpde;
     for (int j = 0; j < GridDimension[1]; j++) {
       for (int i = 0; i < GridDimension[0]; i++) {
 	/* Compute position */
@@ -1227,7 +1224,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
   /* Domain goes from 0 0 to 2 1 */
   if (MHD2DProblemType == 13) { 
 
-    float pres, eintl, eintu, h, cs, dpdrho, dpde,ramp,rhot;
+    float pres, eintl, h, cs, dpdrho, dpde, ramp;
 
     for (int j = 0; j < GridDimension[1]; j++) {
       for (int i = 0; i < GridDimension[0]; i++) {
@@ -1284,7 +1281,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
 
   if (MHD2DProblemType == 14) { 
 
-    float pres, eintl, eintu, h, cs, dpdrho, dpde,ramp,rhot, bx ,by;
+    float pres, eintl, h, cs, dpdrho, dpde, ramp, bx, by;
 
     for (int j = 0; j < GridDimension[1]; j++) {
       for (int i = 0; i < GridDimension[0]; i++) {
@@ -1346,7 +1343,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
 
   if (MHD2DProblemType == 15) { 
 
-    float pres, eintl, eintu, h, cs, dpdrho, dpde,ramp,rhot, bx ,by;
+    float pres, eintl, h, cs, dpdrho, dpde, bx, by;
 
     for (int j = 0; j < GridDimension[1]; j++) {
       for (int i = 0; i < GridDimension[0]; i++) {
@@ -1354,7 +1351,6 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
 	igrid = i + j*GridDimension[0];
 	x = CellLeftEdge[0][i] + 0.5*CellWidth[0][i];
 	y = CellLeftEdge[1][j] + 0.5*CellWidth[1][j];
-	ramp =  1. ;
 	float rho, vx, vy, f;
 	rho = rhol;
 
@@ -1417,8 +1413,6 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
 
   if (MHD2DProblemType == 16) {
     FLOAT x,y;
-    int n=0;
-    float omega=vyu; // reusing UpperVelocityY as perturbation amplitude
     float y1=0.5;
     float y2=1.5;
     float ramp,eint;
@@ -1426,7 +1420,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
     float sigma2=0.2*0.2;
     float dpde, dpdrho,h,cs;
     for (int j = 0; j < GridDimension[1]; j++) {
-      for (int i = 0; i < GridDimension[0]; i++, n++) {
+      for (int i = 0; i < GridDimension[0]; i++) {
 	
 	igrid = i + j*GridDimension[0];
 	

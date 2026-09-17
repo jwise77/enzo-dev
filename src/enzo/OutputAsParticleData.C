@@ -348,7 +348,6 @@ int OutputAsParticleData(TopGridData &MetaData,
  
       /* Set dimensions of HDF field */
  
-      int TempInt = TotalNumberOfParticles[i];
  
       Slab_Rank = 2;
       Slab_Dims[0] = MetaData.TopGridRank;
@@ -385,7 +384,6 @@ int OutputAsParticleData(TopGridData &MetaData,
  
       float32 *buffer = new float32[TotalNumberOfParticles[i]];
  
-      int ret;
  
       /* Write positions to HDF file. */
  

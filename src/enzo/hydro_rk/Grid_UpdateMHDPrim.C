@@ -47,7 +47,7 @@ int grid::UpdateMHDPrim(float **dU, float c1, float c2)
       ENZO_FAIL("Cannot Find Cosmic Rays");
   }
 
-  int i, j, k, n, n_dU, dim, igrid, field, size, activesize;
+  int i, j, k, n, dim, igrid, field, size, activesize;
   for (dim = 0, size = 1; dim < GridRank; dim++) {
     size *= GridDimension[dim];
   }
@@ -134,17 +134,12 @@ int grid::UpdateMHDPrim(float **dU, float c1, float c2)
   } //close if (NoMultiSpeciesButColors == 1)
   /* Update conserved variables */
 
-  float rho_old, vx_old, vy_old, vz_old, e_old, etot_old, Tau_old, eint_old,
-    rho, vx, vy, vz, e, etot, Tau, eint, p, v2,
-    D_new, S1_new, S2_new, S3_new, Tau_new, h, cs, dpdrho, dpde, Eint_new,
-    Bx_old, By_old, Bz_old, Bx, By, Bz, Bx_new, By_new, Bz_new,
-    Phi_old, Phi, Phi_new, B2, ecr_old, ecr, ECR_new;
+  float rho_old, vx_old, vy_old, vz_old, etot_old, Tau_old, eint_old, rho, vx, vy, vz, etot, Tau, eint, p, v2, D_new, S1_new, S2_new, S3_new, Tau_new, h, cs, dpdrho, dpde, Eint_new, Bx_old, By_old, Bz_old, Bx, By, Bz, Bx_new, By_new, Bz_new, Phi_old, Phi, Phi_new, B2, ecr_old, ecr, ECR_new;
 
   float rhou, lenu, tempu, tu, velu;
   GetUnits(&rhou, &lenu, &tempu, &tu, &velu, Time);
 
   n = 0;
-  FLOAT x, y, z, r;
 
  
   for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
@@ -152,7 +147,6 @@ int grid::UpdateMHDPrim(float **dU, float c1, float c2)
       for (i = GridStartIndex[0]; i <= GridEndIndex[0]; i++, n++) {
 	// first convert to conserved variables to do the update
 	igrid = (k * GridDimension[1] + j) * GridDimension[0] + i;
-	r = sqrt(x*x + y*y + z*z);
 
 	rho_old  = OldBaryonField[DensNum][igrid];
 	vx_old   = OldBaryonField[Vel1Num][igrid];

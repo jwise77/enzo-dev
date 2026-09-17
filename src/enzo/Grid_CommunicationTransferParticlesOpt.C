@@ -43,10 +43,9 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
  
   /* Declarations. */
  
-  int i, j, k, dim, grid, proc, grid_num, bin, CenterIndex;
+  int i, j, dim, grid, proc, grid_num, CenterIndex;
   int GridPosition[MAX_DIMENSION];
-  int *ToGrid, *pbin;
-  FLOAT r[MAX_DIMENSION];
+  int *ToGrid;
  
   for (dim = 0; dim < MAX_DIMENSION; dim++)
     GridPosition[dim] = 0;
@@ -184,17 +183,11 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
  
   else {
 
-    double t00, t01, ttt;
-    double T1, T2, T3, T4;
+    double t00, t01;
 
     t00 = 0.0;
     t01 = 0.0;
-    ttt = 0.0;
 
-    T1 = 0.0;
-    T2 = 0.0;
-    T3 = 0.0;
-    T4 = 0.0;
 
 #ifdef USE_MPI
     t00 = MPI_Wtime();
@@ -213,7 +206,7 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
     /* Allocate space for the particles. */
 
 #ifdef USE_MPI
-    T1 = MPI_Wtime();
+    MPI_Wtime();
 #endif
  
     FLOAT *Position[MAX_DIMENSION];
@@ -239,7 +232,7 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
       }
 
 #ifdef USE_MPI
-      T2 = MPI_Wtime();
+      MPI_Wtime();
 #endif
  
       /* Copy this grid's particles to the new space. */
@@ -274,7 +267,7 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
       }
 
 #ifdef USE_MPI
-      T3 = MPI_Wtime();
+      MPI_Wtime();
 #endif
  
       /* Copy new particles. Periodic wrap is now done in the COPY_OUT. */
@@ -297,7 +290,7 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
       } // ENDFOR particles
 
 #ifdef USE_MPI
-      T4 = MPI_Wtime();
+      MPI_Wtime();
 #endif
 
     } // ENDIF TotalNumberOfParticles > 0
@@ -316,7 +309,6 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
 #ifdef USE_MPI
     t01 = MPI_Wtime();
 #endif
-    ttt = t01-t00;
     // fprintf(stderr, "COPY IN %" ISYM" : %16.6e : %16.6e %16.6e %16.6e %16.6e %16.6e\n", MyProcessorNumber, ttt,
     //         T1-t00, T2-T1, T3-T2, T4-T3, t01-T4);
 

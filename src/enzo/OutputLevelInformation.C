@@ -156,7 +156,6 @@ int OutputLevelInformation(FILE *fptr, TopGridData &MetaData,
  
   /* Get the total memory, if possible. */
  
-  float TotalMemoryDeclared = 0, TotalMemoryUsed = 0;
 #if defined(MALLOC_IRIS4)
   struct mallinfo proc;
   proc = mallinfo();

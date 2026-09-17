@@ -86,17 +86,13 @@ int ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData,
 
   FILE *log_fptr;
   FILE *fptr;
-  FILE *tptr;
-  FILE *mptr;
 
   hid_t Hfile_id;
   herr_t h5_status;
   herr_t h5_error = -1;
 
   int GridID = 1;
-  int GridKD = 1;
 
-  float dummy;
 
   // store the original parameter file name, in case we need it later
   strcpy(PrevParameterFileName, name);

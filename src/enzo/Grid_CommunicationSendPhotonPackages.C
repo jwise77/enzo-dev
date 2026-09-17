@@ -50,7 +50,7 @@ int grid::CommunicationSendPhotonPackages(grid *ToGrid, int ToProcessor,
 					  PhotonPackageEntry **ToPP)
 {
 
-  int index, dim, temp_int;
+  int index, dim;
   PhotonPackageEntry *PP;
 
   if (CommunicationShouldExit(ProcessorNumber, ToProcessor))

@@ -28,7 +28,7 @@ float ngb_treefind(FOF_particle_data *P, double xyz[3], int desngb, float hguess
   void   ngb_treesearch(NODE *THIS, FOF_particle_data *P);
   float  selectb(unsigned long k, unsigned long n, float arr[],int ind[]);
   float  sr,sr2,h2max;  /* search radius */
-  int    i,ind,ni,j,subnode,fak,k,rep=0;
+  int i, ind, j, subnode, fak, k;
   float  dx,dy,dz,r2;
   NODE  *th,*nn;
 
@@ -68,7 +68,6 @@ float ngb_treefind(FOF_particle_data *P, double xyz[3], int desngb, float hguess
     sr2 = sr*sr;
     _TopData.numngb = 0;
     ngb_treesearch(_TopData.nodes, P);
-    rep++;
 
     if (_TopData.numngb < desngb) {
       if (_TopData.numngb > 5)
@@ -160,7 +159,7 @@ void ngb_treesearch(NODE *THIS, FOF_particle_data *P)
 void ngb_treeallocate(FOFData &D, int npart, int maxnodes)
 {
 
-  int totbytes=0,bytes;
+  int bytes;
 
   D.MaxNodes = maxnodes;
   _TopData.N = npart;
@@ -171,7 +170,6 @@ void ngb_treeallocate(FOFData &D, int npart, int maxnodes)
     ENZO_VFAIL("Failed to allocate %" ISYM" nodes (%" ISYM" bytes).\n",
 	    D.MaxNodes, bytes)
   }
-  totbytes += bytes;
 
   _TopData.next = new int[_TopData.N+1];
   bytes = (_TopData.N + 1) * sizeof(int);
@@ -179,7 +177,6 @@ void ngb_treeallocate(FOFData &D, int npart, int maxnodes)
     ENZO_VFAIL("Failed to allocate %" ISYM" spaces for next array\n", 
 	    _TopData.N)
   }
-  totbytes += bytes;
 
   _TopData.ngblist = new int[_TopData.N+1];
   bytes = (_TopData.N + 1) * sizeof(int);
@@ -187,7 +184,6 @@ void ngb_treeallocate(FOFData &D, int npart, int maxnodes)
     ENZO_VFAIL("Failed to allocate %" ISYM" spaces for ngblist array\n",
 	    _TopData.N)
   }
-  totbytes+= bytes;
 
   _TopData.r2list = new float[_TopData.N+1];
   bytes = (_TopData.N + 1) * sizeof(float);
@@ -195,7 +191,6 @@ void ngb_treeallocate(FOFData &D, int npart, int maxnodes)
     ENZO_VFAIL("Failed to allocate %" ISYM" spaces for r2list array\n",
 	    _TopData.N)
   }
-  totbytes+= bytes;
 }
 
 
@@ -214,7 +209,7 @@ void ngb_treefree(void)
 void ngb_treebuild(FOFData &D, int Npart) 
 {
   int    i,j,k,subp,subi,p,ni,subnode,fak;
-  float xmin[3],xmax[3],len,x;
+  float xmin[3], xmax[3], len;
   NODE *nfree,*th,*nn; 
 
 
@@ -267,7 +262,6 @@ void ngb_treebuild(FOFData &D, int Npart)
   /* insert all other particles */
 
   // Breaks at i=544979 for 26Apr09_EvoTest
-  int idebug = 544979;
   for (i = 2; i <= Npart; i++) {
     th = _TopData.nodes;
     while (1) {

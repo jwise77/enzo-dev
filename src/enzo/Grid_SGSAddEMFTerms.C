@@ -65,12 +65,10 @@ void grid::SGS_AddEMF_nonlinear_compressive(float **EMF) {
         Bz  = BaryonField[B3Num];
     }
 
-    int size = 1;
     int StartIndex[MAX_DIMENSION];
     int EndIndex[MAX_DIMENSION];
 
     for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-        size *= GridDimension[dim];
 
         /* we need the EMF in the first ghost zone as well
          * as we'll take another derivative later on */
@@ -158,12 +156,10 @@ void grid::SGS_AddEMF_eddy_resistivity(float **EMF) {
         rho = BaryonField[DensNum];
     }
 
-    int size = 1;
     int StartIndex[MAX_DIMENSION];
     int EndIndex[MAX_DIMENSION];
 
     for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-        size *= GridDimension[dim];
 
         /* we need the EMF in the first ghost zone as well
          * as we'll take another derivative later on */
@@ -228,12 +224,10 @@ void grid::SGS_AddEMF_scale_similarity(float **EMF) {
     if (debug1)
         printf("[%" ISYM"] grid::SGS_AddEMF_scale_similarity start\n",MyProcessorNumber);
 
-    int size = 1;
     int StartIndex[MAX_DIMENSION];
     int EndIndex[MAX_DIMENSION];
 
     for (int dim = 0; dim < MAX_DIMENSION; dim++) {
-        size *= GridDimension[dim];
 
         /* we need the EMF in the first ghost zone as well
          * as we'll take another derivative later on */

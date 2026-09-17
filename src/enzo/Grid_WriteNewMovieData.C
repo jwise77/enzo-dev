@@ -76,34 +76,23 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
 			    int NumberOfStarParticlesOnProcOnLvl[][MAX_DEPTH_OF_HIERARCHY])
 {
 
-  static char suffix[] = ".mdat";
-  static char partSuffix[] = ".part";
 
-  static char indexSuffix[] = ".idx";
-
-  static long maxEntriesAll = 40000;    // Maximum entries for all processors
-  long maxEntries = maxEntriesAll;      // / NumberOfProcessors;
 
   /* Declarations */
   int i, j, k, dim, field, size=1, allsize=1, vcsize = 1;
-  int ret, gridindex, tempindex;
-  int ActiveDim[MAX_DIMENSION], instance;
-  int dataWritten, StartNewFile = FALSE;
+  int gridindex, tempindex;
+  int ActiveDim[MAX_DIMENSION];
+  int dataWritten;
   FLOAT CurrentRedshift, Left[MAX_DIMENSION], Right[MAX_DIMENSION], a = 1, dadt;
   float *temp, *ThisField;
   float *temperature;
-  char fileID[3], pid[6];
   const double ln2 = 0.69314718;
   int TemperatureField = NumberOfBaryonFields+1;
   int thislevel;   
   float root_dx = 1.0 / RootResolution;
   
-  double doubleTime, doubleRedshift, *doubletemp;
-  char *referenceFileName = NULL, *referenceDataPath = NULL;
+  double doubleTime, doubleRedshift;
 
-  FILE *index = NULL; 
-  FILE *index2 = NULL;
-  FILE *movie = NULL;
 
   if (MyProcessorNumber != ProcessorNumber)
     return SUCCESS;
@@ -114,7 +103,6 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
 
   /* Determine whether to output, its instance, and if to increment
      the counter */
-  instance = (lastMovieStep) ? 2 : 0;
 
   // Flag to write data if it's the last timestep or the n-th timestep
   dataWritten = (lastMovieStep || WriteMe);
@@ -142,7 +130,6 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
 
   /* Find the density field. */
 
-  int DensNum = FindField(Density, FieldType, NumberOfBaryonFields);
 
   /* Get expansion factor */
   if (ComovingCoordinates) {
@@ -158,7 +145,6 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
 
   if (NewMovieDumpNumber < TopGridCycle && !open) {
     //printf("Inside: %" ISYM " %" ISYM " %" ISYM "\n", NewMovieDumpNumber, TopGridCycle, open);
-    StartNewFile = TRUE;
     NewMovieDumpNumber = TopGridCycle;
 
     char **FieldNames = new char*[nFields];
@@ -415,7 +401,7 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
 
     int *NonDMParticleIndices = new int[NumberOfParticles];
     int NumberOfNonDMParticles = 0;
-    int ii, iattr;
+    int iattr;
 
     FLOAT *TempPosition[3];
     float *TempVelocity[3], *TempMass;
@@ -513,7 +499,7 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
 
     int *NonDMParticleIndices = new int[NumberOfParticles];
     int NumberOfNonDMParticles = 0, filled_upto_here = 0;
-    int ii, iattr;
+    int iattr;
 
     for (i = 0; i < NumberOfParticles; i++)
       NonDMParticleIndices[i] = -1;

@@ -53,7 +53,7 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
 {
   bool TryHDF5 = TRUE; 
   int i, j, k, dim, field, size, active_size;
-  char name[MAX_LINE_LENGTH], dummy[MAX_LINE_LENGTH];
+  char name[MAX_LINE_LENGTH];
   char logname[MAX_LINE_LENGTH];
  
   int ActiveDim[MAX_DIMENSION];
@@ -62,7 +62,7 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
  
   hid_t       file_id, dset_id;
   hid_t       float_type_id, FLOAT_type_id;
-  hid_t       file_type_id, FILE_type_id;
+  hid_t FILE_type_id;
   hid_t       file_dsp_id;
   hid_t       num_type;
  

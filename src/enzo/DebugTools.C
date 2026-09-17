@@ -150,7 +150,7 @@ int TracerParticlesAddToRestart_DoIt(char * filename, HierarchyEntry *TopGrid,
 void WriteSingleCube(float * array, int Dims[], char* string, int dNum, int gNum, char * label){
   
   hid_t       file_id, dataset_id, dataspace_id, float_type_id;
-  herr_t      status, h5_status, h5_error = -1;
+  herr_t status;
   int FieldRankOut = 3;
   hsize_t     DimsInv[FieldRankOut];
   

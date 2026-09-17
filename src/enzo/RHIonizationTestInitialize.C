@@ -68,7 +68,7 @@ int RHIonizationTestInitialize(FILE *fptr, FILE *Outfptr,
 
   // local declarations
   char line[MAX_LINE_LENGTH];
-  int  dim, ret;
+  int ret;
 
   // Setup and parameters:
   //  1. ambient density (should be very small) - free parameter

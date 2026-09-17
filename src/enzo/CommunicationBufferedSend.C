@@ -55,8 +55,6 @@ int CommunicationBufferPurge(void) {
   
   int NewLastActiveIndex = -1;
 
-  int BuffersPurged = 0;
-  int BuffersActive = 0;
 
   for (i = 0; i < LastActiveIndex+1; i++) {
     if (RequestBuffer[i] != NULL) {
@@ -70,7 +68,6 @@ int CommunicationBufferPurge(void) {
 	
 	delete [] RequestBuffer[i];
 	RequestBuffer[i] = NULL;
-        BuffersPurged++;
         //fprintf(stderr, "CBP buffer %" ISYM" released\n", i);
 	
       } else{
@@ -78,7 +75,6 @@ int CommunicationBufferPurge(void) {
 	//fprintf(stderr,"CCO p%" ISYM": mem- thread %" ISYM" active\n",MyProcessorNumber, i);
 
 	NewLastActiveIndex = max(i, NewLastActiveIndex);
-        BuffersActive++;
         //fprintf(stderr, "CBP buffer %" ISYM" remains active\n", i);
 
       }
@@ -103,8 +99,6 @@ int CommunicationBufferedSendCancel(int Tag)
   MPI_Arg RequestDone, stat;
   MPI_Status Status;
   int NewLastActiveIndex = -1;
-  int BuffersCancelled = 0;
-  int BuffersActive = 0;
 
   for (i = 0; i < LastActiveIndex+1; i++) {
     if (RequestBuffer[i] != NULL) {
@@ -116,11 +110,9 @@ int CommunicationBufferedSendCancel(int Tag)
 	MPI_Wait(RequestHandle+i, MPI_STATUS_IGNORE);
 	delete [] RequestBuffer[i];
 	RequestBuffer[i] = NULL;
-	BuffersCancelled++;
       } // ENDIF matching tag
       else {
 	NewLastActiveIndex = max(i, NewLastActiveIndex);
-	BuffersActive++;
       }
     } // ENDIF RequestBuffer[i] != NULL
   } // ENDFOR requests

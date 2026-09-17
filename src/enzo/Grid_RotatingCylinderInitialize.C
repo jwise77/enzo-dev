@@ -57,7 +57,7 @@ int grid::RotatingCylinderInitializeGrid(FLOAT RotatingCylinderRadius,
   for (dim = 0; dim < GridRank; dim++)
     size *= GridDimension[dim];
 
-  FLOAT r,x,y,z, radius, zdist;
+  FLOAT x, y, z, radius, zdist;
 
   float sintheta, costheta, omega;
 
@@ -77,7 +77,7 @@ int grid::RotatingCylinderInitializeGrid(FLOAT RotatingCylinderRadius,
 
   /* set fields in the cylinder region */
  
-  int index, jndex, i, j, k;
+  int i, j, k;
   float outside_rho, outside_TE, outside_GE;
 
   outside_rho =  BaryonField[DensNum][0];

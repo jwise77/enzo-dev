@@ -44,7 +44,6 @@ int MHD2DTestInitialize(FILE *fptr, FILE *Outfptr,
 			TopGridData &MetaData, int SetBaryonFields) 
 {
   char *DensName = "Density";
-  char *PresName = "Pressure";
   char *TEName   = "TotalEnergy";
   char *GEName   = "GasEnergy";
   char *Vel1Name = "x-velocity";
@@ -60,7 +59,7 @@ int MHD2DTestInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, sphere, i;
+  int ret, level, i;
 
   /* set default parameters */
 

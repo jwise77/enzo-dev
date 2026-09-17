@@ -58,7 +58,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
   };
   int cindex = (GridEndIndex[0] - GridStartIndex[0])/2 + GridStartIndex[0];
   int cgindex = GRIDINDEX_NOGHOST(cindex,cindex,cindex);
-  float rhocell = 0.0, mcell = 0.0, CellVolume = 1.0;
+  float CellVolume = 1.0;
   /* Calculate cell volume */
   for (int dim = 0; dim < GridRank; dim++)
   {
@@ -68,14 +68,11 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
   ActiveParticleType_SmartStar* SS;
   SS = static_cast<ActiveParticleType_SmartStar*>(ThisParticle);
   SS->mass_in_accretion_sphere = 0.0;
-  float eta_disk = SS->eta_disk;
   float WeightedSum = 0, AverageDensity = 0, RhoInfinity = 0.0;
   float AverageT=0, TotalGasMass = 0;
   float lambda_c = 0.25*exp(1.5);
   FLOAT radius2 = 0.0;
-  float SmallRhoFac = 1e10, Weight = 0.0, SmallEFac = 10., SmEint = 0,  AccretedMomentum[3],
-    vgas[3], etot, eint, ke,  maccreted, etotnew, rhonew, eintnew,
-    kenew, mnew = 0;
+  float Weight = 0.0, SmEint = 0;
   /* Find the Bondi-Hoyle radius */
   int size = this->GetGridSize();
   float *Temperature = new float[size]();
@@ -294,9 +291,8 @@ int grid::GetVorticityComponent(FLOAT *pos, FLOAT *vorticity)
 {
   if (GridRank != 3) 
     ENZO_FAIL("Devised only for three dimension.");
-  int igrid[MAX_DIMENSION], dim, index, size = 1;
+  int igrid[MAX_DIMENSION], index, size = 1;
   float curl_x, curl_y, curl_z;
-  float curl[3] = {0,0,0};
   int index_yp1, index_ym1, index_zp1, index_zm1;
   
   FLOAT dx = CellWidth[0][0], 
@@ -358,8 +354,7 @@ float grid::CenAccretionRate(float density, FLOAT AccretionRadius,
   double alpha  = 0.1, kappa  = 0.4, lambda;
   double gas_angmom[] = {0.0, 0.0, 0.0}, total_gas_mass = 0.0, gas_mass = 0.0;
   float mdot = 0.0;
-  FLOAT CellVolume = 1, BoxSize = 1, DensityConversion = 1, VelocityConversion = 1;
-  FLOAT a = 1, dadt;
+  FLOAT CellVolume = 1;
   FLOAT delx, dely, delz, velx, vely, velz;
   const double sigma_SB = 5.67e-5;
 
@@ -370,7 +365,7 @@ float grid::CenAccretionRate(float density, FLOAT AccretionRadius,
   /* Set the units. */
   float DensityUnits = 1, LengthUnits = 1, TemperatureUnits = 1,
     TimeUnits = 1, VelocityUnits = 1,
-    PressureUnits = 0, GEUnits = 0, VelUnits = 0;
+    VelUnits = 0;
   double MassUnits = 1;
   if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	       &TimeUnits, &VelocityUnits, Time) == FAIL) {
@@ -389,7 +384,6 @@ float grid::CenAccretionRate(float density, FLOAT AccretionRadius,
   float Gcode = GravConst*DensityUnits*TimeUnits*TimeUnits;
   for (dim = 0; dim < MAX_DIMENSION; dim++) 
     CellVolume *= CellWidth[0][0]; // in code units
-  float MassConversion = CellVolume*MassUnits;
   /* Find angular momentum in 27 cells */
   int numcells = 0;
   float relvel = 0.0, sq_relvel = 0.0;
@@ -486,8 +480,6 @@ float grid::ConvergentMassFlow(int DensNum, int Vel1Num, FLOAT AccretionRadius,
   float *gasvelx = BaryonField[Vel1Num];
   float *gasvely = BaryonField[Vel1Num++];
   float *gasvelz = BaryonField[Vel1Num++];
-  float div = 0.0, divx = 0.0, divy = 0.0, divz = 0.0;
-  const int offset[] = {1, GridDimension[0], GridDimension[0]*GridDimension[1]};
   for (int k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
     for (int j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
       int index = GRIDINDEX_NOGHOST(GridStartIndex[0],j,k);
@@ -560,12 +552,8 @@ float grid::CalculateCirculisationSpeed(int Vel1Num, FLOAT AccretionRadius,
 					FLOAT *pos, float *vel)
 {
   int numcells = 0;
-  float tang_vel = 0.0;
   FLOAT total_vorticity[3] = {0.0, 0.0, 0.0};
   float epsilon = AccretionRadius*0.02;
-  float *gasvelx = BaryonField[Vel1Num];
-  float *gasvely = BaryonField[Vel1Num++];
-  float *gasvelz = BaryonField[Vel1Num++];
   for (int k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
     for (int j = GridStartIndex[1]; j <= GridEndIndex[1]; j++) {
       int index = GRIDINDEX_NOGHOST(GridStartIndex[0],j,k);
@@ -576,14 +564,7 @@ float grid::CalculateCirculisationSpeed(int Vel1Num, FLOAT AccretionRadius,
 	FLOAT radius2 = POW(relx,2) + POW(rely,2) + POW(relz,2);
 	if ((AccretionRadius*AccretionRadius) > radius2 &&
 	    ((AccretionRadius-epsilon)*(AccretionRadius-epsilon)) < radius2) {
-	  FLOAT relposmag = sqrt(relx*relx + rely*rely + relz*relz);
-	  FLOAT relpos[3] = { relx/relposmag, rely/relposmag, relz/relposmag};
-	  FLOAT vrel[3] = {vel[0] - gasvelx[index],
-			   vel[1] - gasvely[index],
-			   vel[2] - gasvelz[index]};
-	  FLOAT radialvelocity = fabs(vrel[0]*relpos[0] +
-					   vrel[1]*relpos[1] +
-					   vrel[2]*relpos[2] );
+
 	  /* Tangential velocity = (v x r)/|r^2| */
 	  FLOAT cellpos[3] = {pos[0] + relx, pos[1] + rely, pos[2] + relz};
 	  FLOAT vorticity[3] = {0.0, 0.0, 0.0};

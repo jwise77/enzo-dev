@@ -40,8 +40,7 @@ int GrackleSetDefaultParameters(FILE *fptr){
   /* First, check if Grackle is actually being used in this problem */
   rewind(fptr);
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
-    int ret = 0;
-    ret += sscanf(line, "use_grackle = %" ISYM, &use_grackle);
+    sscanf(line, "use_grackle = %" ISYM, &use_grackle);
   }
 
 #ifndef USE_GRACKLE
@@ -101,7 +100,6 @@ int GrackleReadParameters(FILE *fptr, FLOAT InitTime)
     return SUCCESS;
   }
 
-  char line[MAX_LINE_LENGTH];
   char *dummy = new char[MAX_LINE_LENGTH];
   dummy[0] = 0;
 

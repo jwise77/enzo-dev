@@ -60,7 +60,7 @@ int grid::StratifiedMediumExplosionInitialize(FLOAT BubbleRadius, int PulseType,
     ENZO_FAIL("Error in GetUnits.");
   }
 
-  float delta, this_delta, g;
+  float delta, g;
   
   FLOAT ScaleHeight = 8.0e+5;  // scale height in cm
   float GroundTemp = 300.0;   // ground temperature in K
@@ -130,8 +130,7 @@ int grid::StratifiedMediumExplosionInitialize(FLOAT BubbleRadius, int PulseType,
     GridEnd[dim] = GridDimension[dim]-1;
   }
 
-  int ii, small_index;
-  FLOAT smallest_d, celldist;
+  FLOAT celldist;
 
   // loop over grid and set cell values: we're setting both the 
   // pulse values and the background values here.

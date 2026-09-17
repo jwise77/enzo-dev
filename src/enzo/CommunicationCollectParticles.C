@@ -109,14 +109,12 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
   ActiveParticleList<ActiveParticleType> APSendList;
   ActiveParticleList<ActiveParticleType> APSharedList;
 
-  int NumberOfReceives, APNumberOfReceives, StarNumberOfReceives,
-      TotalNumber, TotalStars, APTotalNumber;
+  int NumberOfReceives, APNumberOfReceives, StarNumberOfReceives, TotalNumber, TotalStars;
   int *NumberToMove = new int[NumberOfProcessors];
   int *StarsToMove = new int[NumberOfProcessors];
   int *APNumberToMove = new int[NumberOfProcessors];
 
-  int proc, i, j, k, jstart, jend, ThisID;
-  int particle_data_size, star_data_size, activepart_data_size;
+  int i, j, jstart, jend, ThisID;
   int Zero = 0;
 
   /*********************************************************************/
@@ -218,7 +216,6 @@ int CommunicationCollectParticles(LevelHierarchyEntry *LevelArray[],
     for (j = 0; j < NumberOfProcessors; j++) {
       TotalNumber += NumberToMove[j];
       TotalStars += StarsToMove[j];
-      APTotalNumber += APNumberToMove[j];
       NumberToMove[j] = 0;  // Zero-out to use in the next step
       StarsToMove[j]  = 0;  // Zero-out to use in the next step
       APNumberToMove[j] = 0;

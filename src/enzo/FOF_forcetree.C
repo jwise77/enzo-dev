@@ -22,7 +22,6 @@ static force_t _TopData;
 
 void force_treeallocate(FOFData &D, int maxnodes) 
 {
-  int bytes;
   
   D.MaxNodes = maxnodes;
   
@@ -62,9 +61,9 @@ void add_particle_props_to_node(FOFData &D, FNODE *no, int p)
 
 int force_treebuild(FOFData &D, int first, int len, float thetamax)
 {
-  int i,j,tr,n,ip;
-  int subp,subi,p,ni,subnode,fak,fp;
-  float x,length;
+  int i, j, ip;
+  int subp, subi, p, subnode, fak;
+  float length;
   float dx,dy,dz;
   FNODE *nfree,*th,*nn,*ff;
   void force_setupnonrecursive(FNODE *no);
@@ -315,9 +314,9 @@ void force_setupnonrecursive(FNODE *no)
 
 void force_treeevaluate_potential(double *pos, float *pot, float epsilon)
 {
-  FNODE *no,*nn;
-  int i,k,p,ii;
-  float r2,dx,dy,dz,r,fac,theta,u,h,ff;
+  FNODE *no;
+  int p, ii;
+  float r2, dx, dy, dz, r, u, h, ff;
   float wp;
   float r_inv;
   float h_inv;

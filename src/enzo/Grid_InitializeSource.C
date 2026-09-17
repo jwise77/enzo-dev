@@ -84,7 +84,7 @@ int grid::InitializeSource(RadiationSourceEntry *RS)
 
   /* Select the correct field if we're using the coupled transfer/rate solver */
 
-  float *density, *HI, *HII, *f_e, *te, *ge;
+  float *density, *HI, *HII, *f_e;
 
   //  if (RadiativeTransferCoupledRateSolver) {
 //  if (0) {
@@ -99,8 +99,6 @@ int grid::InitializeSource(RadiationSourceEntry *RS)
     HI      = BaryonField[HINum];
     HII     = BaryonField[HIINum];
     f_e     = BaryonField[DeNum];
-    te      = BaryonField[TENum];
-    ge      = BaryonField[GENum];
     //  }
 
   float HIRecombinationRate = 2.6e-13;

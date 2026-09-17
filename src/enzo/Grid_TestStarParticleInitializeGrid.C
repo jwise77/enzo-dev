@@ -38,7 +38,6 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
 
   float CentralMass = 1.0;
   int i, dim;
-  float TestInitialdt = *Initialdt;
   
   /* Return if this doesn't concern us. */
 

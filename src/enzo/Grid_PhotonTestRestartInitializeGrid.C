@@ -31,17 +31,13 @@ int grid::PhotonTestRestartInitialize(int level, int *NumberOfCellsSet)
 {
   /* declarations */
  
-  int dim, i, j, k,l, n;
-  FLOAT delx, dely, delz, radius2, DomainWidth[MAX_DIMENSION];
- int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
-    DINum, DIINum, HDINum,  kphHINum, gammaNum, kphHeINum,
-    kphHeIINum, kdissH2INum, RPresNum1, RPresNum2, RPresNum3; 
+  int dim;
+  FLOAT DomainWidth[MAX_DIMENSION];
 
   float DensityUnits = 1.0, LengthUnits = 1.0, TemperatureUnits = 1.0, TimeUnits = 1.0,
     VelocityUnits = 1.0;
   if (UsePhysicalUnit)
     GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits, &TimeUnits, &VelocityUnits, Time);
-  double MassUnits = DensityUnits*pow(LengthUnits,3);
   //printf("Mass Units = %g \n",MassUnits);
   //printf("Time Units = %g \n",TimeUnits);
 

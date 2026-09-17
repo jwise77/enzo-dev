@@ -2091,7 +2091,6 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
   }
 
   char *cwd_buffer = new char[MAX_LINE_LENGTH];
-  size_t cwd_buffer_len = MAX_LINE_LENGTH;
 
   if ( (MetaData.GlobalDir == NULL) && (MetaData.LocalDir == NULL) ) {
     /*if(getcwd(cwd_buffer, cwd_buffer_len) == NULL) {

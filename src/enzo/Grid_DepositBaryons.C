@@ -308,11 +308,7 @@ int grid::DepositBaryons(grid *TargetGrid, FLOAT DepositTime)
  
     MPI_Status status;
     MPI_Datatype DataType = (sizeof(float) == 4) ? MPI_FLOAT : MPI_DOUBLE;
-    MPI_Arg Count;
-    MPI_Arg Source;
 
-    Count = size;
-    Source = ProcessorNumber;
  
     double time1 = MPI_Wtime();
  

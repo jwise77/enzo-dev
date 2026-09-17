@@ -40,13 +40,11 @@ int MHD1DTestInitialize(FILE *fptr, FILE *Outfptr,
 			HierarchyEntry &TopGrid, TopGridData &MetaData) 
 {
   char *DensName = "Density";
-  char *PresName = "Pressure";
   char *TEName   = "TotalEnergy";
   char *GEName   = "GasEnergy";
   char *Vel1Name = "x-velocity";
   char *Vel2Name = "y-velocity";
   char *Vel3Name = "z-velocity";
-  char *ColourName = "colour";
   char *BxName = "Bx";
   char *ByName = "By";
   char *BzName = "Bz";
@@ -55,7 +53,7 @@ int MHD1DTestInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, sphere, i;
+  int ret, level, i;
 
   /* set default parameters */
 

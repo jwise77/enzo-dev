@@ -46,7 +46,6 @@ int CommunicationShareStars(int *NumberToMove, star_data* &SendList,
   // destination processor
 
   int TotalNumberToMove = 0;
-  int star_data_size = sizeof(star_data);
   for (proc = 0; proc < NumberOfProcessors; proc++)
     TotalNumberToMove += NumberToMove[proc];
   //qsort(SendList, TotalNumberToMove, star_data_size, compare_star_proc);
@@ -55,7 +54,6 @@ int CommunicationShareStars(int *NumberToMove, star_data* &SendList,
   SharedList = NULL;
 
 #ifdef USE_MPI
-  MPI_Datatype DataType = (sizeof(float) == 4) ? MPI_FLOAT : MPI_DOUBLE;
   MPI_Datatype DataTypeInt = (sizeof(int) == 4) ? MPI_INT : MPI_LONG_LONG_INT;
   MPI_Datatype DataTypeByte = MPI_BYTE;
   MPI_Arg Count;

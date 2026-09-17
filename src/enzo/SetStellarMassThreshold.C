@@ -34,7 +34,6 @@ int CosmologyComputeExpansionFactor(FLOAT time, FLOAT *a, FLOAT *dadt);
 int SetStellarMassThreshold(FLOAT time)
 {
 
-  int timestep, i;
   FLOAT a, dadt, redshift=0.0;
   float early_mass, late_mass, current_mass, float_time=0.0, float_redshift=0.0;
 
