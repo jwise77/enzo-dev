@@ -51,8 +51,8 @@ void subfind(FOFData &D, int CycleNumber, FLOAT EnzoTime)
   MPI_Status status;
 #endif
 
-  sprintf(catalogue_fname, "%s/subgroups_%5.5d.dat", FOF_dirname, CycleNumber);
-  sprintf(particle_fname, "%s/subparticles_%5.5d.h5", FOF_dirname, CycleNumber);
+  sprintf(catalogue_fname, "%s/subgroups_%5.5" ISYM ".dat", FOF_dirname, CycleNumber);
+  sprintf(particle_fname, "%s/subparticles_%5.5" ISYM ".h5", FOF_dirname, CycleNumber);
 
   if (MyProcessorNumber == ROOT_PROCESSOR) {
 
@@ -207,7 +207,7 @@ void subfind(FOFData &D, int CycleNumber, FLOAT EnzoTime)
 	    get_properties(D, Pbuf, len, true, cm, cmv, &mtot, &mstars, &mvir, &rvir, AM,
 			   &vrms, &spin);
 	    
-	    sprintf(halo_name, "Halo%8.8d", parent);
+	    sprintf(halo_name, "Halo%8.8" ISYM, parent);
 	    group_id = H5Gcreate(file_id, halo_name, 0);
 	    writeScalarAttribute(group_id, HDF5_INT, "NumberOfSubhalos", &nsubs);
 	    writeScalarAttribute(group_id, HDF5_REAL, "Total Mass", &mtot);
@@ -334,7 +334,7 @@ void subfind(FOFData &D, int CycleNumber, FLOAT EnzoTime)
 	    get_properties(D, partbuf, len, true, cm, cmv, &mtot, &mstars, &mvir, &rvir, AM,
 			   &vrms, &spin);
 	    
-	    sprintf(halo_name, "Halo%8.8d", parent);
+	    sprintf(halo_name, "Halo%8.8" ISYM, parent);
 	    group_id = H5Gcreate(file_id, halo_name, 0);
 	    writeScalarAttribute(group_id, HDF5_INT, "NumberOfSubhalos", &nsubs);
 	    writeScalarAttribute(group_id, HDF5_REAL, "Total Mass", &mtot);

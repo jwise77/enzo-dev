@@ -39,8 +39,8 @@ int grid::DebugActiveParticles(int level)
 
   if (ActiveParticles.size() != NumberOfActiveParticles) {
     printf("Active particle count mismatch!");
-    printf("NumberOfActiveParticles = %" GOUTSYM"\n", NumberOfActiveParticles);
-    printf("ActiveParticles.size() = %" GOUTSYM"\n", ActiveParticles.size());
+    printf("NumberOfActiveParticles = %" ISYM"\n", NumberOfActiveParticles);
+    printf("ActiveParticles.size() = %" ISYM"\n", ActiveParticles.size());
     ENZO_FAIL("")
   }
 

@@ -212,7 +212,7 @@ herr_t AMRHDF5Writer::WriteTextures(  const int    timeStep,
 
 {
   
-  char gridDataName[100], fieldName[100];
+  char gridDataName[512], fieldName[1024];
   sprintf(gridDataName, "/grid-%" ISYM "", gridId);
 
   hid_t gridGrp, dataspace, dataset;
@@ -271,7 +271,7 @@ herr_t AMRHDF5Writer::WriteTextures(  const int    timeStep,
 
   for (i = 0; i < nFields; i++) {
 
-    sprintf(fieldName, "%s/%s-dim%" ISYM "", gridDataName, names[i], dim);
+    snprintf(fieldName, sizeof(fieldName), "%s/%s-dim%" ISYM, gridDataName, names[i], dim);
 
     dataspace = H5Screate_simple(2, hdims, NULL);
     dataset = H5Dcreate(fileId, fieldName, h5DataType, dataspace, H5P_DEFAULT);
@@ -328,9 +328,9 @@ herr_t AMRHDF5Writer::WriteFlat(  const int    timeStep,
 
 {
   
-  char gridDataName[100], fieldName[100];
+  char gridDataName[512], fieldName[1024];
   sprintf(gridDataName, "/grid-%" ISYM "", gridId);
-  sprintf(fieldName, "%s/%s", gridDataName, name);
+  snprintf(fieldName, sizeof(fieldName), "%s/%s", gridDataName, name);
 
   hid_t gridGrp, dataspace, dataset;
   hsize_t hdims[3] = { dims[2], dims[1], dims[0] };

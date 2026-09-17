@@ -336,12 +336,12 @@ int grid::CreateChildParticles(float dx, int NumberOfParticles, float *ParticleM
 		    {
 		      fprintf(stderr, "NewPos[%" ISYM "][%" ISYM "] = %f\n", i, child, NewPos[0][innerchild]);
 		    }
-		  fprintf(stderr, "l11*NewPos[%" ISYM "][%" ISYM "] = %f\n", 0, child, l11*NewPos[0][innerchild]);
-		  fprintf(stderr, "l12*NewPos[%" ISYM "][%" ISYM "] = %f\n", 1, child, l12*NewPos[1][innerchild]);
-		  fprintf(stderr, "l13*NewPos[%" ISYM "][%" ISYM "] = %f\n", 2, child, l13*NewPos[2][innerchild]);
-		  fprintf(stderr, "l21*NewPos[%" ISYM "][%" ISYM "] = %f\n", 0, child, l21*NewPos[0][innerchild]);
-		  fprintf(stderr, "l22*NewPos[%" ISYM "][%" ISYM "] = %f\n", 1, child, l22*NewPos[1][innerchild]);
-		  fprintf(stderr, "l23*NewPos[%" ISYM "][%" ISYM "] = %f\n", 2, child, l23*NewPos[2][innerchild]);
+		  fprintf(stderr, "l11*NewPos[0][%" ISYM "] = %f\n", child, l11*NewPos[0][innerchild]);
+		  fprintf(stderr, "l12*NewPos[1][%" ISYM "] = %f\n", child, l12*NewPos[1][innerchild]);
+		  fprintf(stderr, "l13*NewPos[2][%" ISYM "] = %f\n", child, l13*NewPos[2][innerchild]);
+		  fprintf(stderr, "l21*NewPos[0][%" ISYM "] = %f\n", child, l21*NewPos[0][innerchild]);
+		  fprintf(stderr, "l22*NewPos[1][%" ISYM "] = %f\n", child, l22*NewPos[1][innerchild]);
+		  fprintf(stderr, "l23*NewPos[2][%" ISYM "] = %f\n", child, l23*NewPos[2][innerchild]);
 		 
 		  return FAIL;
 		  

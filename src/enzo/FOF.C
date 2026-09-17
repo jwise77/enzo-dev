@@ -212,8 +212,8 @@ void save_groups(FOFData &AllVars, int CycleNumber, FLOAT EnzoTime)
   char   particle_fname[200];
   char   halo_name[200];
 
-  sprintf(catalogue_fname, "%s/groups_%5.5d.dat", FOF_dirname, CycleNumber);
-  sprintf(particle_fname, "%s/particles_%5.5d.h5", FOF_dirname, CycleNumber);
+  sprintf(catalogue_fname, "%s/groups_%5.5" ISYM ".dat", FOF_dirname, CycleNumber);
+  sprintf(particle_fname, "%s/particles_%5.5" ISYM ".h5", FOF_dirname, CycleNumber);
 
   if (MyProcessorNumber == ROOT_PROCESSOR) {
 
@@ -318,7 +318,7 @@ void save_groups(FOFData &AllVars, int CycleNumber, FLOAT EnzoTime)
 	for (i = 0; i < len; i++)
 	  TempPINT[i] = Pbuf[i].PartID;
 
-	sprintf(halo_name, "Halo%8.8d", AllVars.NgroupsAll-1-gr);
+	sprintf(halo_name, "Halo%8.8" ISYM, AllVars.NgroupsAll-1-gr);
 	group_id = H5Gcreate(file_id, halo_name, 0);
 	writeScalarAttribute(group_id, HDF5_REAL, "Total Mass", &mtot);
 	writeScalarAttribute(group_id, HDF5_REAL, "Stellar Mass", &mstars);

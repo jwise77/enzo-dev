@@ -236,7 +236,7 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
       ret += sscanf(line, "CollapseTestSphereSmoothSurface[%" ISYM"] = %" ISYM, &sphere,
 		    &CollapseTestSphereSmoothSurface[sphere]);
     if (sscanf(line, "CollapseTestSphereSmoothRadius[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "CollapseTestSphereSmoothRadius[%" FSYM"] = %" FSYM, &sphere,
+      ret += sscanf(line, "CollapseTestSphereSmoothRadius[%" ISYM"] = %" FSYM, &sphere,
 		    &CollapseTestSphereSmoothRadius[sphere]);
     if (sscanf(line, "CollapseTestSphereHIIFraction[%" ISYM"]", &sphere) > 0)
       ret += sscanf(line, "CollapseTestSphereHIIFraction[%" ISYM"] = %" FSYM, &sphere,
@@ -579,7 +579,7 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
 	    CollapseTestUseColour);
     fprintf(Outfptr, "CollapseTestUseMetals          = %" ISYM"\n",
 	    CollapseTestUseMetals);
-    fprintf(Outfptr, "CollapseTestWind               = $" ISYM"\n",
+    fprintf(Outfptr, "CollapseTestWind               = %" ISYM"\n",
             CollapseTestWind);
     fprintf(Outfptr, "CollapseTestInitialTemperature = %" FSYM"\n",
 	    CollapseTestInitialTemperature);

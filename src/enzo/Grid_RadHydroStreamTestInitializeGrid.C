@@ -125,9 +125,9 @@ int grid::RadHydroStreamTestInitializeGrid(float DensityConstant,
 
     if (debug) {
       printf("RadHydroStreamTestInitializeGrid:\n");
-      printf("       RadStreamDim = %" ISYM"\n",MyProcessorNumber,RadStreamDim);
-      printf("       RadStreamDir = %" ISYM"\n",MyProcessorNumber,RadStreamDir);
-      printf("     MaxRadiationDt = %g\n",MyProcessorNumber,MaxRadiationDt);
+      printf("       RadStreamDim = %" ISYM"\n", RadStreamDim);
+      printf("       RadStreamDir = %" ISYM"\n", RadStreamDir);
+      printf("     MaxRadiationDt = %g\n", MaxRadiationDt);
 
       printf("    DensityConstant = %g\n",DensityConstant);    
       printf("         TEConstant = %g\n",TEConstant);    

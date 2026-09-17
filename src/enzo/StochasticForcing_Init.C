@@ -207,7 +207,7 @@ AutoCorrlTime[0],AutoCorrlTime[1],AutoCorrlTime[2]);
 		}
         
 		if (debug) {printf("\n"
-		    "j1 = %" FSYM", j2 = %" FSYM"\n"
+		    "j1 = %" ISYM", j2 = %" ISYM"\n"
 		    "b1 = %" FSYM", b2 = %" FSYM"\n"
 		    "f1 = %" FSYM", f2 = %" FSYM"\n"
 		    "g1 = %" FSYM", g2 = %" FSYM"\n\n",

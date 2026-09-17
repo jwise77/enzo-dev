@@ -328,7 +328,7 @@ int CommunicationTransferPhotons(LevelHierarchyEntry *LevelArray[],
       //tag = MPI_PHOTONGROUP_TAG*10 + nPhoton[proc];
       tag = MPI_PHOTONGROUP_TAG;
       if (DEBUG && NumberOfMessages > 0)
-	printf("CTPh(P%" ISYM "): Sending %" ISYM " photons to P%" ISYM " (%" ISYM " messages, TAG=%" ISYM ")\n", 
+	printf("CTPh(P%" ISYM "): Sending %" ISYM " photons to P%" ISYM " (%" ISYM " messages, TAG=%d)\n", 
 	       MyProcessorNumber, nPhoton[proc], proc, NumberOfMessages, tag);
       for (i = 0; i < NumberOfMessages; i++) {
 	Offset = i*PHOTON_BUFFER_SIZE;

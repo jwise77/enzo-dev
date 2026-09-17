@@ -94,7 +94,7 @@ int RadHydroRadShockInitialize(FILE *fptr, FILE *Outfptr,
   /* error checking */
   if (Mu != DEF_MU) {
     if (MyProcessorNumber == ROOT_PROCESSOR)
-      fprintf(stderr, "warning: mu =%f assumed in initialization; setting Mu = %f for consistency.\n", DEF_MU);
+      fprintf(stderr, "warning: mu =%f assumed in initialization; setting Mu = %f for consistency.\n", Mu, DEF_MU);
     Mu = DEF_MU;
   }
 

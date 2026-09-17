@@ -790,7 +790,7 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
   int nFields = TopGrid.GridData->ReturnNumberOfBaryonFields();
   if (nFields >= MAX_NUMBER_OF_BARYON_FIELDS) {
     ENZO_VFAIL("NumberOfBaryonFields (%" ISYM ") + 1 exceeds "
-	       "MAX_NUMBER_OF_BARYON_FIELDS (%" ISYM").\n", 
+	       "MAX_NUMBER_OF_BARYON_FIELDS (%d).\n", 
 	       nFields, MAX_NUMBER_OF_BARYON_FIELDS)
   }
 

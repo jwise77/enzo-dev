@@ -970,7 +970,7 @@ int grid::WriteAllFluxes(hid_t grid_node)
 
     /* Make our group here */
 
-    snprintf(name, 254, "Subgrid%08%" ISYM "", i);
+    snprintf(name, 254, "Subgrid%08" ISYM, i);
 
     subgrid_group = H5Gcreate(fluxes_node, name, 0);
     if(subgrid_group == h5_error)ENZO_VFAIL("IO Problem creating %s", name)

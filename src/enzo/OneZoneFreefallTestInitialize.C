@@ -113,7 +113,7 @@ int OneZoneFreefallTestInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &Top
     ret += sscanf(line, "OneZoneFreefallTestMaximumMetallicity = %" FSYM, &OneZoneFreefallTestMaximumMetallicity);
     ret += sscanf(line, "OneZoneFreefallTimestepFraction = %" FSYM, 
 		  &TestProblemData.OneZoneFreefallTimestepFraction);
-    ret += sscanf(line, "OneZoneFreefallUseEffectiveGamma = %" ISYM,
+    ret += sscanf(line, "OneZoneFreefallUseEffectiveGamma = %" FSYM,
                   &TestProblemData.OneZoneFreefallUseEffectiveGamma);
 
     ret += sscanf(line, "TestProblemHydrogenFractionByMass = %" FSYM, &TestProblemData.HydrogenFractionByMass);
@@ -229,7 +229,7 @@ int OneZoneFreefallTestInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &Top
     fprintf(Outfptr, "OneZoneFreefallTestMinimumMetallicity = %" FSYM"\n", OneZoneFreefallTestMinimumMetallicity);
     fprintf(Outfptr, "OneZoneFreefallTestMaximumMetallicity = %" FSYM"\n", OneZoneFreefallTestMaximumMetallicity);
     fprintf(Outfptr, "OneZoneFreefallTimestepFraction = %" FSYM"\n", TestProblemData.OneZoneFreefallTimestepFraction);
-    fprintf(Outfptr, "OneZoneFreefallUseEffectiveGamma = %d\n", TestProblemData.OneZoneFreefallUseEffectiveGamma);
+    fprintf(Outfptr, "OneZoneFreefallUseEffectiveGamma = %" FSYM"\n", TestProblemData.OneZoneFreefallUseEffectiveGamma);
 
     fprintf(Outfptr, "TestProblemHydrogenFractionByMass = %" FSYM"\n",   TestProblemData.HydrogenFractionByMass);
     fprintf(Outfptr, "TestProblemDeuteriumToHydrogenRatio = %" FSYM"\n", TestProblemData.DeuteriumToHydrogenRatio);

@@ -221,7 +221,7 @@ int PhotonTestInitialize(FILE *fptr, FILE *Outfptr,
       ret += sscanf(line, "PhotonTestSphereSmoothSurface[%" ISYM"] = %" ISYM, &sphere,
 		    &PhotonTestSphereSmoothSurface[sphere]);
     if (sscanf(line, "PhotonTestSphereSmoothRadius[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "PhotonTestSphereSmoothRadius[%" FSYM"] = %" FSYM, &sphere,
+      ret += sscanf(line, "PhotonTestSphereSmoothRadius[%" ISYM"] = %" FSYM, &sphere,
 		    &PhotonTestSphereSmoothRadius[sphere]);
     if (sscanf(line, "PhotonTestSphereRadius[%" ISYM"]", &sphere) > 0)
       ret += sscanf(line, "PhotonTestSphereRadius[%" ISYM"] = %" FSYM, &sphere,

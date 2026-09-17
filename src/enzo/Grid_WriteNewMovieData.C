@@ -174,14 +174,14 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
     int *RefineByArray = new int[3];
     bool error = FALSE;
     hid_t DataType = H5T_NATIVE_FLOAT;
-    char Amira_fileID[5], Amira_pid[6];
+    char Amira_fileID[16], Amira_pid[16];
   
     staggering stag = (MovieVertexCentered) ? VERTEX_CENTERED : CELL_CENTERED;
     fieldtype field_type = SCALAR;
     for (dim = 0; dim < MAX_DIMENSION; dim++) RefineByArray[dim] = RefineBy;
 
-    sprintf(Amira_pid, "_P%3.3d", MyProcessorNumber);
-    sprintf(Amira_fileID, "%4.4d", NewMovieDumpNumber);
+    sprintf(Amira_pid, "_P%3.3" ISYM, MyProcessorNumber);
+    sprintf(Amira_fileID, "%4.4" ISYM, NewMovieDumpNumber);
 
     strcpy(AmiraFileName, NewMovieName);
     strcat(AmiraFileName, Amira_fileID);

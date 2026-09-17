@@ -334,7 +334,7 @@ int grid::RotatingSphereInitializeGrid(float RotatingSphereNFWMass,
          
          if (line[0] != '#') {
             if (lines_read == 0) {
-               sscanf(line, "%i", &pert_dim);
+               sscanf(line, "%" ISYM, &pert_dim);
                lines_read ++;
                }
 

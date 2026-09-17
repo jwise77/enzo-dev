@@ -66,15 +66,15 @@ int InitializeMovieFile(TopGridData &MetaData, HierarchyEntry &TopGrid)
   int *RefineByArray = new int[3];
   bool error = FALSE;
   hid_t DataType = H5T_NATIVE_FLOAT;
-  char fileID[4], pid[6];
+  char fileID[16], pid[16];
   float root_dx = 1.0 / MetaData.TopGridDims[0];
    
   staggering stag = CELL_CENTERED;
   fieldtype field_type = SCALAR;
   for (dim = 0; dim < MAX_DIMENSION; dim++) RefineByArray[dim] = RefineBy;
  
-  sprintf(pid, "_P%3.3d", MyProcessorNumber);
-  sprintf(fileID, "%4.4d", NewMovieDumpNumber);
+  sprintf(pid, "_P%3.3" ISYM, MyProcessorNumber);
+  sprintf(fileID, "%4.4" ISYM, NewMovieDumpNumber);
  
   strcpy(AmiraFileName, NewMovieName);
   strcat(AmiraFileName, fileID);

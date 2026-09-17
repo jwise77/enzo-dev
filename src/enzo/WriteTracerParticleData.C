@@ -79,7 +79,7 @@ int WriteTracerParticleData(char *basename, int dumpnumber,
   /* Create output filename */
  
   strcpy(name, basename);
-  sprintf(id, "%-d", MyProcessorNumber);  /* create processor # */
+  sprintf(id, "%-" ISYM, MyProcessorNumber);  /* create processor # */
   strcat(name, id);
  
   if (debug)

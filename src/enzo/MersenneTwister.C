@@ -44,7 +44,7 @@ int mt_save(char *fname) {
     fprintf(fptr,"%" ISYM"\n",mt_index);
 
 	for (int i = 0; i < MT_LEN; i++)
-        fprintf(fptr,"%lu\n",mt_buffer[i]);
+        fprintf(fptr,"%llu\n",mt_buffer[i]);
     
     fclose(fptr);
 
@@ -65,7 +65,7 @@ int mt_read(char *fname) {
     
 	for (int i = 0; i < MT_LEN; i++) {
         fgets(line, MAX_LINE_LENGTH, fptr);
-        sscanf(line,"%lu",&mt_buffer[i]);
+        sscanf(line,"%llu",&mt_buffer[i]);
         }
     
     fclose(fptr);

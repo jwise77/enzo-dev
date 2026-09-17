@@ -172,8 +172,7 @@ int ConductionBubbleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
     fprintf(Outfptr, "ConductionBubbleMidpointEntropy = %" FSYM"\n", ConductionBubbleMidpointEntropy);
     fprintf(Outfptr, "ConductionBubbleEntropyGradient = %" FSYM"\n", ConductionBubbleEntropyGradient);
     fprintf(Outfptr, "ConductionBubbleMidpointTemperature = %" FSYM"\n", ConductionBubbleMidpointTemperature);
-    fprintf(Outfptr, "ConductionBubbleCenter = %" PSYM" %" PSYM" %" PSYM"\n", ConductionBubbleCenter[0], ConductionBubbleCenter[1], ConductionBubbleCenter[2],
-		  ConductionBubbleCenter+1,ConductionBubbleCenter+2);
+    fprintf(Outfptr, "ConductionBubbleCenter = %" PSYM" %" PSYM" %" PSYM"\n", ConductionBubbleCenter[0], ConductionBubbleCenter[1], ConductionBubbleCenter[2]);
     fprintf(Outfptr, "TestProblemUseMetallicityField  = %" ISYM"\n", TestProblemData.UseMetallicityField);
     fprintf(Outfptr, "TestProblemInitialMetallicityFraction  = %" FSYM"\n", TestProblemData.MetallicityField_Fraction);
     fprintf(Outfptr, "ConductionBubbleBField = %" FSYM" %" FSYM" %" FSYM"\n",ConductionBubbleInitialUniformBField[0],

@@ -251,14 +251,14 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
   double dtheta = sqrt(omega_package);
   if(n_on_this_level <= 0.0  || omega_package == INFINITY)  {
     fprintf(stdout, "%s: level = %llu\n", __FUNCTION__, level);
-    fprintf(stdout, "%s: 2*(*PP)->level-1 = %llu\n", __FUNCTION__, res*(*PP)->level-1);
-    fprintf(stdout, "%s: 12 * (1 << (2*(*PP)->level)) = %llu\n", __FUNCTION__, 
+    fprintf(stdout, "%s: 2*(*PP)->level-1 = %lu\n", __FUNCTION__, res*(*PP)->level-1);
+    fprintf(stdout, "%s: 12 * (1 << (2*(*PP)->level)) = %lu\n", __FUNCTION__, 
 	    BRP * (1L << (res*(*PP)->level)));
     fprintf(stdout, "%s: Hlevel = %lu\n", __FUNCTION__, Hlevel);
     fprintf(stdout, "%s: Nlevel = %lu\n", __FUNCTION__, Nlevel);
     fprintf(stdout, "%s: n_on_this_level = %lf\n", __FUNCTION__, n_on_this_level);
     ENZO_VFAIL("Computation of the number of pixels failed.\n"
-	       "\t level = %llu\n", (*PP)->level);
+	       "\t level = %ld\n", (long)(*PP)->level);
   }
  
   if (RadiativeTransferAdaptiveTimestep)

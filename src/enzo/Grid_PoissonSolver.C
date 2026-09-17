@@ -734,7 +734,7 @@ int grid::PrintToScreenBoundaries(float *field, char *display, int direction, in
     printf("%s\n", display); 	  
     printf("Grid Edges %g %g %g\n", GridLeftEdge[0], GridLeftEdge[1], GridLeftEdge[2]);
     printf( "\n\n*******Processor # %" ISYM " ********\n", ProcessorNumber);
-    printf( "\n\n*******Displaying Data (Slice in %" ISYM " on cell %" ISYM ") (TopGrid %" ISYM ")  ********\n", direction, slice, isTopGrid() );
+    printf( "\n\n*******Displaying Data (Slice in %" ISYM " on cell %" ISYM ") (TopGrid %d)  ********\n", direction, slice, isTopGrid() );
     
     bool intertemp;
     

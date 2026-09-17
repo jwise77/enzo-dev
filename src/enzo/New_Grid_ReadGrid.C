@@ -186,10 +186,10 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 
       // Read in hydro parameters but set to NULL since these should
       // come from the simulation parameter file.
-      fscanf(fptr, "CourantSafetyNumber    = %*" FSYM"\n", NULL);
-      fscanf(fptr, "PPMFlatteningParameter = %*" ISYM"\n", NULL);
-      fscanf(fptr, "PPMDiffusionParameter  = %*" ISYM"\n", NULL);
-      fscanf(fptr, "PPMSteepeningParameter = %*" ISYM"\n", NULL);
+      fscanf(fptr, "CourantSafetyNumber    = %*s\n");
+      fscanf(fptr, "PPMFlatteningParameter = %*s\n");
+      fscanf(fptr, "PPMDiffusionParameter  = %*s\n");
+      fscanf(fptr, "PPMSteepeningParameter = %*s\n");
     }
 
     /* 3) Read particle info */

@@ -154,9 +154,9 @@ void WriteSingleCube(float * array, int Dims[], char* string, int dNum, int gNum
   int FieldRankOut = 3;
   hsize_t     DimsInv[FieldRankOut];
   
-  char filename[20];
+  char filename[64];
   
-  sprintf(filename, "data111%4.4d.grid%4.4d",dNum,gNum);
+  sprintf(filename, "data111%4.4" ISYM ".grid%4.4" ISYM, dNum, gNum);
   fprintf(stderr,"GPFS WriteCube: %s %s [%" ISYM",%" ISYM",%" ISYM"]\n", string, filename, Dims[0],Dims[1],Dims[2]);
   
 #define floatdcc double  

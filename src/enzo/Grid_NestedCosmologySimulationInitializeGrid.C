@@ -874,7 +874,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	// Read attributes for parallel particle I/O
  
 	file_id = H5Fopen(PPos, H5F_ACC_RDONLY, H5P_DEFAULT);
-	fprintf(stderr, "H5Fopen %s on proc %ld status %ld\n", PPos, MyProcessorNumber, file_id);
+	fprintf(stderr, "H5Fopen %s on proc %" ISYM " status %ld\n", PPos, MyProcessorNumber, file_id);
 	if (io_log) fprintf(log_fptr, "H5Fopen id: %ld\n", file_id);
 	if( file_id == h5_error){ENZO_FAIL("IO Problem");}
  
@@ -978,7 +978,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	    if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	    file_id = H5Fopen(PPos, H5F_ACC_RDWR, H5P_DEFAULT);
-	    fprintf(stderr, "H5Fopen %s on proc %ld status %ld\n", PPos, MyProcessorNumber, file_id);
+	    fprintf(stderr, "H5Fopen %s on proc %" ISYM " status %ld\n", PPos, MyProcessorNumber, file_id);
 	    if (io_log) fprintf(log_fptr, "H5Fopen id: %ld\n", file_id);
 	    if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  
@@ -1080,7 +1080,7 @@ int grid::NestedCosmologySimulationInitializeGrid(
 	      if( h5_status == h5_error ){ENZO_FAIL("IO Problem");}
  
 	      file_id = H5Fopen(PVel, H5F_ACC_RDWR, H5P_DEFAULT);
-	      fprintf(stderr, "H5Fopen %s on proc %ld status %ld\n", PVel, MyProcessorNumber, file_id);
+	      fprintf(stderr, "H5Fopen %s on proc %" ISYM " status %ld\n", PVel, MyProcessorNumber, file_id);
 	      if (io_log) fprintf(log_fptr, "H5Fopen id: %ld\n", file_id);
 	      if( file_id == h5_error ){ENZO_FAIL("IO Problem");}
  

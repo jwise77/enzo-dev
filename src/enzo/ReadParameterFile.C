@@ -254,7 +254,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
                   &ConductionDynamicRebuildMinLevel);
     if (sscanf(line, "RebuildHierarchyCycleSkip[%" ISYM"] =", &int_dummy) == 1) {
       if (int_dummy > MAX_DEPTH_OF_HIERARCHY) {
-	ENZO_VFAIL("Cannot set RebuildHierarchyCycleSkip[%" ISYM"], max hierarchy depth = %" ISYM".\n", int_dummy, MAX_DEPTH_OF_HIERARCHY);
+	ENZO_VFAIL("Cannot set RebuildHierarchyCycleSkip[%" ISYM"], max hierarchy depth = %d.\n", int_dummy, MAX_DEPTH_OF_HIERARCHY);
       }
       ret += sscanf(line, "RebuildHierarchyCycleSkip[%" ISYM"] = %" ISYM,
 		    &int_dummy, &RebuildHierarchyCycleSkip[int_dummy]);
@@ -1278,7 +1278,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     ret += sscanf(line, "EOSCriticalDensity = %" FSYM, &EOSCriticalDensity);
     ret += sscanf(line, "EOSGamma = %" FSYM, &EOSGamma);
     ret += sscanf(line, "UseConstantAcceleration = %" ISYM, &UseConstantAcceleration);
-    ret += sscanf(line, "ConstantAcceleration = %f %f %f", &ConstantAcceleration[0],
+    ret += sscanf(line, "ConstantAcceleration = %" FSYM " %" FSYM " %" FSYM, &ConstantAcceleration[0],
 		  &ConstantAcceleration[1], &ConstantAcceleration[2]);
     ret += sscanf(line, "Mu = %" FSYM, &Mu);
     ret += sscanf(line, "DivBDampingLength = %" FSYM, &DivBDampingLength);
@@ -1328,7 +1328,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     ret += sscanf(line, "MHDCTSlopeLimiter             = %" ISYM, &MHDCTSlopeLimiter);
     ret += sscanf(line, "WriteBoundary          = %" ISYM, &WriteBoundary);
     ret += sscanf(line,"TracerParticlesAddToRestart = %" ISYM,&TracerParticlesAddToRestart);
-    ret += sscanf(line, "IsothermalSoundSpeed = %f", &IsothermalSoundSpeed);
+    ret += sscanf(line, "IsothermalSoundSpeed = %" FSYM, &IsothermalSoundSpeed);
 
     ret += sscanf(line,"CT_AthenaDissipation = %" FSYM,&CT_AthenaDissipation);
     ret += sscanf(line,"MHD_WriteElectric = %" ISYM,&MHD_WriteElectric);
@@ -1375,7 +1375,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 		  ParticleSplitterCenterRegion+2, ParticleSplitterCenterRegion+3);
     ret += sscanf(line, "ResetMagneticField = %" ISYM,
 		  &ResetMagneticField);
-    ret += sscanf(line, "ResetMagneticFieldAmplitude  =  %f %f %f",
+    ret += sscanf(line, "ResetMagneticFieldAmplitude  =  %" FSYM " %" FSYM " %" FSYM,
 		  ResetMagneticFieldAmplitude,
 		  ResetMagneticFieldAmplitude+1,
 		  ResetMagneticFieldAmplitude+2);
@@ -1402,7 +1402,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     ret += sscanf(line, "SmartStarSuperEddingtonAdjustment  = %" ISYM, &SmartStarSuperEddingtonAdjustment);
     ret += sscanf(line, "SmartStarJetVelocity                  = %" FSYM, &SmartStarJetVelocity);
     ret += sscanf(line, "UseGasDrag = %" ISYM, &UseGasDrag);
-    ret += sscanf(line, "GasDragCoefficient = %f", &GasDragCoefficient);
+    ret += sscanf(line, "GasDragCoefficient = %" FSYM, &GasDragCoefficient);
 
     // Parameters for magnetic feedback from supernovae
     ret += sscanf(line, "UseMagneticSupernovaFeedback = %" ISYM, &UseMagneticSupernovaFeedback);

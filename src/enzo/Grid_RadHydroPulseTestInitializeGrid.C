@@ -127,8 +127,8 @@ int grid::RadHydroPulseTestInitializeGrid(float DensityConstant,
     
     if (debug) {
       fprintf(stdout,"RadHydroPulseTestInitializeGrid:\n");
-      printf("        RadPulseDim = %" ISYM"\n",MyProcessorNumber,RadPulseDim);
-      printf("     MaxRadiationDt = %g\n",MyProcessorNumber,MaxRadiationDt);
+      printf("        RadPulseDim = %" ISYM"\n", RadPulseDim);
+      printf("     MaxRadiationDt = %g\n", MaxRadiationDt);
 
       printf("    DensityConstant = %g\n",DensityConstant);    
       printf("         TEConstant = %g\n",TEConstant);    

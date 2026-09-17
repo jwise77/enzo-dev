@@ -686,8 +686,8 @@ int RadiatingShockInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
     fprintf(Outfptr,  "RadiatingShockKineticEnergyFraction = %" FSYM"\n", RadiatingShockKineticEnergyFraction);
 
     fprintf(Outfptr, "RadiatingShockCenterPosition = %" PSYM" %" PSYM" %" PSYM"\n",
-		  RadiatingShockCenterPosition, RadiatingShockCenterPosition+1,
-		  RadiatingShockCenterPosition+2);
+		  RadiatingShockCenterPosition[0], RadiatingShockCenterPosition[1],
+		  RadiatingShockCenterPosition[2]);
 
     fprintf(Outfptr, "RadiatingShockSpreadOverNumZones  = %" PSYM"\n", RadiatingShockSpreadOverNumZones);
 

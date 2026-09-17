@@ -171,7 +171,7 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
 
       if (NumberOfBaryonFields >= MAX_NUMBER_OF_BARYON_FIELDS) {
 	ENZO_VFAIL("NumberOfBaryonFields (%" ISYM ") exceeds "
-	       "MAX_NUMBER_OF_BARYON_FIELDS (%" ISYM").\n", 
+	       "MAX_NUMBER_OF_BARYON_FIELDS (%d).\n", 
 	       NumberOfBaryonFields, MAX_NUMBER_OF_BARYON_FIELDS)
       }
  

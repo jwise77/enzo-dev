@@ -126,7 +126,7 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
     int *RefineByArray = new int[3];
     bool error = FALSE;
     hid_t DataType = H5T_NATIVE_FLOAT;
-    char fileID[5], pid[6];
+    char fileID[16], pid[16];
   
     staggering stag = (MovieVertexCentered) ? VERTEX_CENTERED : CELL_CENTERED;
     fieldtype field_type = SCALAR;
@@ -143,8 +143,8 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
     // previous data
     //    int RestartFileNumber = -1;
 
-    sprintf(pid, "_P%3.3d", MyProcessorNumber);
-    sprintf(fileID, "%4.4d", NewMovieDumpNumber);
+    sprintf(pid, "_P%3.3" ISYM, MyProcessorNumber);
+    sprintf(fileID, "%4.4" ISYM, NewMovieDumpNumber);
     
     strcpy(AmiraFileName, NewMovieName);
     strcat(AmiraFileName, fileID);

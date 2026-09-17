@@ -39,7 +39,7 @@ int grid::CreateParticleTypeGrouping(hid_t ptype_dset,
     herr_t err = 0;
 
     start[0] = 0;
-    char dset_name[22];
+    char dset_name[64];
     char ptype_dset_fullname[255];
     H5Iget_name(ptype_dset, ptype_dset_fullname, 255);
 
@@ -60,7 +60,7 @@ int grid::CreateParticleTypeGrouping(hid_t ptype_dset,
 ENZO_FAIL("Couldn't create reference.");}
             new_dspace = H5Screate_simple(1, TempOne, NULL);
             if(err<0) ENZO_FAIL("Couldn't create new dataspace.");
-            snprintf(dset_name, 22, "AddressParticleType%02d", CurrentParticleType);
+            snprintf(dset_name, sizeof(dset_name), "AddressParticleType%02" ISYM, CurrentParticleType);
             new_dset = H5Dcreate(parent_group, dset_name, H5T_STD_REF_DSETREG, 
                             new_dspace, H5P_DEFAULT);
             if(new_dset < 0) ENZO_FAIL("Couldn't create new dataset.");

@@ -93,7 +93,7 @@ int Group_ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData
  
   char hierarchyname[MAX_LINE_LENGTH], radiationname[MAX_LINE_LENGTH];
   char mtname[MAX_LINE_LENGTH], forcingname[MAX_LINE_LENGTH];
-  char HDF5hierarchyname[MAX_LINE_LENGTH];
+  char HDF5hierarchyname[MAX_LINE_LENGTH * 2];
   // Code shrapnel. See comments below. --Rick
   //  char taskmapname[MAX_LINE_LENGTH];
   char memorymapname[MAX_LINE_LENGTH];
@@ -274,11 +274,11 @@ int Group_ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData
 
   //  if (HierarchyFileInputFormat == 0) {
   if (HierarchyFileInputFormat % 2 == 0) {
-    sprintf(HDF5hierarchyname,"%s.hdf5",hierarchyname);
+    snprintf(HDF5hierarchyname, sizeof(HDF5hierarchyname), "%s.hdf5", hierarchyname);
 
     if (io_log) {
-      char logname[MAX_LINE_LENGTH];
-      sprintf(logname,"%s.in_log",HDF5hierarchyname);
+      char logname[MAX_LINE_LENGTH * 2 + 32];
+      snprintf(logname, sizeof(logname), "%s.in_log", HDF5hierarchyname);
       
       log_fptr = fopen(logname,"w");
     }

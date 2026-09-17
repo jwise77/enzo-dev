@@ -124,8 +124,8 @@ int grid::RadHydroGreyMarshakWaveInitializeGrid(float DensityConstant,
 
     if (debug) {
       printf("RadHydroStreamTestInitializeGrid:\n");
-      printf("       GreyMarshDir = %" ISYM"\n",MyProcessorNumber,GreyMarshDir);
-      printf("     MaxRadiationDt = %g\n",MyProcessorNumber,MaxRadiationDt);
+      printf("       GreyMarshDir = %" ISYM"\n", GreyMarshDir);
+      printf("     MaxRadiationDt = %g\n", MaxRadiationDt);
       
       printf("    DensityConstant = %g\n",DensityConstant);    
       printf("         TEConstant = %g\n",TEConstant);    
