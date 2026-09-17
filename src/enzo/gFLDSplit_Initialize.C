@@ -177,7 +177,6 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
   // if input file present, over-write defaults with module inputs
   FILE *fptr;
   char line[MAX_LINE_LENGTH];
-  int ret;
   char *dummy = new char[MAX_LINE_LENGTH];
   dummy[0] = 0;
 
@@ -190,49 +189,48 @@ int gFLDSplit::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
       // read until out of lines
       while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
-	ret = 0;
-	ret += sscanf(line, "RadHydroESpectrum = %" ISYM, &ESpectrum);
-	ret += sscanf(line, "RadHydroChemistry = %" ISYM, &Nchem);
-	ret += sscanf(line, "RadHydroHFraction = %" FSYM, &HFrac);
-	ret += sscanf(line, "RadHydroModel = %" ISYM, &Model);
-	ret += sscanf(line, "RadHydroMaxDt = %" FSYM, &maxdt);
-	ret += sscanf(line, "RadHydroMinDt = %" FSYM, &mindt);
-	ret += sscanf(line, "RadHydroInitDt = %" FSYM, &initdt);
-	ret += sscanf(line, "RadHydroMaxSubcycles = %" FSYM, &maxsubcycles);
-	ret += sscanf(line, "RadHydroMaxChemSubcycles = %" FSYM, &maxchemsub);
-	ret += sscanf(line, "RadHydroDtNorm = %" FSYM, &dtnorm);
-	ret += sscanf(line, "RadHydroDtGrowth = %" FSYM, &dtgrowth);
-	ret += sscanf(line, "RadHydroDtRadFac = %" FSYM, &dtfac[0]);
-	ret += sscanf(line, "RadHydroDtGasFac = %" FSYM, &dtfac[1]);
-	ret += sscanf(line, "RadHydroDtChemFac = %" FSYM, &dtfac[2]);
-	ret += sscanf(line, "RadiationScaling = %" FSYM, &ErScale);
-	ret += sscanf(line, "EnergyCorrectionScaling = %" FSYM, &ecScale);
-	ret += sscanf(line, "ChemistryScaling = %" FSYM, &NiScale);
-	ret += sscanf(line, "AutomaticScaling = %" ISYM, &autoscale);
-	ret += sscanf(line, "RadHydroTheta = %" FSYM, &theta);
-	ret += sscanf(line, "RadiationBoundaryX0Faces = %" ISYM" %" ISYM, 
+	sscanf(line, "RadHydroESpectrum = %" ISYM, &ESpectrum);
+	sscanf(line, "RadHydroChemistry = %" ISYM, &Nchem);
+	sscanf(line, "RadHydroHFraction = %" FSYM, &HFrac);
+	sscanf(line, "RadHydroModel = %" ISYM, &Model);
+	sscanf(line, "RadHydroMaxDt = %" FSYM, &maxdt);
+	sscanf(line, "RadHydroMinDt = %" FSYM, &mindt);
+	sscanf(line, "RadHydroInitDt = %" FSYM, &initdt);
+	sscanf(line, "RadHydroMaxSubcycles = %" FSYM, &maxsubcycles);
+	sscanf(line, "RadHydroMaxChemSubcycles = %" FSYM, &maxchemsub);
+	sscanf(line, "RadHydroDtNorm = %" FSYM, &dtnorm);
+	sscanf(line, "RadHydroDtGrowth = %" FSYM, &dtgrowth);
+	sscanf(line, "RadHydroDtRadFac = %" FSYM, &dtfac[0]);
+	sscanf(line, "RadHydroDtGasFac = %" FSYM, &dtfac[1]);
+	sscanf(line, "RadHydroDtChemFac = %" FSYM, &dtfac[2]);
+	sscanf(line, "RadiationScaling = %" FSYM, &ErScale);
+	sscanf(line, "EnergyCorrectionScaling = %" FSYM, &ecScale);
+	sscanf(line, "ChemistryScaling = %" FSYM, &NiScale);
+	sscanf(line, "AutomaticScaling = %" ISYM, &autoscale);
+	sscanf(line, "RadHydroTheta = %" FSYM, &theta);
+	sscanf(line, "RadiationBoundaryX0Faces = %" ISYM" %" ISYM, 
 		      BdryType[0], BdryType[0]+1);
 	if (rank > 1) {
-	  ret += sscanf(line, "RadiationBoundaryX1Faces = %" ISYM" %" ISYM,
+	  sscanf(line, "RadiationBoundaryX1Faces = %" ISYM" %" ISYM,
 			BdryType[1], BdryType[1]+1);
 	  if (rank > 2) {
-	    ret += sscanf(line, "RadiationBoundaryX2Faces = %" ISYM" %" ISYM,
+	    sscanf(line, "RadiationBoundaryX2Faces = %" ISYM" %" ISYM,
 			  BdryType[2], BdryType[2]+1);
 	  }
 	}
-	ret += sscanf(line, "RadHydroInitialGuess = %" ISYM, &initial_guess);
-	ret += sscanf(line, "RadHydroKrylovMethod = %" ISYM, &Krylov_method);
-	ret += sscanf(line, "RadHydroSolTolerance = %" FSYM, &sol_tolerance);
-	ret += sscanf(line, "RadHydroMaxMGIters = %i", &sol_maxit);
-	ret += sscanf(line, "RadHydroMGRelaxType = %i", &sol_rlxtype);
-	ret += sscanf(line, "RadHydroMGPreRelax = %i", &sol_npre);
-	ret += sscanf(line, "RadHydroMGPostRelax = %i", &sol_npost);
-	ret += sscanf(line, "EnergyOpacityC0 = %" FSYM, &EnergyOpacityC0);
-	ret += sscanf(line, "EnergyOpacityC1 = %" FSYM, &EnergyOpacityC1);
-	ret += sscanf(line, "EnergyOpacityC2 = %" FSYM, &EnergyOpacityC2);
-	ret += sscanf(line, "NGammaDot = %" FSYM, &NGammaDot);
-	ret += sscanf(line, "EtaRadius = %" FSYM, &EtaRadius);
-	ret += sscanf(line, "EtaCenter = %" FSYM" %" FSYM" %" FSYM, 
+	sscanf(line, "RadHydroInitialGuess = %" ISYM, &initial_guess);
+	sscanf(line, "RadHydroKrylovMethod = %" ISYM, &Krylov_method);
+	sscanf(line, "RadHydroSolTolerance = %" FSYM, &sol_tolerance);
+	sscanf(line, "RadHydroMaxMGIters = %i", &sol_maxit);
+	sscanf(line, "RadHydroMGRelaxType = %i", &sol_rlxtype);
+	sscanf(line, "RadHydroMGPreRelax = %i", &sol_npre);
+	sscanf(line, "RadHydroMGPostRelax = %i", &sol_npost);
+	sscanf(line, "EnergyOpacityC0 = %" FSYM, &EnergyOpacityC0);
+	sscanf(line, "EnergyOpacityC1 = %" FSYM, &EnergyOpacityC1);
+	sscanf(line, "EnergyOpacityC2 = %" FSYM, &EnergyOpacityC2);
+	sscanf(line, "NGammaDot = %" FSYM, &NGammaDot);
+	sscanf(line, "EtaRadius = %" FSYM, &EtaRadius);
+	sscanf(line, "EtaCenter = %" FSYM" %" FSYM" %" FSYM, 
 		      &(EtaCenter[0]), &(EtaCenter[1]), &(EtaCenter[2]));
 	
       }  // end loop over file lines

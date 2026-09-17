@@ -32,7 +32,6 @@ int grid::PhotonTestRestartInitialize(int level, int *NumberOfCellsSet)
   /* declarations */
  
   int dim;
-  FLOAT DomainWidth[MAX_DIMENSION];
 
   float DensityUnits = 1.0, LengthUnits = 1.0, TemperatureUnits = 1.0, TimeUnits = 1.0,
     VelocityUnits = 1.0;
@@ -42,7 +41,7 @@ int grid::PhotonTestRestartInitialize(int level, int *NumberOfCellsSet)
   //printf("Time Units = %g \n",TimeUnits);
 
   for (dim = 0; dim < GridRank; dim++)
-    DomainWidth[dim] = DomainRightEdge[dim] - DomainLeftEdge[dim];
+    ;
  
   /* Find fields: density, total energy, velocity1-3. */
  

@@ -275,14 +275,12 @@ int ActiveParticleType_CenOstriker::EvaluateFeedback
   float *gasenergy = thisGrid->BaryonField[data.GENum];
   float *metals = thisGrid->BaryonField[data.MetalNum];
   float dt = thisGrid->dtFixed;
-  float dx = float(thisGrid->CellWidth[0][0]);
 
   float xv1, xv2, ParticleBirthTime, ParticleDynamicalTimeAtBirth,
     ParticleMass, ParticleInitialMass, ParticleMetalFraction, 
     StarFormationDensityThisTimestep, SupernovaEnergyThisTimestep, 
     DensityToAddToEachCell, DensityRatio;
 
-  float StellarMassFormedThisTimestepOnThisGrid = 0;
 
   FLOAT xpos, ypos, zpos;
   float xvel, yvel, zvel;
@@ -393,8 +391,6 @@ int ActiveParticleType_CenOstriker::EvaluateFeedback
 
     // Record amount of star formation in this grid
 
-    StellarMassFormedThisTimestepOnThisGrid += 
-      StarFormationDensityThisTimestep * dt * POW(dx,3);
 
     // Calculate supernova energy for this timestep
 

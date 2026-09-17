@@ -712,7 +712,7 @@ void compile_group_catalogue(FOFData &AllVars)
 
 void find_minids(FOFData &AllVars)
 {
-  int n, pp, len, sum = 0;
+  int n, pp, len;
 
   for (n = 1; n <= AllVars.Nlocal; n++)
     if (AllVars.Head[n] == n) {
@@ -738,7 +738,6 @@ void find_minids(FOFData &AllVars)
 	AllVars.P[pp].GrLen = AllVars.P[n].GrLen;
       }
 
-      sum += len;
     } // ENDIF
 }
 
@@ -1008,10 +1007,8 @@ void exchange_shadow(FOFData &AllVars, int TopGridResolution, bool SmoothData)
 void link_local_slab(FOFData &AllVars)
 {
   int  nx,ny,nz;
-  int  iter;
   int  count;
 
-  iter = 1;
 
   for (AllVars.GridCorner[0] = 0, nx = 0; nx < AllVars.Nx; 
        AllVars.GridCorner[0] += (AllVars.Grid - 2.0) / AllVars.Grid * 
@@ -1097,7 +1094,6 @@ void init_coarse_grid(FOFData &AllVars)
 
 void marking(FOFData &AllVars)
 {
-  float posold[3];
   int   i,k,iter,idone;
 
 //  if (debug)
@@ -1114,7 +1110,6 @@ void marking(FOFData &AllVars)
 	  fabs(AllVars.P[i-1].Pos[2] - AllVars.P[i].Pos[2]) < 1e-3*AllVars.Epsilon) {
 
 	for (k = 0; k < 3; k++) {
-	  posold[k]= AllVars.P[i].Pos[k];
 	  AllVars.P[i].Pos[k] += (0.001*AllVars.Epsilon)*(2*drand48()-1);
 	}
 	idone++;

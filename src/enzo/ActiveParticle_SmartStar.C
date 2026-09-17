@@ -47,8 +47,8 @@ float ActiveParticleType_SmartStar::RadiationLifetime = FLOAT_UNDEFINED;
 int ActiveParticleType_SmartStar::FeedbackDistRadius = INT_UNDEFINED;
 int ActiveParticleType_SmartStar::FeedbackDistTotalCells = INT_UNDEFINED;
 int ActiveParticleType_SmartStar::FeedbackDistCellStep = INT_UNDEFINED;
-static double JeansLength(float T, float dens, float density_units);
-static void UpdateAccretionRadius(ActiveParticleType*  ThisParticle, float newmass,
+static inline double JeansLength(float T, float dens, float density_units);
+static inline void UpdateAccretionRadius(ActiveParticleType*  ThisParticle, float newmass,
 				  FLOAT AccretionRadius, FLOAT dx, float avgtemp,
 				  float mass_units, float length_units);
 static float GetStellarRadius(float cmass, float accrate);
@@ -121,18 +121,17 @@ int ActiveParticleType_SmartStar::EvaluateFormation
   SmartStarGrid *thisGrid =
     static_cast<SmartStarGrid *>(thisgrid_orig);
 
-  int i,j,k,index,method,MassRefinementMethod;
+  int i, j, k, index, method;
  
   float *density = thisGrid->BaryonField[data.DensNum];
 
   float* velx = thisGrid->BaryonField[data.Vel1Num];
   float* vely = thisGrid->BaryonField[data.Vel2Num];
   float* velz = thisGrid->BaryonField[data.Vel3Num];
-  float div = 0.0, divx = 0.0, divy = 0.0, divz = 0.0;
-  float mass = 0.0;
+  float divx = 0.0, divy = 0.0, divz = 0.0;
   float JeansDensityUnitConversion = (Gamma*pi*kboltz) / (Mu*mh*GravConst);
   float CellTemperature = 0;
-  float JeansDensity = 0, JeansMass = 0;
+  float JeansDensity = 0;
   float DensityThreshold = ActiveParticleDensityThreshold*mh/data.DensityUnits;   //in code density
   float ExtraDensity = 0;
   float TotalMass = 0.0;
@@ -140,11 +139,10 @@ int ActiveParticleType_SmartStar::EvaluateFormation
                           thisGrid->GridDimension[1],
                           thisGrid->GridDimension[2]};
   float ConverttoSolar = data.DensityUnits*POW(data.LengthUnits, 3.0)/SolarMass;
-  FLOAT dx = thisGrid->CellWidth[0][0], centralpos[3];
+  FLOAT dx = thisGrid->CellWidth[0][0];
 
   bool HasMetalField = (data.MetalNum != -1 || data.ColourNum != -1);
   bool JeansRefinement = false;
-  bool MassRefinement = false;
 #if CACLDIRECTPOTENTIAL
   float *PotentialField  = NULL;
 #else
@@ -155,8 +153,6 @@ int ActiveParticleType_SmartStar::EvaluateFormation
   // determine refinement criteria
   for (method = 0; method < MAX_FLAGGING_METHODS; method++) {
     if (CellFlaggingMethod[method] == 2) {
-      MassRefinement = true;
-      MassRefinementMethod = method;
     }
     if (CellFlaggingMethod[method] == 6)
       JeansRefinement = true;
@@ -165,7 +161,7 @@ int ActiveParticleType_SmartStar::EvaluateFormation
   fprintf(stdout, "%s: Right half thinking of creating a SmartSink particle\n", __FUNCTION__); fflush(stdout);
 #endif
 #if MASSTHRESHOLDCHECK
-  JeansMass = thisGrid->CalculateJeansMass(data.DensNum, data.Temperature, data.DensityUnits);  //In Msolar
+  thisGrid->CalculateJeansMass(data.DensNum, data.Temperature, data.DensityUnits);  //In Msolar
 #endif
 
   for (k = thisGrid->GridStartIndex[2]; k <= thisGrid->GridEndIndex[2]; k++) {
@@ -204,7 +200,6 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	printf("JeansDensity = %g\t APThreshold = %g\n", JeansDensity*data.DensityUnits/mh, ActiveParticleDensityThreshold);
 #endif
 
-	mass = density[index]*dx*dx*dx;
 #if SSDEBUG
 	//fprintf(stdout, "%s: Excellent! Density threshold exceeeded - density = %g cm^-3\n",
 	//		__FUNCTION__, density[index]*data.DensityUnits/mh);
@@ -217,20 +212,15 @@ int ActiveParticleType_SmartStar::EvaluateFormation
 	  divx = velx[index + offset[0]] - velx[index];
 	  divy = vely[index + offset[1]] - vely[index];
 	  divz = velz[index + offset[2]] - velz[index];
-	  div = divx + divy + divz;
 	} else {
 	  divx = velx[index + offset[0]] - velx[index - offset[0]];
 	  divy = vely[index + offset[1]] - vely[index - offset[1]];
 	  divz = velz[index + offset[2]] - velz[index - offset[2]];
-	  div = divx + divy + divz;
 	}
 	/* All three components must be negative to pass the test */
 	if (divx > 0.0 || divy > 0.0 || divz > 0.0) continue;
 	/* We now need to define a control volume - this is the region within 
 	   an accretion radius of the cell identified */
-	centralpos[0] = thisGrid->CellLeftEdge[0][i] + 0.5*thisGrid->CellWidth[0][i];
-	centralpos[1] = thisGrid->CellLeftEdge[1][j] + 0.5*thisGrid->CellWidth[1][j];
-	centralpos[2] = thisGrid->CellLeftEdge[2][k] + 0.5*thisGrid->CellWidth[2][k];
 	
 #if COOLING_TIME
 	// 4. t_cool < t_freefall (skip if T > 11000 K)
@@ -850,7 +840,7 @@ bool ActiveParticleType_SmartStar::IsARadiationSource(FLOAT Time)
  * Calculate the Jeans Length of a gas cell and return in cgs 
 */
 
-static double JeansLength(float T, float dens, float density_units)
+static inline double JeansLength(float T, float dens, float density_units)
 {
   float jeans_length = 0.0;
 
@@ -863,7 +853,7 @@ static double JeansLength(float T, float dens, float density_units)
  * The accretion radius is updated as mass is accreted. 
  * The accretion radius is to the gravitational radius of the star.
  */
-static void UpdateAccretionRadius(ActiveParticleType*  ThisParticle, float newmass,
+static inline void UpdateAccretionRadius(ActiveParticleType*  ThisParticle, float newmass,
 				  FLOAT OldAccretionRadius, FLOAT dx, float avgtemp,
 				  float mass_units, float length_units)
 {

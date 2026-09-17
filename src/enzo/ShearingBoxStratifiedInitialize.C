@@ -84,20 +84,18 @@ int ShearingBoxStratifiedInitialize (FILE *fptr, FILE *Outfptr,
   int InitialMagneticFieldConfiguration=0;
   int RefineAtStart=1;
 
-  int ret;
 
   
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
 /* read parameters */
-    ret += sscanf(line, "ShearingBoxRefineAtStart = %" ISYM, &RefineAtStart); 
-    ret += sscanf(line, "ShearingBoxThermalMagneticRatio= %" FSYM, &ThermalMagneticRatio);
-    ret += sscanf(line, "ShearingBoxFluctuationAmplitudeFraction = %" FSYM, &FluctuationAmplitudeFraction);
-    ret += sscanf(line, "ShearingBoxGeometry = %" FSYM, &ShearingGeometry);  
-    ret += sscanf(line, "ShearingBoxInitialMagneticFieldConfiguration = %" ISYM, &InitialMagneticFieldConfiguration);  
+    sscanf(line, "ShearingBoxRefineAtStart = %" ISYM, &RefineAtStart); 
+    sscanf(line, "ShearingBoxThermalMagneticRatio= %" FSYM, &ThermalMagneticRatio);
+    sscanf(line, "ShearingBoxFluctuationAmplitudeFraction = %" FSYM, &FluctuationAmplitudeFraction);
+    sscanf(line, "ShearingBoxGeometry = %" FSYM, &ShearingGeometry);  
+    sscanf(line, "ShearingBoxInitialMagneticFieldConfiguration = %" ISYM, &InitialMagneticFieldConfiguration);  
  
   } 
  

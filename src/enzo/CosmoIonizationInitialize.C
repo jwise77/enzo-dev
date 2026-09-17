@@ -70,7 +70,6 @@ int CosmoIonizationInitialize(FILE *fptr, FILE *Outfptr,
  
   // local declarations
   char  line[MAX_LINE_LENGTH];
-  int ret;
  
   // Setup and parameters:
   float RadHydroX0Velocity           = 0.0;
@@ -90,28 +89,27 @@ int CosmoIonizationInitialize(FILE *fptr, FILE *Outfptr,
     FILE *RHfptr;
     if ((RHfptr = fopen(MetaData.RadHydroParameterFname, "r")) != NULL) {
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
-	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "RadHydroVelocity = %" FSYM" %" FSYM" %" FSYM,
+	sscanf(line, "RadHydroVelocity = %" FSYM" %" FSYM" %" FSYM,
 		      &RadHydroX0Velocity, &RadHydroX1Velocity, 
 		      &RadHydroX2Velocity);
-	ret += sscanf(line, "RadHydroChemistry = %" ISYM, 
+	sscanf(line, "RadHydroChemistry = %" ISYM, 
 		      &RadHydroChemistry);
-	ret += sscanf(line, "RadHydroTemperature = %" FSYM, 
+	sscanf(line, "RadHydroTemperature = %" FSYM, 
 		      &RadHydroTemperature);
-	ret += sscanf(line, "RadHydroRadiationEnergy = %" FSYM, 
+	sscanf(line, "RadHydroRadiationEnergy = %" FSYM, 
 		      &RadHydroRadiationEnergy);
-	ret += sscanf(line, "RadHydroInitialFractionHII = %" FSYM, 
+	sscanf(line, "RadHydroInitialFractionHII = %" FSYM, 
 		      &RadHydroInitialFractionHII);
-	ret += sscanf(line, "RadHydroHFraction = %" FSYM, 
+	sscanf(line, "RadHydroHFraction = %" FSYM, 
 		      &RadHydroHydrogenMassFraction);
 	if ((RadHydroChemistry == 3) || (MultiSpecies == 1)) {
-	  ret += sscanf(line, "RadHydroInitialFractionHeII = %" FSYM, 
+	  sscanf(line, "RadHydroInitialFractionHeII = %" FSYM, 
 			&RadHydroInitialFractionHeII);
-	  ret += sscanf(line, "RadHydroInitialFractionHeIII = %" FSYM, 
+	  sscanf(line, "RadHydroInitialFractionHeIII = %" FSYM, 
 			&RadHydroInitialFractionHeIII);
 	}
-	ret += sscanf(line, "RadHydroOmegaBaryonNow = %" FSYM, 
+	sscanf(line, "RadHydroOmegaBaryonNow = %" FSYM, 
 		      &RadHydroOmegaBaryonNow);
 
       } // end input from parameter file

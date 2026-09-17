@@ -51,13 +51,13 @@ int ReadIntFile(char *name, int Rank, int Dim[], int StartIndex[],
  
   hid_t       file_id, dset_id, attr_id;
   hid_t       file_dsp_id, mem_dsp_id, attr_dsp_id;
-  hid_t file_type_id, mem_type_id;
+  hid_t mem_type_id;
  
   hsize_t     xfer_size;
   hsize_t     Slab_Dims[4];
   int         Slab_Rank;
   hsize_t     mem_stride, mem_count, mem_block;
-  hsize_t     file_stride[4], file_count[4], file_block[4];
+  hsize_t file_stride[4], file_count[4];
   hsize_t     slab_stride[4], slab_count[4], slab_block[4];
   hsize_t     attr_count;
  
@@ -117,12 +117,10 @@ int ReadIntFile(char *name, int Rank, int Dim[], int StartIndex[],
  
     case 4:
       mem_type_id = HDF5_INT;
-      file_type_id = HDF5_FILE_INT;
       break;
  
     default:
       mem_type_id = HDF5_INT;
-      file_type_id = HDF5_FILE_INT;
   }
  
   // Error check name
@@ -396,12 +394,10 @@ int ReadIntFile(char *name, int Rank, int Dim[], int StartIndex[],
  
       case 4:
         mem_type_id = HDF5_INT;
-        file_type_id = HDF5_FILE_INT;
         break;
  
       default:
         mem_type_id = HDF5_INT;
-        file_type_id = HDF5_FILE_INT;
  
     }
  
@@ -429,14 +425,12 @@ int ReadIntFile(char *name, int Rank, int Dim[], int StartIndex[],
     file_stride[0] = 1;      // contiguous elements
     file_count[0] = 1;       // one component per call
     file_offset[0] = Part;   // component Part of Npart
-    file_block[0] = 1;       // single element blocks
  
     for ( dim = 1; dim < Slab_Rank; dim++ )
     {
       file_stride[dim] = 1;                   // contiguous elements
       file_count[dim] = TempIntArray[dim-1];  // field dimensions
       file_offset[dim] = 0;                   // complete field, no offset
-      file_block[dim] = 1;                    // single element blocks
     }
  
     file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);

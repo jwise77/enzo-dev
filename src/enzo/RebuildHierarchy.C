@@ -131,12 +131,11 @@ int RebuildHierarchy(TopGridData *MetaData,
   long_int ncells;
   int i, j, k, grids, grids2, subgrids, MoveParticles;
   int TotalFlaggedCells, FlaggedGrids;
-  FLOAT ZeroVector[MAX_DIMENSION];
   LevelHierarchyEntry *Temp;
   HierarchyEntry *GridHierarchyPointer[MAX_NUMBER_OF_SUBGRIDS];
  
   for (i = 0; i < MAX_DIMENSION; i++)
-    ZeroVector[i] = 0;
+    ;
 
   if (_first) {
     for (i = 0; i < 16; i++)

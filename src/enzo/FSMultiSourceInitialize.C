@@ -56,7 +56,6 @@ int FSMultiSourceInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
   // local declarations
   char line[MAX_LINE_LENGTH];
-  int ret;
 
   // Setup and parameters:
   float Density              = 10.0;
@@ -71,13 +70,12 @@ int FSMultiSourceInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
     FILE *RHfptr;
     if ((RHfptr = fopen(MetaData.RadHydroParameterFname, "r")) != NULL) {
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
-	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "FSProbVelocity = %" FSYM" %" FSYM" %" FSYM,
+	sscanf(line, "FSProbVelocity = %" FSYM" %" FSYM" %" FSYM,
 		      &X0Velocity, &X1Velocity, &X2Velocity);
-	ret += sscanf(line, "FSProbDensity = %" FSYM, &Density);
-	ret += sscanf(line, "FSProbTEnergy = %" FSYM, &TEnergy);
-	ret += sscanf(line, "FSProbRadiationEnergy = %" FSYM, 
+	sscanf(line, "FSProbDensity = %" FSYM, &Density);
+	sscanf(line, "FSProbTEnergy = %" FSYM, &TEnergy);
+	sscanf(line, "FSProbRadiationEnergy = %" FSYM, 
 		      &RadiationEnergy);
       } // end input from parameter file
       fclose(RHfptr);

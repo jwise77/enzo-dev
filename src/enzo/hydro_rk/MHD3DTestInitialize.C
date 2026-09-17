@@ -65,7 +65,7 @@ int MHD3DTestInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int ret, level, i;
+  int level, i;
 
   /* set default parameters */
 
@@ -83,36 +83,35 @@ int MHD3DTestInitialize(FILE *fptr, FILE *Outfptr,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     /* read parameters */
-    ret += sscanf(line, "RefineAtStart = %" ISYM, 
+    sscanf(line, "RefineAtStart = %" ISYM, 
 		  &RefineAtStart);
-    ret += sscanf(line, "LeftVelocityX = %" FSYM,
+    sscanf(line, "LeftVelocityX = %" FSYM,
 		  &vxl);
-    ret += sscanf(line, "LeftVelocityY = %" FSYM,
+    sscanf(line, "LeftVelocityY = %" FSYM,
 		  &vyl);
-    ret += sscanf(line, "LeftPressure = %" FSYM, 
+    sscanf(line, "LeftPressure = %" FSYM, 
 		  &pl);
-    ret += sscanf(line, "LeftDensity = %" FSYM, 
+    sscanf(line, "LeftDensity = %" FSYM, 
 		  &rhol);
-    ret += sscanf(line, "LeftBx = %" FSYM,
+    sscanf(line, "LeftBx = %" FSYM,
 		  &Bxl);
-    ret += sscanf(line, "LeftBy = %" FSYM,
+    sscanf(line, "LeftBy = %" FSYM,
 		  &Byl);
-    ret += sscanf(line, "RightVelocityX = %" FSYM, 
+    sscanf(line, "RightVelocityX = %" FSYM, 
 		  &vxu);
-    ret += sscanf(line, "RightVelocityY = %" FSYM, 
+    sscanf(line, "RightVelocityY = %" FSYM, 
 		  &vyu);
-    ret += sscanf(line, "RightPressure = %" FSYM, 
+    sscanf(line, "RightPressure = %" FSYM, 
 		  &pu);
-    ret += sscanf(line, "RightDensity = %" FSYM,
+    sscanf(line, "RightDensity = %" FSYM,
                   &rhou);
-    ret += sscanf(line, "RightBx = %" FSYM,
+    sscanf(line, "RightBx = %" FSYM,
 		  &Bxu);
-    ret += sscanf(line, "RightBy = %" FSYM,
+    sscanf(line, "RightBy = %" FSYM,
 		  &Byu);
-    ret += sscanf(line, "MHD3DProblemType = %" ISYM,
+    sscanf(line, "MHD3DProblemType = %" ISYM,
 		  &MHD3DProblemType);
 
   } // end input from parameter file

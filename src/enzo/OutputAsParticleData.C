@@ -67,7 +67,7 @@ int OutputAsParticleData(TopGridData &MetaData,
   FILE *log_fptr;
  
   hid_t       file_id, dset_id;
-  hid_t       int_type_id, float_type_id, FLOAT_type_id;
+  hid_t float_type_id;
   hid_t       file_type_id, FILE_type_id;
   hid_t       file_dsp_id, mem_dsp_id;
  
@@ -76,8 +76,8 @@ int OutputAsParticleData(TopGridData &MetaData,
  
   hsize_t     Slab_Dims[2];
   int         Slab_Rank;
-  hsize_t     mem_stride, mem_count, mem_block;
-  hsize_t     file_stride[2], file_count[2], file_block[2];
+  hsize_t mem_stride, mem_count;
+  hsize_t file_stride[2], file_count[2];
  
   hsize_t    mem_offset;
   hsize_t    file_offset[2];
@@ -87,7 +87,6 @@ int OutputAsParticleData(TopGridData &MetaData,
   int         io_log = 1;
  
  
-  int_type_id = HDF5_INT;
  
   int ii = sizeof(float32);
  
@@ -116,17 +115,14 @@ int OutputAsParticleData(TopGridData &MetaData,
   {
  
     case 4:
-      FLOAT_type_id = HDF5_R4;
       FILE_type_id = HDF5_FILE_R4;
       break;
  
     case 8:
-      FLOAT_type_id = HDF5_R8;
       FILE_type_id = HDF5_FILE_R8;
       break;
  
     case 16:
-      FLOAT_type_id = HDF5_R16;
       FILE_type_id = H5Tcopy(HDF5_FILE_B8);
                      H5Tset_size(FILE_type_id,16);
       break;
@@ -360,14 +356,12 @@ int OutputAsParticleData(TopGridData &MetaData,
       file_stride[0] = 1;      // contiguous elements
       file_count[0] = 1;       // one component per call
       file_offset[0] = 0;      // component Part of Npart
-      file_block[0] = 1;       // single element blocks
  
 // Data in memory is considered 1D, stride 1, with zero offset
  
       mem_stride = 1;            // contiguous elements
       mem_count = Slab_Dims[1];  // number of elements in field
       mem_offset = 0;            // zero offset in buffer
-      mem_block = 1;             // single element blocks
  
 // 1D memory model
  
@@ -408,7 +402,6 @@ int OutputAsParticleData(TopGridData &MetaData,
         file_stride[1] = 1;
         file_count[1] = TotalNumberOfParticles[i];
         file_offset[1] = 0;
-        file_block[1] = 1;
  
         file_offset[0] = j;
  
@@ -486,7 +479,6 @@ int OutputAsParticleData(TopGridData &MetaData,
         file_stride[1] = 1;
         file_count[1] = TotalNumberOfParticles[i];
         file_offset[1] = 0;
-        file_block[1] = 1;
  
         file_offset[0] = j;
  
@@ -562,7 +554,6 @@ int OutputAsParticleData(TopGridData &MetaData,
       file_stride[1] = 1;
       file_count[1] = TotalNumberOfParticles[i];
       file_offset[1] = 0;
-      file_block[1] = 1;
  
       file_offset[0] = 0;
  
@@ -620,7 +611,6 @@ int OutputAsParticleData(TopGridData &MetaData,
         file_stride[1] = 1;
         file_count[1] = TotalNumberOfParticles[i];
         file_offset[1] = 0;
-        file_block[1] = 1;
  
         file_offset[0] = j;
  
@@ -712,7 +702,6 @@ int OutputAsParticleData(TopGridData &MetaData,
       file_stride[1] = 1;
       file_count[1] = TotalNumberOfParticles[i];
       file_offset[1] = 0;
-      file_block[1] = 1;
  
       file_offset[0] = 0;
  

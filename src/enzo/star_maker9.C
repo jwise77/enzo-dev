@@ -73,7 +73,7 @@ int star_maker9(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 		float *temp, float *gamma, float *mu, int *nproc, int *nstar)
 {
 
-  int i, j, k, index, ii, n, cc, nsinks, closest;
+  int i, j, k, index, ii, n, cc, nsinks;
   int           xo, yo, zo;
 #define MAX_SUPERCELL_NUMBER 1000
   float densthresh, ugrid, vgrid, wgrid;
@@ -155,7 +155,6 @@ int star_maker9(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 		/* If sink is within 5 cells of the closest one, then add to it */
 		if (dist2 < POW(BigStarSeparation,2) && dist2 < nearestdx2) {
 		  nearestdx2 = dist2;
-		  closest = n;		  
 		}
 
 	      } // ENDFOR old particles

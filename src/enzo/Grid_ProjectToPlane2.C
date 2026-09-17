@@ -156,7 +156,6 @@ int grid::ProjectToPlane2(FLOAT ProjectedFieldLeftEdge[],
      dimension). */
 
   float CellLength = CellWidth[ProjectionDimension][0];
-  double CellVolume;
 
   /* Set the Conversion factors for Density and X-rays.  If using comoving
      coordinates use solar masses and Mpc as the intrinsic units. 
@@ -190,7 +189,6 @@ int grid::ProjectToPlane2(FLOAT ProjectedFieldLeftEdge[],
 			  *double(LengthUnits)/Mpc_cm);
   TempXrayConversion = XrayConversion;
   LuminosityConversion *= LengthUnits;
-  CellVolume = pow(double(CellLength) * double(LengthUnits), 3);
   //LuminosityConversion = float(1e-40*CellVolume);
 
   /* Set some required numbers for the FORTRAN call. */
@@ -401,19 +399,14 @@ int grid::ProjectToPlane2(FLOAT ProjectedFieldLeftEdge[],
 
     const float t_star = 0.068;  // Energy difference between hyperfine levels
     const float A_em = 2.85e-15; // Spont. emission rate [/s]
-    float nu0, hz, prefactor, Tcmb, high_dt;
+    float Tcmb, high_dt;
 
     // 21 cm redshifted to box redshift [Hz]
-    nu0 = 1.4204e9 / (1 + CurrentRedshift);
-    hz = 3.24044e-18 * HubbleConstantNow * 
-      sqrt(OmegaMatterNow * pow(1+CurrentRedshift, 3) + OmegaLambdaNow);
     Tcmb = 2.723*(1+CurrentRedshift);
     high_dt = 1.14e5 /
       sqrt(OmegaMatterNow * HubbleConstantNow * HubbleConstantNow / 0.147) *
       pow((1 + CurrentRedshift)/11, -2.5) * dom;
 
-    prefactor = t_star * CellLength * LengthUnits * dom *
-      (3 * (clight*clight) * A_em) / (32 * pi * nu0 * nu0);
 
     for (i = 0; i < size; i++) {
 

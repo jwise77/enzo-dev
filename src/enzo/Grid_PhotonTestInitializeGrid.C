@@ -374,13 +374,10 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
   float VelocityKep = 0;
   float VelocitySound[MAX_SPHERES];
   double SphereMass, SphereCoreMass, SphereCoreDens;
-  float alpha, beta, theta;
-  float Scale_Factor[MAX_SPHERES];
 
   /* Pre-compute cloud properties before looping over mesh */
 
   for (sphere = 0; sphere < NumberOfSpheres; sphere++) {
-    Scale_Factor[sphere] = SphereCutOff[sphere] / SphereRadius[sphere];
     HydrostaticTemperature[sphere] = (2*pi * GravConst * mh) / 
       (3.0*kboltz) * (SphereDensity[sphere] * DensityUnits) * 
       pow(SphereRadius[sphere] * LengthUnits, 2.0);
@@ -499,32 +496,11 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 
 	    /* Compute Cartesian coordinates for rotational properties */
 
-            FLOAT xpos, ypos, zpos, drad;
+            FLOAT xpos, ypos, zpos;
 
 	    xpos = x-SpherePosition[sphere][0] - (dim == 1 ? 0.5*CellWidth[0][0] : 0.0);
 	    ypos = y-SpherePosition[sphere][1] - (dim == 2 ? 0.5*CellWidth[1][0] : 0.0);
 	    zpos = z-SpherePosition[sphere][2] - (dim == 3 ? 0.5*CellWidth[2][0] : 0.0);
-	    drad = sqrt(xpos*xpos + ypos*ypos + zpos*zpos);
-	    alpha = 2*pi*(FLOAT(rand())/FLOAT(RAND_MAX));
-	    beta = (pi/2)*(((2*FLOAT(rand()))/FLOAT(RAND_MAX)) - 1);
-
-	    /* Compute spherical coordinate theta */
-
-	    if (xpos != 0) {
-	      if (xpos > 0 && ypos >= 0)
-		theta = atan(ypos/xpos);
-	      else if (xpos < 0 && ypos >= 0)
-		theta = pi + atan(ypos/xpos);
-	      else if (xpos < 0 && ypos < 0)
-		theta = pi + atan(ypos/xpos);
-	      else if (xpos > 0 && ypos < 0)
-		theta = 2*pi + atan(ypos/xpos);
-             } else if (xpos == 0 && ypos > 0)
-	      theta = pi / 2.0;
-	    else if (xpos == 0 && ypos < 0)
-	      theta = (3*pi) / 2.0;
-	    else
-	      theta = 0.0;
 
 	    // Find out which shell the cell is in
 	    a = ph_Ang(SphereAng1[sphere],SphereAng2[sphere],SphereRadius[sphere],r);
@@ -598,13 +574,11 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 	    if (SphereType[sphere] == 6) {
 
 	      const float DensitySlope = 9.0;
-	      double M_ej, E_ej, r_max, v_max, BlastTime, v_core, normalization,
-		speed;
+	      double M_ej, E_ej, v_max, BlastTime, v_core, normalization, speed;
 
 	      M_ej = SphereDensity[sphere] * (4.0*pi/3.0) * 
 		POW(SphereRadius[sphere]*LengthUnits, 3.0) * DensityUnits;
 	      E_ej = M_ej * kboltz * SphereTemperature[sphere] / (mh*mu);
-	      r_max = LengthUnits * SphereRadius[sphere];
 
 	      // Temperature parameter is a proxy for total energy
 	      // (convert to velocity)
@@ -672,7 +646,6 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 		xpos1 = xpos - zheight*SphereVelocity[sphere][0];
 		ypos1 = ypos - zheight*SphereVelocity[sphere][1];
 		zpos1 = zpos - zheight*SphereVelocity[sphere][2];
-		drad = sqrt(xpos1*xpos1 + ypos1*ypos1 + zpos1*zpos1);
 
 		/* If we're above the disk, then exit. */
 

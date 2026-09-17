@@ -126,12 +126,6 @@ int grid::RotatingSphereInitializeGrid(float RotatingSphereNFWMass,
       fflush(stdout);
       }
  
-   // Figure out grid quantities and how to access fields 
-   int size = 1;
-
-   for (int dim = 0; dim < GridRank; dim++)
-      size *= GridDimension[dim];
-
    int DensNum, GENum, TENum, Vel1Num, Vel2Num, Vel3Num;
    int DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum, HMNum, H2INum, H2IINum,
       DINum, DIINum, HDINum, MetalNum;
@@ -141,8 +135,6 @@ int grid::RotatingSphereInitializeGrid(float RotatingSphereNFWMass,
       ENZO_FAIL("Error in IdentifyPhysicalQuantities.\n");
       }
 
-   int MetallicityField = FALSE;
-
    if (MultiSpecies) {
       if (IdentifySpeciesFields(DeNum, HINum, HIINum, HeINum, HeIINum, HeIIINum,
                       HMNum, H2INum, H2IINum, DINum, DIINum, HDINum) == FAIL) {
@@ -150,10 +142,7 @@ int grid::RotatingSphereInitializeGrid(float RotatingSphereNFWMass,
          }
       }
 
-   if ((MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields))
-         != -1)
-      MetallicityField = TRUE;
-   else
+   if ((MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields)) == -1)
       MetalNum = 0;
 
    // Get the units

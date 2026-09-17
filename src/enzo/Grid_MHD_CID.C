@@ -73,12 +73,10 @@ int grid::MHD_CIDWorker(grid* OldFineGrid, FLOAT EdgeOffset[MAX_DIMENSION]){
   //signature by putting some extra parameters in this structure.
   int Offset[MAX_DIMENSION];
   int TempDim[MAX_DIMENSION];
-  int Refinement[MAX_DIMENSION];
 
   for(dim=0;dim<GridRank;dim++){
     Offset[dim] =CID_Params.Offset[dim];
     TempDim[dim]=CID_Params.TempDim[dim];
-    Refinement[dim]=CID_Params.Refinement[dim];
   }
 
   OnlyOneFace = -1;

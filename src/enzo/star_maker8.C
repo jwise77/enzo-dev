@@ -81,7 +81,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 		float *temp, float *gamma, float *mu, int *nproc, int *nstar)
 {
 
-  int i, j, k, index, ii, n, bb, cc, nsinks, closest;
+  int i, j, k, index, ii, n, bb, cc, nsinks;
   int           xo, yo, zo;
 #define MAX_SUPERCELL_NUMBER 1000
   int           n_cell, ind_cell[MAX_SUPERCELL_NUMBER];
@@ -720,7 +720,6 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 
       //printf("n_cell = %" ISYM " \n", n_cell);
       float m_wind = 0.0;
-      float cells_volume = 0.0;
       for (int ic = 0; ic < n_cell; ic++) {
 	//v_wind = mdot_wind/(4.0*pi*POW(radius_cell[ic],2)*rho_wind);
 	//rho_wind = mdot_wind/(4.0*pi*POW(radius_cell[ic],2)*v_wind);
@@ -743,7 +742,6 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 	  printf("star_maker8.C line 373: Radius squared is wrong?!? radius =%f, n_cell = %" ISYM "\n",radius2_cell[ic],n_cell); 
 	 }
 	rho_wind = mdot_wind*SolidAngle/(POW((*dx),3));
-	cells_volume += POW((*dx),3);
 	//printf("rho_wind = %e cgs\n",rho_wind*(*d1));
 	m_wind += rho_wind*POW(*dx,3);
 	d[ind_cell[ic]] = rho_wind;
@@ -775,7 +773,6 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
   /* Loop over grid looking for a cell with mass larger than massthres */
 
   if (*level == MaximumRefinementLevel) {
-    float oldrho;
     for (k = *ibuff; k < *nz-*ibuff; k++) {
       for (j = *ibuff; j < *ny-*ibuff; j++) {
 	index = (k * (*ny) + j) * (*nx) + (*ibuff);
@@ -811,7 +808,6 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 		/* If sink is within 5 cells of the closest one, then add to it */
 	      if (dist2 < POW(BigStarSeparation,2) && dist2 < nearestdx2) {
 		nearestdx2 = dist2;
-		closest = n;		  
 	      }
 
 	    } // ENDFOR old particles
@@ -826,7 +822,6 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 		maxdens = min(jlsquared * temp[index] / dx2, densthresh);
 	      else
 		maxdens = densthresh;
-	      oldrho = d[index];
 	      adddens = d[index] - maxdens;
 	    
 	      /* Remove mass from grid */

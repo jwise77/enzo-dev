@@ -101,11 +101,11 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
       fclose(header);
     } /* END: write movie header file */
 
-    int field, nBaryonFields;
+    int field;
     int nFields = 0;
     while (MovieDataField[nFields] != INT_UNDEFINED)
       nFields++;
-    nBaryonFields = LevelArray[0]->GridData->ReturnNumberOfBaryonFields();
+    LevelArray[0]->GridData->ReturnNumberOfBaryonFields();
 
     char **FieldNames = new char*[nFields];
     for (field = 0; field < nFields; field++) {

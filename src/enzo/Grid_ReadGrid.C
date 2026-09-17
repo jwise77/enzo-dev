@@ -72,7 +72,6 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
   herr_t      h5_status;
   herr_t      h5_error = -1;
  
-  int         num_size;
  
   char *ParticlePositionLabel[] =
     {"particle_position_x", "particle_position_y", "particle_position_z"};
@@ -409,9 +408,8 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
 
   if (HydroMethod == MHD_RK) { // This is the MHD with Dedner divergence cleaning that needs an extra field
 
-    int activesize = 1;
     for (int dim = 0; dim < GridRank; dim++)
-      activesize *= (GridDimension[dim]-2*NumberOfGhostZones);
+      ;
     
     /* if we restart from a different solvers output without a PhiField create here and set to zero */
     int PhiNum; 
@@ -817,7 +815,7 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
 	  if( dset_id == h5_error ){ENZO_FAIL("line 682  Grid_ReadGrid \n");}
 	  
 	  num_type = H5Dget_type(dset_id);
-	  num_size = H5Tget_size(num_type);
+	  H5Tget_size(num_type);
 	  
 	  if (sizeof(FLOAT) == 16)
 	    {

@@ -92,12 +92,11 @@ int grid::ClusterInitializeGrid(int NumberOfSpheres,
 
   float DensityUnits, LengthUnits, TemperatureUnits = 1, TimeUnits, VelocityUnits, CriticalDensity = 1, mu = 0.6;
   double MassUnits = 1;
-  FLOAT a, dadt, ExpansionFactor = 1;
+  FLOAT a, dadt;
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	   &TimeUnits, &VelocityUnits, &MassUnits, Time);
   if (ComovingCoordinates) {
     CosmologyComputeExpansionFactor(Time, &a, &dadt);
-    ExpansionFactor = a/(1.0+InitialRedshift);
     CriticalDensity = 2.78e11*POW(HubbleConstantNow, 2); // in Msolar/Mpc^3
   } else {
     CriticalDensity = 2.78e11*POW(0.74,2); // in Msolar/Mpc^3 for h=0.74

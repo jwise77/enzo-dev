@@ -58,7 +58,6 @@ int ComputeRandomForcingNormalization(LevelHierarchyEntry *LevelArray[],
  
   /* Create an array (Grids) of all the grids on level 0. */
  
-  typedef HierarchyEntry* HierarchyEntryPointer;
   HierarchyEntry **Grids;
   int NumberOfGrids = GenerateGridArray(LevelArray, level, &Grids);
  

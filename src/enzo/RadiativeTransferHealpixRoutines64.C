@@ -63,7 +63,7 @@ static void util_fail_ (const char *file, int line, const char *func,
 #define DEALLOC(ptr) \
   do { util_free_(ptr); (ptr)=NULL; } while(0)
 
-static void *util_malloc_ (size_t sz)
+static inline void *util_malloc_ (size_t sz)
   {
   void *res;
   if (sz==0) return NULL;
@@ -71,7 +71,7 @@ static void *util_malloc_ (size_t sz)
   UTIL_ASSERT(res,"malloc() failed");
   return res;
   }
-static void util_free_ (void *ptr)
+static inline void util_free_ (void *ptr)
   { if ((ptr)!=NULL) free(ptr); }
 
 /*! Returns the remainder of the division \a v1/v2.

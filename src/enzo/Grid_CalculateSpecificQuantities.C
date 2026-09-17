@@ -113,7 +113,7 @@ int grid::CalculateSpecificQuantities(FLOAT *SinkParticlePos, FLOAT *CLEdge,
 	  // printf("B = %e\n", B);
 	}
 	if(rmin <= (double)CellWidth[0][0]/4.0) /* going to be counted */
-	  *numpoints++;
+	  (*numpoints)++;
       }
     }
   }    

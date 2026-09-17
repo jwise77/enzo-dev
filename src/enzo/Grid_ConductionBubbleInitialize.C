@@ -82,11 +82,7 @@ int grid::ConductionBubbleInitialize (FLOAT BubbleRadius, int PulseType, float D
     ENZO_FAIL("Error in IdentifyPhysicalQuantities.");
   }
 
-  int MetallicityField = FALSE;
-  if ((MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields))
-      != -1)
-    MetallicityField = TRUE;
-  else
+  if ((MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields)) == -1)
     MetalNum = 0;
 
   /* get field numbers for x, y z components of magnetic fields.  Note that

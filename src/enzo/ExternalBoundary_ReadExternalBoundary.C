@@ -51,7 +51,7 @@ int WRITE_BV(float         *bv_buffer, int field, int dim, int face, int slabsiz
 int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadData)
 {
  
-  int Dims[MAX_DIMENSION], index, size, i;
+  int size, i;
   int BoundaryValuePresent[2*MAX_DIMENSION];
   int MagneticBoundaryValuePresent[2*MAX_DIMENSION];
   int dim, field, j;
@@ -65,7 +65,6 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
   hid_t       file_id;
   hid_t       dset_id1, dset_id2;
   hid_t       float_type_id;
-  hid_t       file_type_id;
   hid_t       file_dsp_id;
   hid_t       mem_dsp_id;
  
@@ -102,17 +101,14 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
  
     case 4:
       float_type_id = HDF5_R4;
-      file_type_id = HDF5_FILE_R4;
       break;
  
     case 8:
       float_type_id = HDF5_R8;
-      file_type_id = HDF5_FILE_R8;
       break;
  
     default:
       float_type_id = HDF5_R4;
-      file_type_id = HDF5_FILE_R4;
  
     }
 
@@ -248,17 +244,12 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
  
 	/* calculate size and dims of flux plane */
 	
-	index = 0;
 	size  = 1;
-	Dims[0] = 1;
  
 	for (i = 0; i < BoundaryRank; i++)
 	  if (i != dim) {
-	    Dims[index++] = BoundaryDimension[i];
 	    size *= BoundaryDimension[i];
 	  }
- 
-	index = max(BoundaryRank-1, 1);   // make index at least 1
  
         char *nfile = new char[2];
         char *dname1 = new char[MAX_NAME_LENGTH];

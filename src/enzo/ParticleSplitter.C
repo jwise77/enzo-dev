@@ -91,7 +91,6 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
       ParticleSplitterMustRefineIDFile != NULL) {
 
     hid_t file_id, dataset_id, dataspace_id;
-    herr_t status;
     hsize_t dims[1], maxdims[1];
     
     file_id = H5Fopen(ParticleSplitterMustRefineIDFile,
@@ -99,13 +98,13 @@ int ParticleSplitter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
     dataset_id = H5Dopen2(file_id, "/particle_identifier", H5P_DEFAULT);
     dataspace_id = H5Dget_space(dataset_id);
     // Get number of particles and allocate variable
-    status = H5Sget_simple_extent_dims(dataspace_id, dims, maxdims);
+    H5Sget_simple_extent_dims(dataspace_id, dims, maxdims);
     MustRefineIDs = new long[dims[0]];
     NumberOfIDs = dims[0];
-    status = H5Dread(dataset_id, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT,
+    H5Dread(dataset_id, H5T_NATIVE_LLONG, H5S_ALL, H5S_ALL, H5P_DEFAULT,
      		     MustRefineIDs);
-    status = H5Dclose(dataset_id);
-    status = H5Fclose(file_id);
+    H5Dclose(dataset_id);
+    H5Fclose(file_id);
     
   }
   

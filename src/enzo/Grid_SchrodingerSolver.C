@@ -91,14 +91,6 @@ int grid::SchrodingerSolver( int nhy )
   int i, j, k;
   int dim;
 
-  /* compute global start index for left edge of entire grid 
-       (including boundary zones) */
-  Elong_int GridGlobalStart[MAX_DIMENSION];
-
-  for (dim = 0; dim < GridRank; dim++)
-      GridGlobalStart[dim] = nlongint((GridLeftEdge[dim]-DomainLeftEdge[dim])/(*(CellWidth[dim]))) -
-  GridStartIndex[dim];
-
   /* fix grid quantities so they are defined to at least 3 dims */
 
   for (i = GridRank; i < 3; i++) {
@@ -106,7 +98,6 @@ int grid::SchrodingerSolver( int nhy )
     GridStartIndex[i]  = 0;
     GridEndIndex[i]    = 0;
     GridVelocity[i]    = 0.0;
-    GridGlobalStart[i] = 0;
   }
 
   FLOAT a = 1, dadt;
@@ -216,7 +207,7 @@ int grid::SchrodingerSolver( int nhy )
 
   if (PointSourceGravity > 0) {
 
-    FLOAT potential, auxre, auxim, radius, rsquared, xpos, ypos = 0.0, zpos = 0.0, rcore;
+    FLOAT potential, auxre, auxim, radius, rsquared, xpos, ypos = 0.0, zpos = 0.0;
 	FLOAT r0squared, r0, xh, yh, rproj, worb2;
 
     int n = 0;
@@ -250,7 +241,6 @@ int grid::SchrodingerSolver( int nhy )
  
 	  rsquared = xpos*xpos + ypos*ypos + zpos*zpos;
 	  radius = sqrt(rsquared);
-	  rcore = PointSourceGravityCoreRadius;
 	  rproj = (xpos*xh + ypos*yh)/sqrt(xh*xh + yh*yh);
 
 	  /* Compute potential from point source */

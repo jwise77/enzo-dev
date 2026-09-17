@@ -205,12 +205,11 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
   /* Set various units. */
   float DensityUnits, LengthUnits, TemperatureUnits, TimeUnits, VelocityUnits;
 
-  FLOAT a, dadt, ExpansionFactor = 1;
+  FLOAT a, dadt;
   GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits, &TimeUnits, 
 	   &VelocityUnits, Time);
   if (ComovingCoordinates) {
     CosmologyComputeExpansionFactor(Time, &a, &dadt);
-    ExpansionFactor = a/(1.0+InitialRedshift);
   } else {
     HubbleConstantNow = 1.0;
     OmegaMatterNow = 1.0;

@@ -668,9 +668,7 @@ int grid::TurbulenceInitializeGrid(float CloudDensity, float CloudSoundSpeed, FL
 
     //    double mass_p = 20.0*1.989e33;
     double mass_m = 3.415*1.989e33; //Mass of massive stars
-    double mass_s = 0.01*1.989e33; //Mass of small stars
     mass_m /= MassUnits;
-    mass_s /= MassUnits;
     double dx = CellWidth[0][0];
     double den_m = mass_m / pow(dx,3);
     double t_dyn_m = sqrt(3*M_PI/(6.672e-8*den_m*DensityUnits));

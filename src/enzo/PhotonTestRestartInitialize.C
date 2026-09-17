@@ -66,30 +66,11 @@ int PhotonTestRestartInitialize(FILE *fptr, FILE *Outfptr,
 
   char *PhotonTestRestartName = NULL;
 
-  int   PhotonTestSourceType[MAX_SOURCES];
-  int   PhotonTestSourceEnergyBins[MAX_SOURCES];
-  double PhotonTestSourceLuminosity[MAX_SOURCES];
-  FLOAT PhotonTestSourcePosition[MAX_SOURCES][MAX_DIMENSION];
-  float PhotonTestSourceLifeTime[MAX_SOURCES];
-  float PhotonTestSourceCreationTime[MAX_SOURCES];
-  float PhotonTestSourceRampTime[MAX_SOURCES];
-  float *PhotonTestSourceSED[MAX_SOURCES];
-  float *PhotonTestSourceEnergy[MAX_SOURCES];
 
   // Set defaults
 
   for (source = 0; source < MAX_SOURCES; source++) {
-    PhotonTestSourceType[source] = Isotropic;
-    PhotonTestSourceLuminosity[source] = 0.;
-    PhotonTestSourceLifeTime[source] = 0.;
-    PhotonTestSourceCreationTime[source] = MetaData.Time;
-    PhotonTestSourceRampTime[source] = 0.;
-    PhotonTestSourceEnergyBins[source] = 1;
-    PhotonTestSourceSED[source] = NULL;
-    PhotonTestSourceEnergy[source] = NULL;
     for (dim=0; dim < MAX_DIMENSION; dim++){
-      PhotonTestSourcePosition[source][dim] =
-	0.5*(DomainLeftEdge[dim] + DomainRightEdge[dim]);
     }
   }
 

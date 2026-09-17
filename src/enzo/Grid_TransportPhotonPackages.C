@@ -163,7 +163,6 @@ int grid::TransportPhotonPackages(int level, int finest_level,
     EndTime = PhotonTime+dtPhoton-PFLOAT_EPSILON;
 
   while (PP != NULL) {
-    int retval = 0;
     if (PP->PreviousPackage == NULL)
       printf("Bad package.\n");
     DeleteMe = FALSE;
@@ -177,7 +176,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
       }
     }
     if ((PP->CurrentTime) < EndTime) {
-      retval = WalkPhotonPackage(&PP,
+      WalkPhotonPackage(&PP,
 				 &MoveToGrid, ParentGrid, CurrentGrid, Grids0, nGrids0,
 				 DeleteMe, PauseMe, DeltaLevel, LightCrossingTime,
 				 LightSpeed, level, MinimumPhotonFlux);

@@ -134,7 +134,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
   //const float MetalRadius = 0.75;
   const float MetalRadius = 1.0;
   float ionizedFraction = 0.999;  // Assume supernova is ionized
-  float maxGE, MetalRadius2, PrimordialDensity, metallicity, fhz, fhez;
+  float maxGE, MetalRadius2, metallicity, fhz, fhez;
   float outerRadius2, delta_fz;
 
   if (cstar->FeedbackFlag == SUPERNOVA || 
@@ -166,7 +166,6 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 
   // Correct for smaller enrichment radius
   EjectaMetalDensity *= pow(MetalRadius, -3.0);
-  PrimordialDensity = EjectaDensity - EjectaMetalDensity;
   MetalRadius2 = radius * radius * MetalRadius * MetalRadius;
   outerRadius2 = 1.2 * 1.2 * radius * radius;
 
@@ -460,14 +459,12 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 
 #define MAX_SUPERCELL_NUMBER 1000
   int SUPERCELL = 2; //2 for supercell of 5 cells wide = 5^3  
-  int ind_cell_inside[MAX_SUPERCELL_NUMBER], ind_cell_edge[MAX_SUPERCELL_NUMBER];
+  int ind_cell_edge[MAX_SUPERCELL_NUMBER];
   float nx_cell_edge[MAX_SUPERCELL_NUMBER], ny_cell_edge[MAX_SUPERCELL_NUMBER], 
     nz_cell_edge[MAX_SUPERCELL_NUMBER];
-  int n_cell_inside = 0, n_cell_edge = 0, ibuff = NumberOfGhostZones;
+  int n_cell_edge = 0, ibuff = NumberOfGhostZones;
   int ii, jj, kk, r_s, ic, sign;
-  float m_cell_inside = 0.0, metal_cell_inside = 0.0, colour_cell_inside = 0.0;
-  float m_cell_edge = 0.0, metal_cell_edge = 0.0, colour_cell_edge = 0.0, 
-    metallicity_edge = 0.0, colour_edge = 0.0, rho_jet, rho_metal_jet, rho_colour_jet;
+  float m_cell_edge = 0.0, metal_cell_edge = 0.0, colour_cell_edge = 0.0, rho_jet, rho_metal_jet, rho_colour_jet;
   float L_x, L_y, L_z, L_s, nx_L = 0.0, ny_L = 0.0, nz_L = 0.0, costheta = cos(pi/3.9);
   float EjectaMass, EjectaMetalMass, MBHJetsVelocity;
 
@@ -582,20 +579,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
       for (jj = -SUPERCELL; jj <= SUPERCELL; jj++) {
 	for (ii = -SUPERCELL; ii <= SUPERCELL; ii++) {
 
-	  if (ABS(ii) != SUPERCELL && ABS(jj) != SUPERCELL && ABS(kk) != SUPERCELL) {  //if not on edges
-
-	    ind_cell_inside[n_cell_inside] = i+ii+(j+jj+(k+kk)*GridDimension[1])*GridDimension[0];
-	    m_cell_inside += BaryonField[DensNum][ind_cell_inside[n_cell_inside]] * 
-	      pow(CellWidth[0][0], 3);
-	    if (MetallicityField == TRUE) 
-	      metal_cell_inside += BaryonField[MetalNum][ind_cell_inside[n_cell_inside]] * 
-		pow(CellWidth[0][0], 3);
-	    if (MBHColourNum > 0)
-	      colour_cell_inside += BaryonField[MBHColourNum][ind_cell_inside[n_cell_inside]] * 
-		pow(CellWidth[0][0], 3);
-	    n_cell_inside++;
-	    
-	  } else {  //if on edges
+	  if (ABS(ii) == SUPERCELL || ABS(jj) == SUPERCELL || ABS(kk) == SUPERCELL) {  //if on edges
 
 	    r_s = sqrt(pow(ii,2) + pow(jj,2) + pow(kk,2));	    
 	    
@@ -633,16 +617,14 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
     if (MetallicityField == TRUE) {
       rho_metal_jet = (metal_cell_edge + EjectaMetalMass) / 
 	(n_cell_edge * pow(CellWidth[0][0], 3));
-      metallicity_edge = rho_metal_jet / rho_jet;
     } else
-      metallicity_edge = 0.0;
+      ;
 
     if (MBHColourNum > 0) {
       rho_colour_jet = (colour_cell_edge + EjectaMass) / 
 	(n_cell_edge * pow(CellWidth[0][0], 3));
-      colour_edge = rho_colour_jet / rho_jet;
     } else
-      colour_edge = 0.0;
+      ;
       
 //    printf("rho_jet_prev = %g\n", m_cell_edge / (n_cell_edge * pow(CellWidth[0][0], 3)));
 //    printf("rho_jet =%g, rho_metal_jet = %g, rho_colour_jet = %g, metallicity_edge = %g\n", 
@@ -854,11 +836,8 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
        of the photo-ionization and photo-heating terms and also absorb
        the unit conversions and (1/4pi) into the cross-section. */
 
-    float kph, kheat;
     sigma_HI *= (double) TimeUnits / ((double)LengthUnits * (double)LengthUnits) 
       / (4.0 * pi);
-    kph = (float) (Q_HI * sigma_HI);
-    kheat = kph * deltaE;
 
     /* Get photo-ionization fields */
 

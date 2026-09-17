@@ -176,7 +176,6 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
   // if input file present, over-write defaults with module inputs
   FILE *fptr;
   char line[MAX_LINE_LENGTH];
-  int ret;
   char *dummy = new char[MAX_LINE_LENGTH];
   dummy[0] = 0;
   int numMarshakParms = 1;
@@ -190,57 +189,56 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
       // read until out of lines
       while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
-	ret = 0;
-	ret += sscanf(line, "RadHydroESpectrum = %" ISYM, &ESpectrum);
-	ret += sscanf(line, "RadHydroChemistry = %" ISYM, &Nchem);
-	ret += sscanf(line, "RadHydroHFraction = %" FSYM, &HFrac);
-	ret += sscanf(line, "RadHydroModel = %" ISYM, &Model);
-	ret += sscanf(line, "RadHydroMaxDt = %" FSYM, &maxdt);
-	ret += sscanf(line, "RadHydroMinDt = %" FSYM, &mindt);
-	ret += sscanf(line, "RadHydroInitDt = %" FSYM, &initdt);
-	ret += sscanf(line, "RadHydroDtNorm = %" FSYM, &dtnorm);
-	ret += sscanf(line, "RadHydroDtRadFac = %" FSYM, &dtfac[0]);
-	ret += sscanf(line, "RadHydroDtGasFac = %" FSYM, &dtfac[1]);
-	ret += sscanf(line, "RadHydroDtChemFac = %" FSYM, &dtfac[2]);
-	ret += sscanf(line, "RadiationScaling = %" FSYM, &ErScale);
-	ret += sscanf(line, "EnergyCorrectionScaling = %" FSYM, &ecScale);
-	ret += sscanf(line, "ChemistryScaling = %" FSYM, &NiScale);
-	ret += sscanf(line, "RadHydroTheta = %" FSYM, &theta);
-	ret += sscanf(line, "RadHydroLimiterType = %" ISYM, &LimType);
-	ret += sscanf(line, "RadiationBoundaryX0Faces = %" ISYM" %" ISYM, 
+	sscanf(line, "RadHydroESpectrum = %" ISYM, &ESpectrum);
+	sscanf(line, "RadHydroChemistry = %" ISYM, &Nchem);
+	sscanf(line, "RadHydroHFraction = %" FSYM, &HFrac);
+	sscanf(line, "RadHydroModel = %" ISYM, &Model);
+	sscanf(line, "RadHydroMaxDt = %" FSYM, &maxdt);
+	sscanf(line, "RadHydroMinDt = %" FSYM, &mindt);
+	sscanf(line, "RadHydroInitDt = %" FSYM, &initdt);
+	sscanf(line, "RadHydroDtNorm = %" FSYM, &dtnorm);
+	sscanf(line, "RadHydroDtRadFac = %" FSYM, &dtfac[0]);
+	sscanf(line, "RadHydroDtGasFac = %" FSYM, &dtfac[1]);
+	sscanf(line, "RadHydroDtChemFac = %" FSYM, &dtfac[2]);
+	sscanf(line, "RadiationScaling = %" FSYM, &ErScale);
+	sscanf(line, "EnergyCorrectionScaling = %" FSYM, &ecScale);
+	sscanf(line, "ChemistryScaling = %" FSYM, &NiScale);
+	sscanf(line, "RadHydroTheta = %" FSYM, &theta);
+	sscanf(line, "RadHydroLimiterType = %" ISYM, &LimType);
+	sscanf(line, "RadiationBoundaryX0Faces = %" ISYM" %" ISYM, 
 		      BdryType[0], BdryType[0]+1);
 	if (rank > 1) {
-	  ret += sscanf(line, "RadiationBoundaryX1Faces = %" ISYM" %" ISYM,
+	  sscanf(line, "RadiationBoundaryX1Faces = %" ISYM" %" ISYM,
 			BdryType[1], BdryType[1]+1);
 	  if (rank > 2) {
-	    ret += sscanf(line, "RadiationBoundaryX2Faces = %" ISYM" %" ISYM,
+	    sscanf(line, "RadiationBoundaryX2Faces = %" ISYM" %" ISYM,
 			  BdryType[2], BdryType[2]+1);
 	  }
 	}
-	ret += sscanf(line, "RadHydroAprxJacobian = %" ISYM, &approx_jac);
-	ret += sscanf(line, "RadHydroInitialGuess = %" ISYM, &initial_guess);
-	ret += sscanf(line, "RadHydroAnalyticChem = %" ISYM, &AnalyticChem);
-	ret += sscanf(line, "RadHydroNewtLinesearch = %" ISYM, &newt_linesearch);
-	ret += sscanf(line, "RadHydroNewtIters = %" ISYM, &newt_maxit);
-	ret += sscanf(line, "RadHydroNewtNorm = %" ISYM, &newt_norm);
-	ret += sscanf(line, "RadHydroINConst = %" FSYM, &newt_INconst);
-	ret += sscanf(line, "RadHydroNewtTolerance = %" FSYM, &newt_tol);
-	ret += sscanf(line, "RadHydroMinLinesearch = %" FSYM,
+	sscanf(line, "RadHydroAprxJacobian = %" ISYM, &approx_jac);
+	sscanf(line, "RadHydroInitialGuess = %" ISYM, &initial_guess);
+	sscanf(line, "RadHydroAnalyticChem = %" ISYM, &AnalyticChem);
+	sscanf(line, "RadHydroNewtLinesearch = %" ISYM, &newt_linesearch);
+	sscanf(line, "RadHydroNewtIters = %" ISYM, &newt_maxit);
+	sscanf(line, "RadHydroNewtNorm = %" ISYM, &newt_norm);
+	sscanf(line, "RadHydroINConst = %" FSYM, &newt_INconst);
+	sscanf(line, "RadHydroNewtTolerance = %" FSYM, &newt_tol);
+	sscanf(line, "RadHydroMinLinesearch = %" FSYM,
 		      &newt_MinLinesearch);
-	ret += sscanf(line, "RadHydroMaxMGIters = %i", &sol_maxit);
-	ret += sscanf(line, "RadHydroMGRelaxType = %i", &sol_rlxtype);
-	ret += sscanf(line, "RadHydroMGPreRelax = %i", &sol_npre);
-	ret += sscanf(line, "RadHydroMGPostRelax = %i", &sol_npost);
-	ret += sscanf(line, "PlanckOpacityC0 = %" FSYM, &PlanckOpacityC0);
-	ret += sscanf(line, "PlanckOpacityC1 = %" FSYM, &PlanckOpacityC1);
-	ret += sscanf(line, "PlanckOpacityC2 = %" FSYM, &PlanckOpacityC2);
-	ret += sscanf(line, "PlanckOpacityC3 = %" FSYM, &PlanckOpacityC3);
-	ret += sscanf(line, "PlanckOpacityC4 = %" FSYM, &PlanckOpacityC4);
-	ret += sscanf(line, "EnergyOpacityC0 = %" FSYM, &EnergyOpacityC0);
-	ret += sscanf(line, "EnergyOpacityC1 = %" FSYM, &EnergyOpacityC1);
-	ret += sscanf(line, "EnergyOpacityC2 = %" FSYM, &EnergyOpacityC2);
-	ret += sscanf(line, "EnergyOpacityC3 = %" FSYM, &EnergyOpacityC3);
-	ret += sscanf(line, "EnergyOpacityC4 = %" FSYM, &EnergyOpacityC4);
+	sscanf(line, "RadHydroMaxMGIters = %i", &sol_maxit);
+	sscanf(line, "RadHydroMGRelaxType = %i", &sol_rlxtype);
+	sscanf(line, "RadHydroMGPreRelax = %i", &sol_npre);
+	sscanf(line, "RadHydroMGPostRelax = %i", &sol_npost);
+	sscanf(line, "PlanckOpacityC0 = %" FSYM, &PlanckOpacityC0);
+	sscanf(line, "PlanckOpacityC1 = %" FSYM, &PlanckOpacityC1);
+	sscanf(line, "PlanckOpacityC2 = %" FSYM, &PlanckOpacityC2);
+	sscanf(line, "PlanckOpacityC3 = %" FSYM, &PlanckOpacityC3);
+	sscanf(line, "PlanckOpacityC4 = %" FSYM, &PlanckOpacityC4);
+	sscanf(line, "EnergyOpacityC0 = %" FSYM, &EnergyOpacityC0);
+	sscanf(line, "EnergyOpacityC1 = %" FSYM, &EnergyOpacityC1);
+	sscanf(line, "EnergyOpacityC2 = %" FSYM, &EnergyOpacityC2);
+	sscanf(line, "EnergyOpacityC3 = %" FSYM, &EnergyOpacityC3);
+	sscanf(line, "EnergyOpacityC4 = %" FSYM, &EnergyOpacityC4);
 	
       }  // end loop over file lines
 
@@ -250,8 +248,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
         MarshakParms = new float[numMarshakParms];
 	rewind(fptr);
         while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
-	  ret = 0;
-	  ret += sscanf(line, "SuOlsonGreyEps = %" FSYM, &MarshakParms[0]);
+	  sscanf(line, "SuOlsonGreyEps = %" FSYM, &MarshakParms[0]);
         }  // end loop over file lines
 //         if (debug) printf("gFLDProblem_Initialize: SuOlsonGreyEps = %g\n",MarshakParms[0]);
       }  // end Model IF statement
@@ -266,10 +263,9 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 	IonizationParms[3] = 0.0;
 	IonizationParms[4] = 0.0;
         while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
-	  ret = 0;
-	  ret += sscanf(line, "NGammaDot = %" FSYM, &IonizationParms[0]);
-	  ret += sscanf(line, "EtaRadius = %" FSYM, &IonizationParms[1]);
-	  ret += sscanf(line, "EtaCenter = %" FSYM" %" FSYM" %" FSYM, 
+	  sscanf(line, "NGammaDot = %" FSYM, &IonizationParms[0]);
+	  sscanf(line, "EtaRadius = %" FSYM, &IonizationParms[1]);
+	  sscanf(line, "EtaCenter = %" FSYM" %" FSYM" %" FSYM, 
 			&IonizationParms[2], &IonizationParms[3], &IonizationParms[4]);
         }  // end loop over file lines
         if (debug) {

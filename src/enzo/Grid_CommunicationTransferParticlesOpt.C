@@ -183,14 +183,11 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
  
   else {
 
-    double t00, t01;
 
-    t00 = 0.0;
-    t01 = 0.0;
 
 
 #ifdef USE_MPI
-    t00 = MPI_Wtime();
+    MPI_Wtime();
 #endif
  
     /* Count up total number. */
@@ -307,7 +304,7 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
 				Attribute);
  
 #ifdef USE_MPI
-    t01 = MPI_Wtime();
+    MPI_Wtime();
 #endif
     // fprintf(stderr, "COPY IN %" ISYM" : %16.6e : %16.6e %16.6e %16.6e %16.6e %16.6e\n", MyProcessorNumber, ttt,
     //         T1-t00, T2-T1, T3-T2, T4-T3, t01-T4);

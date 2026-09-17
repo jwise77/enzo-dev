@@ -62,25 +62,12 @@ int grid::ElectronFractionEstimate(float dt)
   /* If using cosmology, get units. */
 
   float TemperatureUnits, DensityUnits, LengthUnits, 
-        VelocityUnits, TimeUnits, aUnits = 1;
-  FLOAT a = 1.0, dadt;
+        VelocityUnits, TimeUnits;
 
   if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	       &TimeUnits, &VelocityUnits, Time) == FAIL) {
     ENZO_FAIL("Error in GetUnits.\n");
   }
-
-  if (ComovingCoordinates) {
-
-    if (CosmologyComputeExpansionFactor(Time, &a, &dadt) == FAIL) {
-      ENZO_FAIL("Error in CosmologyComputeExpansionFactors.\n");
-    }
-
-    aUnits = 1.0/(1.0 + InitialRedshift);
-
-  }
-
-  float afloat = float(a);
 
   /* For cells with photo-ionization rates and low e-fractions (shell
      of HII regions), estimate e-fraction. */
@@ -89,22 +76,9 @@ int grid::ElectronFractionEstimate(float dt)
   alpha_recombination *= (TimeUnits * (DensityUnits / mh));
 
   int i, j, k, index;
-  float efrac, t_i, x_eq, x_estimate;
-  float total, total_h, t_frac, new_hii;
+  float efrac, x_eq;
+  float total, total_h, new_hii;
 
-  // Compton cooling
-  float comp1 = 1e-20, comp2 = 1e-20, zr;
-  if (ComovingCoordinates) {
-    zr = 1.0 / (afloat * aUnits) - 1.0;
-    comp1 = CoolData.comp * (1.0 + zr);
-    comp2 = 2.73 * (1.0 + zr);
-  }
-
-  double CoolUnit, xbase1, dbase1;
-  xbase1 = LengthUnits / (afloat * aUnits);
-  dbase1 = DensityUnits * pow((afloat*aUnits), 3);
-  CoolUnit = (pow(aUnits,5) * pow(xbase1,2) * pow(mh,2)) /
-    (pow(TimeUnits,3) * dbase1);
 
 
   for (k = GridStartIndex[2]; k <= GridEndIndex[2]; k++) {
@@ -223,10 +197,7 @@ int grid::ElectronFractionEstimate(float dt)
 
 	  total = BaryonField[kphHINum][index] + 
 	    (alpha_recombination * BaryonField[DeNum][index]);
-	  t_i = 1.0 / total;
 	  x_eq = BaryonField[kphHINum][index] / total;
-	  t_frac = dt / t_i;
-	  x_estimate = x_eq + (efrac - x_eq) * (1 - exp(-t_frac)) / t_frac;
 
 	  /* Correct electron and hydrogen species for this estimate */
 

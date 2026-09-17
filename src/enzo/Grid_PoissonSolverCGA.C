@@ -157,10 +157,6 @@ int grid::setNeumannBC(T* x,  int* MatrixStartIndex, int *MatrixEndIndex, int ty
 {
   int ijk[3]={0,0,0}; int index;
 
-  int diff[3];
-  diff[0] = 1;
-  diff[1] = (GridRank > 1) ? GridDimension[0] : 0;
-  diff[2] = (GridRank > 2) ? GridDimension[0]*GridDimension[1] : 0;
   
 
 
@@ -290,10 +286,6 @@ int grid::PoissonSolverCGA(int difftype, double *divB_p)
   int igrid;
   double threshold = PoissonApproximationThreshold;
 
-  FLOAT dx_inv[3];
-  dx_inv[0] = 1.0 / CellWidth[0][0];
-  dx_inv[1] = (GridRank > 1) ? 1.0 / CellWidth[1][0] : 0.0;
-  dx_inv[2] = (GridRank > 2) ? 1.0 / CellWidth[2][0] : 0.0;
  
   double *x     = new double[size];
   double *Ax    = new double[size];

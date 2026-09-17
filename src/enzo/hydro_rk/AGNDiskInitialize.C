@@ -62,7 +62,7 @@ int AGNDiskInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int ret, level, i;
+  int level, i;
 
   /* set default parameters */
 
@@ -79,29 +79,28 @@ int AGNDiskInitialize(FILE *fptr, FILE *Outfptr,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     /* read parameters */
 
-    ret += sscanf(line, "DiskType = %" ISYM,
+    sscanf(line, "DiskType = %" ISYM,
 		  &DiskType);
-    ret += sscanf(line, "RefineAtStart = %" ISYM, 
+    sscanf(line, "RefineAtStart = %" ISYM, 
 		  &RefineAtStart);
-    ret += sscanf(line, "BlackHoleMass = %" FSYM,
+    sscanf(line, "BlackHoleMass = %" FSYM,
 		  &BlackHoleMass);
-    ret += sscanf(line, "DiskType = %" ISYM, 
+    sscanf(line, "DiskType = %" ISYM, 
 		  &DiskType);
-    ret += sscanf(line, "BlackHoleType = %" ISYM, 
+    sscanf(line, "BlackHoleType = %" ISYM, 
 		  &BlackHoleType);
-    ret += sscanf(line, "UseGas = %" ISYM, 
+    sscanf(line, "UseGas = %" ISYM, 
 		  &UseGas);
-    ret += sscanf(line, "DiskDensity = %" FSYM, 
+    sscanf(line, "DiskDensity = %" FSYM, 
 		  &DiskDensity);
-    ret += sscanf(line, "DiskTemperature = %" FSYM, 
+    sscanf(line, "DiskTemperature = %" FSYM, 
 		  &DiskTemperature);
-    ret += sscanf(line, "DiskRadius = %" PSYM, 
+    sscanf(line, "DiskRadius = %" PSYM, 
 		  &DiskRadius);
-    ret += sscanf(line, "DiskHeight = %" PSYM, 
+    sscanf(line, "DiskHeight = %" PSYM, 
 		  &DiskHeight);
 
   } // end input from parameter file

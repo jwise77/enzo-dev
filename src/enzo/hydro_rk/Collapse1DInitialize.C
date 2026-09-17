@@ -35,7 +35,7 @@ int Collapse1DInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int ret, level, i;
+  int level, i;
 
   /* set default parameters */
 
@@ -63,32 +63,31 @@ int Collapse1DInitialize(FILE *fptr, FILE *Outfptr,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     /* read parameters */
 
-    ret += sscanf(line, "RefineAtStart = %" ISYM, 
+    sscanf(line, "RefineAtStart = %" ISYM, 
 		  &RefineAtStart);
-    ret += sscanf(line, "UseParticles = %" ISYM, 
+    sscanf(line, "UseParticles = %" ISYM, 
 		  &UseParticles);
-    ret += sscanf(line, "MediumDensity = %" FSYM, 
+    sscanf(line, "MediumDensity = %" FSYM, 
 		  &MediumDensity);
-    ret += sscanf(line, "MediumPressure = %" FSYM,
+    sscanf(line, "MediumPressure = %" FSYM,
 		  &MediumPressure);
 
-    ret += sscanf(line, "SphereType = %" ISYM,
+    sscanf(line, "SphereType = %" ISYM,
 		  &SphereType);
-    ret += sscanf(line, "SphereRadius = %" PSYM,
+    sscanf(line, "SphereRadius = %" PSYM,
 		  &SphereRadius);
-    ret += sscanf(line, "SphereCoreRadius = %" PSYM,
+    sscanf(line, "SphereCoreRadius = %" PSYM,
 		  &SphereCoreRadius);
-    ret += sscanf(line, "SphereDensity = %" FSYM,
+    sscanf(line, "SphereDensity = %" FSYM,
 		  &SphereDensity);
-    ret += sscanf(line, "SpherePressure = %" FSYM,
+    sscanf(line, "SpherePressure = %" FSYM,
 		  &SpherePressure);
-    ret += sscanf(line, "SphereSoundVelocity = %" FSYM,
+    sscanf(line, "SphereSoundVelocity = %" FSYM,
 		  &SphereSoundVelocity);
-    ret += sscanf(line, "SphereAngVel = %" FSYM,
+    sscanf(line, "SphereAngVel = %" FSYM,
 		  &SphereAngVel);
     /* if the line is suspicious, issue a warning */
 

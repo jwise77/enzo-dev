@@ -415,10 +415,8 @@ EnzoArray<PINT> *grid::CreateFieldArrayPINT(field_type field){
 
   int i, dims[MAX_DIMENSION], sindex[MAX_DIMENSION], eindex[MAX_DIMENSION];
   EnzoArray<PINT> *array = NULL;
-  FLOAT cell_width[] = {0, 0, 0};
   
   for(i = 0; i < this->GridRank; i++){
-    cell_width[i] = this->CellWidth[i][0];
   }
 
   switch (field){
@@ -443,10 +441,8 @@ EnzoArray<bool> *grid::CreateFieldArrayBool(field_type field){
 
   int i;
   EnzoArray<bool> *array = NULL;
-  FLOAT cell_width[] = {0, 0, 0};
   
   for(i = 0; i < this->GridRank; i++){
-    cell_width[i] = this->CellWidth[i][0];
   }
 
   // No booleans yet.

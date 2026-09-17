@@ -48,9 +48,9 @@ int grid::KHInitializeGridRamp(float KHInnerDensity,
 
   /* declarations */
 
-  int size = 1, dim;
+  int dim;
   for (dim = 0; dim < GridRank; dim++)
-    size *= GridDimension[dim];
+    ;
 
   /* Find fields: density, total energy, velocity1-3. */
 

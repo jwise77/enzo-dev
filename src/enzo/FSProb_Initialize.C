@@ -120,7 +120,6 @@ int FSProb::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
   // if input file present, over-write defaults with module inputs
   FILE *fptr;
   char line[MAX_LINE_LENGTH];
-  int ret;
   char *dummy = new char[MAX_LINE_LENGTH];
   dummy[0] = 0;
 
@@ -133,33 +132,32 @@ int FSProb::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
       // read until out of lines
       while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
-	ret = 0;
-	ret += sscanf(line, "FSRadiationScaling = %" FSYM, &EScale);
-	ret += sscanf(line, "FSRadiationTheta = %" FSYM, &theta);
-	ret += sscanf(line, "FSRadiationOpacity = %" FSYM, &kappa0);
-	ret += sscanf(line, "FSRadiationH2OpacityOn = %" ISYM, &kappa_h2on);
-	ret += sscanf(line, "FSRadiationNGammaDot = %lf", &NGammaDot);
-	ret += sscanf(line, "FSRadiationEtaRadius = %" FSYM, &EtaRadius);
-	ret += sscanf(line, "FSRadiationEtaCenter = %" FSYM" %" FSYM" %" FSYM, 
+	sscanf(line, "FSRadiationScaling = %" FSYM, &EScale);
+	sscanf(line, "FSRadiationTheta = %" FSYM, &theta);
+	sscanf(line, "FSRadiationOpacity = %" FSYM, &kappa0);
+	sscanf(line, "FSRadiationH2OpacityOn = %" ISYM, &kappa_h2on);
+	sscanf(line, "FSRadiationNGammaDot = %lf", &NGammaDot);
+	sscanf(line, "FSRadiationEtaRadius = %" FSYM, &EtaRadius);
+	sscanf(line, "FSRadiationEtaCenter = %" FSYM" %" FSYM" %" FSYM, 
 		      &(EtaCenter[0]), &(EtaCenter[1]), &(EtaCenter[2]));
-	ret += sscanf(line, "FSRadiationLimiterType = %" ISYM, &LimType);
-	ret += sscanf(line, "FSRadiationBoundaryX0Faces = %" ISYM" %" ISYM, 
+	sscanf(line, "FSRadiationLimiterType = %" ISYM, &LimType);
+	sscanf(line, "FSRadiationBoundaryX0Faces = %" ISYM" %" ISYM, 
 		      BdryType[0], BdryType[0]+1);
 	if (rank > 1) {
-	  ret += sscanf(line, "FSRadiationBoundaryX1Faces = %" ISYM" %" ISYM,
+	  sscanf(line, "FSRadiationBoundaryX1Faces = %" ISYM" %" ISYM,
 			BdryType[1], BdryType[1]+1);
 	  if (rank > 2) {
-	    ret += sscanf(line, "FSRadiationBoundaryX2Faces = %" ISYM" %" ISYM,
+	    sscanf(line, "FSRadiationBoundaryX2Faces = %" ISYM" %" ISYM,
 			  BdryType[2], BdryType[2]+1);
 	  }
 	}
-	ret += sscanf(line, "FSRadiationMaxDt = %" FSYM, &maxdt);
-	ret += sscanf(line, "FSRadiationInitialGuess = %" ISYM, &initial_guess);
-	ret += sscanf(line, "FSRadiationTolerance = %" GSYM "", &sol_tolerance);
-	ret += sscanf(line, "FSRadiationMaxMGIters = %i", &sol_maxit);
-	ret += sscanf(line, "FSRadiationMGRelaxType = %i", &sol_rlxtype);
-	ret += sscanf(line, "FSRadiationMGPreRelax = %i", &sol_npre);
-	ret += sscanf(line, "FSRadiationMGPostRelax = %i", &sol_npost);
+	sscanf(line, "FSRadiationMaxDt = %" FSYM, &maxdt);
+	sscanf(line, "FSRadiationInitialGuess = %" ISYM, &initial_guess);
+	sscanf(line, "FSRadiationTolerance = %" GSYM "", &sol_tolerance);
+	sscanf(line, "FSRadiationMaxMGIters = %i", &sol_maxit);
+	sscanf(line, "FSRadiationMGRelaxType = %i", &sol_rlxtype);
+	sscanf(line, "FSRadiationMGPreRelax = %i", &sol_npre);
+	sscanf(line, "FSRadiationMGPostRelax = %i", &sol_npost);
 	
       }  // end loop over file lines
 

@@ -67,7 +67,6 @@ int RHIonizationClumpInitialize(FILE *fptr, FILE *Outfptr,
 
   // local declarations
   char line[MAX_LINE_LENGTH];
-  int ret;
 
   // Setup and parameters:
   //  1. ambient density (should be very small) - free parameter
@@ -101,37 +100,36 @@ int RHIonizationClumpInitialize(FILE *fptr, FILE *Outfptr,
     FILE *RHfptr;
     if ((RHfptr = fopen(MetaData.RadHydroParameterFname, "r")) != NULL) {
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
-	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "RadHydroVelocity = %" FSYM" %" FSYM" %" FSYM,
+	sscanf(line, "RadHydroVelocity = %" FSYM" %" FSYM" %" FSYM,
 		      &RadHydroX0Velocity, &RadHydroX1Velocity, 
 		      &RadHydroX2Velocity);
-	ret += sscanf(line, "RadHydroChemistry = %" ISYM, 
+	sscanf(line, "RadHydroChemistry = %" ISYM, 
 		      &RadHydroChemistry);
-	ret += sscanf(line, "RadHydroNumDensityIn = %" FSYM, 
+	sscanf(line, "RadHydroNumDensityIn = %" FSYM, 
 		      &RadHydroNumDensityIn);
-	ret += sscanf(line, "RadHydroNumDensityOut = %" FSYM, 
+	sscanf(line, "RadHydroNumDensityOut = %" FSYM, 
 		      &RadHydroNumDensityOut);
-	ret += sscanf(line, "RadHydroTemperatureIn = %" FSYM, 
+	sscanf(line, "RadHydroTemperatureIn = %" FSYM, 
 		      &RadHydroTemperatureIn);
-	ret += sscanf(line, "RadHydroTemperatureOut = %" FSYM, 
+	sscanf(line, "RadHydroTemperatureOut = %" FSYM, 
 		      &RadHydroTemperatureOut);
-	ret += sscanf(line, "RadHydroRadiationEnergy = %" FSYM, 
+	sscanf(line, "RadHydroRadiationEnergy = %" FSYM, 
 		      &RadHydroRadiationEnergy);
-	ret += sscanf(line, "RadHydroInitialFractionHII = %" FSYM, 
+	sscanf(line, "RadHydroInitialFractionHII = %" FSYM, 
 		      &RadHydroInitialFractionHII);
-	ret += sscanf(line, "RadHydroHFraction = %" FSYM, 
+	sscanf(line, "RadHydroHFraction = %" FSYM, 
 		      &RadHydroHydrogenMassFraction);
 	if ((RadHydroChemistry == 3) || (MultiSpecies == 1)) {
-	  ret += sscanf(line, "RadHydroInitialFractionHeII = %" FSYM, 
+	  sscanf(line, "RadHydroInitialFractionHeII = %" FSYM, 
 			&RadHydroInitialFractionHeII);
-	  ret += sscanf(line, "RadHydroInitialFractionHeIII = %" FSYM, 
+	  sscanf(line, "RadHydroInitialFractionHeIII = %" FSYM, 
 			&RadHydroInitialFractionHeIII);
 	}
 	
-	ret += sscanf(line, "ClumpCenter = %" FSYM" %" FSYM" %" FSYM,
+	sscanf(line, "ClumpCenter = %" FSYM" %" FSYM" %" FSYM,
 		      &ClumpCenterX, &ClumpCenterY, &ClumpCenterZ);
-	ret += sscanf(line, "ClumpRadius = %" FSYM, &ClumpRadius);
+	sscanf(line, "ClumpRadius = %" FSYM, &ClumpRadius);
 
       } // end input from parameter file
       fclose(RHfptr);

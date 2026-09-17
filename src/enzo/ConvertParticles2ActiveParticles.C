@@ -113,7 +113,7 @@ int ConvertParticles2ActiveParticles(char *ParameterFile,
     Masterarray[i] = 0;
     RMasterarray[i]=0;
   }
-  int active_particles = 0, global_active_particles = 0;
+  int global_active_particles = 0;
   if(MyProcessorNumber == ROOT_PROCESSOR)
     printf("%s: You have chosen to read in a file and convert all the particles " \
 	   "found in the output to active particles.\n", __FUNCTION__);
@@ -143,7 +143,6 @@ int ConvertParticles2ActiveParticles(char *ParameterFile,
   for(int i = 0; i < MAX_ACTIVE_PARTICLE_TYPES; i++)
     {
       if(strlen(active_particle_types[i]) > 0) {
-	active_particles++;
 	Masterarray[i] = 1;
       }
     }

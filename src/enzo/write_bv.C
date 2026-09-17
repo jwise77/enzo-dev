@@ -28,8 +28,8 @@ int WRITE_BV(float *bv_buffer,
   hid_t file_dsp_id, mem_dsp_id;
   hid_t       file_type_id, mem_type_id;
 
-  hsize_t     mem_stride, mem_count, mem_block;
-  hsize_t     file_stride[4], file_count[4], file_block[4];
+  hsize_t mem_stride, mem_count;
+  hsize_t file_stride[4], file_count[4];
   hsize_t     bv_dims[4];
 
   hsize_t     bsize;
@@ -122,7 +122,6 @@ int WRITE_BV(float *bv_buffer,
   mem_stride = 1;         // contiguous elements
   mem_count = facesize;   // number of elements on boundary face
   mem_offset = 0;         // zero offset in buffer
-  mem_block = 1;          // single element blocks
 
   h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
     if (io_log) fprintf(stderr, "H5Sselect mem slab: %d\n", h5_status);
@@ -131,22 +130,18 @@ int WRITE_BV(float *bv_buffer,
   file_stride[0] = 1;                   // contiguous elements
   file_count[0] = 1;                    // one component per call
   file_offset[0] = field;               // field component 0 to N-1
-  file_block[0] = 1;                    // single element blocks
 
   file_stride[1] = 1;                   // contiguous elements
   file_count[1] = 1;                    // one component per call
   file_offset[1] = dim;                 // dimension 0, 1 or 2
-  file_block[1] = 1;                    // single element blocks
 
   file_stride[2] = 1;                   // contiguous elements
   file_count[2] = 1;                    // one component per call
   file_offset[2] = face;                // face, 0 or 1
-  file_block[2] = 1;                    // single element blocks
 
   file_stride[3] = 1;                   // contiguous elements
   file_count[3] = facesize;             // data for one plane
   file_offset[3] = 0;                   // complete field, no offset
-  file_block[3] = 1;                    // single element blocks
 
   h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, file_offset, file_stride, file_count, NULL);
     if (io_log) fprintf(stderr, "H5Sselect file slab: %d\n", h5_status);

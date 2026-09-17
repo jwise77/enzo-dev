@@ -79,16 +79,10 @@ int ParallelFDMCollapseInitialize(FILE *fptr, FILE *Outfptr,
 
   /* Set default parameters and names */
  
-  int   FDMCollapseGridDimension[MAX_INITIAL_GRIDS][MAX_DIMENSION];
   int   FDMCollapseGridLevel[MAX_INITIAL_GRIDS];
-  FLOAT FDMCollapseGridLeftEdge[MAX_INITIAL_GRIDS][MAX_DIMENSION];
-  FLOAT FDMCollapseGridRightEdge[MAX_INITIAL_GRIDS][MAX_DIMENSION];
   for (i = 0; i < MAX_INITIAL_GRIDS; i++)
     FDMCollapseGridLevel[i] = 1;
   for (dim = 0; dim < MetaData.TopGridRank; dim++) {
-    FDMCollapseGridLeftEdge[0][dim] = DomainLeftEdge[dim];
-    FDMCollapseGridRightEdge[0][dim] = DomainRightEdge[dim];
-    FDMCollapseGridDimension[0][dim] = MetaData.TopGridDims[dim];
   }
 
   FDMCollapseGridLevel[0] = 0;

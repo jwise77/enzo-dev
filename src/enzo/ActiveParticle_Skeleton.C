@@ -155,7 +155,6 @@ int ActiveParticleType_Skeleton::EvaluateFeedback
 
 
   FLOAT xpos, ypos, zpos;
-  float xvel, yvel, zvel;
 
   FLOAT xstart = thisGrid->CellLeftEdge[0][0];
   FLOAT ystart = thisGrid->CellLeftEdge[1][0];
@@ -177,9 +176,6 @@ int ActiveParticleType_Skeleton::EvaluateFeedback
     ypos = particle->pos[1];
     zpos = particle->pos[2];
 
-    xvel = particle->vel[0];
-    yvel = particle->vel[1];
-    zvel = particle->vel[2];
 
 
     i = int((xpos - xstart)/thisGrid->CellWidth[0][0]);

@@ -63,13 +63,11 @@ int grid::CopyPotentialToBaryonField()
      See Grid_InitializeGravitatingMassField.C for details.
   */
  
-  int DimTemp;
   int dim;
   int Off[3];
  
   for (dim = 0; dim < GridRank; dim++)
   {
-     DimTemp = GridEndIndex[dim] - GridStartIndex[dim] + 1;
      Off[dim] = (GravitatingMassFieldDimension[dim] - GridDimension[dim])/2;
 //     fprintf(stderr, "CPOT (%" ISYM") %" ISYM" %" ISYM" %" ISYM" %" ISYM" %" ISYM" %" ISYM"\n", dim, GridDimension[dim], GridStartIndex[dim], GridEndIndex[dim], GravitatingMassFieldDimension[dim], BufferSize, Off[dim]);
   }

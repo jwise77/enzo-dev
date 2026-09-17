@@ -155,9 +155,7 @@ int grid::TurbulenceSimulationInitializeGrid(
       FieldType[NumberOfBaryonFields++] = PhiField;
     }
    
-    int idrivex;
     if (UseDrivingField && (HydroMethod == HD_RK || HydroMethod == MHD_RK)) {
-      idrivex = NumberOfBaryonFields;
       FieldType[NumberOfBaryonFields++] = DrivingField1;
       FieldType[NumberOfBaryonFields++] = DrivingField2;
       FieldType[NumberOfBaryonFields++] = DrivingField3;

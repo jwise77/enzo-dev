@@ -63,7 +63,6 @@ int RadHydroConstTestInitialize(FILE *fptr, FILE *Outfptr,
 
   // local declarations
   char line[MAX_LINE_LENGTH];
-  int ret;
 
   // Setup and parameters:
   //  1. ambient density (should be very small) - free parameter
@@ -95,32 +94,31 @@ int RadHydroConstTestInitialize(FILE *fptr, FILE *Outfptr,
     FILE *RHfptr;
     if ((RHfptr = fopen(MetaData.RadHydroParameterFname, "r")) != NULL) {
       while (fgets(line, MAX_LINE_LENGTH, RHfptr) != NULL) {
-	ret = 0;
 	// read relevant problem parameters
-	ret += sscanf(line, "RadHydroVelocity = %" FSYM" %" FSYM" %" FSYM,
+	sscanf(line, "RadHydroVelocity = %" FSYM" %" FSYM" %" FSYM,
 		      &RadHydroX0Velocity, &RadHydroX1Velocity, 
 		      &RadHydroX2Velocity);
-	ret += sscanf(line, "RadHydroChemistry = %" ISYM, 
+	sscanf(line, "RadHydroChemistry = %" ISYM, 
 		      &RadHydroChemistry);
-	ret += sscanf(line, "RadHydroModel = %" ISYM, 
+	sscanf(line, "RadHydroModel = %" ISYM, 
 		      &RadHydroModel);
-	ret += sscanf(line, "RadHydroDensity = %" FSYM, 
+	sscanf(line, "RadHydroDensity = %" FSYM, 
 		      &RadHydroDensity);
-	ret += sscanf(line, "RadHydroTemperature = %" FSYM, 
+	sscanf(line, "RadHydroTemperature = %" FSYM, 
 		      &RadHydroTemperature);
-	ret += sscanf(line, "RadHydroIEnergy = %" FSYM, 
+	sscanf(line, "RadHydroIEnergy = %" FSYM, 
 		      &RadHydroIEnergy);
-	ret += sscanf(line, "RadHydroRadiationEnergy = %" FSYM, 
+	sscanf(line, "RadHydroRadiationEnergy = %" FSYM, 
 		      &RadHydroRadiationEnergy);
 	if (RadHydroChemistry > 0)
-	  ret += sscanf(line, "RadHydroInitialFractionHII = %" FSYM, 
+	  sscanf(line, "RadHydroInitialFractionHII = %" FSYM, 
 			&RadHydroInitialFractionHII);
 	if (RadHydroChemistry > 1) {
-	  ret += sscanf(line, "RadHydroHFraction = %" FSYM, 
+	  sscanf(line, "RadHydroHFraction = %" FSYM, 
 			&RadHydroHydrogenMassFraction);
-	  ret += sscanf(line, "RadHydroInitialFractionHeII = %" FSYM, 
+	  sscanf(line, "RadHydroInitialFractionHeII = %" FSYM, 
 			&RadHydroInitialFractionHeII);
-	  ret += sscanf(line, "RadHydroInitialFractionHeIII = %" FSYM, 
+	  sscanf(line, "RadHydroInitialFractionHeIII = %" FSYM, 
 			&RadHydroInitialFractionHeIII);
 	}
       } // end input from parameter file

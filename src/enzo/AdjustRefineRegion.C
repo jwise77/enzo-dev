@@ -48,7 +48,6 @@ int AdjustRefineRegion(LevelHierarchyEntry *LevelArray[],
   int i, dim, idim, level;
   LevelHierarchyEntry *Temp;
   float MinParticleMass, dx;
-  FLOAT RefineRegionWidth[MAX_DIMENSION], RefineRegionCenter[MAX_DIMENSION];
   int MaximumStaticRegionLevel = 0;
 
   /* First find the highest resolution particle in the whole
@@ -88,9 +87,6 @@ int AdjustRefineRegion(LevelHierarchyEntry *LevelArray[],
   */
 
   for (dim = 0; dim < MAX_DIMENSION; dim++) {
-    RefineRegionCenter[dim] = 0.5 * (RefineRegionLeftEdge[dim] + 
-				     RefineRegionRightEdge[dim]);
-    RefineRegionWidth[dim] = RefineRegionRightEdge[dim] - RefineRegionLeftEdge[dim];
   }
 
   for (i = 0; i < MAX_STATIC_REGIONS; i++)

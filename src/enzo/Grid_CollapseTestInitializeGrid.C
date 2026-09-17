@@ -273,10 +273,7 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 
     /* Loop over the mesh. */
 
-    float density, dens1, old_density, Velocity[MAX_DIMENSION], 
-      DiskVelocity[MAX_DIMENSION], temperature, temp1, sigma, sigma1, 
-      colour, weight, a, DMVelocity[MAX_DIMENSION], metallicity, 
-      outer_radius;
+    float density, dens1, Velocity[MAX_DIMENSION], DiskVelocity[MAX_DIMENSION], temperature, temp1, sigma, sigma1, colour, weight, a, DMVelocity[MAX_DIMENSION], metallicity, outer_radius;
     FLOAT r, rcyl, x, y = 0, z = 0;
     int n = 0, ibin;
 
@@ -286,7 +283,6 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
     float  DMRotVelocityCorrection = 1, GasRotVelocityCorrection = 1;
     double VelocitySound[MAX_SPHERES];
     double SphereMass, SphereCoreMass, SphereCoreDens;
-    double theta;
     double Scale_Factor[MAX_SPHERES];
     double term1, term2;
     double radius_vr[NR], vr[NR], exterior_rho[NR], radial_velocity;
@@ -492,19 +488,19 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 
 	      if (xpos != 0) {
 		if (xpos > 0 && ypos >= 0)
-		  theta = atan(ypos/xpos);
+		  ;
 		else if (xpos < 0 && ypos >= 0)
-		  theta = pi + atan(ypos/xpos);
+		  ;
 		else if (xpos < 0 && ypos < 0)
-		  theta = pi + atan(ypos/xpos);
+		  ;
 		else if (xpos > 0 && ypos < 0)
-		  theta = 2*pi + atan(ypos/xpos);
+		  ;
 	      } else if (xpos == 0 && ypos > 0)
-		theta = pi / 2.0;
+		;
 	      else if (xpos == 0 && ypos < 0)
-		theta = (3*pi) / 2.0;
+		;
 	      else
-		theta = 0.0;
+		;
 
 	      // Find out which shell the cell is in
 	      a = Ang(SphereAng1[sphere],SphereAng2[sphere],SphereRadius[sphere],r);
@@ -754,10 +750,8 @@ int grid::CollapseTestInitializeGrid(int NumberOfSpheres,
 
 	      if (dens1 > InitialDensity) {
 		if (density <= InitialDensity) {
-		  old_density = 0;
 		  density = dens1;
 		} else {
-		  old_density = density;
 		  density += dens1;
 		}
 		weight = dens1/density;
@@ -1120,7 +1114,7 @@ int ComputeRadialVelocity(float density, double mass, float r_init,
   float t_init, t_i, r_i, dr;
   float z_vir, t_vir;
   float t_ta, rho_ci, r_ta_now;
-  int i, n, iinit, iturn, i_boundary, ithis;
+  int i, n, iinit, i_boundary, ithis;
 
   dtheta = (theta1 - theta0) / (NTHETA-1.0);
   for (i = 0; i < NTHETA; i++) {
@@ -1134,7 +1128,7 @@ int ComputeRadialVelocity(float density, double mass, float r_init,
     if (delta_t[i] < density)
       iinit = i;
     if (Theta[i] < pi)   // Turnaround
-      iturn = i;
+      ;
   }
 
   t_init = 5.38e8 * yr_s * POW((1+InitialRedshift) / 10.0, -1.5);

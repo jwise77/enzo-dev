@@ -95,10 +95,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
     printf("%s: Returning until accretion rate is updated\n", __FUNCTION__);
     return SUCCESS;
   }
-  /***********************************************************************
-                                MBH_THERMAL
-  ************************************************************************/
-  int CellsModified = 0;
   // Similar to Supernova, but here we assume the followings:
   // EjectaDensity = 0.0
   // EjectaMetalDensity = 0.0
@@ -116,14 +112,12 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
     //printf("%s: dx = %e\t MassConversion = %e\n", __FUNCTION__, dx, MassConversion);
     printf("%s: AccretionRate = %e Msolar/yr %e (code) TimeIndex = %" ISYM "\n", __FUNCTION__,
            accrate, SS->AccretionRate[SS->TimeIndex], SS->TimeIndex);
-    /*end Debug*/
-    float newGE = 0.0, oldGE = 0.0;
+    float newGE = 0.0;
     float maxGE = MAX_TEMPERATURE / (TemperatureUnits * (Gamma-1.0) * 0.6);
    
     FLOAT radius2 = 0.0;
     float EjectaVolume = 4.0/3.0 * PI * pow(SS->AccretionRadius, 3);
     printf("%s: OuterRadius = %e\n", __FUNCTION__, sqrt(outerRadius2)*LengthUnits/pc_cm);
-    CellsModified = 0;
     float BHMass =  SS->ReturnMass()*MassConversion/SolarMass; //In solar masses
     float eddrate = 4*M_PI*GravConst*BHMass*mh/(SS->eta_disk*clight*sigma_thompson); // Msolar/s
     eddrate = eddrate*3.154e7; //in Msolar/yr
@@ -184,7 +178,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 
 	      /* When injected energy is uniform throughout the volume;
 		 EjectaThermalEnergy in EnergyUnits/VolumeUnits */
-	      oldGE =  this->BaryonField[GENum][index];
 	      newGE = (Density * this->BaryonField[GENum][index] +
 		       ramp * factor * EjectaThermalEnergy) / Density;
 
@@ -249,7 +242,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 		tiny_number * this->BaryonField[DensNum][index];
 	    }
 #endif
-	    CellsModified++;
 	    
 	  } // END if inside radius
 	}  // END i-direction
@@ -259,7 +251,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 
   }  // END MBH_THERMAL
   
-  CellsModified = 0;
    /***********************************************************************
                                  MBH_JETS
   ************************************************************************/
@@ -270,14 +261,11 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
   int i = 0, j = 0, k = 0;
   #define MAX_SUPERCELL_NUMBER 1000
   int SUPERCELL = 1; //2 for supercell of 5 cells wide = 5^3  
-  int ind_cell_inside[MAX_SUPERCELL_NUMBER], ind_cell_edge[MAX_SUPERCELL_NUMBER];
-  float nx_cell_edge[MAX_SUPERCELL_NUMBER], ny_cell_edge[MAX_SUPERCELL_NUMBER], 
-    nz_cell_edge[MAX_SUPERCELL_NUMBER], anglefactor[MAX_SUPERCELL_NUMBER] = {0};
+  int ind_cell_edge[MAX_SUPERCELL_NUMBER];
+  float nx_cell_edge[MAX_SUPERCELL_NUMBER], ny_cell_edge[MAX_SUPERCELL_NUMBER], nz_cell_edge[MAX_SUPERCELL_NUMBER];
   int n_cell_inside = 0, n_cell_edge = 0, ibuff = NumberOfGhostZones;
   int ii = 0, jj = 0, kk = 0, r_s = 0, ic = 0, sign = 0;
-  float m_cell_inside = 0.0, m_cell_edge = 0.0;
   float L_x, L_y, L_z, L_s, nx_L = 0.0, ny_L = 0.0, nz_L = 0.0, costheta = cos(OPENING_ANGLE);
-  float totalenergybefore = 0.0;
  
   if (SmartStarBHJetFeedback == FALSE || SS->MassToBeEjected*MassUnits/SolarMass < 1e-10) {
     return SUCCESS;
@@ -408,10 +396,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 	  if (fabs(ii) != SUPERCELL && fabs(jj) != SUPERCELL && fabs(kk) != SUPERCELL) {  //if not on edges
 	    //	    printf("%s: Inside: CosTheta = %f\t cellangle = %f (%f degrees)\n", __FUNCTION__, 
 	    //	   costheta, fabs((ii*nx_L + jj*ny_L + kk*nz_L)/r_s), 
-	    //	   (360/pi)*acos(fabs((ii*nx_L + jj*ny_L + kk*nz_L)/r_s)));
-	    ind_cell_inside[n_cell_inside] = i+ii+(j+jj+(k+kk)*this->GridDimension[1])*this->GridDimension[0];
-	    m_cell_inside += this->BaryonField[DensNum][ind_cell_inside[n_cell_inside]] * 
-	      pow(dx, 3);
 	    n_cell_inside++;
 	    
 	  } else {  //if on edges	    
@@ -419,15 +403,11 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 	      //printf("%s: Edge: CosTheta = %f\t cellangle = %f (%f degrees)\n", __FUNCTION__, 
 	      //     costheta, fabs((ii*nx_L + jj*ny_L + kk*nz_L)/r_s), 
 	      //     (360/pi)*acos(fabs((ii*nx_L + jj*ny_L + kk*nz_L)/r_s)));
-	      anglefactor[n_cell_edge] = fabs((ii*nx_L + jj*ny_L + kk*nz_L)/r_s);
 	      ind_cell_edge[n_cell_edge] = i+ii+(j+jj+(k+kk)*this->GetGridDimension(1))*this->GetGridDimension(0);
 	      nx_cell_edge[n_cell_edge]  = ii / r_s;  //directional vector
 	      ny_cell_edge[n_cell_edge]  = jj / r_s;
 	      nz_cell_edge[n_cell_edge]  = kk / r_s;
-	      m_cell_edge += this->BaryonField[DensNum][ind_cell_edge[n_cell_edge]] * 
-		pow(this->GetCellWidth(0, 0), 3);
 
-	      totalenergybefore +=  this->BaryonField[TENum][ind_cell_edge[n_cell_edge]];
 	      n_cell_edge++;
 	     
 	    } 
@@ -634,7 +614,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 	this->BaryonField[HDINum][index] *= increase;
       }
 
-      CellsModified++;
 
     }
 #if IMPOSETHRESHOLD  
@@ -652,7 +631,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
     SS->NotEjectedMass = 0.0;
 #endif
 
-    CellsModified = 0;
     return SUCCESS;
 }
 

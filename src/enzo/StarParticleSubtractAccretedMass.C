@@ -51,7 +51,7 @@ int StarParticleSubtractAccretedMass(TopGridData *MetaData,
   Star *cstar;
   bool MarkedSubgrids = false;
   int l, SphereContained, SphereContainedNextLevel, dummy;
-  float influenceRadius, RootCellWidth, SNe_dt;
+  float influenceRadius, RootCellWidth;
   float dtForThisStar, StarLevelCellWidth;
   double Subtraction, dummy_float = 0;
   FLOAT Time;
@@ -67,9 +67,9 @@ int StarParticleSubtractAccretedMass(TopGridData *MetaData,
   Temp = LevelArray[level];
   Time = Temp->GridData->ReturnTime();
   if (LastSupernovaTime < 0)
-    SNe_dt = 0.0;
+    ;
   else
-    SNe_dt = Time - LastSupernovaTime;
+    ;
   LastSupernovaTime = Time;
   RootCellWidth = 1.0 / MetaData->TopGridDims[0];
 

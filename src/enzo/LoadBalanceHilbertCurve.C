@@ -68,7 +68,6 @@ int LoadBalanceHilbertCurve(HierarchyEntry *GridHierarchyPointer[],
   FLOAT GridCenter[MAX_DIMENSION];
   FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
   FLOAT BoundingBox[2][MAX_DIMENSION];
-  FLOAT BoundingBoxWidthInv[MAX_DIMENSION];
   float GridVolume, AxialRatio;
   int GridMemory, NumberOfCells, CellsTotal, NumberOfParticles;
   int iter;
@@ -96,7 +95,7 @@ int LoadBalanceHilbertCurve(HierarchyEntry *GridHierarchyPointer[],
   } // ENDFOR grids
   
   for (dim = 0; dim < MAX_DIMENSION; dim++)
-    BoundingBoxWidthInv[dim] = 1.0/(BoundingBox[1][dim] - BoundingBox[0][dim]);
+    ;
 
   /* Compute the position of each grid on a Hilbert curve */
   // TODO: PARALLELIZE
@@ -365,14 +364,11 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
   FLOAT GridCenter[MAX_DIMENSION];
   FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
   FLOAT BoundingBox[2][MAX_DIMENSION];
-  FLOAT BoundingBoxWidthInv[MAX_DIMENSION];
   float GridVolume, AxialRatio;
   int GridMemory, NumberOfCells, CellsTotal, NumberOfParticles;
   int iter;
 
-  double tt0;
   CommunicationBarrier();
-  tt0 = ReturnWallTime();
 
   /* Find the bounding box of the grids */
 
@@ -390,7 +386,7 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
   } // ENDFOR grids
   
   for (dim = 0; dim < MAX_DIMENSION; dim++)
-    BoundingBoxWidthInv[dim] = 1.0/(BoundingBox[1][dim] - BoundingBox[0][dim]);
+    ;
 
   /* Compute the position of each grid on a Hilbert curve */
   // TODO: PARALLELIZE
@@ -602,12 +598,9 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
   FLOAT GridCenter[MAX_DIMENSION];
   FLOAT LeftEdge[MAX_DIMENSION], RightEdge[MAX_DIMENSION];
   FLOAT BoundingBox[2][MAX_DIMENSION];
-  FLOAT BoundingBoxWidthInv[MAX_DIMENSION];
   float TotalWork, WorkThisProcessor, WorkPerProcessor, WorkLeft;
-  int GridsThisProcessor, GridsPerProcessor;
+  int GridsThisProcessor;
 
-  double tt0;
-  tt0 = ReturnWallTime();
 
   /* Find the bounding box of the grids */
 
@@ -625,7 +618,7 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
   } // ENDFOR grids
   
   for (dim = 0; dim < MAX_DIMENSION; dim++)
-    BoundingBoxWidthInv[dim] = 1.0/(BoundingBox[1][dim] - BoundingBox[0][dim]);
+    ;
 
   /* Compute the position of each grid on a Hilbert curve */
   // TODO: PARALLELIZE
@@ -679,7 +672,6 @@ int LoadBalanceHilbertCurve(grid *GridPointers[], int NumberOfGrids,
     WorkThisProcessor = 0;
     GridsThisProcessor = 0;
     WorkPerProcessor = WorkLeft / (NumberOfProcessors-i);
-    GridsPerProcessor = GridsLeft / (NumberOfProcessors-i);
     do {
       GridsThisProcessor++;
       GridsLeft--;

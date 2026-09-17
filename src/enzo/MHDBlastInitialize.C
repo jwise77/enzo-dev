@@ -123,8 +123,7 @@ int MHDBlastInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
   // Parameters and their defaults.
   char line[MAX_LINE_LENGTH];
-  int ret = 0, GasFlag = 0, Pflag=0, TotalFlag=0;
-  int ObsFlag = 0;
+  int GasFlag = 0, Pflag=0, TotalFlag=0;
   int RefineOnStartup = FALSE;
   int UseMetal = FALSE, metal_ret=0;
   float MetalOffsetInX = 0;
@@ -160,21 +159,19 @@ int MHDBlastInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     //I changed some nomenclature, to make things easier on myself
     //This checks for old nominclature.
-    ObsFlag = 0;
     
-    ret += sscanf(line, "MHDBlastDA = %" PSYM, &DensityA);
-    ret += sscanf(line, "MHDBlastDB = %" PSYM, &DensityB);
+    sscanf(line, "MHDBlastDA = %" PSYM, &DensityA);
+    sscanf(line, "MHDBlastDB = %" PSYM, &DensityB);
 
-    ret += sscanf(line, "MHDBlastBA = %" PSYM" %" PSYM" %" PSYM, BA, BA+1, BA+2);
-    ret += sscanf(line, "MHDBlastBB = %" PSYM" %" PSYM" %" PSYM, BB, BB+1, BB+2);
+    sscanf(line, "MHDBlastBA = %" PSYM" %" PSYM" %" PSYM, BA, BA+1, BA+2);
+    sscanf(line, "MHDBlastBB = %" PSYM" %" PSYM" %" PSYM, BB, BB+1, BB+2);
 
-    ret += sscanf(line, "MHDBlastVelocityA = %" PSYM" %" PSYM" %" PSYM,
+    sscanf(line, "MHDBlastVelocityA = %" PSYM" %" PSYM" %" PSYM,
 		  VelocityA, VelocityA+1,VelocityA+2);
-    ret += sscanf(line, "MHDBlastVelocityB = %" PSYM" %" PSYM" %" PSYM,
+    sscanf(line, "MHDBlastVelocityB = %" PSYM" %" PSYM" %" PSYM,
 		  VelocityB, VelocityB+1,VelocityB+2);
     
     Pflag += sscanf(line, "MHDBlastPA = %" PSYM, &Pressure0);
@@ -188,33 +185,32 @@ int MHDBlastInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
     
     metal_ret += sscanf(line, "MHDBlastMetalDensityA = %" PSYM, &MetalDensityA);
     metal_ret += sscanf(line, "MHDBlastMetalDensityB = %" PSYM, &MetalDensityB);
-    ret += sscanf(line, "MHDBlastMetalOffsetInX = %" PSYM, &MetalOffsetInX); 
+    sscanf(line, "MHDBlastMetalOffsetInX = %" PSYM, &MetalOffsetInX); 
     //shift the metal density by this fraction of the box.
     if( metal_ret > 0){
-        ret++;
         UseMetal = TRUE;
     }
     
     ////
 
-    ret += sscanf(line, "MHDBlastRadius = %" PSYM, &Radius);
+    sscanf(line, "MHDBlastRadius = %" PSYM, &Radius);
 
-    ret += sscanf(line, "MHDBlastInitStyle = %" ISYM"", &InitStyle);
+    sscanf(line, "MHDBlastInitStyle = %" ISYM"", &InitStyle);
 
-    ret += sscanf(line, "MHDBlastCenter = %" PSYM" %" PSYM" %" PSYM,
+    sscanf(line, "MHDBlastCenter = %" PSYM" %" PSYM" %" PSYM,
 		  MHDBlastCenter, MHDBlastCenter+1,MHDBlastCenter+2);
 
-    ret += sscanf(line, "MHDBlastSubgridLeft  = %" PSYM" %" PSYM" %" PSYM,
+    sscanf(line, "MHDBlastSubgridLeft  = %" PSYM" %" PSYM" %" PSYM,
 		  MHDBlastSubgridLeft, MHDBlastSubgridLeft +1 , MHDBlastSubgridLeft +2);
-    ret += sscanf(line, "MHDBlastSubgridRight = %" PSYM" %" PSYM" %" PSYM,
+    sscanf(line, "MHDBlastSubgridRight = %" PSYM" %" PSYM" %" PSYM,
 		  MHDBlastSubgridRight, MHDBlastSubgridRight +1 , MHDBlastSubgridRight +2);
 
-    ret += sscanf(line, "MHDBlastPerturbAmplitude      = %" PSYM, &PerturbAmplitude);
-    ret += sscanf(line, "MHDBlastPerturbMethod         = %" ISYM"", &PerturbMethod);
-    ret += sscanf(line, "MHDBlastPerturbWavelength      = %" PSYM" %" PSYM" %" PSYM,
+    sscanf(line, "MHDBlastPerturbAmplitude      = %" PSYM, &PerturbAmplitude);
+    sscanf(line, "MHDBlastPerturbMethod         = %" ISYM"", &PerturbMethod);
+    sscanf(line, "MHDBlastPerturbWavelength      = %" PSYM" %" PSYM" %" PSYM,
                   PerturbWavelength,PerturbWavelength+1,PerturbWavelength+2);
 
-    ret += sscanf(line, "MHDBlastRefineOnStartup  = %" ISYM"", &RefineOnStartup);
+    sscanf(line, "MHDBlastRefineOnStartup  = %" ISYM"", &RefineOnStartup);
 
   }//line loop
 

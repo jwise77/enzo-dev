@@ -32,7 +32,6 @@ int grid::AnalyzeTrackPeaks(int level, int ReportLevel)
  
   static int PeakActive[MAX_DEPTH_OF_HIERARCHY][MAX_PEAKS];
   static float PeakDensity[MAX_DEPTH_OF_HIERARCHY][MAX_PEAKS];
-  static FLOAT PeakLastUpdateTime[MAX_DEPTH_OF_HIERARCHY][MAX_PEAKS];
   static FLOAT PeakPosition[MAX_DEPTH_OF_HIERARCHY][MAX_PEAKS][MAX_DIMENSION];
  
   /* Return if this grid is not on this processor
@@ -178,7 +177,6 @@ int grid::AnalyzeTrackPeaks(int level, int ReportLevel)
  
 	if (FoundIt == TRUE && OutputAlready[n] == FALSE) {
 	  OutputAlready[n] = TRUE;
-	  PeakLastUpdateTime[level][n] = Time;
 	  for (dim = 0; dim < GridRank; dim++)
 	    PeakPosition[level][n][dim] = pos[dim];
 	  PeakDensity[level][n] = BaryonField[DensNum][index];

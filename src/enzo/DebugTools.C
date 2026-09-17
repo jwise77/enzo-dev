@@ -150,7 +150,6 @@ int TracerParticlesAddToRestart_DoIt(char * filename, HierarchyEntry *TopGrid,
 void WriteSingleCube(float * array, int Dims[], char* string, int dNum, int gNum, char * label){
   
   hid_t       file_id, dataset_id, dataspace_id, float_type_id;
-  herr_t status;
   int FieldRankOut = 3;
   hsize_t     DimsInv[FieldRankOut];
   
@@ -200,12 +199,12 @@ void WriteSingleCube(float * array, int Dims[], char* string, int dNum, int gNum
   //Write the Data Set
   //                (set, memory type, mem. space, file space, transfer details, actual data)
   fprintf(stderr,"Writing set\n");
-  status = H5Dwrite(dataset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, 
+  H5Dwrite(dataset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, 
 		    array);
   
   
-  status = H5Sclose(dataspace_id);
-  status = H5Dclose(dataset_id);
-  status = H5Fclose(file_id);
+  H5Sclose(dataspace_id);
+  H5Dclose(dataset_id);
+  H5Fclose(file_id);
     
 }

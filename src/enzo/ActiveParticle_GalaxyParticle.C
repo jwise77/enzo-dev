@@ -196,7 +196,7 @@ int ActiveParticleType_GalaxyParticle::SetFlaggingField
 {
   /* Generate a list of all galaxy particles in the simulation box */
   int i, nParticles;
-  FLOAT *pos = NULL, dx=0, rad;
+  FLOAT *pos = NULL, rad;
   ActiveParticleList<ActiveParticleType> GalaxyParticleList;
   LevelHierarchyEntry *Temp = NULL;
   
@@ -206,8 +206,6 @@ int ActiveParticleType_GalaxyParticle::SetFlaggingField
   /* Calculate CellWidth on maximum refinement level */
   
   // this will fail for noncubic boxes or simulations with MinimimMassForRefinementLevelExponent
-  dx = (DomainRightEdge[0] - DomainLeftEdge[0]) /
-    (TopGridDims[0]*POW(FLOAT(RefineBy),FLOAT(MaximumRefinementLevel)));
   
   for (i=0 ; i<nParticles; i++){
     pos = GalaxyParticleList[i]->ReturnPosition();

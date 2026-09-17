@@ -431,7 +431,7 @@ int ActiveParticleType_SmartStar::AfterEvolveLevel(
   return SUCCESS;
 }
 
-static FLOAT Dist(FLOAT *tempPos, FLOAT *tempPos1)
+static inline FLOAT Dist(FLOAT *tempPos, FLOAT *tempPos1)
 {
   return sqrt((tempPos[0] - tempPos1[0])*(tempPos[0] - tempPos1[0]) +
 	      (tempPos[1] - tempPos1[1])*(tempPos[1] - tempPos1[1]) +

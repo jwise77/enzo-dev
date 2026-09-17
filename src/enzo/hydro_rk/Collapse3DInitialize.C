@@ -58,7 +58,7 @@ int Collapse3DInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int   dim, ret, level, sphere, i;
+  int dim, level, sphere, i;
 
   /* set default parameters */
 
@@ -110,69 +110,68 @@ int Collapse3DInitialize(FILE *fptr, FILE *Outfptr,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     /* read parameters */
 
-    ret += sscanf(line, "NumberOfSpheres = %" ISYM,
+    sscanf(line, "NumberOfSpheres = %" ISYM,
 		  &n_sphere);
-    ret += sscanf(line, "RefineAtStart = %" ISYM, 
+    sscanf(line, "RefineAtStart = %" ISYM, 
 		  &RefineAtStart);
-    ret += sscanf(line, "UseParticles = %" ISYM, 
+    sscanf(line, "UseParticles = %" ISYM, 
 		  &UseParticles);
-    ret += sscanf(line, "MediumDensity = %" FSYM, 
+    sscanf(line, "MediumDensity = %" FSYM, 
 		  &MediumDensity);
-    ret += sscanf(line, "MediumPressure = %" FSYM,
+    sscanf(line, "MediumPressure = %" FSYM,
 		  &MediumPressure);
-    ret += sscanf(line, "UniformVelocity = %" FSYM" %" FSYM" %" FSYM, 
+    sscanf(line, "UniformVelocity = %" FSYM" %" FSYM" %" FSYM, 
 		  UniformVelocity, UniformVelocity+1,
 		  UniformVelocity+2);
  
     if (sscanf(line, "SphereType[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereType[%" ISYM"] = %" ISYM, &sphere,
+      sscanf(line, "SphereType[%" ISYM"] = %" ISYM, &sphere,
 		    &SphereType[sphere]);
     if (sscanf(line, "SphereRadius[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereRadius[%" ISYM"] = %" PSYM, &sphere,
+      sscanf(line, "SphereRadius[%" ISYM"] = %" PSYM, &sphere,
 		    &SphereRadius[sphere]);
     if (sscanf(line, "SphereCoreRadius[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereCoreRadius[%" ISYM"] = %" PSYM, &sphere,
+      sscanf(line, "SphereCoreRadius[%" ISYM"] = %" PSYM, &sphere,
 		    &SphereCoreRadius[sphere]);
     if (sscanf(line, "SphereDensity[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereDensity[%" ISYM"] = %" FSYM, &sphere,
+      sscanf(line, "SphereDensity[%" ISYM"] = %" FSYM, &sphere,
 		    &SphereDensity[sphere]);
     if (sscanf(line, "SpherePressure[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SpherePressure[%" ISYM"] = %" FSYM, &sphere,
+      sscanf(line, "SpherePressure[%" ISYM"] = %" FSYM, &sphere,
 		    &SpherePressure[sphere]);
     if (sscanf(line, "SphereSoundVelocity[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereSoundVelocity[%" ISYM"] = %" FSYM, &sphere,
+      sscanf(line, "SphereSoundVelocity[%" ISYM"] = %" FSYM, &sphere,
 		    &SphereSoundVelocity[sphere]);
     if (sscanf(line, "SpherePosition[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SpherePosition[%" ISYM"] = %" PSYM" %" PSYM" %" PSYM, 
+      sscanf(line, "SpherePosition[%" ISYM"] = %" PSYM" %" PSYM" %" PSYM, 
 		    &sphere, &SpherePosition[sphere][0],
 		    &SpherePosition[sphere][1],
 		    &SpherePosition[sphere][2]);
     if (sscanf(line, "SphereVelocity[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereVelocity[%" ISYM"] = %" FSYM" %" FSYM" %" FSYM, 
+      sscanf(line, "SphereVelocity[%" ISYM"] = %" FSYM" %" FSYM" %" FSYM, 
 		    &sphere, &SphereVelocity[sphere][0],
 		    &SphereVelocity[sphere][1],
 		    &SphereVelocity[sphere][2]);
     if (sscanf(line, "SphereAngVel[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereAngVel[%" ISYM"] = %" FSYM, &sphere,
+      sscanf(line, "SphereAngVel[%" ISYM"] = %" FSYM, &sphere,
                     &SphereAngVel[sphere]);
     if (sscanf(line, "SphereTurbulence[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereTurbulence[%" ISYM"] = %" FSYM, &sphere,
+      sscanf(line, "SphereTurbulence[%" ISYM"] = %" FSYM, &sphere,
                     &SphereTurbulence[sphere]);
     if (sscanf(line, "SphereCutOff[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereCutOff[%" ISYM"] = %" FSYM, &sphere,
+      sscanf(line, "SphereCutOff[%" ISYM"] = %" FSYM, &sphere,
                     &SphereCutOff[sphere]);
     if (sscanf(line, "SphereAng1[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereAng1[%" ISYM"] = %" FSYM, &sphere,
+      sscanf(line, "SphereAng1[%" ISYM"] = %" FSYM, &sphere,
                     &SphereAng1[sphere]);
     if (sscanf(line, "SphereAng2[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereAng2[%" ISYM"] = %" FSYM, &sphere,
+      sscanf(line, "SphereAng2[%" ISYM"] = %" FSYM, &sphere,
                     &SphereAng2[sphere]);
     if (sscanf(line, "SphereNumShells[%" ISYM"]", &sphere) > 0)
-      ret += sscanf(line, "SphereNumShells[%" ISYM"] = %" ISYM, &sphere,
+      sscanf(line, "SphereNumShells[%" ISYM"] = %" ISYM, &sphere,
                     &SphereNumShells[sphere]);
     /* if the line is suspicious, issue a warning */
 

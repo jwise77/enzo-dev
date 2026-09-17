@@ -36,7 +36,6 @@ int grid::FlagCellsToBeRefinedByShockwaves(int level)
   /* declarations */
  
   int i, dim, NumberOfFlaggedCells = 0;
-  float CellVolume;
  
   /* Return if this grid is not on this processor. */
   if (MyProcessorNumber != ProcessorNumber)
@@ -57,10 +56,8 @@ int grid::FlagCellsToBeRefinedByShockwaves(int level)
   }
 
 
-   /* Find Mach field.  If no Mach field exists, quit and yell at user. */
-  int MachField = FALSE, MachNum;
+   int MachNum;
   if ((MachNum = FindField(Mach, FieldType, NumberOfBaryonFields)) != -1){
-    MachField = TRUE;
   } else{
     fprintf(stderr,"FlagCellsToBeRefinedByShockwaves: no Mach field!\n");
     return -1;
@@ -76,9 +73,8 @@ int grid::FlagCellsToBeRefinedByShockwaves(int level)
 
   /* Compute cell volume */
   
-  CellVolume = 1.0;
   for (dim = 0; dim < GridRank; dim++)
-    CellVolume *= CellWidth[dim][0];
+    ;
   
   /* compute size */ 
   int size = 1;

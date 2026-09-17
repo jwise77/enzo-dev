@@ -90,11 +90,10 @@ int AssignActiveParticlesToGrids(
     if (NumberOfProcessors == 1) {
       grid* OldGrid = ParticleList[i]->ReturnCurrentGrid();
       int ID = ParticleList[i]->ReturnID();
-      int foundAP = FALSE;
       NumberOfGrids = GenerateGridArray(LevelArray, LevelMax, &LevelGrids); 
 
       if (SavedGrid != -1) {
-        foundAP = OldGrid->RemoveActiveParticle(ID,LevelGrids[SavedGrid]->
+        OldGrid->RemoveActiveParticle(ID,LevelGrids[SavedGrid]->
             GridData->ReturnProcessorNumber());
       }
       if (LevelGrids[SavedGrid]->GridData->AddActiveParticle(

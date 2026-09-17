@@ -162,16 +162,12 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
   int i, Stop = FALSE;
   int StoppedByOutput = FALSE;
   int Restart = FALSE;
-  double tlev0, tlev1, treb0, treb1, tloop0, tloop1, tentry, texit;
+  double tlev0, tlev1, treb0, treb1, tloop0, tloop1;
   LevelHierarchyEntry *Temp;
   double LastCPUTime;
 
   LCAPERF_BEGIN("EL");
   LCAPERF_START("EvolveHierarchy");
-
-#ifdef USE_MPI
-  tentry = MPI_Wtime();
-#endif
  
   if (MetaData.Time        >= MetaData.StopTime ) Stop = TRUE;
   if (MetaData.CycleNumber >= MetaData.StopCycle) Stop = TRUE;
@@ -799,9 +795,5 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
  
   /* done */
 
-#ifdef USE_MPI
-  texit = MPI_Wtime();
-#endif
- 
   return SUCCESS;
 }

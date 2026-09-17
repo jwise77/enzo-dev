@@ -59,7 +59,7 @@ int MHD2DTestInitialize(FILE *fptr, FILE *Outfptr,
   /* declarations */
 
   char  line[MAX_LINE_LENGTH];
-  int ret, level, i;
+  int level, i;
 
   /* set default parameters */
 
@@ -79,40 +79,39 @@ int MHD2DTestInitialize(FILE *fptr, FILE *Outfptr,
 
   while (fgets(line, MAX_LINE_LENGTH, fptr) != NULL) {
 
-    ret = 0;
 
     /* read parameters */
-    ret += sscanf(line, "RefineAtStart = %" ISYM, 
+    sscanf(line, "RefineAtStart = %" ISYM, 
 		  &RefineAtStart);
-    ret += sscanf(line, "LowerVelocityX = %" FSYM,
+    sscanf(line, "LowerVelocityX = %" FSYM,
 		  &LowerVelocityX);
-    ret += sscanf(line, "LowerVelocityY = %" FSYM,
+    sscanf(line, "LowerVelocityY = %" FSYM,
 		  &LowerVelocityY);
-    ret += sscanf(line, "LowerPressure = %" FSYM, 
+    sscanf(line, "LowerPressure = %" FSYM, 
 		  &LowerPressure);
-    ret += sscanf(line, "LowerDensity = %" FSYM, 
+    sscanf(line, "LowerDensity = %" FSYM, 
 		  &LowerDensity);
-    ret += sscanf(line, "LowerBx = %" FSYM,
+    sscanf(line, "LowerBx = %" FSYM,
 		  &LowerBx);
-    ret += sscanf(line, "LowerBy = %" FSYM,
+    sscanf(line, "LowerBy = %" FSYM,
 		  &LowerBy);
-    ret += sscanf(line, "UpperVelocityX = %" FSYM, 
+    sscanf(line, "UpperVelocityX = %" FSYM, 
 		  &UpperVelocityX);
-    ret += sscanf(line, "UpperVelocityY = %" FSYM, 
+    sscanf(line, "UpperVelocityY = %" FSYM, 
 		  &UpperVelocityY);
-    ret += sscanf(line, "UpperPressure = %" FSYM, 
+    sscanf(line, "UpperPressure = %" FSYM, 
 		  &UpperPressure);
-    ret += sscanf(line, "UpperDensity = %" FSYM,
+    sscanf(line, "UpperDensity = %" FSYM,
                   &UpperDensity);
-    ret += sscanf(line, "UpperBx = %" FSYM,
+    sscanf(line, "UpperBx = %" FSYM,
 		  &UpperBx);
-    ret += sscanf(line, "UpperBy = %" FSYM,
+    sscanf(line, "UpperBy = %" FSYM,
 		  &UpperBy);
-    ret += sscanf(line, "MHD2DProblemType = %" ISYM,
+    sscanf(line, "MHD2DProblemType = %" ISYM,
 		  &MHD2DProblemType);
-    ret += sscanf(line, "RampWidth = %" FSYM,
+    sscanf(line, "RampWidth = %" FSYM,
 		  &RampWidth);
-    ret += sscanf(line, "UseColour = %" ISYM, 
+    sscanf(line, "UseColour = %" ISYM, 
 		  &UseColour);
     
     //        fprintf(stderr, "%" ISYM" MHD2DTestInitialize !!!!!!!!!!\n", RefineAtStart);

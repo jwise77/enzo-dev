@@ -631,7 +631,6 @@ int grid::read_dataset(int ndims, hsize_t *dims, const char *name, hid_t group,
 {
   hid_t file_dsp_id;
   hid_t dset_id;
-  hid_t h5_status;
   herr_t      h5_error = -1;
   int i, j, k;
   /* get data into temporary array */
@@ -642,13 +641,13 @@ int grid::read_dataset(int ndims, hsize_t *dims, const char *name, hid_t group,
   dset_id =  H5Dopen(group, name);
   if( dset_id == h5_error )ENZO_VFAIL("Error opening %s", name)
 
-  h5_status = H5Dread(dset_id, data_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) read_to);
+  H5Dread(dset_id, data_type, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) read_to);
   if( dset_id == h5_error )ENZO_VFAIL("Error reading %s", name)
 
-  h5_status = H5Sclose(file_dsp_id);
+  H5Sclose(file_dsp_id);
   if( dset_id == h5_error )ENZO_VFAIL("Error closing dataspace %s", name)
 
-  h5_status = H5Dclose(dset_id);
+  H5Dclose(dset_id);
   if( dset_id == h5_error )ENZO_VFAIL("Error closing %s", name)
 
   if(copy_back_active == TRUE) {
@@ -795,16 +794,10 @@ int grid::ReadExtraFields(hid_t group_id)
   hid_t acc_node;
   hid_t h5_error = -1;
   int size, dim;
-  int ActiveDim[MAX_DIMENSION];
-  hsize_t     OutDims[MAX_DIMENSION];
   hsize_t     FullOutDims[MAX_DIMENSION];
   hsize_t     GMFOutDims[MAX_DIMENSION];
 
-  for (dim = 0; dim < 3; dim++)
-    ActiveDim[dim] = GridEndIndex[dim] - GridStartIndex[dim] +1;
-
   for (dim = 0; dim < GridRank; dim++) {
-    OutDims[GridRank-dim-1] = ActiveDim[dim];
     FullOutDims[GridRank-dim-1] = GridDimension[dim];
   }
 

@@ -68,12 +68,6 @@ int grid::RadiatingShockInitializeGrid(FLOAT dr,
   if (ProcessorNumber != MyProcessorNumber)
     return SUCCESS;
  
-  /* declarations */
- 
-  int size = 1, dim;
-  for (dim = 0; dim < GridRank; dim++)
-    size *= GridDimension[dim];
-
   FLOAT r,x,y,z;
 
   float cell_HydrogenFractionByMass, cell_DeuteriumToHydrogenRatio;
@@ -106,11 +100,7 @@ int grid::RadiatingShockInitializeGrid(FLOAT dr,
       return FAIL;
     }
 
-  int MetallicityField = FALSE;
-  if ((MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields))
-      != -1)
-    MetallicityField = TRUE;
-  else
+  if ((MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields)) == -1)
     MetalNum = 0;
 
 
@@ -793,12 +783,11 @@ void set_analytic_sedov(int Nbins, double *radius, double *density,
 {
 
   int i;
-  double gamp1,gamm1,gam7,k, R2, u1, v2, p2;
+  double gamp1,gamm1,k, R2, u1, v2, p2;
   double alpha1, alpha2, alpha3, alpha4, alpha5;
 
   gamp1 = gamma + 1.0;
   gamm1 = gamma - 1.0;
-  gam7 = 7.0 - gamma;
   k = gamp1 / gamm1;
 
   // shock radii, velocity, pressure
@@ -907,10 +896,9 @@ double compute_sedov_v(double xi, double gamma, double alpha1, double alpha2){
 
 double sedov_vfunc(double V, double gamma, double alpha1, double alpha2){
 
-  double tmp, gamp1, gamm1, gam7;
+  double tmp, gamp1, gamm1;
   gamp1 = gamma + 1.0;
   gamm1 = gamma - 1.0;
-  gam7 = 7.0 - gamma;
 
   tmp = POW( (5.0*gamp1*V/4.0) , -2.0/5.0 ) * POW( gamp1/gamm1*(5.0*gamma*V/2.0-1.0), -1.0*alpha2);
   tmp = tmp * POW( (5.0*gamp1 / (5.0*gamp1 - 2.0*(2.0+3.0*gamm1)) *( 1.0 - (2.0+3.0*gamm1)*V/2.0)), -1.0*alpha1);

@@ -53,9 +53,7 @@ int grid::RotatingCylinderInitializeGrid(FLOAT RotatingCylinderRadius,
 
   /* declarations */
  
-  int size = 1, dim, cellindex;
-  for (dim = 0; dim < GridRank; dim++)
-    size *= GridDimension[dim];
+  int cellindex;
 
   FLOAT x, y, z, radius, zdist;
 
@@ -68,11 +66,7 @@ int grid::RotatingCylinderInitializeGrid(FLOAT RotatingCylinderRadius,
     ENZO_FAIL("Error in IdentifyPhysicalQuantities.\n");
   }
 
-  int MetallicityField = FALSE;
-  if ((MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields))
-      != -1)
-    MetallicityField = TRUE;
-  else
+  if ((MetalNum = FindField(Metallicity, FieldType, NumberOfBaryonFields)) == -1)
     MetalNum = 0;
 
   /* set fields in the cylinder region */
