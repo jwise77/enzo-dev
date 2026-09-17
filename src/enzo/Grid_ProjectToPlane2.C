@@ -144,7 +144,7 @@ int grid::ProjectToPlane2(FLOAT ProjectedFieldLeftEdge[],
   start += GridStartIndex[ProjectionDimension];
   stop += GridStartIndex[ProjectionDimension];
   if (debug) 
-    printf("ProjectToGrid: start = %d/%d (%5.3f)  stop = %d/%d (%5.3f)  "
+    printf("ProjectToGrid: start = %" ISYM "/%" ISYM " (%5.3f)  stop = %" ISYM "/%" ISYM " (%5.3f)  "
 	   "GridLeft/Right = %5.3" FSYM"/%5.3" FSYM"\n",
 	   start, GridStartIndex[ProjectionDimension], LeftCellFraction,
 	   stop, GridEndIndex[ProjectionDimension], RightCellFraction,
@@ -555,7 +555,7 @@ int grid::ProjectToPlane2(FLOAT ProjectedFieldLeftEdge[],
 
       temp_field[i] = powf(10.0f, a0 + a1*log_temp + a2*log_temp2) * nelec*nelec;
       if (isnan(temp_field[i]))
-	printf("NaN: %d %g %g %g %g %g %g %g\n", 
+	printf("NaN: %" ISYM " %g %g %g %g %g %g %g\n", 
 	       i, a0, a1, a2, temperature[i], nelec,
 	       log_temp, log_nelec);
     }

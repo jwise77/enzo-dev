@@ -159,7 +159,7 @@ int CalculateSubtractionParameters(LevelHierarchyEntry *LevelArray[], int level,
     
     c_s = (int)(sqrt(Gamma * kboltz * temperature[index] / (mu * mh)));
 
-    fprintf(stdout, "index = %d, temp = %g, mu = %g, density = %g, number_density = %g, c_s = %d\n",
+    fprintf(stdout, "index = %" ISYM ", temp = %g, mu = %g, density = %g, number_density = %g, c_s = %" ISYM "\n",
 	    index, temperature[index], mu, density, number_density, c_s);  
 
     delete [] temperature;
@@ -171,7 +171,7 @@ int CalculateSubtractionParameters(LevelHierarchyEntry *LevelArray[], int level,
 
   CommunicationBroadcastValue(&c_s, star_CurrentGrid->ReturnProcessorNumber());
 
-  fprintf(stdout, "MyProc = %d, star_CurrentGrid_ProcNum = %d, c_s = %d\n", 
+  fprintf(stdout, "MyProc = %" ISYM ", star_CurrentGrid_ProcNum = %" ISYM ", c_s = %" ISYM "\n", 
 	  MyProcessorNumber, star_CurrentGrid->ReturnProcessorNumber(), c_s);
 #endif // UNUSED
 

@@ -477,7 +477,7 @@ void Star::DeleteCopyInGrid(void)
 
 void Star::PrintInfo(void)
 {
-  printf("[P%d] Star %" ISYM": pos = %" PSYM" %" PSYM" %" PSYM", vel = %" FSYM" %" FSYM" %" FSYM"\n",
+  printf("[P%" ISYM "] Star %" ISYM": pos = %" PSYM" %" PSYM" %" PSYM", vel = %" FSYM" %" FSYM" %" FSYM"\n",
 	 MyProcessorNumber, Identifier, pos[0], pos[1], pos[2], vel[0], vel[1], vel[2]);
   printf("\t delta_vel = %" FSYM" %" FSYM" %" FSYM"\n", delta_vel[0], delta_vel[1],
 	 delta_vel[2]);
@@ -494,7 +494,7 @@ void Star::PrintInfo(void)
   printf("\t FeedbackFlag = %" ISYM"\n", FeedbackFlag);
   printf("\t accreted_angmom = %" FSYM" %" FSYM" %" FSYM"\n", accreted_angmom[0],
 	 accreted_angmom[1], accreted_angmom[2]);
-  printf("\t this = %x, PrevStar = %x, NextStar = %x\n", this, PrevStar, NextStar);
+  printf("\t this = %p, PrevStar = %p, NextStar = %p\n", this, PrevStar, NextStar);
   return;
 }
 

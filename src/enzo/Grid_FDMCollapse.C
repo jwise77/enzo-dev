@@ -74,7 +74,7 @@ int grid::FDMCollapseInitializeGrid(int UseParticles, float ParticleMeanDensity)
   FieldType[ImPsiNum = NumberOfBaryonFields++] = ImPsi;
   FieldType[FDMDensNum = NumberOfBaryonFields++] = FDMDensity;
   
-  //printf("%d \n", NumberOfBaryonFields);
+  //printf("%" ISYM " \n", NumberOfBaryonFields);
   if( WritePotential  )
     FieldType[NumberOfBaryonFields++] = GravPotential;
 
@@ -216,9 +216,9 @@ if(FDMCollapseAbsorbingBoundary){
             indzp = GRIDINDEX_NOGHOST(i,j,k+1);
             indzn = GRIDINDEX_NOGHOST(i,j,k-1);
           }
-		  //printf("%d %d %d %d \n",size, i,j,k);
+		  //printf("%" ISYM " %" ISYM " %" ISYM " %" ISYM " \n",size, i,j,k);
           //printf("x,y,z %f %f %f \n",x,y,z);
-          //printf("%d %d %d \n",ind,indxp,indxn);
+          //printf("%" ISYM " %" ISYM " %" ISYM " \n",ind,indxp,indxn);
 
 		  ParticleCount += int(BaryonField[FDMDensNum][ind]/ParticleMeanDensity);
 	      
@@ -265,7 +265,7 @@ if(FDMCollapseAbsorbingBoundary){
       }// end for loop over grid */ 
    } // end loop SetupLoopCount
    NumberOfParticles = npart;
-   printf("Number of Particles %d \n", NumberOfParticles);
+   printf("Number of Particles %" ISYM " \n", NumberOfParticles);
 
   // turn off quantum pressure, do a pure CDM sim
   // QuantumPressure = 0;

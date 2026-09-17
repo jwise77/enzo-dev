@@ -719,7 +719,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 
       /* Do the feedback */
 
-      //printf("n_cell = %i \n", n_cell);
+      //printf("n_cell = %" ISYM " \n", n_cell);
       float m_wind = 0.0;
       float cells_volume = 0.0;
       for (int ic = 0; ic < n_cell; ic++) {
@@ -741,7 +741,7 @@ int star_maker8(int *nx, int *ny, int *nz, int *size, float *d, float *te, float
 	else if (radius2_cell[ic] == 27.0) SolidAngle = 0.0302870901;
 	else { 
 	  SolidAngle = 4.*pi/n_cell; 
-	  printf("star_maker8.C line 373: Radius squared is wrong?!? radius =%f, n_cell = %i\n",radius2_cell[ic],n_cell); 
+	  printf("star_maker8.C line 373: Radius squared is wrong?!? radius =%f, n_cell = %" ISYM "\n",radius2_cell[ic],n_cell); 
 	 }
 	rho_wind = mdot_wind*SolidAngle/(POW((*dx),3));
 	cells_volume += POW((*dx),3);

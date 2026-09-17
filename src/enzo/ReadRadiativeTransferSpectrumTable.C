@@ -64,7 +64,7 @@ int ReadRadiativeTransferSpectrumTable(float TemperatureUnits, float LengthUnits
   // Read the spectrum table
 
   for (i = 0; i < nbins; i++) {
-      if (fscanf(fptr, "%" FSYM" %" FSYM" %" FSYM" %" FSYM" %f",
+      if (fscanf(fptr, "%" FSYM" %" FSYM" %" FSYM" %" FSYM" %" FSYM"",
 		 &RadiativeTransferSpectrumTable.columndensity_table[i],
 		 &RadiativeTransferSpectrumTable.fractionphotons_table[0][i],
 		 &RadiativeTransferSpectrumTable.fractionphotons_table[1][i],

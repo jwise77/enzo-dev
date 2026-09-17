@@ -254,8 +254,8 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
     fprintf(stdout, "%s: 2*(*PP)->level-1 = %llu\n", __FUNCTION__, res*(*PP)->level-1);
     fprintf(stdout, "%s: 12 * (1 << (2*(*PP)->level)) = %llu\n", __FUNCTION__, 
 	    BRP * (1L << (res*(*PP)->level)));
-    fprintf(stdout, "%s: Hlevel = %llu\n", __FUNCTION__, Hlevel);
-    fprintf(stdout, "%s: Nlevel = %llu\n", __FUNCTION__, Nlevel);
+    fprintf(stdout, "%s: Hlevel = %lu\n", __FUNCTION__, Hlevel);
+    fprintf(stdout, "%s: Nlevel = %lu\n", __FUNCTION__, Nlevel);
     fprintf(stdout, "%s: n_on_this_level = %lf\n", __FUNCTION__, n_on_this_level);
     ENZO_VFAIL("Computation of the number of pixels failed.\n"
 	       "\t level = %llu\n", (*PP)->level);
@@ -490,7 +490,7 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
     }  // if (splitting condition)
     
     if (DEBUG > 1) 
-      fprintf(stdout, "%x %" ISYM" %" ISYM" %" ISYM" %" GSYM" %" GSYM"\t|\n",
+      fprintf(stdout, "%p %" ISYM" %" ISYM" %" ISYM" %" GSYM" %" GSYM"\t|\n",
 	      (*PP), g[0], g[1], g[2], (*PP)->Radius, dr);
 
     index = cindex;
@@ -567,7 +567,7 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
      *
      */
 #if DEBUG
-    printf("%s: Radiation Type = %d\t PhotonEnergy = %f\n", __FUNCTION__, type, (*PP)->Energy);
+    printf("%s: Radiation Type = %" ISYM "\t PhotonEnergy = %f\n", __FUNCTION__, type, (*PP)->Energy);
 #endif
     switch (type) {
 
@@ -804,7 +804,7 @@ int grid::WalkPhotonPackage(PhotonPackageEntry **PP,
 
       break;
     default:
-      printf("Photon type = %d, radius = %g, pos = %" FSYM" %" FSYM" %" FSYM"\n",
+      printf("Photon type = %" ISYM ", radius = %g, pos = %" FSYM" %" FSYM" %" FSYM"\n",
 	     type, radius, r[0], r[1], r[2]);
       ENZO_FAIL("Bad photon type.");
 

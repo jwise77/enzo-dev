@@ -169,7 +169,7 @@ int StarParticleAddFeedback(TopGridData *MetaData,
 
 //    if (debug) {
 //      fprintf(stdout, "EjectaDensity=%g, influenceRadius=%g\n", EjectaDensity, influenceRadius); 
-//      fprintf(stdout, "SkipMassRemoval=%d, SphereContained=%d, SphereContainedNextLevel=%d\n", 
+//      fprintf(stdout, "SkipMassRemoval=%" ISYM ", SphereContained=%" ISYM ", SphereContainedNextLevel=%" ISYM "\n", 
 //	      SkipMassRemoval, SphereContained, SphereContainedNextLevel); 
 //    }
 

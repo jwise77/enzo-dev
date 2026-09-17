@@ -45,7 +45,7 @@ static const double inv_halfpi=0.6366197723675813430755350534900574;
 static void util_fail_ (const char *file, int line, const char *func,
   const char *msg)
   {
-  fprintf(stderr,"%s, %i (%s):\n%s\n",file,line,func,msg);
+  fprintf(stderr,"%s, %" ISYM " (%s):\n%s\n",file,line,func,msg);
   exit(1);
   }
 
@@ -948,7 +948,7 @@ static void setCoordSysHP(char coordsys,char *coordsys9)
   else if (coordsys=='E')
     strcpy (coordsys9,"E       ");
   else if ((coordsys!='C')&&(coordsys!='Q'))
-    fprintf(stderr, "%s (%d): System Cordinates are not correct"
+    fprintf(stderr, "%s (%" ISYM "): System Cordinates are not correct"
                     "(Galactic,Ecliptic,Celestial=Equatorial). "
                     " Celestial system was set.\n", __FILE__, __LINE__);
   }

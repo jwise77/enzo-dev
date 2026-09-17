@@ -50,10 +50,10 @@ int FSProb::WriteParameters(FILE *fptr)
   fprintf(fptr, "FSRadiationMaxDt = %22.16e\n", maxdt);    
   fprintf(fptr, "FSRadiationInitialGuess = %" ISYM"\n", initial_guess);    
   fprintf(fptr, "FSRadiationTolerance = %22.16e\n", sol_tolerance);    
-  fprintf(fptr, "FSRadiationMaxMGIters = %i\n", sol_maxit);    
-  fprintf(fptr, "FSRadiationMGRelaxType = %i\n", sol_rlxtype);    
-  fprintf(fptr, "FSRadiationMGPreRelax = %i\n", sol_npre);    
-  fprintf(fptr, "FSRadiationMGPostRelax = %i\n", sol_npost);    
+  fprintf(fptr, "FSRadiationMaxMGIters = %d\n", sol_maxit);    
+  fprintf(fptr, "FSRadiationMGRelaxType = %d\n", sol_rlxtype);    
+  fprintf(fptr, "FSRadiationMGPreRelax = %d\n", sol_npre);    
+  fprintf(fptr, "FSRadiationMGPostRelax = %d\n", sol_npost);    
 
   return SUCCESS;
 }

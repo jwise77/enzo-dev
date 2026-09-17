@@ -166,7 +166,7 @@ int grid::SchrodingerSolver( int nhy )
   for (int dim = 0; dim < GridRank; dim++) {
     Offset[dim] = nint((CellLeftEdge[dim][0] -
 			GravitatingMassFieldLeftEdge[dim])/ CellWidth[dim][0]);
-    //printf("offset %d %d\n", dim , GravitatingMassFieldDimension[dim]);
+    //printf("offset %" ISYM " %" ISYM "\n", dim , GravitatingMassFieldDimension[dim]);
   }
 
   // calculate hbar/m

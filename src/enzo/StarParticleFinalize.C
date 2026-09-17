@@ -137,7 +137,7 @@ int StarParticleFinalize(HierarchyEntry *Grids[], TopGridData *MetaData,
   for (ThisStar = AllStars; ThisStar; ThisStar = ThisStar->NextStar, count++) {
     //TimeNow = LevelArray[ThisStar->ReturnLevel()]->GridData->ReturnTime();
 //    if (debug) {
-//      printf("AddedFeedback[%d] = %d\n", count, AddedFeedback[count]);
+//      printf("AddedFeedback[%" ISYM "] = %" ISYM "\n", count, AddedFeedback[count]);
 //     ThisStar->PrintInfo();
 //    } 
     if (AddedFeedback[count]) {

@@ -298,7 +298,7 @@ int OutputAsParticleData(TopGridData &MetaData,
     if (io_log) fprintf(log_fptr, "H5Fcreate with Name = %s\n", FileName);
  
     file_id = H5Fcreate(FileName, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
-      if (io_log) fprintf(log_fptr, "H5Fcreate id: %" ISYM"\n", file_id);
+      if (io_log) fprintf(log_fptr, "H5Fcreate id: %ld\n", file_id);
       if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
  
     if (TotalNumberOfParticles[i] > 0) {
@@ -355,7 +355,7 @@ int OutputAsParticleData(TopGridData &MetaData,
       Slab_Dims[1] = TotalNumberOfParticles[i];
  
       file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       file_stride[0] = 1;      // contiguous elements
@@ -373,11 +373,11 @@ int OutputAsParticleData(TopGridData &MetaData,
 // 1D memory model
  
       mem_dsp_id = H5Screate_simple((Eint32) 1, &Slab_Dims[1], NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %" ISYM"\n", mem_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %ld\n", mem_dsp_id);
         if( mem_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
-        if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
  
@@ -394,7 +394,7 @@ int OutputAsParticleData(TopGridData &MetaData,
       if (io_log) fprintf(log_fptr, "H5Dcreate with Name = %s\n", dset_name);
  
       dset_id = H5Dcreate(file_id, dset_name, file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %ld\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       WriteStringAttr(dset_id, "Label", "xyz_position", log_fptr);
@@ -415,11 +415,11 @@ int OutputAsParticleData(TopGridData &MetaData,
         file_offset[0] = j;
  
         h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, file_offset, file_stride, file_count, NULL);
-          if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
+          if (io_log) fprintf(log_fptr, "H5Sselect file slab: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Dwrite(dset_id, float_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) buffer);
-          if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
+          if (io_log) fprintf(log_fptr, "H5Dwrite: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
 /* HDF5 problem
@@ -451,11 +451,11 @@ int OutputAsParticleData(TopGridData &MetaData,
       }
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
  
@@ -466,13 +466,13 @@ int OutputAsParticleData(TopGridData &MetaData,
       Slab_Dims[0] = MetaData.TopGridRank;
  
       file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n",dset_name);
  
       dset_id = H5Dcreate(file_id, dset_name, file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %ld\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       WriteStringAttr(dset_id, "Label", "xyz_velocity", log_fptr);
@@ -493,11 +493,11 @@ int OutputAsParticleData(TopGridData &MetaData,
         file_offset[0] = j;
  
         h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, file_offset, file_stride, file_count, NULL);
-          if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
+          if (io_log) fprintf(log_fptr, "H5Sselect file slab: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Dwrite(dset_id, float_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) buffer);
-          if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
+          if (io_log) fprintf(log_fptr, "H5Dwrite: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
 /* HDF5 problem
@@ -529,11 +529,11 @@ int OutputAsParticleData(TopGridData &MetaData,
       }
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
  
@@ -544,13 +544,13 @@ int OutputAsParticleData(TopGridData &MetaData,
       Slab_Dims[0] = 1;
  
       file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n",dset_name);
  
       dset_id = H5Dcreate(file_id, dset_name, file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %ld\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       WriteStringAttr(dset_id, "Label", "radius", log_fptr);
@@ -569,19 +569,19 @@ int OutputAsParticleData(TopGridData &MetaData,
       file_offset[0] = 0;
  
       h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, file_offset, file_stride, file_count, NULL);
-        if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sselect file slab: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dwrite(dset_id, float_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) buffer);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
  
@@ -598,13 +598,13 @@ int OutputAsParticleData(TopGridData &MetaData,
       Slab_Dims[0] = FullList.NumberOfValues;
  
       file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n", dset_name);
  
       dset_id = H5Dcreate(file_id, dset_name, file_type_id, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %ld\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
 /* Can't do this like HDF4 */
@@ -627,11 +627,11 @@ int OutputAsParticleData(TopGridData &MetaData,
         file_offset[0] = j;
  
         h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, file_offset, file_stride, file_count, NULL);
-          if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
+          if (io_log) fprintf(log_fptr, "H5Sselect file slab: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Dwrite(dset_id, float_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) buffer);
-          if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
+          if (io_log) fprintf(log_fptr, "H5Dwrite: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
 /* HDF5 problem
@@ -679,11 +679,11 @@ int OutputAsParticleData(TopGridData &MetaData,
       }
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       }
@@ -697,13 +697,13 @@ int OutputAsParticleData(TopGridData &MetaData,
       Slab_Dims[0] = 1;
  
       file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+        if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
         if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr,"H5Dcreate with Name = %s\n", dset_name);
  
       dset_id = H5Dcreate(file_id, dset_name, HDF5_FILE_PINT, file_dsp_id, H5P_DEFAULT);
-        if (io_log) fprintf(log_fptr, "H5Dcreate id: %" ISYM"\n", dset_id);
+        if (io_log) fprintf(log_fptr, "H5Dcreate id: %ld\n", dset_id);
         if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       WriteStringAttr(dset_id, "Label", "particle_index", log_fptr);
@@ -719,25 +719,25 @@ int OutputAsParticleData(TopGridData &MetaData,
       file_offset[0] = 0;
  
       h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, file_offset, file_stride, file_count, NULL);
-        if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sselect file slab: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dwrite(dset_id, HDF5_PINT, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) FullList.ParticleIndex);
-        if (io_log) fprintf(log_fptr, "H5Dwrite: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dwrite: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-        if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Dclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Sclose(file_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       }
  
       h5_status = H5Sclose(mem_dsp_id);
-        if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+        if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       delete buffer;
@@ -745,7 +745,7 @@ int OutputAsParticleData(TopGridData &MetaData,
     } // end: if (TotalNumberOfParticles[i] > 0)
  
     h5_status = H5Fclose(file_id);
-      if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   } // end: loop over dark matter/baryon particle lists

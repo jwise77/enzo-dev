@@ -142,7 +142,7 @@ int grid::TestRadiatingStarParticleInitializeGrid(float TestStarParticleStarMass
   NumberOfParticles = 1;
   NumberOfParticleAttributes = 4;
   this->AllocateNewParticles(NumberOfParticles);
-  printf("Allocated %d particles\n", NumberOfParticles);
+  printf("Allocated %" ISYM " particles\n", NumberOfParticles);
  
   /* Set up the baryon field. */ 
    /* compute size of fields */

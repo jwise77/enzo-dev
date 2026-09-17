@@ -267,7 +267,7 @@ int grid::SetFlaggingFieldMultiRefineRegions(int level)
     size *= GridEndIndex[dim] - GridStartIndex[dim] + 1;
 
   if (debug)
-    printf("SetFlaggingFieldMultiRefineRegions: NumberOfFlaggedCells = %d (%.1f%%)\n",
+    printf("SetFlaggingFieldMultiRefineRegions: NumberOfFlaggedCells = %" ISYM " (%.1f%%)\n",
 	   NumberOfFlaggedCells, float(NumberOfFlaggedCells)*100.0/
 	   float(size));
 

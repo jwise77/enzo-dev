@@ -147,7 +147,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
 	  POW((CellLeftEdge[2][k] + 0.5*CellWidth[2][k]) - xparticle[2],2);
 	
 	if ((AccretionRadius*AccretionRadius) > radius2) {
-	  //printf("Grid:index = %d\n", index);
+	  //printf("Grid:index = %" ISYM "\n", index);
 	  WeightedSum += BaryonField[DensNum][index]*
 	    exp(-radius2/((*KernelRadius)*(*KernelRadius)));
 	  (*SumOfWeights) += exp(-radius2/((*KernelRadius)*(*KernelRadius)));
@@ -181,7 +181,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
   if(SmartStarAccretion == SPHERICAL_BONDI_HOYLE_FORMALISM ||
      SmartStarAccretion == SPHERICAL_BONDI_HOYLE_FORMALISM_WITH_VORTICITY) {
 #ifdef DEBUG_AP
-    printf("Doing SPHERICAL_BONDI_HOYLE_FORMALISM, SmartStarAccretion = %d\n", SmartStarAccretion);
+    printf("Doing SPHERICAL_BONDI_HOYLE_FORMALISM, SmartStarAccretion = %" ISYM "\n", SmartStarAccretion);
 #endif
     RhoInfinity = AverageDensity /
       bondi_alpha(1.2*CellWidth[0][0] / BondiHoyleRadius);
@@ -192,7 +192,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
     /* Include Vorticity component if specified */
     if(SPHERICAL_BONDI_HOYLE_FORMALISM_WITH_VORTICITY == SmartStarAccretion) {
 #ifdef DEBUG_AP
-      printf("Doing SPHERICAL_BONDI_HOYLE_FORMALISM_WIDTH_VORTICITY, SmartStarAccretion = %d\n",
+      printf("Doing SPHERICAL_BONDI_HOYLE_FORMALISM_WIDTH_VORTICITY, SmartStarAccretion = %" ISYM "\n",
 	     SmartStarAccretion);
 #endif
       /* Include Vorticity Component */
@@ -217,7 +217,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
    */
   if(SmartStarAccretion == VISCOUS_ANGULAR_MOMENTUM_TRANSPORT) {
 #ifdef DEBUG_AP
-    printf("Doing VISCOUS_ANGULAR_MOMENTUM_TRANSPORT, SmartStarAccretion = %d\n", SmartStarAccretion);
+    printf("Doing VISCOUS_ANGULAR_MOMENTUM_TRANSPORT, SmartStarAccretion = %" ISYM "\n", SmartStarAccretion);
 #endif
   float alpha = 0.1;
   float c_s = sqrt(Gamma * kboltz * AverageT / (Mu * mh)) /
@@ -236,7 +236,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
    */
   if(SmartStarAccretion == ALPHA_DISK_CEN_2012) {
 #ifdef DEBUG_AP
-     printf("Doing ALPHA_DISK_CEN_2012, SmartStarAccretion = %d\n", SmartStarAccretion);
+     printf("Doing ALPHA_DISK_CEN_2012, SmartStarAccretion = %" ISYM "\n", SmartStarAccretion);
 #endif
     AccretionRate = CenAccretionRate(AverageDensity, AccretionRadius,
 				     xparticle, vparticle, mparticle);
@@ -249,7 +249,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
    */
   if(SmartStarAccretion == ANGULAR_MOMENTUM_LIMITED_ACCRETION) {
 #ifdef DEBUG_AP
-    printf("Doing ANGULAR_MOMENTUM_LIMITED_ACCRETION, SmartStarAccretion = %d\n", SmartStarAccretion);
+    printf("Doing ANGULAR_MOMENTUM_LIMITED_ACCRETION, SmartStarAccretion = %" ISYM "\n", SmartStarAccretion);
 #endif
     float c_s = sqrt(Gamma * kboltz * AverageT / (Mu * mh))*TimeUnits/LengthUnits;
     float V_phi = CalculateCirculisationSpeed(Vel1Num, AccretionRadius, xparticle, vparticle);
@@ -276,7 +276,7 @@ float grid::CalculateSmartStarAccretionRate(ActiveParticleType* ThisParticle,
    */
   if(SmartStarAccretion ==  CONVERGING_MASS_FLOW) {
 #ifdef DEBUG_AP
-    printf("Doing CONVERGING_MASS_FLOW, SmartStarAccretion = %d\n", SmartStarAccretion);
+    printf("Doing CONVERGING_MASS_FLOW, SmartStarAccretion = %" ISYM "\n", SmartStarAccretion);
 #endif
     AccretionRate = ConvergentMassFlow(DensNum, Vel1Num, AccretionRadius, xparticle, vparticle, 
 				       mparticle, Gcode, GENum);
@@ -546,7 +546,7 @@ float grid::ConvergentMassFlow(int DensNum, int Vel1Num, FLOAT AccretionRadius,
   // mdot = -4*pi*rho*R^2*V_radial
   mdot = fabs(4*M_PI*mdot); //return the accretion rate as a positive quantity
 #ifdef DEBUG_AP
-  printf("%s: Num InFlow cells = %d\t Num OutflowCells = %d\t mdot = %e\n", __FUNCTION__, numincells,
+  printf("%s: Num InFlow cells = %" ISYM "\t Num OutflowCells = %" ISYM "\t mdot = %e\n", __FUNCTION__, numincells,
 	 numoutcells, mdot);
 #endif
   return mdot;
@@ -592,7 +592,7 @@ float grid::CalculateCirculisationSpeed(int Vel1Num, FLOAT AccretionRadius,
 	  //		  radialvelocity*radialvelocity);
 	  total_vorticity[0] += vorticity[0];total_vorticity[1] += vorticity[1];total_vorticity[2] += vorticity[2]; 
 	  numcells++;
-	  //printf("%s: numcells = %d\t relpos = (%g, %g, %g)\n", __FUNCTION__, numcells, relpos[0], relpos[1], relpos[2]);
+	  //printf("%s: numcells = %" ISYM "\t relpos = (%g, %g, %g)\n", __FUNCTION__, numcells, relpos[0], relpos[1], relpos[2]);
 	  //printf("%s: vorticty = (%g, %g, %g)\n", __FUNCTION__, vorticity[0], vorticity[1], vorticity[2]);
 	}
       }

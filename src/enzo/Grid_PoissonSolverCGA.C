@@ -469,7 +469,7 @@ int grid::PoissonSolverCGA(int difftype, double *divB_p)
 
 
   if (debug){
-//    printf("Iteration times = %d\n", counter); 
+//    printf("Iteration times = %" ISYM "\n", counter); 
   
     if (counter == size)
       printf("Iterations reached limit, maxnr = %g\n", dotnr);

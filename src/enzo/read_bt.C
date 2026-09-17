@@ -84,24 +84,24 @@ int READ_BT(boundary_type *bt_buffer,
 
 // 1D array for memory buffer
     mem_dsp_id = H5Screate_simple(1, &bsize, NULL);
-      if (io_log) fprintf(stderr, "H5Screate mem_dsp_id: %" ISYM"\n", mem_dsp_id);
+      if (io_log) fprintf(stderr, "H5Screate mem_dsp_id: %ld\n", mem_dsp_id);
       if( mem_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
 
 // 4D array for file, or 2?
     file_dsp_id = H5Screate_simple(4, bt_dims, NULL);
-      if (io_log) fprintf(stderr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(stderr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
 
     if (io_log) fprintf(stderr, "Calling H5Fopen with Name = %s\n", Name);
 
     file_id = H5Fopen(Name, H5F_ACC_RDWR, H5P_DEFAULT);
-      if (io_log) fprintf(stderr, "H5Fopen id: %" ISYM"\n", file_id);
+      if (io_log) fprintf(stderr, "H5Fopen id: %ld\n", file_id);
       if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
 
     if (io_log) fprintf(stderr, "Calling H5Dopen with Name = %s\n", Name);
 
     dset_id =  H5Dopen(file_id, Name);
-      if (io_log) fprintf(stderr, "H5Dopen id: %" ISYM"\n", dset_id);
+      if (io_log) fprintf(stderr, "H5Dopen id: %ld\n", dset_id);
       if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
 
   mem_stride = 1;         // contiguous elements
@@ -110,7 +110,7 @@ int READ_BT(boundary_type *bt_buffer,
   mem_block = 1;          // single element blocks
 
   h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
-    if (io_log) fprintf(stderr, "H5Sselect mem slab: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(stderr, "H5Sselect mem slab: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
   file_stride[0] = 1;                   // contiguous elements
@@ -134,12 +134,12 @@ int READ_BT(boundary_type *bt_buffer,
   file_block[3] = 1;                    // single element blocks
 
   h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, file_offset, file_stride, file_count, NULL);
-    if (io_log) fprintf(stderr, "H5Sselect file slab: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(stderr, "H5Sselect file slab: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
 
   h5_status = H5Dread(dset_id, mem_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, bt_buffer);
-    if (io_log) fprintf(stderr, "H5Dread: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(stderr, "H5Dread: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
 /*
@@ -152,19 +152,19 @@ int READ_BT(boundary_type *bt_buffer,
 */
 
   h5_status = H5Dclose(dset_id);
-    if (io_log) fprintf(stderr, "H5Dclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(stderr, "H5Dclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
   h5_status = H5Sclose(mem_dsp_id);
-    if (io_log) fprintf(stderr, "H5Sclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(stderr, "H5Sclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
   h5_status = H5Sclose(file_dsp_id);
-    if (io_log) fprintf(stderr, "H5Sclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(stderr, "H5Sclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
   h5_status = H5Fclose(file_id);
-    if (io_log) fprintf(stderr, "H5Fclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(stderr, "H5Fclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
   return SUCCESS;

@@ -221,7 +221,7 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 	      if(l_char/(CellWidth[0][0]*LengthUnits) != 1.0) {
 		printf("l_char/cellwidth = %g\n", l_char/(CellWidth[0][0]*LengthUnits));
 		printf("N_H2 = %g (cm^-2)\n", N_H2);
-		printf("H2I Density[%d] = %g (code)\n", index, BaryonField[H2INum][index]);
+		printf("H2I Density[%" ISYM "] = %g (code)\n", index, BaryonField[H2INum][index]);
 		printf("Local H2I Density = %g (cgs)\n",
 		BaryonField[H2INum][index]*DensityUnits*CellWidth[0][0]*LengthUnits/mh);
 		printf("Temp = %f\n", BaryonField[TemperatureField][index]);
@@ -330,9 +330,9 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 	LWLuminosity = LWSED * RS->Luminosity / LConv;
 	H2IILuminosity = IRLuminosity + LWLuminosity;
 #if(DEBUG)
-	printf("MyProcessorNumber %d: IRSED = %f\t IRLuminosity = %g\n", MyProcessorNumber, IRSED,
+	printf("MyProcessorNumber %" ISYM ": IRSED = %f\t IRLuminosity = %g\n", MyProcessorNumber, IRSED,
 	       IRLuminosity);
-	printf("MyProcessorNumber %d: LWSED = %f\t LWLuminosity = %g\n", MyProcessorNumber, LWSED,
+	printf("MyProcessorNumber %" ISYM ": LWSED = %f\t LWLuminosity = %g\n", MyProcessorNumber, LWSED,
 	       LWLuminosity);
 #endif
 	/* Pre-calculate distances from cells to source */
@@ -392,7 +392,7 @@ int grid::AddH2DissociationFromSources(Star *AllStars)
 		printf("CellWidth = %g\n", CellWidth[0][0]*LengthUnits);
 		printf("l_char/cellwidth = %g\n", l_char/(CellWidth[0][0]*LengthUnits));
 		printf("N_H2 = %g (cm^-2)\n", N_H2);
-		printf("H2I Density[%d] = %g (code)\n", index, BaryonField[H2INum][index]);
+		printf("H2I Density[%" ISYM "] = %g (code)\n", index, BaryonField[H2INum][index]);
 		printf("Local H2I Density = %g (cgs)\n",
 		BaryonField[H2INum][index]*DensityUnits*CellWidth[0][0]*LengthUnits/mh);
 		printf("Temp = %f\n", BaryonField[TemperatureField][index]);

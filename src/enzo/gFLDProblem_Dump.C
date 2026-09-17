@@ -97,8 +97,8 @@ int gFLDProblem::Dump(EnzoVector *ucur)
   
 
   char *ofile = new char[12];
-  char *tmp_str = new char[3];
-  char *tmp_str2 = new char[3];
+  char *tmp_str = new char[64];
+  char *tmp_str2 = new char[64];
   for (int ns=0; ns<=Nchem+1; ns++) {
 
     sprintf(tmp_str,"%" ISYM,ns);

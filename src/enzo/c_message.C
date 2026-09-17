@@ -45,7 +45,7 @@ void c_error (char *sourcefile, Eint32 linenumber)
 #endif
  
   printf ("==================\n");
-  printf ("=== ENZO ERROR ===   %s: %" ISYM"   node %" ISYM"\n",
+  printf ("=== ENZO ERROR ===   %s: %d   node %d\n",
 	  sourcefile,linenumber,id);
   printf ("==================\n");
   fflush(stdout);
@@ -76,7 +76,7 @@ void c_warning (char *sourcefile, Eint32 linenumber)
   id = 0;
 #endif
  
-  printf ("--- ENZO WARNING #%" ISYM" ---   %s: %" ISYM"   node %" ISYM"\n",
+  printf ("--- ENZO WARNING #%" ISYM " ---   %s: %d   node %d\n",
 	  warning_count,sourcefile,linenumber,id);
   fflush(stdout);
  

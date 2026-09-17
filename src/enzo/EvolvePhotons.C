@@ -713,7 +713,7 @@ int EvolvePhotons(TopGridData *MetaData, LevelHierarchyEntry *LevelArray[],
     CommunicationBarrier();
     if (MyProcessorNumber == i) {
 
-      printf("P%d:", MyProcessorNumber);
+      printf("P%" ISYM ":", MyProcessorNumber);
       fpcol(PerfCounter, 14, 14, stdout);
       fflush(stdout);
     }

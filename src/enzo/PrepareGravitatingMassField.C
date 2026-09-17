@@ -120,7 +120,7 @@ int PrepareGravitatingMassField2a(HierarchyEntry *Grid, TopGridData *MetaData,
       fprintf(stderr, "Error in grid->AddOverlappingParticleMassFields.\n");
     }
   //  for (grid2 = 0; grid2 < SiblingList[grid1].NumberOfSiblings; grid2++)
-  //fprintf(stderr,"grid %i %i\n", grid1, grid2);
+  //fprintf(stderr,"grid %" ISYM " %" ISYM "\n", grid1, grid2);
 
 #else
   if (CopyOverlappingParticleMassFields(CurrentGrid, MetaData,

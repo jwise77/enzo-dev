@@ -123,7 +123,7 @@ int ActiveParticleType_GalaxyParticle::EvaluateFormation
       continue;
     }
 
-    fprintf(stderr,"%d %d inserting particle %" FSYM" %" FSYM" %" FSYM" %" FSYM" %" FSYM"\n",
+    fprintf(stderr,"%" ISYM " %" ISYM " inserting particle %" FSYM" %" FSYM" %" FSYM" %" FSYM" %" FSYM"\n",
         MyProcessorNumber, data.GridID, x, y, z, dens, radius);
 
 	// If no more room for particles, throw an ENZO_FAIL

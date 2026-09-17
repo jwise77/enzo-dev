@@ -335,7 +335,7 @@ int grid::CosmologyInitializeParticles(
 	  } // ENDIF mask
       } // ENDFOR j
   } // ENDIF types
-  printf("Number of MRPs created on level %d is %d.\n",level,num_flip);
+  printf("Number of MRPs created on level %" ISYM " is %" ISYM ".\n",level,num_flip);
   
 #ifdef ICPART_SHIFT8
   /* Check to see if the particle is adjacent to static grid boundary

@@ -643,7 +643,7 @@ typedef long long int   HDF5_hid_t;
   time (&rawtime); \
   timeinfo = localtime(&rawtime); \
   if (MyProcessorNumber % (NumberOfProcessors/PROCS_PER_NODE) == 0) \
-    printf("%s :: P%d :: %s", A, MyProcessorNumber, asctime(timeinfo));
+    printf("%s :: P%" ISYM " :: %s", A, MyProcessorNumber, asctime(timeinfo));
 #else
 #define TIME_MSG(A) ;
 #endif

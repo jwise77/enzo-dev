@@ -48,7 +48,7 @@ int grid::FTStochasticForcing(int FieldDim)
 
     if (size > MAX_FORCING_MODES) {
     if (MyProcessorNumber == ROOT_PROCESSOR) 
-        printf("Number of forcing modes exceeds MAX_FORCING_MODES = %" ISYM"\n",MAX_FORCING_MODES);
+        printf("Number of forcing modes exceeds MAX_FORCING_MODES = %d\n",MAX_FORCING_MODES);
     return FAIL;
     }
 

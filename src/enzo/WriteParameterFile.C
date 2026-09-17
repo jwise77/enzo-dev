@@ -87,9 +87,9 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
     /*
     for (int i = 0; i < MAX_FLAGGING_METHODS; i++) {
       if (MinimumMassForRefinement[i] != FLOAT_UNDEFINED) {
-	printf("i = %i, MinMass = %g, massu = %g\n",i,MinimumMassForRefinement[i],massu);
+	printf("i = %" ISYM ", MinMass = %g, massu = %g\n",i,MinimumMassForRefinement[i],massu);
 	MinimumMassForRefinement[i] *= massu;
-	printf("i = %i, MinMass = %g\n",i,MinimumMassForRefinement[i]);
+	printf("i = %" ISYM ", MinMass = %g\n",i,MinimumMassForRefinement[i]);
       }
     }
     */
@@ -398,8 +398,8 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
   WriteListOfFloats(fptr, MetaData.TopGridRank, MustRefineRegionLeftEdge);
   fprintf(fptr, "MustRefineRegionRightEdge  = ");
   WriteListOfFloats(fptr, MetaData.TopGridRank, MustRefineRegionRightEdge);
-  fprintf(fptr, "RefineRegionTimeType   = %d\n", RefineRegionTimeType);
-  fprintf(fptr, "MustRefineRegionTimeType   = %d\n", MustRefineRegionTimeType);
+  fprintf(fptr, "RefineRegionTimeType   = %" ISYM "\n", RefineRegionTimeType);
+  fprintf(fptr, "MustRefineRegionTimeType   = %" ISYM "\n", MustRefineRegionTimeType);
   fprintf(fptr, "MustRefineParticlesLeftEdge   = ");
   WriteListOfFloats(fptr, MetaData.TopGridRank, MustRefineParticlesLeftEdge);
   fprintf(fptr, "MustRefineParticlesRightEdge  = ");
@@ -416,7 +416,7 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
   WriteListOfFloats(fptr, MetaData.TopGridRank, CoolingRefineRegionLeftEdge);
   fprintf(fptr, "CoolingRefineRegionRightEdge  = ");
   WriteListOfFloats(fptr, MetaData.TopGridRank, CoolingRefineRegionRightEdge);
-  fprintf(fptr, "CoolingRefineRegionTimeType   = %d\n", CoolingRefineRegionTimeType);
+  fprintf(fptr, "CoolingRefineRegionTimeType   = %" ISYM "\n", CoolingRefineRegionTimeType);
   if (CoolingRefineRegionFile != NULL)
     fprintf(fptr, "CoolingRefineRegionFile     = %s\n", CoolingRefineRegionFile);
 
@@ -624,18 +624,18 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
 
   // Negative number means that it was flagged from the command line.  Don't propagate.
   if (OutputCoolingTime < 0)
-    fprintf(fptr, "OutputCoolingTime              = %" ISYM"\n", 0);
+    fprintf(fptr, "OutputCoolingTime              = %d\n", 0);
   else
     fprintf(fptr, "OutputCoolingTime              = %" ISYM"\n", OutputCoolingTime);
   fprintf(fptr, "OutputTemperature              = %" ISYM"\n", OutputTemperature);
   if (OutputDustTemperature < 0)
-    fprintf(fptr, "OutputDustTemperature          = %" ISYM"\n", 0);
+    fprintf(fptr, "OutputDustTemperature          = %d\n", 0);
   else
     fprintf(fptr, "OutputDustTemperature          = %" ISYM"\n", OutputDustTemperature);
 
   // Negative number means that it was flagged from the command line.  Don't propagate.
   if (OutputSmoothedDarkMatter < 0)
-    fprintf(fptr, "OutputSmoothedDarkMatter       = %" ISYM"\n", 0);
+    fprintf(fptr, "OutputSmoothedDarkMatter       = %d\n", 0);
   else
     fprintf(fptr, "OutputSmoothedDarkMatter       = %" ISYM"\n", 
 	    OutputSmoothedDarkMatter);
@@ -1142,35 +1142,35 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
 
   fprintf(fptr, "UseHydro                   = %" ISYM"\n", UseHydro);
   fprintf(fptr, "Theta_Limiter              = %f\n", Theta_Limiter);
-  fprintf(fptr, "RiemannSolver              = %d\n", RiemannSolver);
-  fprintf(fptr, "RiemannSolverFallback      = %d\n", RiemannSolverFallback);
-  fprintf(fptr, "ConservativeReconstruction = %d\n", ConservativeReconstruction);
-  fprintf(fptr, "PositiveReconstruction     = %d\n", PositiveReconstruction);
-  fprintf(fptr, "ReconstructionMethod       = %d\n", ReconstructionMethod);
-  fprintf(fptr, "UsePhysicalUnit            = %d\n", UsePhysicalUnit);
-  fprintf(fptr, "UseFloor                   = %d\n", UseFloor);
-  fprintf(fptr, "UseViscosity               = %d\n", UseViscosity);
+  fprintf(fptr, "RiemannSolver              = %" ISYM "\n", RiemannSolver);
+  fprintf(fptr, "RiemannSolverFallback      = %" ISYM "\n", RiemannSolverFallback);
+  fprintf(fptr, "ConservativeReconstruction = %" ISYM "\n", ConservativeReconstruction);
+  fprintf(fptr, "PositiveReconstruction     = %" ISYM "\n", PositiveReconstruction);
+  fprintf(fptr, "ReconstructionMethod       = %" ISYM "\n", ReconstructionMethod);
+  fprintf(fptr, "UsePhysicalUnit            = %" ISYM "\n", UsePhysicalUnit);
+  fprintf(fptr, "UseFloor                   = %" ISYM "\n", UseFloor);
+  fprintf(fptr, "UseViscosity               = %" ISYM "\n", UseViscosity);
   fprintf(fptr, "ViscosityCoefficient       = %g\n", ViscosityCoefficient);  
-  fprintf(fptr, "UseAmbipolarDiffusion      = %d\n", UseAmbipolarDiffusion);
-  fprintf(fptr, "UseResistivity             = %d\n", UseResistivity);
+  fprintf(fptr, "UseAmbipolarDiffusion      = %" ISYM "\n", UseAmbipolarDiffusion);
+  fprintf(fptr, "UseResistivity             = %" ISYM "\n", UseResistivity);
   fprintf(fptr, "SmallRho                   = %g\n", SmallRho);
   fprintf(fptr, "SmallP                     = %g\n", SmallP);
   fprintf(fptr, "SmallT                     = %g\n", SmallT);
   fprintf(fptr, "MaximumAlvenSpeed          = %g\n", MaximumAlvenSpeed);
-  fprintf(fptr, "Coordinate                 = %d\n", Coordinate);
-  fprintf(fptr, "EOSType                    = %d\n", EOSType);
+  fprintf(fptr, "Coordinate                 = %" ISYM "\n", Coordinate);
+  fprintf(fptr, "EOSType                    = %" ISYM "\n", EOSType);
   fprintf(fptr, "EOSSoundSpeed              = %g\n", EOSSoundSpeed);
   fprintf(fptr, "EOSCriticalDensity         = %g\n", EOSCriticalDensity);
   fprintf(fptr, "EOSGamma                   = %g\n", EOSGamma); 
   fprintf(fptr, "Mu                         = %g\n", Mu);
   fprintf(fptr, "DivBDampingLength          = %g\n", DivBDampingLength);
-  fprintf(fptr, "UseConstantAcceleration    = %d\n", UseConstantAcceleration);
+  fprintf(fptr, "UseConstantAcceleration    = %" ISYM "\n", UseConstantAcceleration);
   fprintf(fptr, "ConstantAcceleration       = %g %g %g\n", ConstantAcceleration[0],
 	  ConstantAcceleration[1], ConstantAcceleration[2]);
 
-  fprintf(fptr, "UseDrivingField            = %d\n", UseDrivingField);
+  fprintf(fptr, "UseDrivingField            = %" ISYM "\n", UseDrivingField);
   fprintf(fptr, "DrivingEfficiency          = %f\n", DrivingEfficiency);
-  fprintf(fptr, "MixSpeciesAndColors     = %d\n", MixSpeciesAndColors);
+  fprintf(fptr, "MixSpeciesAndColors     = %" ISYM "\n", MixSpeciesAndColors);
 #ifdef ECUDA
   fprintf(fptr, "UseCUDA = %" ISYM"\n", UseCUDA);
 #endif
@@ -1293,7 +1293,7 @@ int WriteParameterFile(FILE *fptr, TopGridData &MetaData, char *name = NULL)
   fprintf(fptr,"MHD_ProjectE                  =%" ISYM"\n",MHD_ProjectE);
   fprintf(fptr,"EquationOfState               =%" ISYM"\n",EquationOfState);
 
-  fprintf(fptr, "CorrectParentBoundaryFlux          = %d\n", CorrectParentBoundaryFlux);
+  fprintf(fptr, "CorrectParentBoundaryFlux          = %" ISYM "\n", CorrectParentBoundaryFlux);
 
   fprintf(fptr, "StoreDomainBoundaryMassFlux = %" ISYM"\n", StoreDomainBoundaryMassFlux);
   fprintf(fptr, "BoundaryMassFluxFilename = %s\n", BoundaryMassFluxFilename);

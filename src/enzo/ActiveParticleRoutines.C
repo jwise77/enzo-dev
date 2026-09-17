@@ -360,7 +360,7 @@ void ActiveParticleType::CopyFromParticle(grid *_grid, int _id, int _level)
 
 void ActiveParticleType::PrintInfo(void)
 {
-  printf("[P%d] ActiveParticle %" ISYM": pos = %" PSYM" %" PSYM" %" PSYM", vel = %" FSYM" %" FSYM" %" FSYM"\n",
+  printf("[P%" ISYM "] ActiveParticle %" ISYM": pos = %" PSYM" %" PSYM" %" PSYM", vel = %" FSYM" %" FSYM" %" FSYM"\n",
 	 MyProcessorNumber, Identifier, pos[0], pos[1], pos[2], vel[0], vel[1], vel[2]);
   printf("\t birthtime = %" FSYM", tdyn = %" FSYM"\n", BirthTime, DynamicalTime);
   printf("\t Z = %" GSYM"\n", Metallicity);

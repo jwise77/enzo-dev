@@ -171,12 +171,12 @@ int CommunicationLoadBalanceGrids(HierarchyEntry *GridHierarchyPointer[],
 	//proc = GridHierarchyPointer[i]->GridData->ReturnProcessorNumber();
 	proc = NewProcessorNumber[i];
 //	if (proc == MaxProc)
-//	  printf("P%d / N%d :: grid %d - work = %g, min = %g, max = %g\n",
+//	  printf("P%" ISYM " / N%" ISYM " :: grid %" ISYM " - work = %g, min = %g, max = %g\n",
 //		 MyProcessorNumber, MyProcessorNumber/CoresPerNode,
 //		 i, ComputeTime[i], MinVal, MaxVal);
 	if (proc == MaxProc && ComputeTime[i] < 0.5*(MaxVal-MinVal)) {
 
-//	  printf("\t P%d / N%d :: moving grid %d from %d => %d\n",
+//	  printf("\t P%" ISYM " / N%" ISYM " :: moving grid %" ISYM " from %" ISYM " => %" ISYM "\n",
 //		 MyProcessorNumber, MyProcessorNumber/CoresPerNode,
 //		 i, MaxProc, MinProc);
  

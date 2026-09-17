@@ -373,7 +373,7 @@ int ActiveParticleType_SmartStar::EvaluateFormation
     } // j
   } // k
   if(data.NumberOfNewParticles > 0) {
-    printf("Particles (%d) Created and done in Evaulate Formation\n", data.NumberOfNewParticles);
+    printf("Particles (%" ISYM ") Created and done in Evaulate Formation\n", data.NumberOfNewParticles);
     fflush(stdout);
   }
 
@@ -471,7 +471,7 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
 #if SSDEBUG      
       printf("%s: Star Age = %e yrs\n", __FUNCTION__, Age*TimeUnits/yr_s);
       printf("%s: Radiation Lifetime =  %e yrs\n", __FUNCTION__, ThisParticle->RadiationLifetime*TimeUnits/yr_s);
-      printf("%s: Particle Class = %d\t POPIII = %d\n", __FUNCTION__, ThisParticle->ParticleClass, POPIII);
+      printf("%s: Particle Class = %" ISYM "\t POPIII = %d\n", __FUNCTION__, ThisParticle->ParticleClass, POPIII);
 #endif
       /* Check for star death and transition to BH */
       if(ThisParticle->RadiationLifetime < Age) {/* Star needs to go supernovae and change type */
@@ -488,7 +488,7 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
 	  sn_nrg_thistimestep /= (TimeUnits*LumConvert*StarMass*SolarMass);
 	}
 #endif
-	printf("%s: !!!!!!!!!!!!!!!Transition from %d particle to BH (Particle Type = %d)\n", 
+	printf("%s: !!!!!!!!!!!!!!!Transition from %" ISYM " particle to BH (Particle Type = %d)\n", 
 	       __FUNCTION__, ThisParticle->ParticleClass, BH); fflush(stdout);
 	printf("%s: Star Age = %e yrs\n", __FUNCTION__, Age*TimeUnits/yr_s);
 	printf("%s: Radiation Lifetime =  %e yrs\n", __FUNCTION__, ThisParticle->RadiationLifetime*TimeUnits/yr_s);
@@ -510,7 +510,7 @@ int ActiveParticleType_SmartStar::EvaluateFeedback(grid *thisgrid_orig,
     int j = int((ThisParticle->pos[1] - ystart)/thisGrid->CellWidth[1][0]);
     int k = int((ThisParticle->pos[2] - zstart)/thisGrid->CellWidth[2][0]);
     // Check bounds - if star particle is outside of this grid then give a warning and continue
-    //printf("%s: GridDimension = %d %d %d\n", __FUNCTION__, GridDimension[0], GridDimension[1], GridDimension[2]);
+    //printf("%s: GridDimension = %" ISYM " %" ISYM " %" ISYM "\n", __FUNCTION__, GridDimension[0], GridDimension[1], GridDimension[2]);
     if (i < 0 || i > GridXSize-1 || j < 0 || j > GridYSize-1 || k < 0 || k > GridZSize-1){
       fprintf(stdout, "Particle out of grid; xind, yind, zind = %" ISYM", %" ISYM", %" ISYM"\n",i,j,k);
       continue;
@@ -649,11 +649,11 @@ int ActiveParticleType_SmartStar::BeforeEvolveLevel
 	  printf("%s: !!!!!!!!!!!!!!!!!!!!!!!!SRC Luminosity: L=%lg Lcode=%g M=%g Mcode=%g\n", __FUNCTION__, 
 		 ThisParticle->LuminosityPerSolarMass * ThisParticle->Mass * MassConversion, 
 		 source->Luminosity, ThisParticle->Mass * MassConversion, ThisParticle->Mass);
-	  printf("TimeIndex = %d\n", ThisParticle->TimeIndex);
+	  printf("TimeIndex = %" ISYM "\n", ThisParticle->TimeIndex);
 	  printf("%s: BH Mass = %e Msolar AccretionRate = %e Msolar/yr\n", __FUNCTION__,
 		 ThisParticle->Mass * MassConversion, 
 		 (ThisParticle->AccretionRate[ThisParticle->TimeIndex]*MassConversion/TimeUnits)*yr_s);
-	  printf("%s: ParticleClass = %d\t SEDs = [%f, %f, %f, %f, %f]\n", __FUNCTION__,
+	  printf("%s: ParticleClass = %" ISYM "\t SEDs = [%f, %f, %f, %f, %f]\n", __FUNCTION__,
 		 ThisParticle->ParticleClass, ThisParticle->RadiationSED[0], ThisParticle->RadiationSED[1],
 		 ThisParticle->RadiationSED[2], ThisParticle->RadiationSED[3],
 		 ThisParticle->RadiationSED[4]);
@@ -954,7 +954,7 @@ int ActiveParticleType_SmartStar::UpdateAccretionRateStats(int nParticles,
 	SS->TimeIndex = timeindex;
 	fprintf(stdout, "old_mass = %e Msolar\t cmass = %e Msolar\n", omass*MassConversion,
 		cmass*MassConversion);
-	fprintf(stdout, "accrate = %e Msolar/yr\t accratetime = %e yrs \t deltatime = %f yrs\t index = %d\t Particle Mass = %e Msolar\t Class = %d\n",
+	fprintf(stdout, "accrate = %e Msolar/yr\t accratetime = %e yrs \t deltatime = %f yrs\t index = %" ISYM "\t Particle Mass = %e Msolar\t Class = %" ISYM "\n",
 		(SS->AccretionRate[timeindex]*MassUnits/TimeUnits)*yr_s/SolarMass,
 		(SS->AccretionRateTime[timeindex]*TimeUnits)/yr_s,
 		deltatime*TimeUnits/yr_s,

@@ -218,7 +218,7 @@ void ngb_treebuild(FOFData &D, int Npart)
   NODE *nfree,*th,*nn; 
 
 
-  //printf("Begin Ngb-tree construction. Npart = %d\n", Npart);
+  //printf("Begin Ngb-tree construction. Npart = %" ISYM "\n", Npart);
 
   
   if (Npart < 2)

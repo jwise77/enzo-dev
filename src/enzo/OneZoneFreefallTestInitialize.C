@@ -229,7 +229,7 @@ int OneZoneFreefallTestInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &Top
     fprintf(Outfptr, "OneZoneFreefallTestMinimumMetallicity = %" FSYM"\n", OneZoneFreefallTestMinimumMetallicity);
     fprintf(Outfptr, "OneZoneFreefallTestMaximumMetallicity = %" FSYM"\n", OneZoneFreefallTestMaximumMetallicity);
     fprintf(Outfptr, "OneZoneFreefallTimestepFraction = %" FSYM"\n", TestProblemData.OneZoneFreefallTimestepFraction);
-    fprintf(Outfptr, "OneZoneFreefallUseEffectiveGamma = %" ISYM"\n", TestProblemData.OneZoneFreefallUseEffectiveGamma);
+    fprintf(Outfptr, "OneZoneFreefallUseEffectiveGamma = %d\n", TestProblemData.OneZoneFreefallUseEffectiveGamma);
 
     fprintf(Outfptr, "TestProblemHydrogenFractionByMass = %" FSYM"\n",   TestProblemData.HydrogenFractionByMass);
     fprintf(Outfptr, "TestProblemDeuteriumToHydrogenRatio = %" FSYM"\n", TestProblemData.DeuteriumToHydrogenRatio);

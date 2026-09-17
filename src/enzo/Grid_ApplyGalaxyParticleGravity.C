@@ -75,7 +75,7 @@ int grid::ApplyGalaxyParticleGravity(ActiveParticleType** ThisParticle){
     GravitatingMassFieldLeftEdge[0] + GravitatingMassFieldDimension[0]* GravitatingMassFieldCellSize,
     GravitatingMassFieldLeftEdge[1] + GravitatingMassFieldDimension[1]* GravitatingMassFieldCellSize,
     GravitatingMassFieldLeftEdge[2] + GravitatingMassFieldDimension[2]* GravitatingMassFieldCellSize);
-//   printf("%d %d %d : %d %d %d\n", this->GridStartIndex[0], this->GridStartIndex[1],
+//   printf("%" ISYM " %" ISYM " %" ISYM " : %" ISYM " %" ISYM " %" ISYM "\n", this->GridStartIndex[0], this->GridStartIndex[1],
 //     this->GridStartIndex[2], this->GridEndIndex[0], this->GridEndIndex[1],
 //     this->GridEndIndex[2]);
 //   printf("%f %f %f\n", this->CellLeftEdge[0][3] + 0.5*this->CellWidth[0][3],

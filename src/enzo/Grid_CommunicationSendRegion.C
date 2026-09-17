@@ -223,7 +223,7 @@ int grid::CommunicationSendRegion(grid *ToGrid, int ToProcessor,int SendField,
     starttime = MPI_Wtime();
 #endif
 
-//    fprintf(stderr, "P(%d) communication for %d floats from %d to %d (phase %d)\n",
+//    fprintf(stderr, "P(%" ISYM ") communication for %" ISYM " floats from %" ISYM " to %" ISYM " (phase %" ISYM ")\n",
 //    	    MyProcessorNumber, TransferSize, ProcessorNumber,
 //    	    ToProcessor, CommunicationDirection);
 
@@ -242,7 +242,7 @@ int grid::CommunicationSendRegion(grid *ToGrid, int ToProcessor,int SendField,
 
     if (MyProcessorNumber == ToProcessor) {
 
-//      fprintf(stderr, "Waiting for %d floats at %d from %d\n", TransferSize, 
+//      fprintf(stderr, "Waiting for %" ISYM " floats at %" ISYM " from %" ISYM "\n", TransferSize, 
 //	      MyProcessorNumber, ProcessorNumber);
 
       /* Post the receive message without waiting for the message to
@@ -293,7 +293,7 @@ int grid::CommunicationSendRegion(grid *ToGrid, int ToProcessor,int SendField,
        CommunicationDirection == COMMUNICATION_RECEIVE)) {
 
 //    if (ToProcessor != ProcessorNumber)
-//      fprintf(stderr, "Received %d floats at %d from %d\n", TransferSize, 
+//      fprintf(stderr, "Received %" ISYM " floats at %" ISYM " from %" ISYM "\n", TransferSize, 
 //	      MyProcessorNumber, ProcessorNumber);
 
     index = 0;

@@ -80,7 +80,7 @@ int grid::PutSinkRestartInitialize(int level, int *NumberOfCellsSet)
       for (j=0; j<4; j++){
 	for (i=0; i<4; i++){
 	  l = i+4*j+16*k;
-	  printf("Creating particle %i \n",l);
+	  printf("Creating particle %" ISYM " \n",l);
 	  ParticleMass[l] = den_m;
 	  ParticleNumber[l] = l;
 	  ParticleType[l] = PARTICLE_TYPE_MUST_REFINE;
@@ -102,7 +102,7 @@ int grid::PutSinkRestartInitialize(int level, int *NumberOfCellsSet)
 	    ParticleAttribute[5][l] = 0.0;
 	  }
 	  this->ClearParticleAccelerations();
-	  printf("Completed particle %i, position %g,%g,%g \n",l,ParticlePosition[0][l],ParticlePosition[1][l],ParticlePosition[2][l]);
+	  printf("Completed particle %" ISYM ", position %g,%g,%g \n",l,ParticlePosition[0][l],ParticlePosition[1][l],ParticlePosition[2][l]);
 	}
       }
     }

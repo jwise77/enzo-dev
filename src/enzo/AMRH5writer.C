@@ -180,7 +180,7 @@ void AMRHDF5Writer::AMRHDF5Create( const char*      fileName,
     if (overwrite)
       fprintf(fptr, "# %10s %20s %20s\n", "Cycle", "Time", "Redshift");
 
-    fprintf(fptr, "  %10d %20.15f %20.15f\n", cycle, time, redshift);
+    fprintf(fptr, "  %10" ISYM " %20.15lf %20.15lf\n", cycle, time, redshift);
     fclose(fptr);
 
   } // ENDIF writeTimeFile
@@ -213,7 +213,7 @@ herr_t AMRHDF5Writer::WriteTextures(  const int    timeStep,
 {
   
   char gridDataName[100], fieldName[100];
-  sprintf(gridDataName, "/grid-%d", gridId);
+  sprintf(gridDataName, "/grid-%" ISYM "", gridId);
 
   hid_t gridGrp, dataspace, dataset;
   hsize_t hdims[2] = { dims[0], dims[1] };
@@ -271,7 +271,7 @@ herr_t AMRHDF5Writer::WriteTextures(  const int    timeStep,
 
   for (i = 0; i < nFields; i++) {
 
-    sprintf(fieldName, "%s/%s-dim%d", gridDataName, names[i], dim);
+    sprintf(fieldName, "%s/%s-dim%" ISYM "", gridDataName, names[i], dim);
 
     dataspace = H5Screate_simple(2, hdims, NULL);
     dataset = H5Dcreate(fileId, fieldName, h5DataType, dataspace, H5P_DEFAULT);
@@ -329,7 +329,7 @@ herr_t AMRHDF5Writer::WriteFlat(  const int    timeStep,
 {
   
   char gridDataName[100], fieldName[100];
-  sprintf(gridDataName, "/grid-%d", gridId);
+  sprintf(gridDataName, "/grid-%" ISYM "", gridId);
   sprintf(fieldName, "%s/%s", gridDataName, name);
 
   hid_t gridGrp, dataspace, dataset;
@@ -441,7 +441,7 @@ herr_t AMRHDF5Writer::writeParticles ( const int nPart,
     {"creation_time", "dynamical_time", "metallicity_fraction", "typeia_fraction"};
 #endif
 
-  sprintf(gridDataName, "/grid-%d", gridId);
+  sprintf(gridDataName, "/grid-%" ISYM "", gridId);
   if (nBaryonFields > 0) 
     gridGrp = H5Gopen(fileId, gridDataName);
   else
@@ -613,8 +613,8 @@ herr_t AMRHDF5Writer::writeParticles2( const int nPart,
   if (nPart == 0 && levelIndex != 0)
     return 0;
 
-  sprintf(gridDataName, "/particlegrid-%d", particlegridId);
-  fprintf(stdout, "AMRH5writer: nPart = %d (NofSP_OnProcOnLvl = %d), alreadyopenedentry = %d, gridDataName = %s\n",
+  sprintf(gridDataName, "/particlegrid-%" ISYM "", particlegridId);
+  fprintf(stdout, "AMRH5writer: nPart = %" ISYM " (NofSP_OnProcOnLvl = %" ISYM "), alreadyopenedentry = %" ISYM ", gridDataName = %s\n",
 	  nPart, NumberOfStarParticlesOnProcOnLvlEntry, alreadyopenedentry, gridDataName); //#####
 
   if (alreadyopenedentry == FALSE) {
@@ -654,7 +654,7 @@ herr_t AMRHDF5Writer::writeParticles2( const int nPart,
     ret  = H5Awrite(attrname, H5T_NATIVE_INT, &nPart_recorded_here_new);
     H5Aclose(attrname);
 
-    fprintf(stdout, "nPart_recorded_here was %d, is now %d \n",
+    fprintf(stdout, "nPart_recorded_here was %" ISYM ", is now %" ISYM " \n",
 	    nPart_recorded_here, nPart_recorded_here_new); //#####
   }
 
@@ -956,8 +956,8 @@ herr_t AMRHDF5Writer::writeSeparateParticles ( const int nPart,
   if (nPart == 0) 
     return 0;
 
-  sprintf(partDataName, "/Timestep-%d", output_particle);
-  //  fprintf(stdout, "AMRH5writer: nPart = %d, alreadyopenedentry = %d, partDataName = %s\n",
+  sprintf(partDataName, "/Timestep-%" ISYM "", output_particle);
+  //  fprintf(stdout, "AMRH5writer: nPart = %" ISYM ", alreadyopenedentry = %" ISYM ", partDataName = %s\n",
   //	  nPart, alreadyopenedentry, partDataName); 
   //  fprintf(stdout, "fileId_particle = %g\n", fileId_particle);
 
@@ -984,7 +984,7 @@ herr_t AMRHDF5Writer::writeSeparateParticles ( const int nPart,
     ret  = H5Awrite(attrname, H5T_NATIVE_INT, &nPart_recorded_here_new);
     H5Aclose(attrname);
 
-  //  fprintf(stdout, "AMRH5writer: nPart = %d, alreadyopenedentry = %d, partDataName = %s\n"
+  //  fprintf(stdout, "AMRH5writer: nPart = %" ISYM ", alreadyopenedentry = %" ISYM ", partDataName = %s\n"
   //	  "nPart_recorded_here was %d, is now %d \n",
   //	  nPart, alreadyopenedentry, partDataName, 
   //	  nPart_recorded_here, nPart_recorded_here_new); 

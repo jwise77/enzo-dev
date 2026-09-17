@@ -49,7 +49,7 @@ int grid::CreateParticleTypeGrouping(hid_t ptype_dset,
         if ((i == NumberOfParticles)
          || (ParticleType[i] != CurrentParticleType)) {
             count[0] = i - start[0];
-            /*fprintf(stderr, "Creating reference for %d of size %d starting at %d\n", 
+            /*fprintf(stderr, "Creating reference for %" ISYM " of size %" ISYM " starting at %" ISYM "\n", 
                 CurrentParticleType, count[0], start[0]);*/
             err = H5Sselect_hyperslab(
                 ptype_dspace, H5S_SELECT_SET, start, NULL, count, NULL);

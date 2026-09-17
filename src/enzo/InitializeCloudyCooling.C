@@ -280,7 +280,7 @@ int InitializeCloudyCooling(FLOAT Time)
   status = H5Fclose (file_id);
 
   if (CloudyCoolingData.CloudyCoolingGridRank > CLOUDY_COOLING_MAX_DIMENSION) {
-    fprintf(stderr,"Error: rank of Cloudy cooling data must be less than or equal to %" ISYM".\n",
+    fprintf(stderr,"Error: rank of Cloudy cooling data must be less than or equal to %d.\n",
 	    CLOUDY_COOLING_MAX_DIMENSION);
     return FAIL;
   }

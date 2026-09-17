@@ -157,7 +157,7 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
   /* Check if we need to start a new moviefile (at top grid timesteps). */
 
   if (NewMovieDumpNumber < TopGridCycle && !open) {
-    //printf("Inside: %d %d %d\n", NewMovieDumpNumber, TopGridCycle, open);
+    //printf("Inside: %" ISYM " %" ISYM " %" ISYM "\n", NewMovieDumpNumber, TopGridCycle, open);
     StartNewFile = TRUE;
     NewMovieDumpNumber = TopGridCycle;
 
@@ -403,8 +403,8 @@ int grid::WriteNewMovieData(FLOAT RegionLeftEdge[], FLOAT RegionRightEdge[],
       fprintf(stderr, "Error in AMRHDF5Writer->writeParticles\n");
       return FAIL;
     }
-//  fprintf(stdout, "grid::WriteNewMovieData: NumberOfParticles = %d\n", NumberOfParticles); 
-//    fprintf(stdout, "ParticleNumber[j][0] = %d", ParticleNumber[j][0]);
+//  fprintf(stdout, "grid::WriteNewMovieData: NumberOfParticles = %" ISYM "\n", NumberOfParticles); 
+//    fprintf(stdout, "ParticleNumber[j][0] = %" ISYM "", ParticleNumber[j][0]);
   } /* ENDIF: output all particles */
 
   if (NewMovieParticleOn == NON_DM_PARTICLES) {

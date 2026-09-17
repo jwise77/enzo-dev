@@ -57,7 +57,7 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
   int count;
 
 //  if (debug)
-//    printf("Movie: %d %d\n", level, CycleCount[level]);
+//    printf("Movie: %" ISYM " %" ISYM "\n", level, CycleCount[level]);
 
   if (MovieSkipTimestep == INT_UNDEFINED)
     return SUCCESS;
@@ -97,11 +97,11 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
       if ((header = fopen(headerName, "w")) == NULL)
 	ENZO_FAIL("Error in opening movie header.\n");
       fprintf(header, "MovieVersion = %s\n", movieVersion);
-      fprintf(header, "RootReso = %d\n", MetaData->TopGridDims[0]);
-      fprintf(header, "FLOATSize = %d\n", sizeOfFLOAT);
-      fprintf(header, "RecordSize = %d\n", sizeOfRecord);
-      fprintf(header, "NumFields = %d\n", nMovieFields);
-      fprintf(header, "NumCPUs = %d\n", NumberOfProcessors);
+      fprintf(header, "RootReso = %" ISYM "\n", MetaData->TopGridDims[0]);
+      fprintf(header, "FLOATSize = %" ISYM "\n", sizeOfFLOAT);
+      fprintf(header, "RecordSize = %" ISYM "\n", sizeOfRecord);
+      fprintf(header, "NumFields = %" ISYM "\n", nMovieFields);
+      fprintf(header, "NumCPUs = %" ISYM "\n", NumberOfProcessors);
       fprintf(header, "FileStem = %s\n", NewMovieName);
       fclose(header);
     } /* END: write movie header file */
@@ -290,14 +290,14 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
     /*
     for (i = 0; i < NumberOfProcessors; i++)  
       for (j = 0; j < 8; j++) 
- 	fprintf(stdout, "WriteStreamData: NumberOfStarParticlesOnProcOnLvl[%d][%d] = %d\n", 
+ 	fprintf(stdout, "WriteStreamData: NumberOfStarParticlesOnProcOnLvl[%" ISYM "][%" ISYM "] = %" ISYM "\n", 
  		i, j, NumberOfStarParticlesOnProcOnLvl[i][j]); 
     */
     
   } // ENDIF NON_DM_PARTICLES_MERGED_LEVEL
 
   if (debug)
-    printf("WriteStreamData: level = %d, StartLevel = %d, timestep = %d\n", 
+    printf("WriteStreamData: level = %" ISYM ", StartLevel = %" ISYM ", timestep = %" ISYM "\n", 
 	   level, StartLevel, MetaData->MovieTimestepCounter);
 
   for (ilvl = StartLevel; ilvl < MAX_DEPTH_OF_HIERARCHY; ilvl++) {
@@ -442,7 +442,7 @@ int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
 #endif
 
 //    for (i = 0; i < NumberOfProcessors; i++)
-//      fprintf(stdout, "WriteStreamData: NumberOfStarParticlesOnProc[%d] = %d\n", 
+//      fprintf(stdout, "WriteStreamData: NumberOfStarParticlesOnProc[%" ISYM "] = %" ISYM "\n", 
 //	      i, NumberOfStarParticlesOnProc[i]);  
 
     // starting from ilvl=0, to print all the particles in the dataset

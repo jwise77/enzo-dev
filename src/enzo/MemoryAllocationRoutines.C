@@ -117,7 +117,7 @@ void* operator new(size_t NumberOfBytes) throw (std::bad_alloc) {
   //void *pointer = jemalloc(NumberOfBytes + sizeof(float));
   void *pointer = jemalloc(NumberOfBytes);
   if (pointer == NULL)
-    ENZO_VFAIL("Error allocation %d bytes", NumberOfBytes);
+    ENZO_VFAIL("Error allocation %" ISYM " bytes", NumberOfBytes);
   return pointer;
   //*((float*) pointer) = float(NumberOfBytes);
   //return (void*) (((float*) pointer) + 1);
@@ -128,7 +128,7 @@ void* operator new[](size_t NumberOfBytes) throw (std::bad_alloc) {
   //void *pointer = jemalloc(NumberOfBytes + sizeof(float));
   void *pointer = jemalloc(NumberOfBytes);
   if (pointer == NULL)
-    ENZO_VFAIL("Error allocation %d bytes", NumberOfBytes);
+    ENZO_VFAIL("Error allocation %" ISYM " bytes", NumberOfBytes);
   return pointer;
   //*((float*) pointer) = float(NumberOfBytes);
   //return (void*) (((float*) pointer) + 1);

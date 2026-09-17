@@ -239,7 +239,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
 	GridDimension[dim]  = GridEndIndex[dim]-GridStartIndex[dim]+1+2*ghosts;
 	GridStartIndex[dim] = ghosts;
 	GridEndIndex[dim]   = GridStartIndex[dim]+GridDimension[dim]-1-2*ghosts;
-	 if (GridID < 2) fprintf(stderr, "dim: GridStart,GridEnd,GridDim:  %i: %i %i %i\n",
+	 if (GridID < 2) fprintf(stderr, "dim: GridStart,GridEnd,GridDim:  %" ISYM ": %" ISYM " %" ISYM " %" ISYM "\n",
 				  dim, GridStartIndex[dim], GridEndIndex[dim], GridDimension[dim]);
       }
     }

@@ -117,7 +117,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
     float accrate = mdot*MassUnits/(SolarMass*TimeUnits)*3.154e7; //in Msolar/yr
     float mdot_cgs = mdot*MassUnits/TimeUnits; //g/s
     //printf("%s: dx = %e\t MassConversion = %e\n", __FUNCTION__, dx, MassConversion);
-    printf("%s: AccretionRate = %e Msolar/yr %e (code) TimeIndex = %d\n", __FUNCTION__,
+    printf("%s: AccretionRate = %e Msolar/yr %e (code) TimeIndex = %" ISYM "\n", __FUNCTION__,
            accrate, SS->AccretionRate[SS->TimeIndex], SS->TimeIndex);
     /*end Debug*/
     float newGE = 0.0, oldGE = 0.0;
@@ -259,7 +259,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
 	}  // END i-direction
       }  // END j-direction
     }  // END k-direction
-    //printf("CellsModified = %d\n", CellsModified);
+    //printf("CellsModified = %" ISYM "\n", CellsModified);
 
   }  // END MBH_THERMAL
   
@@ -323,7 +323,7 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
   printf("%s: Eddrate = %e Msolar/yr AccRate = %e Msolar/yr\t Ratio = %f\n", __FUNCTION__,
          eddrate, AccretionRate*3.154e7, AccretionRate*3.154e7/eddrate);
   printf("%s: dx = %e\t MassConversion = %e\n", __FUNCTION__, dx, MassConversion);
-  printf("%s: AccretionRate (*deltat) = %e Msolar/yr %e (code) TimeIndex = %d\n", __FUNCTION__,
+  printf("%s: AccretionRate (*deltat) = %e Msolar/yr %e (code) TimeIndex = %" ISYM "\n", __FUNCTION__,
 	 AccretionRate*3.154e7, SS->AccretionRate[SS->TimeIndex], SS->TimeIndex);
   float MassEjected = SS->NotEjectedMass + SS->MassToBeEjected; //code mass    
 
@@ -444,9 +444,9 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
       }  // END jj-direction
     }  // END kk-direction
 #if SSFEED_DEBUG
-     printf("%s: n_cell_inside = %d\n", __FUNCTION__,  n_cell_inside);
-     printf("%s: n_cell_edge = %d\n", __FUNCTION__, n_cell_edge);
-     printf("%s: nsupercells = %d\n",  __FUNCTION__, nsupercells);
+     printf("%s: n_cell_inside = %" ISYM "\n", __FUNCTION__,  n_cell_inside);
+     printf("%s: n_cell_edge = %" ISYM "\n", __FUNCTION__, n_cell_edge);
+     printf("%s: nsupercells = %" ISYM "\n",  __FUNCTION__, nsupercells);
 #endif
      /* Calculate the jet density 
       * This is the mass of the ejected mass + the mass at the cell edges

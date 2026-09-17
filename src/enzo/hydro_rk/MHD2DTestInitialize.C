@@ -142,7 +142,7 @@ int MHD2DTestInitialize(FILE *fptr, FILE *Outfptr,
   CurrentGrid = &TopGrid;
   int count = 0;
   while (CurrentGrid != NULL) {
-    printf("count %i %i\n", count++, MyProcessorNumber);
+    printf("count %" ISYM " %" ISYM "\n", count++, MyProcessorNumber);
     if (CurrentGrid->GridData->MHD2DTestInitializeGrid(MHD2DProblemType, UseColour,
 						RampWidth,
 						LowerDensity, UpperDensity,

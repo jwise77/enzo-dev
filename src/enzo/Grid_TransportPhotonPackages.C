@@ -103,7 +103,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
       PP=PP->NextPackage;
     }
     fprintf(stdout, "TransportPhotonPackage: done initializing.\n");
-    fprintf(stdout, "[%d] counted %" ISYM" packages\n", this->ID, count);
+    fprintf(stdout, "[%" ISYM "] counted %" ISYM" packages\n", this->ID, count);
   }
 
   /* If requested, make vertex centered field (only when it doesn't
@@ -172,7 +172,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
     AdvancePhotonPointer = TRUE;
     if (MYPROC && DEBUG) {
       if(prev_type != PP->Type) {
-	fprintf(stdout, "%s: Radiation type = %ld\n", __FUNCTION__, PP->Type);
+	fprintf(stdout, "%s: Radiation type = %" ISYM "\n", __FUNCTION__, PP->Type);
 	prev_type = PP->Type;
       }
     }
@@ -195,12 +195,12 @@ int grid::TransportPhotonPackages(int level, int finest_level,
     }
 
     if (DEBUG > 1) 
-      fprintf(stdout, "photon #%" ISYM" %x %x %x\n",
+      fprintf(stdout, "photon #%" ISYM" %p %p %p\n",
 	      tcount,  PP,  PhotonPackages, 
 	      MoveToGrid); 
 
     if (PauseMe == TRUE) {
-      if (DEBUG > 1) fprintf(stdout, "paused photon %x\n", PP);
+      if (DEBUG > 1) fprintf(stdout, "paused photon %p\n", PP);
       this->RegridPausedPhotonPackage(&PP, ParentGrid, &MoveToGrid, DeltaLevel,
 				      DeleteMe, DomainWidth, LightSpeed);
 
@@ -215,7 +215,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
     }
 
     if (DeleteMe == TRUE) {
-      if (DEBUG > 1) fprintf(stdout, "delete photon %x\n", PP);
+      if (DEBUG > 1) fprintf(stdout, "delete photon %p\n", PP);
       dcount++;
       PP = DeletePhotonPackage(PP);
       MoveToGrid = NULL;
@@ -223,9 +223,9 @@ int grid::TransportPhotonPackages(int level, int finest_level,
 
     if (MoveToGrid != NULL) {
       if (DEBUG > 1) {
-	fprintf(stdout, "moving photon from %x to %x\n", 
+	fprintf(stdout, "moving photon from %p to %p\n", 
 		 CurrentGrid,  MoveToGrid);
-	fprintf(stdout, "moving photon %x %x %x %x\n", 
+	fprintf(stdout, "moving photon %p %p %p %p\n", 
 		 PP,  PP->PreviousPackage, 
 		 PP->NextPackage,  PhotonPackages);
       }
@@ -245,7 +245,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
       if (NewEntry->ToProcessor >= NumberOfProcessors ||
 	  NewEntry->ToProcessor < 0) {
 	PP->PrintInfo();
-	ENZO_VFAIL("Grid %d, Invalid ToProcessor P%d", GridNum, 
+	ENZO_VFAIL("Grid %" ISYM ", Invalid ToProcessor P%" ISYM "", GridNum, 
 		   NewEntry->ToProcessor)
       }
 
@@ -262,7 +262,7 @@ int grid::TransportPhotonPackages(int level, int finest_level,
   } // ENDWHILE photons
 
   if (DEBUG)
-    fprintf(stdout, "grid::TransportPhotonPackage[%d]: "
+    fprintf(stdout, "grid::TransportPhotonPackage[%" ISYM "]: "
 	    "transported %" ISYM" deleted %" ISYM" paused %" ISYM" moved %" ISYM"\n",
 	    this->ID, tcount, dcount, pcount, trcount);
   NumberOfPhotonPackages -= dcount;

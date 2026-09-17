@@ -238,7 +238,7 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
     if (io_log) fprintf(log_fptr, "H5Fopen with Name = %s\n", hdfname);
  
     file_id = H5Fopen(hdfname, H5F_ACC_RDONLY, H5P_DEFAULT);
-    if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
+    if (io_log) fprintf(log_fptr, "H5Fopen id: %ld\n", file_id);
     //    if( file_id == h5_error ){return FAIL;}
     if( file_id == h5_error ){return FAIL;}
  
@@ -278,29 +278,29 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
         file_size  = mem_size * 2 * NumberOfBaryonFields;
  
         file_dsp_id = H5Screate_simple((Eint32) 1, &file_size, NULL);
-	if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+	if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
 	if( file_dsp_id == h5_error ){return FAIL;}
  
         if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", dname1);
  
         dset_id1 =  H5Dopen(file_id, dname1);
-	if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id1);
+	if (io_log) fprintf(log_fptr, "H5Dopen id: %ld\n", dset_id1);
 	if( dset_id1 == h5_error ){return FAIL;}
  
         if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", dname2);
  
         dset_id2 =  H5Dopen(file_id, dname2);
-	if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id2);
+	if (io_log) fprintf(log_fptr, "H5Dopen id: %ld\n", dset_id2);
 	if( dset_id2 == h5_error ){return FAIL;}
  
         file_offset = 0;
  
         mem_dsp_id = H5Screate_simple((Eint32) 1, &mem_size, NULL);
-	if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %" ISYM"\n", mem_dsp_id);
+	if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %ld\n", mem_dsp_id);
 	if( mem_dsp_id == h5_error ){return FAIL;}
  
         file_dsp_id = H5Screate_simple((Eint32) 1, &file_size, NULL);
-	if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+	if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
 	if( file_dsp_id == h5_error ){return FAIL;}
  
 	/* Read HDF dims */
@@ -373,24 +373,24 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
             mem_count = size;
 
             h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
-	    if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %" ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %d\n", h5_status);
 	    if( h5_status == h5_error ){return FAIL;}
  
             file_stride = 1;
             file_count = size;
  
             h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, &file_offset, &file_stride, &file_count, NULL);
-	    if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Sselect file slab: %d\n", h5_status);
 	    if( h5_status == h5_error ){return FAIL;}
  
             file_offset = file_offset + size;
  
             h5_status = H5Dread(dset_id1, float_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) buffer);
-	    if (io_log) fprintf(log_fptr, "H5Dread boundary type: %" ISYM"\n", h5_status);
+	    if (io_log) fprintf(log_fptr, "H5Dread boundary type: %d\n", h5_status);
 
 	    if( h5_status == h5_error ){	      
 	      for (int k=0;k<size;k++) buffer[k] = BoundaryType[0][dim][i][j];
-	      fprintf(stderr,"ExternaBoundary::ReadExternalBoundary Had trouble reading ExternalBoudnary values: field: %i\n", field);
+	      fprintf(stderr,"ExternaBoundary::ReadExternalBoundary Had trouble reading ExternalBoudnary values: field: %" ISYM "\n", field);
 	      fprintf(stderr,"Continue and hope for the best.\n");
 	    }
 
@@ -422,7 +422,7 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
             if (ExternalBoundaryValueIO) {
 
               h5_status = H5Dread(dset_id2, float_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) buffer);
-	      if (io_log) fprintf(log_fptr, "H5Dread boundary value: %" ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Dread boundary value: %d\n", h5_status);
 	      if( h5_status == h5_error ){return FAIL;}
 
               for (j = 0; j < size; j++)
@@ -442,7 +442,7 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
               BoundaryValue[field][dim][i] = new float[size];
 
               h5_status = H5Dread(dset_id2, float_type_id, mem_dsp_id, file_dsp_id,  H5P_DEFAULT, (VOIDP) buffer);
-	      if (io_log) fprintf(log_fptr, "H5Dread boundary value: %" ISYM"\n", h5_status);
+	      if (io_log) fprintf(log_fptr, "H5Dread boundary value: %d\n", h5_status);
 	      if( h5_status == h5_error ){return FAIL;}
  
 	      for (j = 0; j < size; j++)
@@ -465,25 +465,25 @@ int ExternalBoundary::ReadExternalBoundary(FILE *fptr, int ReadText, int ReadDat
         delete [] dname2;
  
         h5_status = H5Dclose(dset_id1);
-	if (io_log) fprintf(log_fptr,"H5Dclose 1: %" ISYM"\n", h5_status);
+	if (io_log) fprintf(log_fptr,"H5Dclose 1: %d\n", h5_status);
 	if( h5_status == h5_error ){return FAIL;}
  
         h5_status = H5Dclose(dset_id2);
-	if (io_log) fprintf(log_fptr,"H5Dclose 2: %" ISYM"\n", h5_status);
+	if (io_log) fprintf(log_fptr,"H5Dclose 2: %d\n", h5_status);
 	if( h5_status == h5_error ){return FAIL;}
  
         h5_status = H5Sclose(mem_dsp_id);
-	if (io_log) fprintf(log_fptr, "H5Sclose mem_dsp: %" ISYM"\n", h5_status);
+	if (io_log) fprintf(log_fptr, "H5Sclose mem_dsp: %d\n", h5_status);
 	if( h5_status == h5_error ){return FAIL;}
  
         h5_status = H5Sclose(file_dsp_id);
-	if (io_log) fprintf(log_fptr, "H5Sclose file_dsp: %" ISYM"\n", h5_status);
+	if (io_log) fprintf(log_fptr, "H5Sclose file_dsp: %d\n", h5_status);
 	if( h5_status == h5_error ){return FAIL;}
  
       }   // end of loop over dims
  
     h5_status = H5Fclose(file_id);
-    if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
     if( h5_status == h5_error ){return FAIL;}
  
     if (io_log) fclose(log_fptr);

@@ -56,7 +56,7 @@ int RecalibrateMBHFeedbackThermalRadius(FLOAT star_pos[], LevelHierarchyEntry *L
   if (MBHFeedback != 1 || MBHFeedbackThermalRadius >= 0) 
     return SUCCESS;
 
-//  printf("RecalibrateMFTR: MyProcNum = %d, star_pos[] = %g, %g, %g\n", 
+//  printf("RecalibrateMFTR: MyProcNum = %" ISYM ", star_pos[] = %g, %g, %g\n", 
 //	 MyProcessorNumber, star_pos[0], star_pos[1], star_pos[2]); 
 
   /* Set the units. */

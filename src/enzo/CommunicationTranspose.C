@@ -93,7 +93,7 @@ int CommunicationTranspose(region *FromRegion, int NumberOfFromRegions,
 	 ToRegion, NumberOfToRegions, TransposeOrder);
       break;
     default:
-      ENZO_VFAIL("Invalid value for UnigridTranspose = %d", UnigridTranspose);
+      ENZO_VFAIL("Invalid value for UnigridTranspose = %" ISYM "", UnigridTranspose);
     } // ENDSWITCH
     TIMER_STOP("CommunicationTranspose");
     return retval;
@@ -1025,7 +1025,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
       TotalCompletedRequests = 0;
 
 #ifdef DEBUG_NONBLOCKCT
-      printf("CT(%" ISYM"): TotalCompletedRequests = %d, NumberOfRequests = %d\n",
+      printf("CT(%" ISYM"): TotalCompletedRequests = %" ISYM ", NumberOfRequests = %" ISYM "\n",
 	     MyProcessorNumber, TotalCompletedRequests, 
 	     NumberOfRequests);
 #endif
@@ -1037,7 +1037,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
 	  MPI_Waitsome(NumberOfRequests, RequestHandle, &CompletedRequests,
 		       ListOfIndices, ListOfStatuses);
 #ifdef DEBUG_NONBLOCKCT
-	  printf("P%d: CompletedRequests = %d/%d\n", MyProcessorNumber, 
+	  printf("P%" ISYM ": CompletedRequests = %" ISYM "/%" ISYM "\n", MyProcessorNumber, 
 		 CompletedRequests, NumberOfRequests);
 #endif
 
@@ -1054,7 +1054,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
 	      (n == 0 && request == 0)) {
 
 #ifdef DEBUG_NONBLOCKCT
-	    fprintf(stderr, "CT(%" ISYM"): request = %d, receives = %" ISYM"\n", 
+	    fprintf(stderr, "CT(%" ISYM"): request = %" ISYM ", receives = %" ISYM"\n", 
 		    MyProcessorNumber, request, receives);
 #endif
 
@@ -1108,7 +1108,7 @@ int NonBlockingCommunicationTranspose(region *FromRegion, int NumberOfFromRegion
 	  } // ENDIF completed request
 	} // ENDFOR requests
 #ifdef DEBUG_NONBLOCKCT
-	printf("CT(%" ISYM"): (n=%d) -- completed %d out of %d requests\n",
+	printf("CT(%" ISYM"): (n=%" ISYM ") -- completed %" ISYM " out of %" ISYM " requests\n",
 	       MyProcessorNumber, n, TotalCompletedRequests, NumberOfRequests);
 #endif
       } // ENDWHILE

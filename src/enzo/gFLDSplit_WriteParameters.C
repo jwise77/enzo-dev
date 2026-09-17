@@ -68,10 +68,10 @@ int gFLDSplit::WriteParameters(FILE *fptr)
   fprintf(fptr, "RadHydroInitialGuess = %" ISYM"\n", initial_guess);    
   fprintf(fptr, "RadHydroKrylovMethod = %" ISYM"\n", Krylov_method);
   fprintf(fptr, "RadHydroSolTolerance = %22.16e\n", sol_tolerance);
-  fprintf(fptr, "RadHydroMaxMGIters = %i\n", sol_maxit);    
-  fprintf(fptr, "RadHydroMGRelaxType = %i\n", sol_rlxtype);    
-  fprintf(fptr, "RadHydroMGPreRelax = %i\n", sol_npre);    
-  fprintf(fptr, "RadHydroMGPostRelax = %i\n", sol_npost);    
+  fprintf(fptr, "RadHydroMaxMGIters = %d\n", sol_maxit);    
+  fprintf(fptr, "RadHydroMGRelaxType = %d\n", sol_rlxtype);    
+  fprintf(fptr, "RadHydroMGPreRelax = %d\n", sol_npre);    
+  fprintf(fptr, "RadHydroMGPostRelax = %d\n", sol_npost);    
 
   fprintf(fptr, "EnergyOpacityC0 = %22.16e\n", EnergyOpacityC0);
   fprintf(fptr, "EnergyOpacityC1 = %22.16e\n", EnergyOpacityC1);

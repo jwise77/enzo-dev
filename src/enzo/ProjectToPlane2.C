@@ -169,7 +169,7 @@ int ProjectToPlane2(char *ParameterFile, HierarchyEntry &TopGrid,
   /* Error check. */
 
   if (ProjectionDimension < 0 || ProjectionDimension > MetaData.TopGridRank) {
-    ENZO_VFAIL("Invalid ProjectionDimension (%d).\n",ProjectionDimension)
+    ENZO_VFAIL("Invalid ProjectionDimension (%" ISYM ").\n",ProjectionDimension)
   }
 
   /* Check to see if a metal cooling rates (and ratios of line and total

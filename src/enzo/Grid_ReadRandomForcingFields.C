@@ -177,7 +177,7 @@ int grid::ReadRandomForcingFields(FILE *fptr, char DataFilename[])
     if (io_log) log_fptr = fopen(logname, "a");
     if (io_log) fprintf(log_fptr,"H5Fopen with Name %s\n",name);
     file_id = H5Fopen(name,  H5F_ACC_RDONLY, H5P_DEFAULT);
-    if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
+    if (io_log) fprintf(log_fptr, "H5Fopen id: %ld\n", file_id);
     if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
   }
  
@@ -227,26 +227,26 @@ int grid::ReadRandomForcingFields(FILE *fptr, char DataFilename[])
  
     for (i = 0; i < vel; i++) {
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", DataLabel[i]);
  
       dset_id =  H5Dopen(file_id, DataLabel[i]);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %ld\n", dset_id);
       if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dread(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dread: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
       //      LCAPERF_COUNT_READ(dset_id, float_type_id, H5S_ALL);
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
     }
  
@@ -257,26 +257,26 @@ int grid::ReadRandomForcingFields(FILE *fptr, char DataFilename[])
       /* get data into temporary array */
  
       file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+      if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
       if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", DataLabel[vel+dim]);
  
       dset_id =  H5Dopen(file_id, DataLabel[vel+dim]);
-      if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
+      if (io_log) fprintf(log_fptr, "H5Dopen id: %ld\n", dset_id);
       if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dread(dset_id, float_type_id, H5S_ALL, H5S_ALL, H5P_DEFAULT, (VOIDP) temp);
-      if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dread: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
       //JBPERF_COUNT_READ(dset_id, float_type_id, H5S_ALL);
  
       h5_status = H5Sclose(file_dsp_id);
-      if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Dclose(dset_id);
-      if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
+      if (io_log) fprintf(log_fptr, "H5Dclose: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       /* copy velocity from active region into whole grid forcing field;
@@ -308,7 +308,7 @@ int grid::ReadRandomForcingFields(FILE *fptr, char DataFilename[])
        (NumberOfBaryonFields > 0) )
   {
      h5_status = H5Fclose(file_id);
-       if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+       if (io_log) fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
        if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
   }
  

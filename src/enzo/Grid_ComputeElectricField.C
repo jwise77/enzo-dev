@@ -278,7 +278,7 @@ int grid::ComputeElectricField(float dT, float ** Fluxes){
 	 F4 = B2 - Db[dimX][1] + MagneticSize[dimY] * Li_B[dimX][1];
 	 break;
        default:
-	 fprintf(stderr,"Athena_ComputeElectricField and incompatable Hydro Method %d\n", HydroMethod);
+	 fprintf(stderr,"Athena_ComputeElectricField and incompatable Hydro Method %" ISYM "\n", HydroMethod);
 	 return FAIL;
        }
 

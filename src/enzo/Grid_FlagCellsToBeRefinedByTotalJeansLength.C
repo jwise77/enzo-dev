@@ -125,7 +125,7 @@ int grid::FlagCellsToBeRefinedByTotalJeansLength()
 
   //  FORTRAN_NAME(smooth2)(BaryonField[GPotNum] ,Phi, &GridRank, GridDimension, GridDimension+1, GridDimension+2);
       
-  //  printf("GpotNum : %i\n", GPotNum);
+  //  printf("GpotNum : %" ISYM "\n", GPotNum);
   rhox = rhoy = rhoz = 0.;
   int ci,cj,ck,cind;
   for (k = GridStartIndex[2]+1; k < GridEndIndex[2]; k++) {
@@ -245,7 +245,7 @@ int grid::FlagCellsToBeRefinedByTotalJeansLength()
     FlaggingField[i] = (FlaggingField[i] >= 1)? 1 : 0;
     NumberOfFlaggedCells += FlaggingField[i];
   };
-  //  printf("NumberOfFlaggedCells %i\n", NumberOfFlaggedCells);
+  //  printf("NumberOfFlaggedCells %" ISYM "\n", NumberOfFlaggedCells);
   
   return NumberOfFlaggedCells;
   

@@ -140,7 +140,7 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
   FieldType[NumberOfBaryonFields++] = ImPsi;
   FieldType[NumberOfBaryonFields++] = FDMDensity;
   
-  //printf("%d \n", NumberOfBaryonFields);
+  //printf("%" ISYM " \n", NumberOfBaryonFields);
   if(WritePotential)
     FieldType[NumberOfBaryonFields++] = GravPotential;
 
@@ -251,7 +251,7 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
     return SUCCESS;
     }
 
-    fprintf(stdout, "FDMCollapse: initialize particles on processor %d \n", MyProcessorNumber);
+    fprintf(stdout, "FDMCollapse: initialize particles on processor %" ISYM " \n", MyProcessorNumber);
     for (SetupLoopCount = 0; SetupLoopCount < 1+min(FDMUseParticles, 1); SetupLoopCount++) {
      if (SetupLoopCount > 0) {
       /* If particles already exist (coarse particles), then delete. */
@@ -313,9 +313,9 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
             indzp = GRIDINDEX_NOGHOST(i,j,k+1);
             indzn = GRIDINDEX_NOGHOST(i,j,k-1);
           }
-		  //printf("%d %d %d %d \n",size, i,j,k);
+		  //printf("%" ISYM " %" ISYM " %" ISYM " %" ISYM " \n",size, i,j,k);
           //printf("x,y,z %f %f %f \n",x,y,z);
-          //printf("%d %d %d \n",ind,indxp,indxn);
+          //printf("%" ISYM " %" ISYM " %" ISYM " \n",ind,indxp,indxn);
 
 		  ParticleCount += int(BaryonField[FDMDensNum][ind]/ParticleMeanDensity);
 	      
@@ -362,7 +362,7 @@ int grid::ParallelFDMCollapseInitializeGrid(char *FDMCollapseRePsiName,
       }// end for loop over grid */ 
    } // end loop SetupLoopCount
    NumberOfParticles = npart;
-   printf("FDMCollapseInitialize: Number of Particles = %d on Processor %d\n", NumberOfParticles, MyProcessorNumber);
+   printf("FDMCollapseInitialize: Number of Particles = %" ISYM " on Processor %" ISYM "\n", NumberOfParticles, MyProcessorNumber);
 
 
   // turn off quantum pressure, do a pure CDM sim

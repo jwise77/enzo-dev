@@ -54,7 +54,7 @@ int MagneticFieldResetter(LevelHierarchyEntry *LevelArray[], int ThisLevel,
 
   for (level = 0; level < MAX_DEPTH_OF_HIERARCHY-1; level++) {
     
-//  fprintf(stdout, "Resetting magnetic fields at level = %d ...\n", level);
+//  fprintf(stdout, "Resetting magnetic fields at level = %" ISYM " ...\n", level);
 
     NumberOfGrids = GenerateGridArray(LevelArray, level, &Grids);
     

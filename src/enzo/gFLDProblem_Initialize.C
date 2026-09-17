@@ -456,10 +456,10 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     }
   }
   if (debug){
-    printf("gFLDProblem::Initialize p%" ISYM": rank = %" ISYM", Nchem = %" ISYM", HFrac = %g\n",
+    printf("gFLDProblem::Initialize p%" ISYM ": rank = %" ISYM ", Nchem = %" ISYM ", HFrac = %g\n",
 	   MyProcessorNumber, rank, Nchem, HFrac);
-    printf("gFLDProblem::Initialize p%" ISYM": layout = (%" ISYM",%" ISYM",%" ISYM")\n",MyProcessorNumber,layout[0],layout[1],layout[2]);
-    printf("gFLDProblem::Initialize p%" ISYM": location = (%" ISYM",%" ISYM",%" ISYM")\n",MyProcessorNumber,location[0],location[1],location[2]);
+    printf("gFLDProblem::Initialize p%" ISYM ": layout = (%" ISYM ",%" ISYM ",%" ISYM ")\n",MyProcessorNumber,layout[0],layout[1],layout[2]);
+    printf("gFLDProblem::Initialize p%" ISYM ": location = (%" ISYM ",%" ISYM ",%" ISYM ")\n",MyProcessorNumber,location[0],location[1],location[2]);
   }
 
   //   for non-periodic domain, unset neighbor info.
@@ -473,9 +473,9 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     printf("gFLDProblem::Initialize p%" ISYM": EdgeVals = (%g:%g,%g:%g,%g:%g)\n",
 	   MyProcessorNumber, EdgeVals[0][0], EdgeVals[0][1], EdgeVals[1][0],
 	   EdgeVals[1][1], EdgeVals[2][0], EdgeVals[2][1]);
-    printf("gFLDProblem::Initialize p%" ISYM": OnBdry = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,int(OnBdry[0][0]),int(OnBdry[0][1]),int(OnBdry[1][0]),int(OnBdry[1][1]),int(OnBdry[2][0]),int(OnBdry[2][1]));
-    printf("gFLDProblem::Initialize p%" ISYM": BdryType = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,BdryType[0][0],BdryType[0][1],BdryType[1][0],BdryType[1][1],BdryType[2][0],BdryType[2][1]);
-    printf("gFLDProblem::Initialize p%" ISYM": NBors = (%" ISYM":%" ISYM",%" ISYM":%" ISYM",%" ISYM":%" ISYM")\n",MyProcessorNumber,NBors[0][0],NBors[0][1],NBors[1][0],NBors[1][1],NBors[2][0],NBors[2][1]);
+    printf("gFLDProblem::Initialize p%" ISYM ": OnBdry = (%" ISYM ":%" ISYM ",%" ISYM ":%" ISYM ",%" ISYM ":%" ISYM ")\n",MyProcessorNumber,int(OnBdry[0][0]),int(OnBdry[0][1]),int(OnBdry[1][0]),int(OnBdry[1][1]),int(OnBdry[2][0]),int(OnBdry[2][1]));
+    printf("gFLDProblem::Initialize p%" ISYM ": BdryType = (%" ISYM ":%" ISYM ",%" ISYM ":%" ISYM ",%" ISYM ":%" ISYM ")\n",MyProcessorNumber,BdryType[0][0],BdryType[0][1],BdryType[1][0],BdryType[1][1],BdryType[2][0],BdryType[2][1]);
+    printf("gFLDProblem::Initialize p%" ISYM ": NBors = (%" ISYM ":%" ISYM ",%" ISYM ":%" ISYM ",%" ISYM ":%" ISYM ")\n",MyProcessorNumber,NBors[0][0],NBors[0][1],NBors[1][0],NBors[1][1],NBors[2][0],NBors[2][1]);
   }
 
   // set initial time step into TopGrid
@@ -527,7 +527,7 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
     ArrDims[dim] = LocDims[dim] + 2*NumberOfGhostZones;
 
   if (debug) {
-    printf("gFLDProblem::Initialize p%" ISYM": SolvIndices = (%i:%i,%i:%i,%i:%i)\n",
+    printf("gFLDProblem::Initialize p%" ISYM ": SolvIndices = (%d:%d,%d:%d,%d:%d)\n",
 	   MyProcessorNumber, SolvIndices[0][0], SolvIndices[0][1], SolvIndices[1][0], 
 	   SolvIndices[1][1], SolvIndices[2][0], SolvIndices[2][1]);
     printf("gFLDProblem::Initialize p%" ISYM": SolvOff = (%" ISYM",%" ISYM",%" ISYM")\n",
@@ -772,22 +772,22 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
   //   check MG solver parameters
   if (sol_maxit < 0) {
-    fprintf(stderr,"Illegal RadHydroMaxMGIters = %i. Setting to 20\n",
+    fprintf(stderr,"Illegal RadHydroMaxMGIters = %d. Setting to 20\n",
 	    sol_maxit);
     sol_maxit = 20;
   }
   if ((sol_rlxtype<0) || (sol_rlxtype>3)) {
-    fprintf(stderr,"Illegal RadHydroMGRelaxType = %i. Setting to 1\n",
+    fprintf(stderr,"Illegal RadHydroMGRelaxType = %d. Setting to 1\n",
 	    sol_rlxtype);
     sol_rlxtype = 1;
   }
   if (sol_npre < 1) {
-    fprintf(stderr,"Illegal RadHydroMGPreRelax = %i. Setting to 1\n",
+    fprintf(stderr,"Illegal RadHydroMGPreRelax = %d. Setting to 1\n",
 	    sol_npre);
     sol_npre = 1;
   }
   if (sol_npost < 1) {
-    fprintf(stderr,"Illegal RadHydroMGPostRelax = %i. Setting to 1\n",
+    fprintf(stderr,"Illegal RadHydroMGPostRelax = %d. Setting to 1\n",
 	    sol_npost);
     sol_npost = 1;
   }
@@ -1300,10 +1300,10 @@ int gFLDProblem::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
       fprintf(outfptr, "RadHydroNewtTolerance = %g\n", newt_tol);    
       fprintf(outfptr, "RadHydroMinLinesearch = %g\n", 
 	      newt_MinLinesearch);    
-      fprintf(outfptr, "RadHydroMaxMGIters = %i\n", sol_maxit);    
-      fprintf(outfptr, "RadHydroMGRelaxType = %i\n", sol_rlxtype);    
-      fprintf(outfptr, "RadHydroMGPreRelax = %i\n", sol_npre);    
-      fprintf(outfptr, "RadHydroMGPostRelax = %i\n", sol_npost);    
+      fprintf(outfptr, "RadHydroMaxMGIters = %d\n", sol_maxit);    
+      fprintf(outfptr, "RadHydroMGRelaxType = %d\n", sol_rlxtype);    
+      fprintf(outfptr, "RadHydroMGPreRelax = %d\n", sol_npre);    
+      fprintf(outfptr, "RadHydroMGPostRelax = %d\n", sol_npost);    
       fprintf(outfptr, "PlanckOpacityC0 = %g\n", PlanckOpacityC0);
       fprintf(outfptr, "PlanckOpacityC1 = %g\n", PlanckOpacityC1);
       fprintf(outfptr, "PlanckOpacityC2 = %g\n", PlanckOpacityC2);

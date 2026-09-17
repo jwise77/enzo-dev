@@ -284,7 +284,7 @@ Eint32 MAIN_NAME(Eint32 argc, char *argv[])
     int impi = 0;
     char hostname[256];
     gethostname(hostname, sizeof(hostname));
-    printf("PID %d on %s ready for debugger attach\n", getpid(), hostname);
+    printf("PID %" ISYM " on %s ready for debugger attach\n", getpid(), hostname);
     fflush(stdout);
     while (impi == 0)
       sleep(5);
@@ -612,7 +612,7 @@ Eint32 MAIN_NAME(Eint32 argc, char *argv[])
     for (dim = dim1; dim < dim2; dim++) {
       sprintf(proj_name, "project_%4.4d_%c.h5", MetaData.CycleNumber, 120+dim);
       if (MyProcessorNumber == ROOT_PROCESSOR)
-	printf("ProjectToPlane: dimension %d.  Output %s\n", dim, proj_name);
+	printf("ProjectToPlane: dimension %" ISYM ".  Output %s\n", dim, proj_name);
       if (ProjectToPlane2(ParameterFile, TopGrid, MetaData, LevelArray, 
 			  RegionStart, RegionEnd,
 			  RegionStartCoordinates, RegionEndCoordinates,

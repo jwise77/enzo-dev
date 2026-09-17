@@ -68,7 +68,7 @@ int grid::Collapse1DInitializeGrid(FLOAT r_sphere,
         printf("BE sphere data not enough\n");
         return FAIL;
       }
-      sscanf(line, "%" GSYM" %" GSYM, &radius[i], &rho_be[i]);
+      sscanf(line, "%lf %lf", &radius[i], &rho_be[i]);
     }
     fclose(fptr);
   }

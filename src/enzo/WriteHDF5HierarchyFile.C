@@ -92,14 +92,14 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
 
   sprintf(FileName,"%s.hierarchy.hdf5",base_name);
 
-  char logname[MAX_LINE_LENGTH];
+  char logname[1024];
   sprintf(logname,"%s.log",FileName);
   if (io_log) log_fptr = fopen(logname, "w");
 
   // open the file
   if (io_log) fprintf(log_fptr, "Calling H5Fcreate with Name = %s\n", FileName);
   file_id = H5Fcreate(FileName, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
-  if (io_log) fprintf(log_fptr, "H5Fcreate id: %d\n", file_id);
+  if (io_log) fprintf(log_fptr, "H5Fcreate id: %ld\n", file_id);
 
   
   // Calculate CurrentRedshift and add as attribute (if Cosmology)
@@ -177,7 +177,7 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
     
     if (io_log) fprintf(log_fptr, "Calling H5Gcreate with Name %s\n", GroupName);
     group_id = H5Gcreate(file_id, GroupName, 0);
-    if (io_log) fprintf(log_fptr, "H5Gcreate: %" ISYM"\n", (int) group_id);
+    if (io_log) fprintf(log_fptr, "H5Gcreate: %ld\n", group_id);
     
 
     // create all grid groups and and write its datasets
@@ -244,7 +244,7 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
 
     // Close this group
     h5_status = H5Gclose(group_id);
-    if (io_log) fprintf(log_fptr, "H5Gclose: %" ISYM"\n", (int) h5_status);
+    if (io_log) fprintf(log_fptr, "H5Gclose: %d\n", h5_status);
     
   } // loop over levels
   //  fprintf(stderr,"Total number of grids = %" ISYM"\n",TotalNumberOfGrids);
@@ -259,12 +259,12 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
   for(level=0; level<=FinestLevel; level++) {
     for (LTemp = LevelArray[level]; LTemp; LTemp=LTemp->NextGridThisLevel) {
       LevelLookupTable[LTemp->GridData->GetGridID()-1] = level;
-      //      fprintf(stderr,"LevelLookup[%d] = %d\n",LTemp->GridData->GetGridID()-1,level);
+      //      fprintf(stderr,"LevelLookup[%" ISYM "] = %" ISYM "\n",LTemp->GridData->GetGridID()-1,level);
     }
   }
 
   // for(i=0;i<TotalNumberOfGrids;i++)
-  //   fprintf(stderr,"%d %d\n",i,LevelLookupTable[i]);
+  //   fprintf(stderr,"%" ISYM " %" ISYM "\n",i,LevelLookupTable[i]);
   // fflush(stderr);
 
   // Write LevelLookupTable Dataset
@@ -274,7 +274,7 @@ int WriteHDF5HierarchyFile(char *base_name, HierarchyEntry *TopGrid, TopGridData
   // Close the file
   h5_status = H5Fclose(file_id);
 
-  if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", (int) h5_status);
+  if (io_log) fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
 
 
   if (io_log) fclose(log_fptr);

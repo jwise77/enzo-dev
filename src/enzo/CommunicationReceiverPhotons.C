@@ -74,7 +74,7 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
     return SUCCESS;
 
 #ifdef DEBUG_CRP
-  printf("P(%" ISYM") in PH_CRH with %" ISYM" requests (local=%d)\n", 
+  printf("P(%" ISYM") in PH_CRH with %" ISYM" requests (local=%" ISYM ")\n", 
 	 MyProcessorNumber, TotalReceives, local_transport);
 #endif
 
@@ -170,15 +170,15 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
       // Double check if the grids exists on this processor and if the
       // grid number is valid.  If not, skip and warn the user.
       if (gi >= nGrids[lvl]) {
-	printf("P%d: WARNING: CommunicationReceiverPhotons: Bad grid number = %d\n"
-	       "\t Receive %d, level %d, NumberOfGrids = %d.  SKIPPING!\n",
+	printf("P%" ISYM ": WARNING: CommunicationReceiverPhotons: Bad grid number = %" ISYM "\n"
+	       "\t Receive %" ISYM ", level %" ISYM ", NumberOfGrids = %" ISYM ".  SKIPPING!\n",
 	       MyProcessorNumber, gi, i, lvl, nGrids[lvl]);
 	continue;
       }
       else if (Grids[lvl][gi]->GridData->ReturnProcessorNumber() != 
 	       MyProcessorNumber) {
-	printf("P%d: WARNING: CommunicationReceiverPhotons: This grid isn't on this processor!\n"
-	       "\t Grid %d (P%d), Receive %d, level %d, NumberOfGrids = %d. SKIPPING!\n",
+	printf("P%" ISYM ": WARNING: CommunicationReceiverPhotons: This grid isn't on this processor!\n"
+	       "\t Grid %" ISYM " (P%" ISYM "), Receive %" ISYM ", level %" ISYM ", NumberOfGrids = %" ISYM ". SKIPPING!\n",
 	       MyProcessorNumber, gi, Grids[lvl][gi]->GridData->ReturnProcessorNumber(), 
 	       i, lvl, nGrids[lvl]);
 	continue;
@@ -276,7 +276,7 @@ int CommunicationReceiverPhotons(LevelHierarchyEntry *LevelArray[],
     keep_transporting = 1;
   
 #ifdef DEBUG_CRP
-  printf("P(%" ISYM") out of PH_CRH with %" ISYM" requests. nphotons=%d, kt=%d\n",
+  printf("P(%" ISYM") out of PH_CRH with %" ISYM" requests. nphotons=%" ISYM ", kt=%" ISYM "\n",
 	 MyProcessorNumber, PH_CommunicationReceiveMaxIndex, 
 	 TotalReceivedPhotons, keep_transporting);
 #endif

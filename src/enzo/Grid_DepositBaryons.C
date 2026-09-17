@@ -261,7 +261,7 @@ int grid::DepositBaryons(grid *TargetGrid, FLOAT DepositTime)
     }
   }
 
-    //    printf("DepositBaryons, %i\n", RK2SecondStepBaryonDeposit);
+    //    printf("DepositBaryons, %" ISYM "\n", RK2SecondStepBaryonDeposit);
 
     if (DepositGridCIC == TRUE)
       FORTRAN_NAME(dep_grid_cic)(input_density, dens_field, vel_field,

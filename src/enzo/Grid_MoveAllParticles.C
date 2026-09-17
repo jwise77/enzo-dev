@@ -195,7 +195,7 @@ int grid::MoveAllParticlesOld(int NumberOfGrids, grid* FromGrid[])
 {
 
   if (NumberOfGrids < 1) {
-    fprintf(stderr, "NumberOfGrids(%d) must be > 0.\n", NumberOfGrids);
+    fprintf(stderr, "NumberOfGrids(%" ISYM ") must be > 0.\n", NumberOfGrids);
     return FAIL;
   }
 
@@ -212,7 +212,7 @@ int grid::MoveAllParticlesOld(int NumberOfGrids, grid* FromGrid[])
 
   /* Debugging info. */
 
-  if (debug) printf("MoveAllParticles: %d (before: ThisGrid = %d).\n",
+  if (debug) printf("MoveAllParticles: %" ISYM " (before: ThisGrid = %" ISYM ").\n",
 		    TotalNumberOfParticles, NumberOfParticles);
 
   /* Allocate space for the particles. */
@@ -287,7 +287,7 @@ int grid::MoveAllParticlesOld(int NumberOfGrids, grid* FromGrid[])
     if (MyProcessorNumber == ProcessorNumber &&
         MyProcessorNumber == FromGrid[grid]->ProcessorNumber) {
 
-      //      fprintf(stderr, "P(%d) copying %d particles\n", MyProcessorNumber,
+      //      fprintf(stderr, "P(%" ISYM ") copying %" ISYM " particles\n", MyProcessorNumber,
       //	     FromGrid[grid]->NumberOfParticles);
 
       for (i = 0; i < FromGrid[grid]->NumberOfParticles; i++) {

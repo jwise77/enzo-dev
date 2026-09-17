@@ -810,7 +810,7 @@ void calculate_radial_profiles(float central_density, float central_temperature,
     numdens_of_r[counter]=n_of_r(this_radius);  // particles/CC
     radius_bins[counter]=this_radius;  // in CGS
 
-    printf("%e    %e    %e   %e  %e  %d\n", this_radius/pc_cm, this_temperature, n_of_r(this_radius), dr, r_outer*pc_cm, counter );
+    printf("%e    %e    %e   %e  %e  %" ISYM "\n", this_radius/pc_cm, this_temperature, n_of_r(this_radius), dr, r_outer*pc_cm, counter );
 
     counter++;
 

@@ -180,7 +180,7 @@ int grid::TracerParticleOutputData(FILE *fptr, FLOAT WriteOutTime)
   for (n = 0; n < NumberOfParticles; n++)
     if (ParticleType[n] == PARTICLE_TYPE_TRACER){
       int_buffer[index++] = ParticleNumber[n];
-      //printf("particle ID %d (%d)\n",ParticleNumber[n], int_buffer[index-1]);
+      //printf("particle ID %" ISYM " (%" ISYM ")\n",ParticleNumber[n], int_buffer[index-1]);
     }
 
   fwrite((void*) int_buffer, sizeof(int), NumberOfTracerParticles, fptr);

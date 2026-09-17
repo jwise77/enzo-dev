@@ -16,7 +16,7 @@ int SplitPhotonPackage(PhotonPackageEntry *PP)
     fprintf(stderr, "SplitPhotonPackage: Warning Previous Photon Package == NULL");
   
   if (DEBUG) 
-    fprintf(stdout, "split package ipix:%" ISYM" level:%" ISYM"\n",PP->ipix, PP->level);
+    fprintf(stdout, "split package ipix:%ld level:%d\n",PP->ipix, PP->level);
 
   nipix = (PP->ipix)*4;
   for (childrays=0; childrays < 4; childrays++) {

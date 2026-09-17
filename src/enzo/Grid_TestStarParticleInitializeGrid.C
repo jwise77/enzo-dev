@@ -67,7 +67,7 @@ int grid::TestStarParticleInitializeGrid(float TestStarParticleStarMass,
   NumberOfParticles = 1;
   NumberOfParticleAttributes = 4;
   this->AllocateNewParticles(NumberOfParticles);
-  printf("Allocated %d particles\n", NumberOfParticles);
+  printf("Allocated %" ISYM " particles\n", NumberOfParticles);
 
   /* Set particle IDs and types */
 

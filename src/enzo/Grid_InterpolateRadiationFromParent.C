@@ -234,7 +234,7 @@ int grid::InterpolateRadiationFromParent(grid *ParentGrid, int Field)
 			    &SecondOrderBFlag, &interp_error);
  
     if (interp_error) {
-      ENZO_VFAIL("P%d: Error interpolating emissivity.\n"
+      ENZO_VFAIL("P%" ISYM ": Error interpolating emissivity.\n"
 		 "ParentGrid ID = %d\n"
 		 "\t LeftEdge  = %" PSYM" %" PSYM" %" PSYM"\n"
 		 "\t RightEdge = %" PSYM" %" PSYM" %" PSYM"\n"

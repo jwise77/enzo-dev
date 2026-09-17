@@ -269,8 +269,8 @@ int RotatingCylinderInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGri
     fprintf(Outfptr, "RotatingCylinderTotalEnergy         = %" FSYM"\n"  , RotatingCylinderTotalEnergy);
     fprintf(Outfptr, "RotatingCylinderRadius         = %" PSYM"\n"  , RotatingCylinderRadius);
     fprintf(Outfptr, "RotatingCylinderCenterPosition = %" PSYM" %" PSYM" %" PSYM"\n",
-		  RotatingCylinderCenterPosition, RotatingCylinderCenterPosition+1,
-		  RotatingCylinderCenterPosition+2);
+		  RotatingCylinderCenterPosition[0], RotatingCylinderCenterPosition[1],
+		  RotatingCylinderCenterPosition[2]);
     fprintf(Outfptr, "TestProblemUseMetallicityField  = %" ISYM"\n", TestProblemData.UseMetallicityField);
     fprintf(Outfptr, "TestProblemInitialMetallicityFraction  = %" FSYM"\n", TestProblemData.MetallicityField_Fraction);
 

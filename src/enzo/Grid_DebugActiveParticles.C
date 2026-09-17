@@ -48,7 +48,7 @@ int grid::DebugActiveParticles(int level)
     pos = ActiveParticles[i]->ReturnPosition();
     inside = this->PointInGrid(pos);
     if (inside == FALSE) {
-      printf("Active particle outside grid!  level %d, grid %d\n", level, this->ID);
+      printf("Active particle outside grid!  level %" ISYM ", grid %" ISYM "\n", level, this->ID);
       printf("\t pos       = %" GOUTSYM " %" GOUTSYM " %" GOUTSYM "\n", pos[0], pos[1], pos[2]);
       printf("\t left edge = %" GOUTSYM " %" GOUTSYM " %" GOUTSYM "\n",
 	     GridLeftEdge[0], GridLeftEdge[1], GridLeftEdge[2]);

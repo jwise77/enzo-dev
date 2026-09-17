@@ -138,7 +138,7 @@ int grid::WriteNewMovieDataSeparateParticles(FLOAT RegionLeftEdge[], FLOAT Regio
       TempNumber[i] = ParticleNumber[j];
     } // ENDFOR non-DM particles
 
-    //    fprintf(stdout, "alreadyopened[] = %d\n", alreadyopened[ProcessorNumber]);  
+    //    fprintf(stdout, "alreadyopened[] = %" ISYM "\n", alreadyopened[ProcessorNumber]);  
 
     if (AmiraGrid.writeSeparateParticles(NumberOfNonDMParticles, NumberOfParticleAttributes,
 					 GridRank, 

@@ -497,7 +497,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
 
     cstar->NotEjectedMass += EjectaDensity * DensityUnits * BubbleVolume * pow(LengthUnits,3.0) / SolarMass;  
 
-//    fprintf(stdout, "d1, d2, d3, i, j, k = %d %d %d / %d %d %d\n", 
+//    fprintf(stdout, "d1, d2, d3, i, j, k = %" ISYM " %" ISYM " %" ISYM " / %" ISYM " %" ISYM " %" ISYM "\n", 
 //	    GridDimension[0], GridDimension[1], GridDimension[2], i,j,k);
 
     /* If NotEjectedMass is still smaller than the threshold, return */
@@ -623,7 +623,7 @@ int grid::AddFeedbackSphere(Star *cstar, int level, float radius, float DensityU
       }  // END jj-direction
     }  // END kk-direction
 
-//    printf("EjectaM in SolarMass = %g, EjectaM = %g, EjectaMetalM = %g, m_cell_edge = %g, n_cell_edge = %d\n",
+//    printf("EjectaM in SolarMass = %g, EjectaM = %g, EjectaMetalM = %g, m_cell_edge = %g, n_cell_edge = %" ISYM "\n",
 //	   cstar->NotEjectedMass, EjectaMass, EjectaMetalMass, m_cell_edge, n_cell_edge); 
 
     /* Calculate the jet density */

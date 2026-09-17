@@ -305,7 +305,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
         this->write_dataset(GridRank, OutDims, DataLabel[field],
             group_id, file_type_id, (VOIDP) BaryonField[field],
             CopyOnlyActive, temp);
-	//	fprintf(stderr, "%i field\n", field);
+	//	fprintf(stderr, "%" ISYM " field\n", field);
       } else {
 
         this->write_dataset(GridRank, FullOutDims, DataLabel[field],
@@ -536,7 +536,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
                             MHDActive, ElectricDims[field]);
           if( AvgElectricField[field] != NULL ){
             char name[30];
-            sprintf(name, "AvgElec%d",field);
+            sprintf(name, "AvgElec%" ISYM "",field);
             this->write_dataset(GridRank, MHDOutDims, name,
                             group_id, file_type_id, (VOIDP) ElectricField[field],
                             TRUE, MHDtmp, MHDWriteStartIndex, MHDWriteEndIndex, 
@@ -732,7 +732,7 @@ int grid::Group_WriteGrid(FILE *fptr, char *base_name, int grid_id, HDF5_hid_t f
 
       // Only the active part was calculated, so no copying in the routine
       if (debug1)
-	fprintf(stdout, "DM field = %i\n", field);
+	fprintf(stdout, "DM field = %" ISYM "\n", field);
       this->write_dataset(GridRank, OutDims, SmoothedDMLabel[field],
                     group_id, file_type_id, (VOIDP) InterpolatedField[field], FALSE);
 
@@ -970,7 +970,7 @@ int grid::WriteAllFluxes(hid_t grid_node)
 
     /* Make our group here */
 
-    snprintf(name, 254, "Subgrid%08d", i);
+    snprintf(name, 254, "Subgrid%08%" ISYM "", i);
 
     subgrid_group = H5Gcreate(fluxes_node, name, 0);
     if(subgrid_group == h5_error)ENZO_VFAIL("IO Problem creating %s", name)

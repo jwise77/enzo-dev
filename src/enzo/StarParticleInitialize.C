@@ -117,9 +117,9 @@ int StarParticleInitialize(HierarchyEntry *Grids[], TopGridData *MetaData,
   }
 
 //  fprintf(stdout, "\nin StarParticleInitialize.C \n", MetaData->NumberOfParticles); 
-//  fprintf(stdout, "MetaData->NumberOfParticles = %d\n", MetaData->NumberOfParticles); 
-//  fprintf(stdout, "NumberOfStarParticles now = %d\n", NumberOfStarParticles);
-//  fprintf(stdout, "NumberOfOtherParticles now = %d\n", NumberOfOtherParticles);
+//  fprintf(stdout, "MetaData->NumberOfParticles = %" ISYM "\n", MetaData->NumberOfParticles); 
+//  fprintf(stdout, "NumberOfStarParticles now = %" ISYM "\n", NumberOfStarParticles);
+//  fprintf(stdout, "NumberOfOtherParticles now = %" ISYM "\n", NumberOfOtherParticles);
 
 
   LCAPERF_STOP("StarParticleInitialize");

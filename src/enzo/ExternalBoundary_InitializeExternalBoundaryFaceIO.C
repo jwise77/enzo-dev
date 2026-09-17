@@ -121,7 +121,7 @@ int ExternalBoundary::InitializeExternalBoundaryFace(int dim,
     for (field = 0; field < NumberOfBaryonFields; field++) {
 
       if (debug1) 
-	printf("InitializeBoundary: field %d, allocating %d bytes\n",
+	printf("InitializeBoundary: field %" ISYM ", allocating %" ISYM " bytes\n",
 	       field, 2*sizeof(boundary_type)*size/BoundaryDimension[dim]);
       BoundaryType[field][dim][0] =
 	new boundary_type[size/BoundaryDimension[dim]];

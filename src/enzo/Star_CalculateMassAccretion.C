@@ -171,12 +171,12 @@ int Star::CalculateMassAccretion(float &BondiRadius, float &density)
       igrid[0] + CurrentGrid->GridStartIndex[0];
     density = CurrentGrid->BaryonField[DensNum][index];
 
-//     fprintf(stdout, "index = %d, density = %g\n", index, density);  
-//     fprintf(stdout, "igrid[0], igrid[1], igrid[2] = %d, %d, %d\n", igrid[0], igrid[1], igrid[2]); 
+//     fprintf(stdout, "index = %" ISYM ", density = %g\n", index, density);  
+//     fprintf(stdout, "igrid[0], igrid[1], igrid[2] = %" ISYM ", %" ISYM ", %" ISYM "\n", igrid[0], igrid[1], igrid[2]); 
 //     fprintf(stdout, "pos[0], [1], [2] = %g %g %g\n", pos[0], pos[1], pos[2]); 
 //     fprintf(stdout, "GridLeftEdge[0], [1], [2] = %g, %g, %g\n",
 // 	    CurrentGrid->GridLeftEdge[0], CurrentGrid->GridLeftEdge[1], CurrentGrid->GridLeftEdge[2]);
-//     fprintf(stdout, "GridDimension[0], [1], [2] = %d, %d, %d\n",
+//     fprintf(stdout, "GridDimension[0], [1], [2] = %" ISYM ", %" ISYM ", %" ISYM "\n",
 // 	    CurrentGrid->GridDimension[0], CurrentGrid->GridDimension[1], CurrentGrid->GridDimension[2]);
 
     if (MultiSpecies == 0) {
@@ -184,7 +184,7 @@ int Star::CalculateMassAccretion(float &BondiRadius, float &density)
       mu = Mu;
     } else {
       /*
-      printf("star::CMA: HI, HII, De, HeI, HeII, HeIII, index = %d %d %d %d %d %d %d\n",
+      printf("star::CMA: HI, HII, De, HeI, HeII, HeIII, index = %" ISYM " %" ISYM " %" ISYM " %" ISYM " %" ISYM " %" ISYM " %" ISYM "\n",
 	     HINum, HIINum, DeNum, HeINum, HeIINum, HeIIINum, index);
       */
       number_density = 

@@ -251,8 +251,8 @@ int StratifiedMediumExplosionInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntr
     fprintf(Outfptr, "StratifiedMediumExplosionRadiusOfBubble = %" PSYM"\n", StratifiedMediumExplosionRadiusOfBubble);
     fprintf(Outfptr, "StratifiedMediumExplosionPulseType = %" ISYM"\n", StratifiedMediumExplosionPulseType);
     fprintf(Outfptr, "StratifiedMediumExplosionEnergy = %" FSYM"\n", StratifiedMediumExplosionEnergy);
-    fprintf(Outfptr, "StratifiedMediumExplosionCenter = %" PSYM" %" PSYM" %" PSYM"\n", StratifiedMediumExplosionCenter,
-		  StratifiedMediumExplosionCenter+1,StratifiedMediumExplosionCenter+2);
+    fprintf(Outfptr, "StratifiedMediumExplosionCenter = %" PSYM" %" PSYM" %" PSYM"\n", StratifiedMediumExplosionCenter[0],
+		  StratifiedMediumExplosionCenter[1], StratifiedMediumExplosionCenter[2]);
     fprintf(Outfptr, "TestProblemUseMetallicityField  = %" ISYM"\n", TestProblemData.UseMetallicityField);
     fprintf(Outfptr, "TestProblemInitialMetallicityFraction  = %" FSYM"\n", TestProblemData.MetallicityField_Fraction);
   }

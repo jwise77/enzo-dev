@@ -207,10 +207,10 @@ int grid::CollapseMHD3DInitializeGrid(int n_sphere,
         printf("SIT data not enough\n");
         return FAIL;
       }
-      sscanf(line, "%" GSYM" %" GSYM" %" GSYM" %" GSYM, &theta_sit[i], &R_sit[i], &phi_sit[i], &dphi_sit[i]);
+      sscanf(line, "%lf %lf %lf %lf", &theta_sit[i], &R_sit[i], &phi_sit[i], &dphi_sit[i]);
     }
     fgets(line, MAX_LINE_LENGTH, fptr);
-    sscanf(line, "%" GSYM, &v_sit);
+    sscanf(line, "%lf", &v_sit);
     fclose(fptr);
   }
 

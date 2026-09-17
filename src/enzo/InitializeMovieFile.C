@@ -52,11 +52,11 @@ int InitializeMovieFile(TopGridData &MetaData, HierarchyEntry &TopGrid)
     return FAIL;
   }
   fprintf(header, "MovieVersion = %s\n", movieVersion);
-  fprintf(header, "RootReso = %d\n", MetaData.TopGridDims[0]);
-  fprintf(header, "FLOATSize = %d\n", sizeOfFLOAT);
-  fprintf(header, "RecordSize = %d\n", sizeOfRecord);
-  fprintf(header, "NumFields = %d\n", nMovieFields);
-  fprintf(header, "NumCPUs = %d\n", NumberOfProcessors);
+  fprintf(header, "RootReso = %" ISYM "\n", MetaData.TopGridDims[0]);
+  fprintf(header, "FLOATSize = %" ISYM "\n", sizeOfFLOAT);
+  fprintf(header, "RecordSize = %" ISYM "\n", sizeOfRecord);
+  fprintf(header, "NumFields = %" ISYM "\n", nMovieFields);
+  fprintf(header, "NumCPUs = %" ISYM "\n", NumberOfProcessors);
   fprintf(header, "FileStem = %s\n", NewMovieName);
   fclose(header);
  

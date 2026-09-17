@@ -156,7 +156,7 @@ int StarParticleSubtractAccretedMass(TopGridData *MetaData,
 				  VelocityUnits, Time, MarkedSubgrids);
       }
 
-//    fprintf(stdout, "SPSAM: SkipMassRemoval=%d, SphereContained=%d, SphereContainedNextLevel=%d\n", 
+//    fprintf(stdout, "SPSAM: SkipMassRemoval=%" ISYM ", SphereContained=%" ISYM ", SphereContainedNextLevel=%" ISYM "\n", 
 //	    SkipMassRemoval, SphereContained, SphereContainedNextLevel);  
 
       /* Quit this routine when 

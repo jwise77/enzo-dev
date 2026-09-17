@@ -74,13 +74,13 @@ int CalcEmiss(int *nx, int *ny, int *nz,
     if(EmissivityArray[n]==0)
       n++;
     else {
-      printf("AN ELEMENT IS %" FSYM" at %i \n", EmissivityArray[n], n);
+      printf("AN ELEMENT IS %" FSYM" at %" ISYM " \n", EmissivityArray[n], n);
       printf("dtFixed dtLevelAbove %" FSYM" %" FSYM" \n", *dt, dtLevelAbove);
       n = ArraySize+1;
     }
   }
   if(n == ArraySize)
-    printf("ARRAY size %" ISYM" initially ZEROs, n at %i \n", ArraySize, n);
+    printf("ARRAY size %" ISYM" initially ZEROs, n at %" ISYM " \n", ArraySize, n);
   */
 
 
@@ -188,9 +188,9 @@ int CalcEmiss(int *nx, int *ny, int *nz,
 
 
 	    /* update the Emissivity_Array with <UV energy weighted by time> */
-	    /*printf("before %i %i %i was %22.16e\n", EmissivityArray[i + *nx * (j + *ny * k)],i,j,k);*/
+	    /*printf("before %" ISYM " %" ISYM " %" ISYM " was %22.16e\n", EmissivityArray[i + *nx * (j + *ny * k)],i,j,k);*/
 	    EmissivityArray[i + *nx * (j + *ny * k)] += uv_energy;
-	    /*printf("after %i %i %i is %22.16e\n", EmissivityArray[i + *nx * (j + *ny * k)],i,j,k);*/
+	    /*printf("after %" ISYM " %" ISYM " %" ISYM " is %22.16e\n", EmissivityArray[i + *nx * (j + *ny * k)],i,j,k);*/
 	  }
 	}
 	else {

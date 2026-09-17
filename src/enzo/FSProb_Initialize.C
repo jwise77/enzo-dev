@@ -155,7 +155,7 @@ int FSProb::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 	}
 	ret += sscanf(line, "FSRadiationMaxDt = %" FSYM, &maxdt);
 	ret += sscanf(line, "FSRadiationInitialGuess = %" ISYM, &initial_guess);
-	ret += sscanf(line, "FSRadiationTolerance = %g", &sol_tolerance);
+	ret += sscanf(line, "FSRadiationTolerance = %" GSYM "", &sol_tolerance);
 	ret += sscanf(line, "FSRadiationMaxMGIters = %i", &sol_maxit);
 	ret += sscanf(line, "FSRadiationMGRelaxType = %i", &sol_rlxtype);
 	ret += sscanf(line, "FSRadiationMGPreRelax = %i", &sol_npre);
@@ -445,22 +445,22 @@ int FSProb::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
 
   //   check MG solver parameters
   if (sol_maxit < 0) {
-    fprintf(stderr,"Illegal FSRadiationMaxMGIters = %i. Setting to 20\n",
+    fprintf(stderr,"Illegal FSRadiationMaxMGIters = %d. Setting to 20\n",
 	    sol_maxit);
     sol_maxit = 20;
   }
   if ((sol_rlxtype<0) || (sol_rlxtype>3)) {
-    fprintf(stderr,"Illegal FSRadiationMGRelaxType = %i. Setting to 1\n",
+    fprintf(stderr,"Illegal FSRadiationMGRelaxType = %d. Setting to 1\n",
 	    sol_rlxtype);
     sol_rlxtype = 1;
   }
   if (sol_npre < 0) {
-    fprintf(stderr,"Illegal FSRadiationMGPreRelax = %i. Setting to 1\n",
+    fprintf(stderr,"Illegal FSRadiationMGPreRelax = %d. Setting to 1\n",
 	    sol_npre);
     sol_npre = 1;
   }
   if (sol_npost < 0) {
-    fprintf(stderr,"Illegal FSRadiationMGPostRelax = %i. Setting to 1\n",
+    fprintf(stderr,"Illegal FSRadiationMGPostRelax = %d. Setting to 1\n",
 	    sol_npost);
     sol_npost = 1;
   }
@@ -618,10 +618,10 @@ int FSProb::Initialize(HierarchyEntry &TopGrid, TopGridData &MetaData)
       fprintf(outfptr, "FSRadiationMaxDt = %g\n", maxdt);
       fprintf(outfptr, "FSRadiationInitialGuess = %" ISYM"\n", initial_guess);
       fprintf(outfptr, "FSRadiationTolerance = %g\n", sol_tolerance);    
-      fprintf(outfptr, "FSRadiationMaxMGIters = %i\n", sol_maxit);    
-      fprintf(outfptr, "FSRadiationMGRelaxType = %i\n", sol_rlxtype);    
-      fprintf(outfptr, "FSRadiationMGPreRelax = %i\n", sol_npre);    
-      fprintf(outfptr, "FSRadiationMGPostRelax = %i\n", sol_npost);    
+      fprintf(outfptr, "FSRadiationMaxMGIters = %d\n", sol_maxit);    
+      fprintf(outfptr, "FSRadiationMGRelaxType = %d\n", sol_rlxtype);    
+      fprintf(outfptr, "FSRadiationMGPreRelax = %d\n", sol_npre);    
+      fprintf(outfptr, "FSRadiationMGPostRelax = %d\n", sol_npost);    
       
       // close parameter file
       fclose(outfptr);

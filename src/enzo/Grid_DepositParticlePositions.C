@@ -170,28 +170,28 @@ int grid::DepositParticlePositions(grid *TargetGrid, FLOAT DepositTime,
       LeftEdge[dim] = (long_int((FLOAT)GridLeftEdge[dim]/CellSize)-2)*CellSize;
       Offset[dim] = nlongint((LeftEdge[dim] - OriginalLeftEdge[dim])/CellSize);
       if (Offset[dim] < 0) {
-	fprintf(stderr, "P(%d)(1): dx=%" GOUTSYM"/%" GOUTSYM" = %" GOUTSYM"\n",
+	fprintf(stderr, "P(%" ISYM ")(1): dx=%" GOUTSYM"/%" GOUTSYM" = %" GOUTSYM"\n",
 		MyProcessorNumber, CellSize, CellWidth[0][0], 
 		CellSize/CellWidth[0][0]);
-	fprintf(stderr, "P(%d)(2): %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
+	fprintf(stderr, "P(%" ISYM ")(2): %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
 		MyProcessorNumber, OriginalLeftEdge[0], OriginalLeftEdge[1], 
 		OriginalLeftEdge[2]);
-	fprintf(stderr, "P(%d)(3): %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
+	fprintf(stderr, "P(%" ISYM ")(3): %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
 		MyProcessorNumber, GridLeftEdge[0], GridLeftEdge[1], 
 		GridLeftEdge[2]);
-	fprintf(stderr, "P(%d)(4): %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
+	fprintf(stderr, "P(%" ISYM ")(4): %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
 		MyProcessorNumber, GridRightEdge[0], GridRightEdge[1], 
 		GridRightEdge[2]);
-	fprintf(stderr, "P(%d)(5): %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
+	fprintf(stderr, "P(%" ISYM ")(5): %" GOUTSYM" %" GOUTSYM" %" GOUTSYM"\n",
 		MyProcessorNumber, LeftEdge[0], LeftEdge[1], LeftEdge[2]);
-	fprintf(stderr, "P(%d)(6): %ld %ld %ld - %ld %ld %ld\n",
+	fprintf(stderr, "P(%" ISYM ")(6): %" ISYM " %" ISYM " %" ISYM " - %" ISYM " %" ISYM " %" ISYM "\n",
 		MyProcessorNumber, Offset[0], Offset[1], Offset[2],
 		Dimension[0], Dimension[1], Dimension[2]);
-	fprintf(stderr, "P(%d)(7): %" GOUTSYM" %ld\n",
+	fprintf(stderr, "P(%" ISYM ")(7): %" GOUTSYM" %" ISYM "\n",
 		MyProcessorNumber, (int(GridLeftEdge[dim]/CellSize)-2)*CellSize, 
 		int(GridLeftEdge[dim]/CellSize));
 
-	ENZO_VFAIL("Offset[%d] = %d < 0\n", dim, Offset[dim])
+	ENZO_VFAIL("Offset[%" ISYM "] = %" ISYM " < 0\n", dim, Offset[dim])
       }
       Dimension[dim] = int((GridRightEdge[dim] - LeftEdge[dim])/CellSize) + 3;
       size *= Dimension[dim];

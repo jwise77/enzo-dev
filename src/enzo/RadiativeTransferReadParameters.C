@@ -200,7 +200,7 @@ int RadiativeTransferReadParameters(FILE *fptr)
   if (RadiativeTransferFLDCallOnLevel < 0) {
     if (MyProcessorNumber == ROOT_PROCESSOR)
       fprintf(stderr, "Warning: RadiativeTransferFLDCallOnLevel = %" ISYM
-	      " cannot be negative!  Setting to 0.\n");
+	      " cannot be negative!  Setting to 0.\n", RadiativeTransferFLDCallOnLevel);
     RadiativeTransferFLDCallOnLevel = 0;
   }
 

@@ -149,7 +149,7 @@ int LoadBalanceSimulatedAnnealing(int NumberOfGrids, int NumberOfNodes,
 			  NumberOfCells, NumberOfSubcells, node_balance_weight); 
 
     if (debug)
-      printf("iter %3d / %3d: T = %8.3g, H = %8.4g, nsucc = %d\n",
+      printf("iter %3d / %3d: T = %8.3g, H = %8.4g, nsucc = %" ISYM "\n",
 	     i, j, temperature, H, nsucc);
 #endif /* LB_DEBUG */
 

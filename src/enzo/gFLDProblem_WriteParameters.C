@@ -73,10 +73,10 @@ int gFLDProblem::WriteParameters(FILE *fptr)
   fprintf(fptr, "RadHydroNewtTolerance = %22.16e\n", newt_tol);    
   fprintf(fptr, "RadHydroMinLinesearch = %22.16e\n", 
 	  newt_MinLinesearch);    
-  fprintf(fptr, "RadHydroMaxMGIters = %i\n", sol_maxit);    
-  fprintf(fptr, "RadHydroMGRelaxType = %i\n", sol_rlxtype);    
-  fprintf(fptr, "RadHydroMGPreRelax = %i\n", sol_npre);    
-  fprintf(fptr, "RadHydroMGPostRelax = %i\n", sol_npost);    
+  fprintf(fptr, "RadHydroMaxMGIters = %d\n", sol_maxit);    
+  fprintf(fptr, "RadHydroMGRelaxType = %d\n", sol_rlxtype);    
+  fprintf(fptr, "RadHydroMGPreRelax = %d\n", sol_npre);    
+  fprintf(fptr, "RadHydroMGPostRelax = %d\n", sol_npost);    
 
   fprintf(fptr, "PlanckOpacityC0 = %22.16e\n", PlanckOpacityC0);
   fprintf(fptr, "PlanckOpacityC1 = %22.16e\n", PlanckOpacityC1);
@@ -102,7 +102,7 @@ int gFLDProblem::WriteParameters(FILE *fptr)
   // if doing a Marshak-type problem (20 <= Model < 30), 
   // output additional Marshak parameters 
   if ( Model >= 20 && Model <= 29 ) {
-    fprintf(fptr, "SuOlsonGreyEps = %22.16e", &MarshakParms[0]);
+    fprintf(fptr, "SuOlsonGreyEps = %22.16e", MarshakParms[0]);
   }
 
   // output relevant units: although these aren't required for restart, 

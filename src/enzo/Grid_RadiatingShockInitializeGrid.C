@@ -174,7 +174,7 @@ int grid::RadiatingShockInitializeGrid(FLOAT dr,
     // convert sedov values (CGS) to Enzo internal energy units!
     for(int i=0; i<numbins; i++){
       if(debug)
-	printf("Pre-conversion (CGS) values: %e %e %e %e  (%d)\n",
+	printf("Pre-conversion (CGS) values: %e %e %e %e  (%" ISYM ")\n",
 	       sedovradius[i],sedovdensity[i],sedovpressure[i],sedovvelocity[i], i);
 
       sedovradius[i] /= double(LengthUnits);
@@ -194,7 +194,7 @@ int grid::RadiatingShockInitializeGrid(FLOAT dr,
       if(sedovpressure[i] < 1.0e-10) sedovpressure[i] = 1.0e-10;
 
       if(debug){
-	printf("Post-conversion (enzo units):  %e %e %e %e (%d)\n",
+	printf("Post-conversion (enzo units):  %e %e %e %e (%" ISYM ")\n",
 	       sedovradius[i],sedovdensity[i],sedovpressure[i],sedovvelocity[i], i);
 	fflush(stdout);
       }
@@ -339,7 +339,7 @@ int grid::RadiatingShockInitializeGrid(FLOAT dr,
 	      if(r >= sedovradius[numbins-1]) sedovindex = numbins-1;
 
 	      if(sedovindex < 0 || sedovindex >= numbins){
-		fprintf(stderr,"Grid:RadiatingShockInitializeGrid: Argh!  %d  %e  %e  %e\n",
+		fprintf(stderr,"Grid:RadiatingShockInitializeGrid: Argh!  %" ISYM "  %e  %e  %e\n",
 			sedovindex, r, sedovradius[0], sedovradius[numbins-1]);
 		return FAIL;
 	      }

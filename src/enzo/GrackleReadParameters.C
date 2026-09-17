@@ -137,7 +137,7 @@ int GrackleReadParameters(FILE *fptr, FLOAT InitTime)
     ret += sscanf(line, "LWbackground_sawtooth_suppression = %d",
                   &grackle_data->LWbackground_sawtooth_suppression);
 
-    ret += sscanf(line, "local_dust_to_gas_ratio = %f",
+    ret += sscanf(line, "local_dust_to_gas_ratio = %" GSYM "",
                   &grackle_data->local_dust_to_gas_ratio);
 
     ret += sscanf(line, "dust_chemistry = %d",

@@ -52,14 +52,14 @@ int WriteStringAttr(hid_t dset_id, char *Alabel, char *String, FILE *log_fptr)
 //  if (io_log) fprintf(log_fptr, "  String: %" ISYM" %s\n", strlen(String), String);
  
   attr_dsp_id = H5Screate(H5S_SCALAR);
-    if (io_log) fprintf(log_fptr, "  H5Screate attr_dsp_id: %" ISYM"\n", attr_dsp_id);
+    if (io_log) fprintf(log_fptr, "  H5Screate attr_dsp_id: %ld\n", attr_dsp_id);
     if( attr_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   attr_type_id = H5Tcopy(H5T_C_S1);
                  H5Tset_size(attr_type_id, 80);
  
   attr_id = H5Acreate(dset_id, Alabel, attr_type_id,  attr_dsp_id, H5P_DEFAULT);
-    if (io_log) fprintf(log_fptr, "  H5Acreate attr_id: %" ISYM"\n", attr_id);
+    if (io_log) fprintf(log_fptr, "  H5Acreate attr_id: %ld\n", attr_id);
     if( attr_id == h5_error ){my_exit(EXIT_FAILURE);}
 
     if (String != NULL) {
@@ -73,15 +73,15 @@ int WriteStringAttr(hid_t dset_id, char *Alabel, char *String, FILE *log_fptr)
       }
     }
  
-    if (io_log) fprintf(log_fptr, "  H5Awrite: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "  H5Awrite: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aclose(attr_id);
-    if (io_log) fprintf(log_fptr, "  H5Aclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "  H5Aclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Sclose(attr_dsp_id);
-    if (io_log) fprintf(log_fptr, "  H5Sclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "  H5Sclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   return SUCCESS;

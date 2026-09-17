@@ -136,7 +136,7 @@ int grid::CopyZonesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION])
   for (dim = 0; dim < GridRank; dim++){
     if (GridDimension[dim] > 1) {
  
-      //printf("Dim %d", dim);
+      //printf("Dim %" ISYM "", dim);
       /* Compute left and right positions in problem space.
 	 note: include buffer zones of this grid but not the other grid. */
  
@@ -424,7 +424,7 @@ int grid::CopyZonesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION])
     for (field =0; field<3; field++){
       
       if( MagneticField[field] == NULL )
-	ENZO_VFAIL("Severe Error: Grid_CopyZonesFromGrid.  MagneticField[%d] == NULL..\n", field);
+	ENZO_VFAIL("Severe Error: Grid_CopyZonesFromGrid.  MagneticField[%" ISYM "] == NULL..\n", field);
       
       othersize[field] = MHDOtherDim[field][0]*MHDOtherDim[field][1]*MHDOtherDim[field][2];
       for( k=0; k<MHDDim[field][2]; k++)
@@ -457,7 +457,7 @@ int grid::CopyZonesFromGrid(grid *OtherGrid, FLOAT EdgeOffset[MAX_DIMENSION])
   this->DebugCheck("CopyZonesFromGrid (after)");
  //  PrintToScreenBoundaries(BaryonField[ieint], "Eint after a copy");
 //   PrintToScreenBoundaries(BaryonField[ietot], "Etot after a copy");
-  //  printf("***Labels copy %d \n", FieldType[ivy]);
+  //  printf("***Labels copy %" ISYM " \n", FieldType[ivy]);
 
    
   return SUCCESS;

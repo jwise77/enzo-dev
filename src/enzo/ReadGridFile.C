@@ -130,14 +130,14 @@ int ReadGridFile(char *name, int Rank, int Dim[], int StartIndex[],
   if (io_log) fprintf(log_fptr, "H5Fopen with Name = %s\n", name);
  
   file_id = H5Fopen(name, H5F_ACC_RDONLY, H5P_DEFAULT);
-  fprintf(stderr, "GR H5Fopen %s on CPU %" ISYM"\n", name, MyProcessorNumber);
-    if (io_log) fprintf(log_fptr, "H5Fopen id: %" ISYM"\n", file_id);
+  fprintf(stderr, "GR H5Fopen %s on CPU %" ISYM "\n", name, MyProcessorNumber);
+    if (io_log) fprintf(log_fptr, "H5Fopen id: %ld\n", file_id);
     if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", name);
  
   dset_id =  H5Dopen(file_id, name);
-    if (io_log) fprintf(log_fptr, "H5Dopen id: %" ISYM"\n", dset_id);
+    if (io_log) fprintf(log_fptr, "H5Dopen id: %ld\n", dset_id);
     if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}
 
  
@@ -147,15 +147,15 @@ int ReadGridFile(char *name, int Rank, int Dim[], int StartIndex[],
   if (io_log) fprintf(log_fptr, "H5Aopen_name with Name = Component_Rank\n");
  
   attr_id = H5Aopen_name(dset_id, "Component_Rank");
-    if (io_log) fprintf(log_fptr, "H5Aopen_name id: %" ISYM"\n", attr_id);
+    if (io_log) fprintf(log_fptr, "H5Aopen_name id: %ld\n", attr_id);
     if( attr_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aread(attr_id, HDF5_INT, &component_rank_attr);
-    if (io_log) fprintf(log_fptr, "H5Aread: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Aread: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aclose(attr_id);
-    if (io_log) fprintf(log_fptr, "H5Aclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Aclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   if (io_log) fprintf(log_fptr, "COMPONENT_RANK %" ISYM"\n", component_rank_attr);
@@ -166,15 +166,15 @@ int ReadGridFile(char *name, int Rank, int Dim[], int StartIndex[],
   if (io_log) fprintf(log_fptr, "H5Aopen_name with Name = Component_Size\n");
  
   attr_id = H5Aopen_name(dset_id, "Component_Size");
-    if (io_log) fprintf(log_fptr, "H5Aopen_name id: %" ISYM"\n", attr_id);
+    if (io_log) fprintf(log_fptr, "H5Aopen_name id: %ld\n", attr_id);
     if( attr_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aread(attr_id, HDF5_INT, &component_size_attr);
-    if (io_log) fprintf(log_fptr, "H5Aread: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Aread: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aclose(attr_id);
-    if (io_log) fprintf(log_fptr, "H5Aclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Aclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   if (io_log) fprintf(log_fptr, "COMPONENT_SIZE %" ISYM"\n", component_size_attr);
@@ -185,15 +185,15 @@ int ReadGridFile(char *name, int Rank, int Dim[], int StartIndex[],
   if (io_log) fprintf(log_fptr, "H5Aopen_name with Name = Rank\n");
  
   attr_id = H5Aopen_name(dset_id, "Rank");
-    if (io_log) fprintf(log_fptr, "H5Aopen_name id: %" ISYM"\n", attr_id);
+    if (io_log) fprintf(log_fptr, "H5Aopen_name id: %ld\n", attr_id);
     if( attr_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aread(attr_id, HDF5_INT, &field_rank_attr);
-    if (io_log) fprintf(log_fptr, "H5Aread: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Aread: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aclose(attr_id);
-    if (io_log) fprintf(log_fptr, "H5Aclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Aclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   if (io_log) fprintf(log_fptr, "RANK %" ISYM"\n", field_rank_attr);
@@ -204,21 +204,21 @@ int ReadGridFile(char *name, int Rank, int Dim[], int StartIndex[],
   if (io_log) fprintf(log_fptr, "H5Aopen_name with Name = Dimensions\n");
  
   attr_id = H5Aopen_name(dset_id, "Dimensions");
-    if (io_log) fprintf(log_fptr, "H5Aopen_name id: %" ISYM"\n", attr_id);
+    if (io_log) fprintf(log_fptr, "H5Aopen_name id: %ld\n", attr_id);
     if( attr_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   attr_count = field_rank_attr;
  
   attr_dsp_id = H5Screate_simple((Eint32) 1, &attr_count, NULL);
-    if (io_log) fprintf(log_fptr, "H5Screate_simple %" ISYM"\n", attr_dsp_id);
+    if (io_log) fprintf(log_fptr, "H5Screate_simple %ld\n", attr_dsp_id);
     if( attr_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aread(attr_id, HDF5_INT, field_dims_attr);
-    if (io_log) fprintf(log_fptr, "H5Aread: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Aread: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Aclose(attr_id);
-    if (io_log) fprintf(log_fptr, "H5Aclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Aclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   for (dim = 0; dim < field_rank_attr; dim++)
@@ -312,11 +312,11 @@ int ReadGridFile(char *name, int Rank, int Dim[], int StartIndex[],
   // 1D memory model
  
   mem_dsp_id = H5Screate_simple((Eint32) 1, &xfer_size, NULL);
-    if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %" ISYM"\n", mem_dsp_id);
+    if (io_log) fprintf(log_fptr, "H5Screate mem_dsp_id: %ld\n", mem_dsp_id);
     if( mem_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status =  H5Sselect_hyperslab(mem_dsp_id,  H5S_SELECT_SET, &mem_offset, &mem_stride, &mem_count, NULL);
-    if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Sselect mem slab: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   // Data in the file is (1+Rank)D with Npart components per grid point.
@@ -337,31 +337,31 @@ int ReadGridFile(char *name, int Rank, int Dim[], int StartIndex[],
   }
  
   file_dsp_id = H5Screate_simple((Eint32) Slab_Rank, Slab_Dims, NULL);
-    if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %" ISYM"\n", file_dsp_id);
+    if (io_log) fprintf(log_fptr, "H5Screate file_dsp_id: %ld\n", file_dsp_id);
     if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Sselect_hyperslab(file_dsp_id, H5S_SELECT_SET, file_offset, file_stride, file_count, NULL);
-    if (io_log) fprintf(log_fptr, "H5Sselect file slab: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Sselect file slab: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Dread(dset_id, mem_type_id, mem_dsp_id, file_dsp_id, H5P_DEFAULT, (VOIDP) (*tempbuffer));
-    if (io_log) fprintf(log_fptr, "H5Dread: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Dread: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Sclose(mem_dsp_id);
-    if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Sclose(file_dsp_id);
-    if (io_log) fprintf(log_fptr, "H5Sclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Dclose(dset_id);
-    if (io_log) fprintf(log_fptr, "H5Dclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Dclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
   h5_status = H5Fclose(file_id);
-    if (io_log) fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+    if (io_log) fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
     if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
 
  

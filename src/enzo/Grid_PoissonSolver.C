@@ -142,7 +142,7 @@ int grid::PoissonSolver(int level)
       }
     }
     
-//    printf("Initial divB_p: %g (%g/%d) \n", divSum/size, divSum, size); 
+//    printf("Initial divB_p: %g (%g/%" ISYM ") \n", divSum/size, divSum, size); 
    }
     
  
@@ -293,7 +293,7 @@ int grid::PoissonCleanStep(int level)
   }  
 
   
-//  printf("End divB_p: %g (%g/%d) \n", divSum/size, divSum, size);   //#####
+//  printf("End divB_p: %g (%g/%" ISYM ") \n", divSum/size, divSum, size);   //#####
   
   delete [] divB_p;
   }
@@ -523,15 +523,15 @@ int grid::PoissonSolverSOR2()
       if (sumerror>0.00001) notconverge=true;
 	  
       if (debug&& counter%maxdim== maxdim-1) 
-	 if (debug) printf("Div Cleaning %d Iterations, Error %f\n", 
+	 if (debug) printf("Div Cleaning %" ISYM " Iterations, Error %f\n", 
 		counter, sumerror);
-      //  if (counter%2== 1) printf(stderr, "Div Cleaning %d Iterations, Error %f\n", counter, sumerror);
+      //  if (counter%2== 1) printf(stderr, "Div Cleaning %" ISYM " Iterations, Error %f\n", counter, sumerror);
 
 
 
   }
   
-  if (debug) printf(stderr, "Div Cleaning Takes %d Steps\n", counter);
+  if (debug) printf(stderr, "Div Cleaning Takes %" ISYM " Steps\n", counter);
 
 #endif  
     
@@ -614,7 +614,7 @@ int grid::PoissonSolverMultigrid()
 //   if (check==0){fail=true;}
 
 //   else if (check ==1){
-//     //  printf(stderr, "Checking Grid for Badness Level %d\n", Level);
+//     //  printf(stderr, "Checking Grid for Badness Level %" ISYM "\n", Level);
 //     //int direction=0;
 
     
@@ -647,7 +647,7 @@ int grid::PoissonSolverMultigrid()
 
 // 	 index = GetIndex(ijk[0], ijk[1], ijk[2]);
 // 	 printf(stderr, "%g\t", field[index]);
-// 	 printf(fptr, "%d\t%d\t%g\t1.0\t1.0\n", ijk[ind1],ijk[ind2], field[index]);
+// 	 printf(fptr, "%" ISYM "\t%" ISYM "\t%g\t1.0\t1.0\n", ijk[ind1],ijk[ind2], field[index]);
 //        }
 //       printf(stderr, "\n");
 //     }
@@ -692,7 +692,7 @@ int grid::PrintToScreenBoundaries(float *field, char *display, int direction, in
 //       return SUCCESS;}
 
   if (ProcessorNumber != MyProcessorNumber) {
-    printf("PrintToScreen wrong processor %d Proc != %d MyProc \n", ProcessorNumber, MyProcessorNumber);
+    printf("PrintToScreen wrong processor %" ISYM " Proc != %" ISYM " MyProc \n", ProcessorNumber, MyProcessorNumber);
     return SUCCESS;
   }
 
@@ -714,7 +714,7 @@ int grid::PrintToScreenBoundaries(float *field, char *display, int direction, in
   if (check==0){fail=true;}
 
   else if (check ==1){
-    //  printf(stdout, "Checking Grid for Badness Level %d\n", Level);
+    //  printf(stdout, "Checking Grid for Badness Level %" ISYM "\n", Level);
     //int direction=0;
 
     
@@ -733,8 +733,8 @@ int grid::PrintToScreenBoundaries(float *field, char *display, int direction, in
     printf("\n\n\n\n");
     printf("%s\n", display); 	  
     printf("Grid Edges %g %g %g\n", GridLeftEdge[0], GridLeftEdge[1], GridLeftEdge[2]);
-    printf( "\n\n*******Processor # %d ********\n", ProcessorNumber);
-    printf( "\n\n*******Displaying Data (Slice in %d on cell %d) (TopGrid %d)  ********\n", direction, slice, isTopGrid() );
+    printf( "\n\n*******Processor # %" ISYM " ********\n", ProcessorNumber);
+    printf( "\n\n*******Displaying Data (Slice in %" ISYM " on cell %" ISYM ") (TopGrid %" ISYM ")  ********\n", direction, slice, isTopGrid() );
     
     bool intertemp;
     
@@ -758,7 +758,7 @@ int grid::PrintToScreenBoundaries(float *field, char *display, int direction, in
 	 index=ijk[0]+ijk[1]*(GridDimension[0])+ ijk[2]*(GridDimension[0])*(GridDimension[1]);
 	 //printf( "%2.1E \t", field[index]);
 	 printf( "%.4g \t", field[index]);
-	 //printf( "%d\t%d\t%g\t1.0\t1.0\n", ijk[ind1],ijk[ind2], field[index]);
+	 //printf( "%" ISYM "\t%" ISYM "\t%g\t1.0\t1.0\n", ijk[ind1],ijk[ind2], field[index]);
        }
       printf( "\n");
      }
@@ -804,7 +804,7 @@ int grid::PrintToScreenBoundaries(){
 
  
   for (int i=0; i< NumberOfBaryonFields; i++){
-    printf("\n\n\n\n\n\n-------------Displaying %d (%d)\n", FieldType[i], i);
+    printf("\n\n\n\n\n\n-------------Displaying %" ISYM " (%" ISYM ")\n", FieldType[i], i);
     PrintToScreenBoundaries(OldBaryonField[i], "old", 1, NumberOfGhostZones, 0, 0.0);
     PrintToScreenBoundaries(BaryonField[i], "new", 1, NumberOfGhostZones, 0, 0.0);
     PrintToScreenBoundaries(OldBaryonField[i], "old", 0, NumberOfGhostZones, 0, 0.0);

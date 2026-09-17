@@ -194,13 +194,13 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
 #endif
 #if DEBUG_AP
 	  //maccreted = 0.1*mcell;
-	  //printf("Index %d: mcell: %g\t maccreted: %g\t  maccreted/mcell = %g\n", index,
+	  //printf("Index %" ISYM ": mcell: %g\t maccreted: %g\t  maccreted/mcell = %g\n", index,
 	  // 		 mcell, maccreted, maccreted/mcell);
 #endif
 
 	  if (maccreted > ACCRETION_LIMIT*mcell) {
 	    //#if DEBUG_AP
-	    // printf("Index %d: accretion rate capped - old maccreted = %g new maccreted = %g\n",
+	    // printf("Index %" ISYM ": accretion rate capped - old maccreted = %g new maccreted = %g\n",
 	    //	   index, maccreted, ACCRETION_LIMIT*mcell);
 	    //#endif
 	    maccreted = ACCRETION_LIMIT*mcell;
@@ -445,7 +445,7 @@ int grid::RemoveMassFromGrid(ActiveParticleType* ThisParticle,
   printf("Relative Error in Linear Momentum Conservation = %e\n", RelativeError);
   RelativeError = fabs(DeltaTotalAngularMomentum[0]/TotalAngularMomentumBefore[0]);
   printf("Relative Error in Angular Momentum Conservation = %e\n", RelativeError);
-  printf("NumCells = %d\n", numcells);
+  printf("NumCells = %" ISYM "\n", numcells);
 
 
   printf("Gas Angular Momentum Before = %e\n",

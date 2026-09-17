@@ -149,7 +149,7 @@ int grid::ConductHeat(){
   	  e[idx] += dedt[idx]*dtSubcycle;
 
 	  if (e[idx]<0) {
-	    ENZO_VFAIL("Grid_ConductHeat: e=%g dedt=%g (eold=%g) i,j,k=%d,%d,%d  dtFixed,dtSub: %e, %e\n", 
+	    ENZO_VFAIL("Grid_ConductHeat: e=%g dedt=%g (eold=%g) i,j,k=%" ISYM ",%" ISYM ",%" ISYM "  dtFixed,dtSub: %e, %e\n", 
 		       e[ELT(i,j,k)],dedt[idx], eold, i,j,k,
 		       dtFixed, dtSubcycle);
 	  }

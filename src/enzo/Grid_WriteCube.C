@@ -370,7 +370,7 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
       if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Pclose(file_access_template);
-      fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+      fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     dset_id = H5Dcreate(file_id, FieldName, file_type_id, file_dsp_id, H5P_DEFAULT);
@@ -454,7 +454,7 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     h5_status = H5Fclose(file_id);
-      fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+      fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
       if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     delete temp;
@@ -510,7 +510,7 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
         if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Pclose(file_access_template);
-        fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+        fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       dset_id = H5Dcreate(file_id, FieldName, file_type_id, file_dsp_id, H5P_DEFAULT);
@@ -603,7 +603,7 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Fclose(file_id);
-        fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+        fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       delete temperature;
@@ -682,7 +682,7 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
         if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Pclose(file_access_template);
-        fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+        fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       dset_id = H5Dcreate(file_id, FieldName, file_type_id, file_dsp_id, H5P_DEFAULT);
@@ -770,7 +770,7 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       h5_status = H5Fclose(file_id);
-        fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+        fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     } // end of (if GravitatingMassFieldParticles != NULL)
@@ -891,18 +891,18 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(file_access_template);
-          fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(xfer_prop_list);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fflush(file_id, H5F_SCOPE_GLOBAL);
-          fprintf(log_fptr, "H5Fflush: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fflush: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fclose(file_id);
-          fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         } // if output cube active for this dim
@@ -992,18 +992,18 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(file_access_template);
-          fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(xfer_prop_list);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fflush(file_id, H5F_SCOPE_GLOBAL);
-          fprintf(log_fptr, "H5Fflush: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fflush: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fclose(file_id);
-          fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       } // if output cube active for this dim
@@ -1084,18 +1084,18 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(file_access_template);
-          fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(xfer_prop_list);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fflush(file_id, H5F_SCOPE_GLOBAL);
-          fprintf(log_fptr, "H5Fflush: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fflush: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fclose(file_id);
-          fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     delete temp;
@@ -1173,18 +1173,18 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(file_access_template);
-          fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(xfer_prop_list);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fflush(file_id, H5F_SCOPE_GLOBAL);
-          fprintf(log_fptr, "H5Fflush: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fflush: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fclose(file_id);
-          fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     delete tempint;
@@ -1260,18 +1260,18 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(file_access_template);
-          fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(xfer_prop_list);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fflush(file_id, H5F_SCOPE_GLOBAL);
-          fprintf(log_fptr, "H5Fflush: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fflush: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fclose(file_id);
-          fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
     delete [] tempint;
@@ -1353,18 +1353,18 @@ int grid::WriteCube(char *base_name, int grid_id, int TGdims[])
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(file_access_template);
-          fprintf(log_fptr, "H5Pclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Pclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Pclose(xfer_prop_list);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fflush(file_id, H5F_SCOPE_GLOBAL);
-          fprintf(log_fptr, "H5Fflush: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fflush: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
         h5_status = H5Fclose(file_id);
-          fprintf(log_fptr, "H5Fclose: %" ISYM"\n", h5_status);
+          fprintf(log_fptr, "H5Fclose: %d\n", h5_status);
           if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
       } // if output cube active for this attribute

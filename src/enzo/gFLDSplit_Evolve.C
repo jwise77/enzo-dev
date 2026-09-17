@@ -971,7 +971,7 @@ int gFLDSplit::RadStep(HierarchyEntry *ThisGrid, int eta_set)
   }
   HYPRE_StructPFMGGetNumIterations(preconditioner, &Pits);
   totIters += Sits;
-  if (debug) printf("   lin resid = %.1e (tol = %.1e, |rhs| = %.1e), its = (%i,%i)\n",
+  if (debug) printf("   lin resid = %.1e (tol = %.1e, |rhs| = %.1e), its = (%" ISYM ",%" ISYM ")\n",
 		    finalresid, delta, rhsnorm, Sits, Pits);
   int recompute_step = 0;
   if ((sol_tolerance != 0.0) || (finalresid != finalresid)) {

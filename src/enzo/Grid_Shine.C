@@ -268,7 +268,7 @@ int grid::Shine(RadiationSourceEntry *RadiationSource)
 	  NewPack->PrintInfo();
 
 //	if (DEBUG) {
-//	  printf("Shine: MBH = %d, RS->Type = %d, E=%g, NewPack->Type = %d\n", 
+//	  printf("Shine: MBH = %" ISYM ", RS->Type = %" ISYM ", E=%g, NewPack->Type = %" ISYM "\n", 
 //	         MBH, RS->Type, RS->Energy[ebin], NewPack->Type);  
 //	  NewPack->PrintInfo();
 //	}

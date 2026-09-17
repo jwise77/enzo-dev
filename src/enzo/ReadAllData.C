@@ -263,7 +263,7 @@ int ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData,
     
 //     if(MyProcessorNumber == ROOT_PROCESSOR)
 //       for(int i=0;i<TotalNumberOfGrids;i++)
-// 	fprintf(stderr,"LevelLookupTable[%d] = %d\n",i,LevelLookupTable[i]);
+// 	fprintf(stderr,"LevelLookupTable[%" ISYM "] = %" ISYM "\n",i,LevelLookupTable[i]);
   } 
 
   if (HierarchyFileInputFormat == 1) {
@@ -313,7 +313,7 @@ int ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData,
 					       MetaData.LeftFaceBoundaryCondition[dim],
 					       MetaData.RightFaceBoundaryCondition[dim],
 					       Dummy, Dummy);
-      fprintf(stderr, " %i  %i \n", MetaData.LeftFaceBoundaryCondition[dim],
+      fprintf(stderr, " %" ISYM "  %" ISYM " \n", MetaData.LeftFaceBoundaryCondition[dim],
 	      MetaData.RightFaceBoundaryCondition[dim]);
     }
     

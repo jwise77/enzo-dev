@@ -107,7 +107,7 @@ int mbh_maker(int *nx, int *ny, int *nz, int *size, float *d, float *u,
 
 	  index = (k * (*ny) + j) * (*nx) + i;
 
-//	  fprintf(stdout, "mbh_maker: i, j, k, index, r[index] = %d, %d, %d, %d, %g\n", 
+//	  fprintf(stdout, "mbh_maker: i, j, k, index, r[index] = %" ISYM ", %" ISYM ", %" ISYM ", %" ISYM ", %g\n", 
 //		  i, j, k, index, r[index]);  
 
 	  if (r[index] == 0.0) {
@@ -148,7 +148,7 @@ int mbh_maker(int *nx, int *ny, int *nz, int *size, float *d, float *u,
 	    }
 #endif
 
-	    fprintf(stdout, "mbh_maker: A MBH inserted at (%lf,%lf,%lf) with v=(%f,%f,%f), m=%f (d=%f), tc=%f, type=%d\n",
+	    fprintf(stdout, "mbh_maker: A MBH inserted at (%lf,%lf,%lf) with v=(%f,%f,%f), m=%f (d=%f), tc=%f, type=%" ISYM "\n",
 		    xp[ii], yp[ii], zp[ii], up[ii], vp[ii], wp[ii], mp[ii], d[index], tcp[ii], type[ii]);
 
 	    // increase the counter

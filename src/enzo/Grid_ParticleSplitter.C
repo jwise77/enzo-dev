@@ -128,7 +128,7 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
   /* ------------------------------------------------------------------- */
 
 #ifdef DEBUG_PS
-  fprintf(stdout, "grid::ParticleSplitter:  NumberOfParticles before splitting = %d, MyProcessorNumber = %d\n", 
+  fprintf(stdout, "grid::ParticleSplitter:  NumberOfParticles before splitting = %" ISYM ", MyProcessorNumber = %" ISYM "\n", 
 	  NumberOfParticles, MyProcessorNumber); 
 #endif
 
@@ -147,7 +147,7 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
       if (xindex < 0 || xindex >= GridDimension[0] || 
 	  yindex < 0 || yindex >= GridDimension[1] || 
 	  zindex < 0 || zindex >= GridDimension[2])
-	fprintf(stdout, "grid::PS: parent particle out of grid (C level): xind, yind, zind, level = %d, %d, %d, %d\n",
+	fprintf(stdout, "grid::PS: parent particle out of grid (C level): xind, yind, zind, level = %" ISYM ", %" ISYM ", %" ISYM ", %" ISYM "\n",
 		xindex, yindex, zindex, level); 
     }
 #endif
@@ -175,7 +175,7 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
                                  MaximumNumberOfNewParticles, iteration, 
 				 &NumberOfNewParticles))
       {
-	fprintf(stdout, "Failed to create child particles in grid %d\n", this->GetGridID());
+	fprintf(stdout, "Failed to create child particles in grid %" ISYM "\n", this->GetGridID());
 	return FAIL;
       }
 
@@ -186,7 +186,7 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
   if (NumberOfNewParticles > 0) {
 
 #ifdef DEBUG_PS
-    fprintf(stdout, "grid::ParticleSplitter:  NumberOfNewParticles = %d, MyProcessorNumber = %d\n", 
+    fprintf(stdout, "grid::ParticleSplitter:  NumberOfNewParticles = %" ISYM ", MyProcessorNumber = %" ISYM "\n", 
 	    NumberOfNewParticles, MyProcessorNumber);    
 #endif
 
@@ -223,7 +223,7 @@ int grid::ParticleSplitter(int level, int iteration, int NumberOfIDs,
     this->MoveAllParticles(1, &tg);
 
 #ifdef DEBUG_PS
-    fprintf(stdout, "grid::ParticleSplitter:  NumberOfParticles(New) = %d, MyProcessorNumber = %d\n", 
+    fprintf(stdout, "grid::ParticleSplitter:  NumberOfParticles(New) = %" ISYM ", MyProcessorNumber = %" ISYM "\n", 
 	    NumberOfParticles, MyProcessorNumber);
 #endif
     

@@ -158,7 +158,7 @@ void Star::CalculateFeedbackParameters(float &Radius,
       Delta_SF = dtForThisStar * StarMassEjectionFraction * (Mass/tdyn) *
 	frac * exp(-frac);
 //      if (debug)
-//	printf("Star %d: Delta_SF = %g, Mass = %g, frac = %g (%f %f)\n", 
+//	printf("Star %" ISYM ": Delta_SF = %g, Mass = %g, frac = %g (%f %f)\n", 
 //	       Identifier, Delta_SF, Mass, frac, Time, BirthTime);
     } else {
       Delta_SF = StarMassEjectionFraction * Mass * dtForThisStar * 

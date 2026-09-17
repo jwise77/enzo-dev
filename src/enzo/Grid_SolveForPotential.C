@@ -147,7 +147,7 @@ int grid::SolveForPotential(int level, FLOAT PotentialTime)
 #ifdef POTENTIALDEBUGOUTPUT
   for (int i=0;i<GridDimension[0]; i++) {
     int igrid = GRIDINDEX_NOGHOST(i,(GridEndIndex[0]+GridStartIndex[0])/2,(GridEndIndex[0]+GridStartIndex[0])/2);
-    printf("i: %i \t SolvedSub %g\n", i, PotentialField[igrid]);
+    printf("i: %" ISYM " \t SolvedSub %g\n", i, PotentialField[igrid]);
   }
   float maxPot=-1e30, minPot=1e30;    
   float maxGM=-1e30, minGM=1e30;

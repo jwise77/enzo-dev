@@ -184,7 +184,7 @@ int CommunicationLoadBalanceRootGrids(LevelHierarchyEntry *LevelArray[],
       Done = true;
 
 //    if (debug) 
-//      printf("LBRoot: done = %d, grids %d -> %d, nmove = %d\n", 
+//      printf("LBRoot: done = %" ISYM ", grids %" ISYM " -> %" ISYM ", nmove = %" ISYM "\n", 
 //	     Done, StartGrid, EndGrid, nmove);
 
     /* Post receives */

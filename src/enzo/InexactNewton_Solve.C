@@ -191,7 +191,7 @@ int InexactNewtonSolver::Solve(NonlinearProblemABC *prob, EnzoVector *x)
   // output final residual and return
   if (debug) {
     printf("  -----------------------------------------------------------------------\n");
-    printf("   Final Newton residual: %i iters, ||f|| = %g (tol = %g)\n", 
+    printf("   Final Newton residual: %d iters, ||f|| = %g (tol = %g)\n", 
 	   Eint32(Niters), fnormtest, Ntol);
     printf("  =======================================================================\n");
   }

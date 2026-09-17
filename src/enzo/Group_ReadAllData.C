@@ -300,7 +300,7 @@ int Group_ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData
 
 //     if(MyProcessorNumber == ROOT_PROCESSOR)
 //       for(int i=0;i<TotalNumberOfGrids;i++)
-// 	fprintf(stderr,"LevelLookupTable[%d] = %d\n",i,LevelLookupTable[i]);
+// 	fprintf(stderr,"LevelLookupTable[%" ISYM "] = %" ISYM "\n",i,LevelLookupTable[i]);
 
   } 
 
@@ -378,7 +378,7 @@ int Group_ReadAllData(char *name, HierarchyEntry *TopGrid, TopGridData &MetaData
     return FAIL;
   }
 
-//   printf("P%d: out of Group_RDH\n", MyProcessorNumber);
+//   printf("P%" ISYM ": out of Group_RDH\n", MyProcessorNumber);
 //   CommunicationBarrier();
   
   if(LoadGridDataAtStart){

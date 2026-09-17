@@ -87,7 +87,7 @@ int RadiativeTransferComputeTimestep(LevelHierarchyEntry *LevelArray[],
   }
   maxLevel = CommunicationMaxValue(maxLevel);
   if (debug)
-    fprintf(stdout, "EvolvePhotons: Maximum level with radiation = %d\n", maxLevel);
+    fprintf(stdout, "EvolvePhotons: Maximum level with radiation = %" ISYM "\n", maxLevel);
   // If no radiation, find the maximum level
   if (maxLevel < 0) {
     for (l = MAX_DEPTH_OF_HIERARCHY-1; l >= 0; l--) {

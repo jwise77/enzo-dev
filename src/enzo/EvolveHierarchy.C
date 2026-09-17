@@ -534,7 +534,7 @@ int EvolveHierarchy(HierarchyEntry &TopGrid, TopGridData &MetaData,
                 ) == FAIL) {
         if (NumberOfProcessors == 1) {
             fprintf(stderr, "Error in EvolveLevel.\n");
-            fprintf(stderr, "--> Dumping data (output number %d).\n",
+            fprintf(stderr, "--> Dumping data (output number %" ISYM ").\n",
                     MetaData.DataDumpNumber);
             Group_WriteAllData(MetaData.DataDumpName, MetaData.DataDumpNumber,
                     &TopGrid, MetaData, Exterior

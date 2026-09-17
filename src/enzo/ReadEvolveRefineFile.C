@@ -94,7 +94,7 @@ int ReadEvolveRefineFile(void)
       		    &(EvolveMustRefineRegionMinLevel[i]));
       if(debug1 && MyProcessorNumber == ROOT_PROCESSOR){
          fprintf(stderr,"Here is the line (MustRefineRegion): %s \n",line);
-         fprintf(stderr,". . . and here is the value (MustRefineRegion): %i \n",EvolveMustRefineRegionMinLevel[i]);
+         fprintf(stderr,". . . and here is the value (MustRefineRegion): %" ISYM " \n",EvolveMustRefineRegionMinLevel[i]);
          } 
       if( nret != 8 ){
 	fprintf(stderr,"WARNING: ReadEvolveRefineFile (MustRefineRegion) cannot interpret line %s",line);
@@ -165,7 +165,7 @@ int ReadEvolveRefineFile(void)
       		    &dummy);
       if(debug1 && MyProcessorNumber == ROOT_PROCESSOR){
          fprintf(stderr,"Here is the line (CoolingRefineRegion): %s \n",line);
-         fprintf(stderr,". . . and here is the value (CoolingRefineRegion): %i \n",dummy);
+         fprintf(stderr,". . . and here is the value (CoolingRefineRegion): %" ISYM " \n",dummy);
          } 
       if( nret != 8 ){
 	fprintf(stderr,"WARNING: ReadEvolveRefineFile cannot interpret line %s",line);

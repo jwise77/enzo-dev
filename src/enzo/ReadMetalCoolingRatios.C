@@ -48,7 +48,7 @@ int ReadMetalCoolingRatios(char *filename)
   }
 
   fgets(line, MAX_LINE_LENGTH, fptr);
-  if ((sscanf(line, "# %" GSYM" %" GSYM" %" GSYM" %" GSYM, 
+  if ((sscanf(line, "# %f %f %f %f", 
 	      &CoolData.MR_TemperatureStart, &CoolData.MR_TemperatureEnd,
 	      &CoolData.MR_ElectronFracStart, &CoolData.MR_ElectronFracEnd)) != 4) {
     ENZO_FAIL("Error reading number of ranges (line 3)\n");
@@ -76,18 +76,18 @@ int ReadMetalCoolingRatios(char *filename)
   for (ixe = 0; ixe < CoolData.MR_NumberOfElectronFracBins; ixe++) {
 
     // Throw away line that indicates electron fraction bin and value
-    fscanf(fptr, "%" GSYM, &dummy);
-    fscanf(fptr, "%" GSYM, &dummy);
+    fscanf(fptr, "%f", &dummy);
+    fscanf(fptr, "%f", &dummy);
     //fgets(line, MAX_LINE_LENGTH, fptr);
 
     for (itemp = 0; itemp < CoolData.MR_NumberOfTemperatureBins; itemp++) {
 
       // Throw away first column (temperature)
-      fscanf(fptr, "%" GSYM, &dummy);
+      fscanf(fptr, "%f", &dummy);
 
       // Read ratios
       for (icool = 0; icool < NUMBER_OF_COOLANTS; icool++, index++) {
-	if ((fscanf(fptr, "%" GSYM, &CoolData.metal_ratios[index])) == EOF) {
+	if ((fscanf(fptr, "%f", &CoolData.metal_ratios[index])) == EOF) {
 	  ENZO_VFAIL("EOF reached at itemp = %" ISYM", ixe = %" ISYM", icool = %" ISYM"\n", 
 		  itemp, ixe, icool)
 

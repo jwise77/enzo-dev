@@ -64,7 +64,7 @@ int RecalibrateAccretingMass(FLOAT star_pos[], LevelHierarchyEntry *LevelArray[]
     ENZO_FAIL("RecalibrateAM: Something is wrong!");
 //    return SUCCESS;
 
-//    printf("RecalibrateAM: Proc = %d, star_pos[] = %g, %g, %g\n", 
+//    printf("RecalibrateAM: Proc = %" ISYM ", star_pos[] = %g, %g, %g\n", 
 // 	  MyProcessorNumber, star_pos[0], star_pos[1], star_pos[2]);  
 
   /* Set the units. */

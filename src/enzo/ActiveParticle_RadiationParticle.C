@@ -481,7 +481,7 @@ int ActiveParticleType_RadiationParticle::ReadRadiationParameterFile()
 		     &(cnode->Position[2]), &(cnode->Redshift), &(cnode->Redshift_end)) < NUMPARAMS) {
 	    fprintf(stderr, "%s: Unrecognised line found in %s - ignoring\n", 
 		    __FUNCTION__, RadiationSourcesFileName);
-	    fprintf(stderr, "%s: line = %s\t length = %u\n", __FUNCTION__, line, 
+	    fprintf(stderr, "%s: line = %s\t length = %zu\n", __FUNCTION__, line, 
 		    strlen(line));
 	    continue;
 	  }

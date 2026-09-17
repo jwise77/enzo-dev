@@ -197,7 +197,7 @@ int grid::AccreteOntoSmartStarParticle(
       *AccretionRate *= (1 - eta_jet);
 #if  ACCRETE_DEBUG
       printf("%s: eta_disk = %f\n", __FUNCTION__, SS->eta_disk);
-      printf("%s: eta_jet = %f\t beta_jet = %f\t ParticleClass = %d\n", __FUNCTION__, eta_jet,  SS->beta_jet,SS->ParticleClass );
+      printf("%s: eta_jet = %f\t beta_jet = %f\t ParticleClass = %" ISYM "\n", __FUNCTION__, eta_jet,  SS->beta_jet,SS->ParticleClass );
       printf("%s: Mass in surrounding sphere = %e Msolar\n", __FUNCTION__, SS->mass_in_accretion_sphere*MassConversion/SolarMass);
       printf("%s: Macc = %e Msolar\t Mjet = %e Msolar\n", __FUNCTION__,
 	     (*AccretionRate)*this->dtFixed*MassConversion/SolarMass,

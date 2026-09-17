@@ -119,7 +119,7 @@ int grid::CommunicationTransferParticles(grid* Grids[], int NumberOfGrids,
       if (grid != ThisGridNum) {
 	proc = Grids[grid]->ReturnProcessorNumber();
 	NumberToMove[proc]++;
-//	printf("grid %d->%d: Pos = %f %f %f\n", ThisGridNum, grid, 
+//	printf("grid %" ISYM "->%" ISYM ": Pos = %f %f %f\n", ThisGridNum, grid, 
 //	       ParticlePosition[0][i], ParticlePosition[1][i], 
 //	       ParticlePosition[2][i]);
       }

@@ -234,7 +234,7 @@ int grid::LightBosonInitializeGrid(float CenterPosition, int LightBosonProblemTy
 	      ParticleMass[npart] = ParticleMeanDensity;
 	      ParticleNumber[npart] = CollapseTestParticleCount++;
 	      ParticleType[npart] = PARTICLE_TYPE_DARK_MATTER;
-      //fprintf(stderr, "%d %d %d %d %f %f \n", i,j,npart,ParticleCount , BaryonField[FDMDensNum][index],ParticleMeanDensity);
+      //fprintf(stderr, "%" ISYM " %" ISYM " %" ISYM " %" ISYM " %f %f \n", i,j,npart,ParticleCount , BaryonField[FDMDensNum][index],ParticleMeanDensity);
 
       /* Set random position within cell. */
 

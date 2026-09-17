@@ -1278,7 +1278,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     ret += sscanf(line, "EOSCriticalDensity = %" FSYM, &EOSCriticalDensity);
     ret += sscanf(line, "EOSGamma = %" FSYM, &EOSGamma);
     ret += sscanf(line, "UseConstantAcceleration = %" ISYM, &UseConstantAcceleration);
-    ret += sscanf(line, "ConstantAcceleration = %" GSYM" %" GSYM" %" GSYM, &ConstantAcceleration[0],
+    ret += sscanf(line, "ConstantAcceleration = %f %f %f", &ConstantAcceleration[0],
 		  &ConstantAcceleration[1], &ConstantAcceleration[2]);
     ret += sscanf(line, "Mu = %" FSYM, &Mu);
     ret += sscanf(line, "DivBDampingLength = %" FSYM, &DivBDampingLength);
@@ -1328,7 +1328,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     ret += sscanf(line, "MHDCTSlopeLimiter             = %" ISYM, &MHDCTSlopeLimiter);
     ret += sscanf(line, "WriteBoundary          = %" ISYM, &WriteBoundary);
     ret += sscanf(line,"TracerParticlesAddToRestart = %" ISYM,&TracerParticlesAddToRestart);
-    ret += sscanf(line, "IsothermalSoundSpeed = %" GSYM, &IsothermalSoundSpeed);
+    ret += sscanf(line, "IsothermalSoundSpeed = %f", &IsothermalSoundSpeed);
 
     ret += sscanf(line,"CT_AthenaDissipation = %" FSYM,&CT_AthenaDissipation);
     ret += sscanf(line,"MHD_WriteElectric = %" ISYM,&MHD_WriteElectric);
@@ -1375,7 +1375,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 		  ParticleSplitterCenterRegion+2, ParticleSplitterCenterRegion+3);
     ret += sscanf(line, "ResetMagneticField = %" ISYM,
 		  &ResetMagneticField);
-    ret += sscanf(line, "ResetMagneticFieldAmplitude  =  %" GSYM" %" GSYM" %" GSYM,
+    ret += sscanf(line, "ResetMagneticFieldAmplitude  =  %f %f %f",
 		  ResetMagneticFieldAmplitude,
 		  ResetMagneticFieldAmplitude+1,
 		  ResetMagneticFieldAmplitude+2);
@@ -1402,7 +1402,7 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
     ret += sscanf(line, "SmartStarSuperEddingtonAdjustment  = %" ISYM, &SmartStarSuperEddingtonAdjustment);
     ret += sscanf(line, "SmartStarJetVelocity                  = %" FSYM, &SmartStarJetVelocity);
     ret += sscanf(line, "UseGasDrag = %" ISYM, &UseGasDrag);
-    ret += sscanf(line, "GasDragCoefficient = %" GSYM, &GasDragCoefficient);
+    ret += sscanf(line, "GasDragCoefficient = %f", &GasDragCoefficient);
 
     // Parameters for magnetic feedback from supernovae
     ret += sscanf(line, "UseMagneticSupernovaFeedback = %" ISYM, &UseMagneticSupernovaFeedback);

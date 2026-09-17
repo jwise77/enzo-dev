@@ -349,7 +349,7 @@ int grid::RotatingSphereInitializeGrid(float RotatingSphereNFWMass,
       pert_size_y = atoi(pert_dim_y_s);
       pert_size_z = atoi(pert_dim_z_s);
 
-      printf("Reading in a %i dim perturbation grid of size %i x %i x %i\n", pert_dim, pert_size_x, pert_size_y, pert_size_z);
+      printf("Reading in a %" ISYM " dim perturbation grid of size %" ISYM " x %" ISYM " x %" ISYM "\n", pert_dim, pert_size_x, pert_size_y, pert_size_z);
 
       // Create an array to hold the turbulence
       turbulence_field_vx = new float**[pert_size_z];
@@ -506,7 +506,7 @@ int grid::RotatingSphereInitializeGrid(float RotatingSphereNFWMass,
                pert_index[2] = floor((float)pert_size_z * (z - DomainLeftEdge[2]) / (DomainRightEdge[2] - DomainLeftEdge[2]));
 
                //printf("x, y, z: %e %e %e\n", x, y, z);
-               //printf("size x, size y, size z: %i %i %i\n", pert_size_x, pert_size_y, pert_size_z);
+               //printf("size x, size y, size z: %" ISYM " %" ISYM " %" ISYM "\n", pert_size_x, pert_size_y, pert_size_z);
 
                if (pert_index[0] < 0)
                   pert_index[0] = 0;
@@ -522,7 +522,7 @@ int grid::RotatingSphereInitializeGrid(float RotatingSphereNFWMass,
                if (pert_index[2] > pert_size_z - 1)
                   pert_index[2] = pert_size_z - 1;
 
-               //printf("pert x, pert y, pert z: %i %i %i\n", pert_index[0], pert_index[1], pert_index[2]);
+               //printf("pert x, pert y, pert z: %" ISYM " %" ISYM " %" ISYM "\n", pert_index[0], pert_index[1], pert_index[2]);
 
                BaryonField[Vel1Num][cell_index] += turbulence_field_vx[pert_index[2]][pert_index[1]][pert_index[0]];
                BaryonField[Vel2Num][cell_index] += turbulence_field_vy[pert_index[2]][pert_index[1]][pert_index[0]];

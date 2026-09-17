@@ -102,7 +102,7 @@ int grid::SubtractAccretedMassFromSphere(Star *cstar, int level, float radius, f
   float BoxVolume = 27 * CellWidth[0][0] * CellWidth[0][0] * CellWidth[0][0];
   float BubbleVolume = (4.0 * pi / 3.0) * radius * radius * radius;
   if (BoxVolume > BubbleVolume) {
-    fprintf(stdout, "grid::SAMFS: level(%d) probably too coarse, rescaling Subtraction!\n", level);
+    fprintf(stdout, "grid::SAMFS: level(%" ISYM ") probably too coarse, rescaling Subtraction!\n", level);
     Subtraction *= BubbleVolume/BoxVolume;
   }
 

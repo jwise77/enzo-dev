@@ -130,9 +130,9 @@ int Star::SubtractAccretedMassFromCell(void)
   //                                         = ugrid;  //velocity of the grids will be unchanged! 
 
 
-//  fprintf(stdout, "star::SubtractAccretedMass[%d]:  DeltaMass = %e, OldDensity =%e, NewDensity =%e, factor =%e\n", 
+//  fprintf(stdout, "star::SubtractAccretedMass[%" ISYM "]:  DeltaMass = %e, OldDensity =%e, NewDensity =%e, factor =%e\n", 
 //	  this->Identifier, this->DeltaMass, OldDensity, NewDensity, factor); 
-//  fprintf(stdout, "star::SubtractAccretedMass[%d]:  vel_p[1] = %g -> %g\n", 
+//  fprintf(stdout, "star::SubtractAccretedMass[%" ISYM "]:  vel_p[1] = %g -> %g\n", 
 //	  this->Identifier, vsink, vel[1]); 
 
 

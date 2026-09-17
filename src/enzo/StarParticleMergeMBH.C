@@ -98,10 +98,10 @@ int StarParticleMergeMBH(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
 	ThisStar->Separation(OtherStar) / LengthUnits / (VelocityUnits*VelocityUnits) ; 
 
       /*
-      printf("Merging stars candidates: %d (%g, %g, %g) and %d (%g, %g, %g)\n", 
+      printf("Merging stars candidates: %" ISYM " (%g, %g, %g) and %" ISYM " (%g, %g, %g)\n", 
 	     ThisStar->ReturnID(), ThisStar->ReturnPosition()[0], ThisStar->ReturnPosition()[1], ThisStar->ReturnPosition()[2],
 	     OtherStar->ReturnID(), OtherStar->ReturnPosition()[0], OtherStar->ReturnPosition()[0], OtherStar->ReturnPosition()[0]);
-      printf("Merging stars candidates: mergableMBH = %d, Separation2 = %g, rmerge2 = %g, RelVel2 = %g, vcirc2 = %g \n", 
+      printf("Merging stars candidates: mergableMBH = %" ISYM ", Separation2 = %g, rmerge2 = %g, RelVel2 = %g, vcirc2 = %g \n", 
 	     ThisStar->MergableMBH(OtherStar), ThisStar->Separation2(OtherStar), rmerge2,
 	     ThisStar->RelativeVelocity2(OtherStar), vcirc2);
       */
