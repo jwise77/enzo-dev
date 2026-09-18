@@ -145,6 +145,11 @@ int grid::ComputeCoolingTime(float *cooling_time, int CoolingTimeOnly)
   float *velocity2   = BaryonField[Vel2Num];
   float *velocity3   = BaryonField[Vel3Num];
 
+#ifdef USE_GRACKLE
+  float *volumetric_heating_rate = NULL;
+  float *specific_heating_rate   = NULL;
+#endif
+
  
   /* Compute the cooling time. */
  
