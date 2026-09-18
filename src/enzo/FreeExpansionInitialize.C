@@ -42,17 +42,17 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
 int FreeExpansionInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 			    TopGridData &MetaData)
 {
-  char	*DensName  = "Density";
-  char	*TEName	   = "TotalEnergy";
-  char	*GEName	   = "GasEnergy";
-  char	*Vel1Name  = "x-velocity";
-  char	*Vel2Name  = "y-velocity";
-  char	*Vel3Name  = "z-velocity";
-  char	*B1Name	   = "Bx";
-  char	*B2Name	   = "By";
-  char	*B3Name	   = "Bz";
-  char	*PhiName   = "Phi";
-  char	*Phi_pName = "Phip";
+  const char *DensName  = "Density";
+  const char *TEName	   = "TotalEnergy";
+  const char *GEName	   = "GasEnergy";
+  const char *Vel1Name  = "x-velocity";
+  const char *Vel2Name  = "y-velocity";
+  const char *Vel3Name  = "z-velocity";
+  const char *B1Name	   = "Bx";
+  const char *B2Name	   = "By";
+  const char *B3Name	   = "Bz";
+  const char *PhiName   = "Phi";
+  const char *Phi_pName = "Phip";
 
   /* parameter declarations */
 

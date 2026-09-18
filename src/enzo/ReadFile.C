@@ -32,10 +32,10 @@ void my_exit(int status);
 // function prototypes
  
 void fcol(float *x, int n, int m, FILE *log_fptr);
-void ReadAttribute(hid_t dset_id, int *Attribute, char *AttributeName, FILE *log_fptr, int io_log);
+void ReadAttribute(hid_t dset_id, int *Attribute, const char *AttributeName, FILE *log_fptr, int io_log);
  
  
-int ReadFile(char *name, int Rank, int Dim[], int StartIndex[],
+int ReadFile(const char *name, int Rank, int Dim[], int StartIndex[],
                   int EndIndex[], int BufferOffset[], float *buffer,
                   inits_type **tempbuffer, int Part, int Npart)
 {
@@ -457,7 +457,7 @@ int ReadFile(char *name, int Rank, int Dim[], int StartIndex[],
 
 // Routine to read an attribute
 
-void ReadAttribute(hid_t dset_id, int *Attribute, char *AttributeName, FILE *log_fptr, int io_log)
+void ReadAttribute(hid_t dset_id, int *Attribute, const char *AttributeName, FILE *log_fptr, int io_log)
 {
   hid_t attr_id;
   herr_t h5_status, h5_error = -1;

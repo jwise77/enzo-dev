@@ -33,19 +33,19 @@ int DrivenFlowInitialize(FILE *fptr, FILE *Outfptr,
              HierarchyEntry &TopGrid, TopGridData &MetaData, 
              int SetBaryonFields)
 {
-  char *DensName = "Density";
-  char *TEName   = "TotalEnergy";
-  char *GEName   = "GasEnergy";
-  char *Vel1Name = "x-velocity";
-  char *Vel2Name = "y-velocity";
-  char *Vel3Name = "z-velocity";
-  char *BxName = "Bx";
-  char *ByName = "By";
-  char *BzName = "Bz";
-  char *PhiName = "Phi";
-  char *StochAccel1Name = "x-acceleration";
-  char *StochAccel2Name = "y-acceleration";
-  char *StochAccel3Name = "z-acceleration";
+  const char *DensName = "Density";
+  const char *TEName   = "TotalEnergy";
+  const char *GEName   = "GasEnergy";
+  const char *Vel1Name = "x-velocity";
+  const char *Vel2Name = "y-velocity";
+  const char *Vel3Name = "z-velocity";
+  const char *BxName = "Bx";
+  const char *ByName = "By";
+  const char *BzName = "Bz";
+  const char *PhiName = "Phi";
+  const char *StochAccel1Name = "x-acceleration";
+  const char *StochAccel2Name = "y-acceleration";
+  const char *StochAccel3Name = "z-acceleration";
 
   /* declarations */
 

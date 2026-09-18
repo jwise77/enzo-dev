@@ -44,7 +44,7 @@ void my_exit(int status);
 #endif
 
 /********************* PROTOTYPES *********************/
-int ReadFile(char *name, int Rank, int Dims[], int StartIndex[],
+int ReadFile(const char *name, int Rank, int Dims[], int StartIndex[],
        int EndIndex[], int BufferOffset[], float *buffer,
        inits_type **tempbuffer, int Part, int Npart);
  
@@ -52,7 +52,7 @@ int ReadIntFile(char *name, int Rank, int Dims[], int StartIndex[],
     int EndIndex[], int BufferOffset[], int *buffer,
     int **tempbuffer, int Part, int Npart);
 
-void ReadAttribute(hid_t dset_id, int *Attribute, char *AttributeName, FILE *log_fptr, int io_log);
+void ReadAttribute(hid_t dset_id, int *Attribute, const char *AttributeName, FILE *log_fptr, int io_log);
 int ReadAttr(char *Fname, int *Rank, int Dims[], int *NSeg, int *LSeg, FILE *log_fptr);
 
 int GetUnits(float *DensityUnits, float *LengthUnits,

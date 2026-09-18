@@ -258,7 +258,7 @@ void lcaperfInitialize (int max_level);
 #endif
 
 void my_exit(int status);
-void PrintMemoryUsage(char *str);
+void PrintMemoryUsage(const char *str);
 
 
 //  ENZO Main Program

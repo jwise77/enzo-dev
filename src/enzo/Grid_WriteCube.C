@@ -40,9 +40,9 @@ void my_exit(int status);
  
 // function prototypes
  
-int FindCube(char *cube_name);
+int FindCube(const char *cube_name);
 int FindField(int f, int farray[], int n);
-int WriteStringAttr(hid_t dset_id, char *Alabel, char *String, FILE *log_fptr);
+int WriteStringAttr(hid_t dset_id, const char *Alabel, const char *String, FILE *log_fptr);
 
  
  

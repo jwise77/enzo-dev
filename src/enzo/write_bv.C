@@ -22,7 +22,7 @@ int WRITE_BV(float *bv_buffer,
   int io_log = 1;
   int i;
 
-  char *Name = "BoundaryValue";
+  const char *Name = "BoundaryValue";
 
   hid_t file_id, dset_id;
   hid_t file_dsp_id, mem_dsp_id;

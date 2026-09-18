@@ -49,7 +49,7 @@ int READ_BV(float         *bv_buffer, int field, int dim, int face, int slabsize
  
  
  
-int ExternalBoundary::WriteExternalBoundary(FILE *fptr, char *hdfname)
+int ExternalBoundary::WriteExternalBoundary(FILE *fptr, const char *hdfname)
 {
  
   int dim, field, i, j, index, size;

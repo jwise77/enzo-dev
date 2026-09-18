@@ -28,17 +28,17 @@ int PoissonSolverTestInitialize(FILE *fptr, FILE *Outfptr,
   if (!UseMHD) 
     ENZO_FAIL("DivergenceCleaning only useful with MHD simulations");
 
-  char *DensName = "Density";
-  char *TEName   = "TotalEnergy";
-  char *GEName   = "GasEnergy";
-  char *Vel1Name = "x-velocity";
-  char *Vel2Name = "y-velocity";
-  char *Vel3Name = "z-velocity";
-  char *BxName = "Bx";
-  char *ByName = "By";
-  char *BzName = "Bz";
-  char *PhiName = "Phi";
-  char *Phi_pName = "Phip";
+  const char *DensName = "Density";
+  const char *TEName   = "TotalEnergy";
+  const char *GEName   = "GasEnergy";
+  const char *Vel1Name = "x-velocity";
+  const char *Vel2Name = "y-velocity";
+  const char *Vel3Name = "z-velocity";
+  const char *BxName = "Bx";
+  const char *ByName = "By";
+  const char *BzName = "Bz";
+  const char *PhiName = "Phi";
+  const char *Phi_pName = "Phip";
   
 
 

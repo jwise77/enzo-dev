@@ -287,7 +287,7 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
     hid_t file_id;
 
     // Parse DensityFilename into filename and dataset name
-    char *delim = "/";
+    const char *delim = "/";
     data_filename = strtok(DensityFilename, delim);
     dataset_name = strtok(NULL, delim);
 

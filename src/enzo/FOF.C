@@ -204,7 +204,7 @@ void save_groups(FOFData &AllVars, int CycleNumber, FLOAT EnzoTime)
   PINT   *TempPINT;
 
   FOF_particle_data *Pbuf;
-  char   *FOF_dirname = "FOF";
+  const char *FOF_dirname = "FOF";
   char   catalogue_fname[200];
   char   particle_fname[200];
   char   halo_name[200];

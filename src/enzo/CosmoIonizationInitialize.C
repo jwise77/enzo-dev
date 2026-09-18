@@ -49,24 +49,24 @@ int CosmoIonizationInitialize(FILE *fptr, FILE *Outfptr,
   if (MyProcessorNumber == ROOT_PROCESSOR)
     printf("Entering CosmoIonizationInitialize routine\n");
 
-  char *kphHIName    = "HI_kph";
-  char *kphHeIName   = "HeI_kph";
-  char *kphHeIIName  = "HeII_kph";
-  char *gammaName    = "PhotoGamma";
-  char *kdissH2IName = "H2I_kdiss";
-  char *DensName  = "Density";
-  char *TEName    = "TotalEnergy";
-  char *GEName    = "GasEnergy";
-  char *Vel1Name  = "x-velocity";
-  char *Vel2Name  = "y-velocity";
-  char *Vel3Name  = "z-velocity";
-  char *RadName   = "Grey_Radiation_Energy";
-  char *HIName    = "HI_Density";
-  char *HIIName   = "HII_Density";
-  char *HeIName   = "HeI_Density";
-  char *HeIIName  = "HeII_Density";
-  char *HeIIIName = "HeIII_Density";
-  char *DeName    = "Electron_Density";
+  const char *kphHIName    = "HI_kph";
+  const char *kphHeIName   = "HeI_kph";
+  const char *kphHeIIName  = "HeII_kph";
+  const char *gammaName    = "PhotoGamma";
+  const char *kdissH2IName = "H2I_kdiss";
+  const char *DensName  = "Density";
+  const char *TEName    = "TotalEnergy";
+  const char *GEName    = "GasEnergy";
+  const char *Vel1Name  = "x-velocity";
+  const char *Vel2Name  = "y-velocity";
+  const char *Vel3Name  = "z-velocity";
+  const char *RadName   = "Grey_Radiation_Energy";
+  const char *HIName    = "HI_Density";
+  const char *HIIName   = "HII_Density";
+  const char *HeIName   = "HeI_Density";
+  const char *HeIIName  = "HeII_Density";
+  const char *HeIIIName = "HeIII_Density";
+  const char *DeName    = "Electron_Density";
  
   // local declarations
   char  line[MAX_LINE_LENGTH];

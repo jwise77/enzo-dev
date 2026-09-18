@@ -38,13 +38,13 @@ int CommunicationPartitionGrid(HierarchyEntry *Grid, int gridnum);
 int ClusterInitialize(FILE *fptr, FILE *Outfptr, 
                            HierarchyEntry &TopGrid, TopGridData &MetaData, ExternalBoundary &Exterior)
 {
-  char *DensName = "Density";
-  char *TEName   = "TotalEnergy";
-  char *GEName   = "GasEnergy";
-  char *Vel1Name = "x-velocity";
-  char *Vel2Name = "y-velocity";
-  char *Vel3Name = "z-velocity";
-  char *ColourName = "colour";
+  const char *DensName = "Density";
+  const char *TEName   = "TotalEnergy";
+  const char *GEName   = "GasEnergy";
+  const char *Vel1Name = "x-velocity";
+  const char *Vel2Name = "y-velocity";
+  const char *Vel3Name = "z-velocity";
+  const char *ColourName = "colour";
 
   /* declarations */
 

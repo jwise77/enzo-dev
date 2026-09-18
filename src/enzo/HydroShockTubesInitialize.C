@@ -25,15 +25,15 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
 int HydroShockTubesInitialize(FILE *fptr, FILE *Outfptr, 
 			      HierarchyEntry &TopGrid, TopGridData &MetaData) 
 {
-  char *DensName = "Density";
-  char *TEName   = "TotalEnergy";
-  char *GEName   = "GasEnergy";
-  char *Vel1Name = "x-velocity";
-  char *Vel2Name = "y-velocity";
-  char *Vel3Name = "z-velocity";
-  char *MachName   = "Mach";
-  char *PSTempName = "PreShock_Temperature";
-  char *PSDenName  = "PreShock_Density";
+  const char *DensName = "Density";
+  const char *TEName   = "TotalEnergy";
+  const char *GEName   = "GasEnergy";
+  const char *Vel1Name = "x-velocity";
+  const char *Vel2Name = "y-velocity";
+  const char *Vel3Name = "z-velocity";
+  const char *MachName   = "Mach";
+  const char *PSTempName = "PreShock_Temperature";
+  const char *PSDenName  = "PreShock_Density";
 
   /* declarations */
 

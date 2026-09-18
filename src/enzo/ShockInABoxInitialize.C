@@ -32,15 +32,15 @@
 int ShockInABoxInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 			  TopGridData &MetaData, ExternalBoundary &Exterior)
 {
-  char *DensName = "Density";
-  char *TEName = "TotalEnergy";
-  char *Vel1Name = "x-velocity";
-  char *Vel2Name = "y-velocity";
-  char *Vel3Name = "z-velocity";
+  const char *DensName = "Density";
+  const char *TEName = "TotalEnergy";
+  const char *Vel1Name = "x-velocity";
+  const char *Vel2Name = "y-velocity";
+  const char *Vel3Name = "z-velocity";
  
-  char *MachName   = "Mach";
-  char *PSTempName = "PreShock_Temperature";
-  char *PSDenName  = "PreShock_Density";
+  const char *MachName   = "Mach";
+  const char *PSTempName = "PreShock_Temperature";
+  const char *PSDenName  = "PreShock_Density";
   /* declarations */
  
   char line[MAX_LINE_LENGTH];

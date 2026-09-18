@@ -31,7 +31,7 @@ extern void *LargestAddress;
 #endif /* MEMORY_TRACE */
  
  
-int ReportMemoryUsage(char *header = NULL)
+int ReportMemoryUsage(const char *header = NULL)
 {
  
 #ifdef MEMORY_TRACE

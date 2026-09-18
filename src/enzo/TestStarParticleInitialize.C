@@ -33,19 +33,19 @@
 int TestStarParticleInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 			       TopGridData &MetaData,float *Initialdt)
 {
-  char *DensName = "Density";
-  char *TEName   = "TotalEnergy";
-  char *GEName   = "GasEnergy";
-  char *Vel1Name = "x-velocity";
-  char *Vel2Name = "y-velocity";
-  char *Vel3Name = "z-velocity";
-  char *MetalName = "Metal_Density";
-  char *ElectronName = "Electron_Density";
-  char *HIName    = "HI_Density";
-  char *HIIName   = "HII_Density";
-  char *HeIName   = "HeI_Density";
-  char *HeIIName  = "HeII_Density";
-  char *HeIIIName = "HeIII_Density";
+  const char *DensName = "Density";
+  const char *TEName   = "TotalEnergy";
+  const char *GEName   = "GasEnergy";
+  const char *Vel1Name = "x-velocity";
+  const char *Vel2Name = "y-velocity";
+  const char *Vel3Name = "z-velocity";
+  const char *MetalName = "Metal_Density";
+  const char *ElectronName = "Electron_Density";
+  const char *HIName    = "HI_Density";
+  const char *HIIName   = "HII_Density";
+  const char *HeIName   = "HeI_Density";
+  const char *HeIIName  = "HeII_Density";
+  const char *HeIIIName = "HeIII_Density";
 
 
   /* declarations */

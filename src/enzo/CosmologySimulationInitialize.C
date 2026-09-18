@@ -47,7 +47,7 @@ void MHDCTSetupFieldLabels();
 void WriteListOfFloats(FILE *fptr, int N, float floats[]);
 void WriteListOfFloats(FILE *fptr, int N, FLOAT floats[]);
 void WriteListOfInts(FILE *fptr, int N, int nums[]);
-void PrintMemoryUsage(char *str);
+void PrintMemoryUsage(const char *str);
 int InitializeRateData(FLOAT Time);
 int GetUnits(float *DensityUnits, float *LengthUnits,
 	     float *TemperatureUnits, float *TimeUnits,
@@ -104,46 +104,46 @@ static float RadHydroInitialRadiationEnergy = 1.0e-32;
 int CosmologySimulationInitialize(FILE *fptr, FILE *Outfptr,
 			       HierarchyEntry &TopGrid, TopGridData &MetaData)
 {
-  char *DensName = "Density";
-  char *TEName   = "TotalEnergy";
-  char *GEName   = "GasEnergy";
-  char *Vel1Name = "x-velocity";
-  char *Vel2Name = "y-velocity";
-  char *Vel3Name = "z-velocity";
-  char *CRName   = "CREnergyDensity";
-  char *ElectronName = "Electron_Density";
-  char *HIName    = "HI_Density";
-  char *HIIName   = "HII_Density";
-  char *HeIName   = "HeI_Density";
-  char *HeIIName  = "HeII_Density";
-  char *HeIIIName = "HeIII_Density";
-  char *HMName    = "HM_Density";
-  char *H2IName   = "H2I_Density";
-  char *H2IIName  = "H2II_Density";
-  char *DIName    = "DI_Density";
-  char *DIIName   = "DII_Density";
-  char *HDIName   = "HDI_Density";
-  char *MetalName = "Metal_Density";
-  char *MetalIaName = "MetalSNIa_Density";
-  char *GPotName  = "Grav_Potential";
-  char *ForbidName  = "ForbiddenRefinement";
-  char *MachName   = "Mach";
-  char *PSTempName = "PreShock_Temperature";
-  char *PSDenName  = "PreShock_Density";
-  char *ExtraNames[2] = {"Z_Field1", "Z_Field2"};
-  char *BxName = "Bx";
-  char *ByName = "By";
-  char *BzName = "Bz";
-  char *PhiName = "Phi";
-  char *Phi_pName = "Phip";
+  const char *DensName = "Density";
+  const char *TEName   = "TotalEnergy";
+  const char *GEName   = "GasEnergy";
+  const char *Vel1Name = "x-velocity";
+  const char *Vel2Name = "y-velocity";
+  const char *Vel3Name = "z-velocity";
+  const char *CRName   = "CREnergyDensity";
+  const char *ElectronName = "Electron_Density";
+  const char *HIName    = "HI_Density";
+  const char *HIIName   = "HII_Density";
+  const char *HeIName   = "HeI_Density";
+  const char *HeIIName  = "HeII_Density";
+  const char *HeIIIName = "HeIII_Density";
+  const char *HMName    = "HM_Density";
+  const char *H2IName   = "H2I_Density";
+  const char *H2IIName  = "H2II_Density";
+  const char *DIName    = "DI_Density";
+  const char *DIIName   = "DII_Density";
+  const char *HDIName   = "HDI_Density";
+  const char *MetalName = "Metal_Density";
+  const char *MetalIaName = "MetalSNIa_Density";
+  const char *GPotName  = "Grav_Potential";
+  const char *ForbidName  = "ForbiddenRefinement";
+  const char *MachName   = "Mach";
+  const char *PSTempName = "PreShock_Temperature";
+  const char *PSDenName  = "PreShock_Density";
+  const char *ExtraNames[2] = {"Z_Field1", "Z_Field2"};
+  const char *BxName = "Bx";
+  const char *ByName = "By";
+  const char *BzName = "Bz";
+  const char *PhiName = "Phi";
+  const char *Phi_pName = "Phip";
 
 #ifdef TRANSFER
-  char *RadName = "Grey_Radiation_Energy";
-  char *kphHIName = "kphHI";
-  char *kphHeIName = "kphHeI";
-  char *kphHeIIName = "kphHeII";
-  char *kdissH2IName = "kdissH2I";
-  char *PhotoGammaName = "PhotoGamma";
+  const char *RadName = "Grey_Radiation_Energy";
+  const char *kphHIName = "kphHI";
+  const char *kphHeIName = "kphHeI";
+  const char *kphHeIIName = "kphHeII";
+  const char *kdissH2IName = "kdissH2I";
+  const char *PhotoGammaName = "PhotoGamma";
 #endif
 #ifdef EMISSIVITY
   char *EtaName    = "Emissivity";

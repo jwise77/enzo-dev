@@ -122,7 +122,7 @@ int grid::Collapse3DInitializeGrid(int n_sphere,
 
   // if use BE sphere, read in the BE sphere density profile
 
-  char *filename = "be.dat";
+  const char *filename = "be.dat";
   int n_bin = 6401;
   float radius[n_bin];
   float rho_be[n_bin];

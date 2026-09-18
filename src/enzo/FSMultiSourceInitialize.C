@@ -47,12 +47,12 @@ int FSMultiSourceInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   if (MyProcessorNumber == ROOT_PROCESSOR)
     fprintf(stdout,"Entering FSMultiSourceInitialize routine\n");
 
-  char *DensName  = "Density";
-  char *TEName    = "TotalEnergy";
-  char *Vel0Name  = "x-velocity";
-  char *Vel1Name  = "y-velocity";
-  char *Vel2Name  = "z-velocity";
-  char *RadName   = "FS_Radiation";
+  const char *DensName  = "Density";
+  const char *TEName    = "TotalEnergy";
+  const char *Vel0Name  = "x-velocity";
+  const char *Vel1Name  = "y-velocity";
+  const char *Vel2Name  = "z-velocity";
+  const char *RadName   = "FS_Radiation";
 
   // local declarations
   char line[MAX_LINE_LENGTH];

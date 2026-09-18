@@ -49,7 +49,7 @@ void my_exit(int status);
  
 // function prototypes
  
-int SysMkdir(char *startdir, char *directory);
+int SysMkdir(const char *startdir, const char *directory);
 
 void AddLevel(LevelHierarchyEntry *Array[], HierarchyEntry *Grid, int level);
 int WriteDataCubes(HierarchyEntry *TopGrid, int TDdims[], char *gridbasename, int &GridID, FLOAT WriteTime);

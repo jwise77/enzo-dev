@@ -56,7 +56,7 @@ int ExtraOutput(int output_flag, LevelHierarchyEntry *LevelArray[],TopGridData *
 #ifdef TRANSFER
 			  , ImplicitProblemABC *ImplicitSolver
 #endif
-       ,char * message ){
+       ,const char * message ){
     //initialize output_number array.
     int n_outputs=100;
     if( output_number == NULL){

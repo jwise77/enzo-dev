@@ -54,7 +54,8 @@ int grid::SphericalInfallGetProfile(int level, int ReportLevel)
   /* declarations */
  
   int i, j, k, n, dim, Index[MAX_DIMENSION];
-  char *SphericalInfallReportName, ProfileName[MAX_LINE_LENGTH];
+  const char *SphericalInfallReportName;
+  char ProfileName[MAX_LINE_LENGTH];
   FILE *fptr;
  
   /* Find fields: density, total energy, velocity1-3. */
@@ -132,7 +133,7 @@ int grid::SphericalInfallGetProfile(int level, int ReportLevel)
     SphericalInfallGetProfileNumber++;
   }
  
-  char *mode;
+  const char *mode;
   if (ReportLevel == 1) {
     mode = "a";
     SphericalInfallReportName = "SphericalInfallReport";

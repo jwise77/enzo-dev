@@ -7,7 +7,7 @@
 #include "typedefs.h"
 #include "global_data.h"
  
-int FindCube(char *cubename)
+int FindCube(const char *cubename)
 {
   int i;
  

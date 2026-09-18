@@ -23,7 +23,7 @@
 
 float PreviousEnergy;
 
-int grid::MHD_Diagnose(char * label, float * &DivB)
+int grid::MHD_Diagnose(const char * label, float * &DivB)
 {
 
   if( MyProcessorNumber != ProcessorNumber )

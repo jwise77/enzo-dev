@@ -98,7 +98,7 @@
 #ifdef NEW_PROBLEM_TYPES
 #include "EventHooks.h"
 #else
-void RunEventHooks(char *, HierarchyEntry *Grid[], TopGridData &MetaData) {}
+void RunEventHooks(const char *, HierarchyEntry *Grid[], TopGridData &MetaData) {}
 #endif
  
 /* function prototypes */
@@ -114,18 +114,21 @@ int ExtraOutput(int output_flag, LevelHierarchyEntry *LevelArray[],TopGridData *
 #ifdef TRANSFER
 			  , ImplicitProblemABC *ImplicitSolver
 #endif
-        , char * output_string);
+        , const char * output_string);
 
+int GenerateGridArray(LevelHierarchyEntry *LevelArray[], int level,
+		      HierarchyEntry **Grids[]);
+int SetSubgridMarker(TopGridData &MetaData,
+		     LevelHierarchyEntry *LevelArray[], int level,
+		     int UpdateReplicatedGridsOnly);
+int  UpdateParticlePositions(grid *Grid);
+int  CheckEnergyConservation(HierarchyEntry *Grids[], int grid,
+			     int NumberOfGrids, int level, float dt);
 int ComputeDednerWaveSpeeds(TopGridData *MetaData,LevelHierarchyEntry *LevelArray[], 
 			    int level, FLOAT dt0);
 int  RebuildHierarchy(TopGridData *MetaData,
 		      LevelHierarchyEntry *LevelArray[], int level);
-int  ReportMemoryUsage(char *header = NULL);
-int  UpdateParticlePositions(grid *Grid);
-int  CheckEnergyConservation(HierarchyEntry *Grids[], int grid,
-			     int NumberOfGrids, int level, float dt);
-int GenerateGridArray(LevelHierarchyEntry *LevelArray[], int level,
-		      HierarchyEntry **Grids[]);
+int  ReportMemoryUsage(const char *header = NULL);
 int WriteStreamData(LevelHierarchyEntry *LevelArray[], int level,
 		    TopGridData *MetaData, int *CycleCount, int open=FALSE);
 int CallProblemSpecificRoutines(TopGridData * MetaData, HierarchyEntry *ThisGrid,

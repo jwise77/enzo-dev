@@ -289,7 +289,7 @@ static FLOAT *x1,*x2;
 /* LOCAL FUNCTIONS */
 /*******************/
 
-static void ErrorHandler(char *errstr) {
+static void ErrorHandler(const char *errstr) {
   /* Error handler */
   fprintf(stderr, "Fatal error in Foflib.c: %s.\n", errstr);
   fprintf(stderr, "Exiting to system.\n");

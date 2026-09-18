@@ -42,7 +42,7 @@ void my_exit(int status);
  
 void WriteListOfFloats(FILE *fptr, int N, FLOAT floats[]);
 void WriteListOfInts(FILE *fptr, int N, int nums[]);
-int WriteStringAttr(hid_t dset_id, char *Alabel, char *String, FILE *log_fptr);
+int WriteStringAttr(hid_t dset_id, const char *Alabel, const char *String, FILE *log_fptr);
  
  
  
@@ -67,11 +67,11 @@ int grid::WriteGridX(FILE *fptr, char *base_name, int grid_id)
   herr_t      h5_status;
   herr_t      h5_error = -1;
  
-  char *ParticlePositionLabel[] =
+  const char *ParticlePositionLabel[] =
      {"particle_position_x", "particle_position_y", "particle_position_z"};
-  char *ParticleVelocityLabel[] =
+  const char *ParticleVelocityLabel[] =
      {"particle_velocity_x", "particle_velocity_y", "particle_velocity_z"};
-  char *ParticleAttributeLabel[] = {"creation_time", "dynamical_time",
+  const char *ParticleAttributeLabel[] = {"creation_time", "dynamical_time",
 				    "metallicity_fraction", "particle_jet_x", "particle_jet_y", "particle_jet_z", "alpha_fraction"};
   /*  char *ParticleAttributeLabel[] = {"creation_time", "dynamical_time",
       "metallicity_fraction", "alpha_fraction"};*/

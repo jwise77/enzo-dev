@@ -73,16 +73,16 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
   herr_t      h5_error = -1;
  
  
-  char *ParticlePositionLabel[] =
+  const char *ParticlePositionLabel[] =
     {"particle_position_x", "particle_position_y", "particle_position_z"};
-  char *ParticleVelocityLabel[] =
+  const char *ParticleVelocityLabel[] =
     {"particle_velocity_x", "particle_velocity_y", "particle_velocity_z"};
 #ifdef WINDS
-    char *ParticleAttributeLabel[] = 
+    const char *ParticleAttributeLabel[] = 
       {"creation_time", "dynamical_time", "metallicity_fraction", "particle_jet_x", 
        "particle_jet_y", "particle_jet_z", "typeia_fraction"};
 #else
-    char *ParticleAttributeLabel[] = 
+    const char *ParticleAttributeLabel[] = 
       {"creation_time", "dynamical_time", "metallicity_fraction", "typeia_fraction"};
 #endif
 
@@ -416,7 +416,7 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
     if ((PhiNum = FindField(PhiField, FieldType, NumberOfBaryonFields)) < 0) {
       fprintf(stderr, "Starting with Dedner MHD method with no Phi field. \n");
       fprintf(stderr, "Adding it in Grid_ReadGrid.C \n");
-      char *PhiName = "Phi";
+      const char *PhiName = "Phi";
       PhiNum = NumberOfBaryonFields;
       int PhiToAdd = PhiField;
       this->AddFields(&PhiToAdd, 1);
@@ -430,7 +430,7 @@ int grid::ReadGrid(FILE *fptr, int GridID, char DataFilename[],
       if ((Phi_pNum = FindField(Phi_pField, FieldType, NumberOfBaryonFields)) < 0) {
 	fprintf(stderr, "Want to use divergence cleaning with no Phi_p field. \n");
 	fprintf(stderr, "Adding it in Grid_ReadGrid.C \n");
-	char *Phi_pName = "Phi_p";
+	const char *Phi_pName = "Phi_p";
 	Phi_pNum = NumberOfBaryonFields;
 	int Phi_pToAdd = Phi_pField;
 	this->AddFields(&Phi_pToAdd, 1);

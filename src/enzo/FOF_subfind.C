@@ -37,7 +37,7 @@ void subfind(FOFData &D, int CycleNumber, FLOAT EnzoTime)
   int    *sublen, *suboffset, *bufsublen, *bufsuboffset;
   int    *fsuboffset, *fbufsuboffset;
 
-  char   *FOF_dirname = "FOF";
+  const char *FOF_dirname = "FOF";
   char   catalogue_fname[200];
   char   particle_fname[200];
   char   halo_name[200];

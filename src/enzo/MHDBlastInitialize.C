@@ -105,16 +105,16 @@ int MHDBlastInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
   // Labels and Units.  (For IO.)
   // 
   
-  char *DensName = "Density";
-  char *TEName = "TotalEnergy";
-  char *Vel1Name = "x-velocity";
-  char *Vel2Name = "y-velocity";
-  char *Vel3Name = "z-velocity";
-  char *GPotName = "GravPotential";
-  char *BxName = "Bx";
-  char *ByName = "By";
-  char *BzName = "Bz";
-  char *PhiName = "Phi";
+  const char *DensName = "Density";
+  const char *TEName = "TotalEnergy";
+  const char *Vel1Name = "x-velocity";
+  const char *Vel2Name = "y-velocity";
+  const char *Vel3Name = "z-velocity";
+  const char *GPotName = "GravPotential";
+  const char *BxName = "Bx";
+  const char *ByName = "By";
+  const char *BzName = "Bz";
+  const char *PhiName = "Phi";
   
   
 
@@ -432,7 +432,7 @@ int MHDBlastInitialize(FILE *fptr, FILE *Outfptr, HierarchyEntry &TopGrid,
 
 
   if(DualEnergyFormalism ){
-    char *GEName = "GasEnergy";
+    const char *GEName = "GasEnergy";
     DataLabel[i++] = GEName;
     DataUnits[j++] = NULL;   
   }

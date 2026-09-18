@@ -40,7 +40,7 @@
 #include "CosmologyParameters.h"
 #include "Gadget.h"
 
-void GadgetReadIonizeParams(char *fname)
+void GadgetReadIonizeParams(const char *fname)
 {
 
   int i;

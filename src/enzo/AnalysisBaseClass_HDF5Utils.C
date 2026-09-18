@@ -278,7 +278,7 @@ void AnalysisBaseClass::HDF5MakeDataset( hid_t group_id,
   delete [] buffer;
 }
 
-void AnalysisBaseClass::HDF5WriteStringAttr(hid_t dset_id, char *Alabel, char *String){
+void AnalysisBaseClass::HDF5WriteStringAttr(hid_t dset_id, const char *Alabel, const char *String){
 
   hid_t       attr_id;
   hid_t       attr_dsp_id;

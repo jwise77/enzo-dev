@@ -22,7 +22,7 @@ int WRITE_BT(boundary_type *bt_buffer,
   int io_log = 0;
   int i;
 
-  char *Name = "BoundaryType";
+  const char *Name = "BoundaryType";
 
   hid_t file_id, dset_id;
   hid_t file_dsp_id, mem_dsp_id;

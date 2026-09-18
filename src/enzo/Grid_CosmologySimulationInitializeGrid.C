@@ -56,7 +56,7 @@ void my_exit(int status);
  
 // Function prototypes
  
-int ReadFile(char *name, int Rank, int Dims[], int StartIndex[],
+int ReadFile(const char *name, int Rank, int Dims[], int StartIndex[],
                   int EndIndex[], int BufferOffset[], float *buffer,
                   inits_type **tempbuffer, int Part, int Npart);
  

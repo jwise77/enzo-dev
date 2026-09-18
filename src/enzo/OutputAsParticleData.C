@@ -39,7 +39,7 @@ void my_exit(int status);
  
 // function prototypes
  
-int WriteStringAttr(hid_t dset_id, char *Alabel, char *String, FILE *log_fptr);
+int WriteStringAttr(hid_t dset_id, const char *Alabel, const char *String, FILE *log_fptr);
  
 int  DepositParticleMassField(HierarchyEntry *Grid, FLOAT Time = -1.0);
 int  CopyOverlappingZones(grid* CurrentGrid, TopGridData *MetaData,
@@ -82,7 +82,7 @@ int OutputAsParticleData(TopGridData &MetaData,
   hsize_t    mem_offset;
   hsize_t    file_offset[2];
  
-  char *dset_name;
+  const char *dset_name;
  
   int         io_log = 1;
  

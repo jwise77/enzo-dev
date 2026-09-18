@@ -42,7 +42,7 @@ void my_exit(int status);
 void WriteListOfFloats(FILE *fptr, int N, FLOAT floats[]);
 void WriteListOfInts(FILE *fptr, int N, int nums[]);
  
-int WriteStringAttr(hid_t dset_id, char *Alabel, char *String, FILE *log_fptr);
+int WriteStringAttr(hid_t dset_id, const char *Alabel, const char *String, FILE *log_fptr);
  
 int FindField(int field, int farray[], int numfields);
 
@@ -59,7 +59,7 @@ int GetUnits(float *DensityUnits, float *LengthUnits,
 int WriteDataset(hid_t WriteLoc, float * data_buffer, io_type * tmp_buffer,
 		 int * DataDims, int GridRank,
 		 int *WriteStartIndex, int *WriteEndIndex, int * WriteDims,
-		 char * Label, char * Units,hid_t file_type_id,hid_t float_type_id,FILE *log_fptr ) ;
+		 const char * Label, const char * Units,hid_t file_type_id,hid_t float_type_id,FILE *log_fptr ) ;
 
 int grid::WriteGrid(FILE *fptr, char *base_name, int grid_id)
 {
@@ -85,19 +85,19 @@ int grid::WriteGrid(FILE *fptr, char *base_name, int grid_id)
   herr_t      h5_status;
   herr_t      h5_error = -1;
  
-  char *ParticlePositionLabel[] =
+  const char *ParticlePositionLabel[] =
      {"particle_position_x", "particle_position_y", "particle_position_z"};
-  char *ParticleVelocityLabel[] =
+  const char *ParticleVelocityLabel[] =
      {"particle_velocity_x", "particle_velocity_y", "particle_velocity_z"};
 #ifdef WINDS
-    char *ParticleAttributeLabel[] = 
+    const char *ParticleAttributeLabel[] = 
       {"creation_time", "dynamical_time", "metallicity_fraction", "particle_jet_x", 
        "particle_jet_y", "particle_jet_z", "typeia_fraction"};
 #else
-    char *ParticleAttributeLabel[] = 
+    const char *ParticleAttributeLabel[] = 
       {"creation_time", "dynamical_time", "metallicity_fraction", "typeia_fraction"};
 #endif
-  char *SmoothedDMLabel[] = {"Dark_Matter_Density", "Velocity_Dispersion",
+  const char *SmoothedDMLabel[] = {"Dark_Matter_Density", "Velocity_Dispersion",
 			     "Particle_x-velocity", "Particle_y-velocity",
 			     "Particle_z-velocity"};
 #ifdef IO_LOG
@@ -635,7 +635,7 @@ int grid::WriteGrid(FILE *fptr, char *base_name, int grid_id)
 
       /* output */
       
-      char *DataLabelN[4];
+      const char *DataLabelN[4];
       if (GridRank==2) {
 	DataLabelN[0]="Velocity_Div";
 	DataLabelN[1]="Velocity_Vorticity";
