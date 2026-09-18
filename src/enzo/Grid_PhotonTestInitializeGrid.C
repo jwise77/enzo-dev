@@ -646,6 +646,7 @@ int grid::PhotonTestInitializeGrid(int NumberOfSpheres,
 		xpos1 = xpos - zheight*SphereVelocity[sphere][0];
 		ypos1 = ypos - zheight*SphereVelocity[sphere][1];
 		zpos1 = zpos - zheight*SphereVelocity[sphere][2];
+		drad = sqrt(xpos1*xpos1 + ypos1*ypos1 + zpos1*zpos1);
 
 		/* If we're above the disk, then exit. */
 

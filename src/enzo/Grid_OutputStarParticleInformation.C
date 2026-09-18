@@ -85,7 +85,7 @@ int grid::OutputStarParticleInformation(FILE *StarFile)
 	if (fwrite( (void*) buffer,  sizeof(float32),
 
 		    NumberOfParticleAttributes+4, StarFile) !=
-	    NumberOfParticleAttributes+4)
+	    (size_t) (NumberOfParticleAttributes+4))
 	  perror("error in fwrite");
       }
   }

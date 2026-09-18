@@ -214,14 +214,14 @@ herr_t AMRHDF5Writer::WriteTextures(  const int    timeStep,
   sprintf(gridDataName, "/grid-%" ISYM "", gridId);
 
   hid_t gridGrp, dataspace, dataset;
-  hsize_t hdims[2] = { dims[0], dims[1] };
+  hsize_t hdims[2] = { (hsize_t) dims[0], (hsize_t) dims[1] };
   int err = 0;
   int i;
 
   /* Write index entry */
 
   char level8bit = (char) levelIndex;
-  short shortdims[3] = { dims[0], dims[1], dims[2] };
+  short shortdims[3] = { (short) dims[0], (short) dims[1], (short) dims[2] };
 
   if (dim == 0) {
     fwrite(&gridId, sizeof(int), 1, index_file);
@@ -329,10 +329,10 @@ herr_t AMRHDF5Writer::WriteFlat(  const int    timeStep,
   snprintf(fieldName, sizeof(fieldName), "%s/%s", gridDataName, name);
 
   hid_t gridGrp, dataspace, dataset;
-  hsize_t hdims[3] = { dims[2], dims[1], dims[0] };
+  hsize_t hdims[3] = { (hsize_t) dims[2], (hsize_t) dims[1], (hsize_t) dims[0] };
   int err = 0;
   char level8bit = (char) levelIndex;
-  short shortdims[3] = { dims[0], dims[1], dims[2] };
+  short shortdims[3] = { (short) dims[0], (short) dims[1], (short) dims[2] };
 
   /* Write index entry */
 

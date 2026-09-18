@@ -613,6 +613,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
     float rho0 = 1.0, cs = 1.0, eint, etot;
     float p0 = rho0*cs*cs;
     float eint0 = p0/((Gamma-1.0)*rho0);
+    eint = eint0;
     float Bx = 0.0;
 
     FLOAT b = 0.175, a = 0.075;
@@ -892,7 +893,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
     float v1 = cs*sqrt((2.0+(Gamma-1.0)*Ms*Ms)/(2.0*Gamma*Ms*Ms-Gamma+1));
     float v0 = Ms*cs;
     eint0 = p0/((Gamma-1.0)*rho0);
-    eint1 = eint1; // isothermal so same specific energy
+    eint1 = eint0; // isothermal so same specific energy
 
     FLOAT x, y, xs = 0.6, delx=0.001;
     int igrid;
@@ -1415,7 +1416,7 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
     FLOAT x,y;
     float y1=0.5;
     float y2=1.5;
-    float ramp,eint;
+    float eint;
     float a=RampWidth;
     float sigma2=0.2*0.2;
     float dpde, dpdrho,h,cs;
@@ -1450,8 +1451,8 @@ int grid::MHD2DTestInitializeGrid(int MHD2DProblemType,
 	  BaryonField[ieint][igrid] = eint ;
 	}
 	if (HydroMethod == MHD_RK) {
-	  BaryonField[iBx  ][igrid] = Bxu + ramp*(Bxl-Bxu);
-	  BaryonField[iBy  ][igrid] = Byu + ramp*(Byl-Byu);
+	  BaryonField[iBx  ][igrid] = Bxu + rhoramp*(Bxl-Bxu);
+	  BaryonField[iBy  ][igrid] = Byu + rhoramp*(Byl-Byu);
 	  BaryonField[iBz  ][igrid] = 0.0;
 	  BaryonField[iPhi ][igrid] = 0.0;
 	}

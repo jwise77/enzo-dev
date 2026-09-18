@@ -711,8 +711,8 @@ int grid::WriteGrid(FILE *fptr, char *base_name, int grid_id)
       if(GridRank==3){
 	delete curlx;
 	delete curly;}
-      delete curlz;
-      delete div;
+      delete [] curlz;
+      delete [] div;
     }
 
 

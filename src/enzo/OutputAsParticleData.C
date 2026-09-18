@@ -280,7 +280,7 @@ int OutputAsParticleData(TopGridData &MetaData,
   char *logname = new char[9];
   strcpy(logname,"OAPD.log");
   log_fptr = fopen(logname, "a");
-  delete logname;
+  delete [] logname;
  
   for (i = 0; i < NUM_PARTICLE_TYPES; i++) {
  
@@ -727,7 +727,7 @@ int OutputAsParticleData(TopGridData &MetaData,
         if (io_log) fprintf(log_fptr, "H5Sclose: %d\n", h5_status);
         if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}
  
-      delete buffer;
+      delete [] buffer;
  
     } // end: if (TotalNumberOfParticles[i] > 0)
  

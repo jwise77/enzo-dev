@@ -31,7 +31,6 @@ int grid::MustRefineParticlesFlagFromList()
 {
   
   int i, LowerIndex, UpperIndex, MidPoint, ParticlesFound, ParticlesFlagged, *ParticleNumberList;
-  int NumberOfParticles;
   FILE *fptr;
 
   if (MyProcessorNumber != ProcessorNumber)

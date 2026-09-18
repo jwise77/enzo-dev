@@ -194,7 +194,7 @@ int grid::SolveRateEquations()
  
   /* deallocate temporary space for solver */
  
-  delete temperature;
+  delete [] temperature;
  
   return SUCCESS;
  

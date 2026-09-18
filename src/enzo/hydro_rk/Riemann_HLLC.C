@@ -23,7 +23,7 @@
 int hllc(float **FluxLine, float **priml, float **primr, int ActiveSize)
 {
   float Ul[NEQ_HYDRO], Ur[NEQ_HYDRO], Fl[NEQ_HYDRO], Fr[NEQ_HYDRO], Fc[NEQ_HYDRO];
-  float etot, eint_l, eint_r, h, dpdrho, dpde, ap, am, cs_l, cs_r, v2, vx_l, vx_r, vy_l, vy_r, vz_r, vz_l, rho_r, rho_l, p_l, p_r, lm_l, lp_l, lm_r, lp_r;
+  float etot, eint_l, eint_r, h, dpdrho, dpde, ap = 0.0, am = 0.0, cs_l, cs_r, v2, vx_l, vx_r, vy_l, vy_r, vz_r, vz_l, rho_r, rho_l, p_l, p_r, lm_l, lp_l, lm_r, lp_r;
   float eint_c, rho_c, p_c, vx_c, vy_c, vz_c, cs_c;
   float lam_l, lam_r, lam_c;
 

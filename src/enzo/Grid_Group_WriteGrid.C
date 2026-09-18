@@ -65,7 +65,7 @@ int WriteDataset(hid_t WriteLoc, float * data_buffer, io_type * tmp_buffer,
 {
 
   int i,j,k,dim;
-  herr_t h5_status, h5_error = -1;
+  herr_t h5_status = 0, h5_error = -1;
   
   hsize_t     OutDims[MAX_DIMENSION];
   for (dim = 0; dim < GridRank; dim++)
@@ -82,9 +82,9 @@ int WriteDataset(hid_t WriteLoc, float * data_buffer, io_type * tmp_buffer,
 		  );
       }
   hid_t file_dsp_id = H5Screate_simple((Eint32) GridRank, OutDims, NULL);
-  if( h5_status == h5_error ){my_exit(EXIT_FAILURE);} 
+  if( file_dsp_id == h5_error ){my_exit(EXIT_FAILURE);} 
   hid_t dset_id =  H5Dcreate(WriteLoc, Label, file_type_id, file_dsp_id, H5P_DEFAULT);
-  if( h5_status == h5_error ){my_exit(EXIT_FAILURE);}  
+  if( dset_id == h5_error ){my_exit(EXIT_FAILURE);}  
   /* set datafield name and units, etc. */
   
   WriteStringAttr(dset_id, "Label", Label, log_fptr);

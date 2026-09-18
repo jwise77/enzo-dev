@@ -167,7 +167,7 @@ int grid::AddViscosity()
     delete d2Vz[i];
   }
   
-  delete viscosity;
+  delete [] viscosity;
   
   return SUCCESS;
 

@@ -350,7 +350,7 @@ int ProjectToPlane(TopGridData &MetaData, LevelHierarchyEntry *LevelArray[],
   strcpy(logname, ProjectionFileName);
   strcat(logname, ".log");
   log_fptr = fopen(logname, "a");
-  delete logname;
+  delete [] logname;
  
   if (io_log) fprintf(log_fptr, "H5Fopen with Name = %s\n", ProjectionFileName);
  

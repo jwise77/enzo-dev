@@ -235,7 +235,7 @@ int grid::AnalyzeTrackPeaks(int level, int ReportLevel)
   /* Close file. */
  
   fclose(fptr);
-  delete temperature;
+  delete [] temperature;
  
   return SUCCESS;
 }

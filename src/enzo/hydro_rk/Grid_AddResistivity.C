@@ -150,7 +150,7 @@ int grid::AddResistivity()
     delete d2Bz[dim];
   }
 
-  delete resistivity;
+  delete [] resistivity;
   
   return SUCCESS;
 

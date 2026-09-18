@@ -109,10 +109,11 @@ int ReadDataHierarchy(FILE *fptr, hid_t Hfile_id, HierarchyEntry *Grid, int Grid
     fptr = ptr_task_check;
   }
 
-  if ( MyProcessorNumber == 0 )
+  if ( MyProcessorNumber == 0 ) {
     fprintf(stderr, "Using dumped task assignment: GridID = %" ISYM"  MPI Task = %" ISYM"\n", GridID, Task);
+  }
 
-    Grid->GridData->SetProcessorNumber(Task);
+  Grid->GridData->SetProcessorNumber(Task);
 
 #endif
 

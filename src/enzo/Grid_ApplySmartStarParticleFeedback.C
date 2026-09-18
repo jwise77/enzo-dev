@@ -281,7 +281,6 @@ int grid::ApplySmartStarParticleFeedback(ActiveParticleType** ThisParticle){
   if (i < ibuff || i > this->GridDimension[0]-ibuff-1 ||
       j < ibuff || j > this->GridDimension[1]-ibuff-1 || 
       k < ibuff || k > this->GridDimension[2]-ibuff-1 ||
-	this == NULL ||
 	SS->level < MaximumRefinementLevel) {
       fprintf(stdout, "grid::AddFS: MBH_JETS - MBH doesn't belong to this grid.\n"); 
       return SUCCESS;

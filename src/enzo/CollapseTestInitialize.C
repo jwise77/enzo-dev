@@ -144,9 +144,10 @@ int CollapseTestInitialize(FILE *fptr, FILE *Outfptr,
     CollapseTestSphereConstantPressure[sphere] = FALSE;
     CollapseTestSphereSmoothSurface[sphere] = FALSE;
   }
-  for (dim = 0; dim < MAX_DIMENSION; dim++)
+  for (dim = 0; dim < MAX_DIMENSION; dim++) {
     CollapseTestUniformVelocity[dim] = 0;
     CollapseTestWindVelocity[dim] = 0;
+  }
 
   /* read input from file */
 

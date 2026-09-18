@@ -261,16 +261,16 @@ struct treenode {
 #define SIBLING(i) ((i&1)?i-1:i+1)
 #define SETNEXT(i) { while (i&1) i=i>>1; ++i; }
 
-static FLOAT maxarg1,maxarg2;
-#define FMAX(a,b) (maxarg1=(a),maxarg2=(b), (maxarg1) > (maxarg2) ? (maxarg1) : (maxarg2))
+static inline FLOAT fof_fmax(FLOAT a, FLOAT b) { return a > b ? a : b; }
+#define FMAX(a,b) fof_fmax((a), (b))
 
-static FLOAT minarg1,minarg2;
-#define FMIN(a,b) (minarg1=(a),minarg2=(b), (minarg1) < (minarg2) ? (minarg1) : (minarg2))
+static inline FLOAT fof_fmin(FLOAT a, FLOAT b) { return a < b ? a : b; }
+#define FMIN(a,b) fof_fmin((a), (b))
 
 #define IMAX(a,b) ((a) > (b) ? (a) : (b))
 
-static int iminarg1,iminarg2;
-#define IMIN(a,b) (iminarg1=(a),iminarg2=(b), (iminarg1) < (iminarg2) ? (iminarg1) : (iminarg2))
+static inline int fof_imin(int a, int b) { return a < b ? a : b; }
+#define IMIN(a,b) fof_imin((a), (b))
 
 static FLOAT swaptmp;
 #define SWAP(a,b) swaptmp=(a),(a)=(b),(b)=swaptmp;
@@ -278,12 +278,16 @@ static FLOAT swaptmp;
 static int iswaptmp;
 #define ISWAP(a,b) iswaptmp=(a),(a)=(b),(b)=iswaptmp;
 
-//static FLOAT sqrarg;
-//#define SQR(a) ((sqrarg=(a)) == 0.0 ? 0.0 : sqrarg*sqrarg)
 #define SQR(a) ((a)*(a))
 
-static FLOAT *x1,*x2;
-#define DISTSQR(a,b) (x1=(a),x2=(b), (x1)==(x2) ? 0.0 : SQR(x1[0]-x2[0])+SQR(x1[1]-x2[1])+SQR(x1[2]-x2[2]))
+static inline FLOAT fof_distsqr(const FLOAT *a, const FLOAT *b) {
+  if (a == b) return 0.0;
+  FLOAT dx = a[0] - b[0];
+  FLOAT dy = a[1] - b[1];
+  FLOAT dz = a[2] - b[2];
+  return dx*dx + dy*dy + dz*dz;
+}
+#define DISTSQR(a,b) fof_distsqr((a), (b))
 
 /*******************/
 /* LOCAL FUNCTIONS */
@@ -421,9 +425,8 @@ static struct treenode *BuildTree(FLOAT *x, int nidx, int *idxlist,
     leaves=leaves<<1;
     nodes+=leaves;
   }
-  if (!(tree=(struct treenode *) calloc(nodes, sizeof(struct treenode))))
+  if (!(tree=(struct treenode *) calloc(nodes + 1, sizeof(struct treenode))))
     ErrorHandler("unable to allocate memory for particle tree");
-  tree--; /* We want tree[1] to be first node */
 
   /* Initialize root node by setting bounding box */
   curnode=ROOT;
@@ -510,9 +513,8 @@ static struct treenode *BuildVarTree(FLOAT *x, FLOAT *link, int
     leaves=leaves<<1;
     nodes+=leaves;
   }
-  if (!(tree=(struct treenode *) calloc(nodes, sizeof(struct treenode))))
+  if (!(tree=(struct treenode *) calloc(nodes + 1, sizeof(struct treenode))))
     ErrorHandler("unable to allocate memory for particle tree");
-  tree--; /* We want tree[1] to be first node */
 
   /* Initialize root node by setting bounding box */
   curnode=ROOT;
@@ -1087,7 +1089,7 @@ int FofVar(int npart, FLOAT *x, FLOAT *link, int *group, int
   free(fifo);
   *groupsize=(int *) realloc(*groupsize, groupnum*sizeof(int));
   free(idxlist);
-  free(root+1);
+  free(root);
 
   return(groupnum); /* Return number of groups */
 }
@@ -1148,7 +1150,7 @@ int FofVarList(int npart, FLOAT *x, FLOAT *link, int *group, int
   *groupsize=(int *) realloc(*groupsize, groupnum*sizeof(int));
   *grouplist=(int **) realloc(*grouplist, groupnum*sizeof(int *));
   free(idxlist);
-  free(root+1);
+  free(root);
 
   return(groupnum); /* Return number of groups */
 }
@@ -1201,7 +1203,7 @@ int Fof(int npart, FLOAT *x, FLOAT link, int *group, int **groupsize)
   free(fifo);
   *groupsize=(int *) realloc(*groupsize, groupnum*sizeof(int));
   free(idxlist);
-  free(root+1);
+  free(root);
 
   return(groupnum); /* Return number of groups */
 }
@@ -1263,7 +1265,7 @@ int FofList(int npart, FLOAT *x, FLOAT link, int *group, int
   *groupsize=(int *) realloc(*groupsize, groupnum*sizeof(int));
   *grouplist=(int **) realloc(*grouplist, groupnum*sizeof(int *));
   free(idxlist);
-  free(root+1);
+  free(root);
 
   return(groupnum); /* Return number of groups */
 }
@@ -1358,7 +1360,7 @@ void NearNeighbor(int npart, FLOAT *x, int nneighbor, int
 		       neighborlist+nneighbor*n);
 
   /* Clean up memory */
-  free(root+1);
+  free(root);
   free(idxlist);
 }
 
@@ -1384,7 +1386,7 @@ void NearNeighborPartial(int npart, FLOAT *x, int nneighbor, int
 		       neighborlist+nneighbor*n);
 
   /* Clean up memory */
-  free(root+1);
+  free(root);
   free(idxlist);
 }
 
@@ -1424,7 +1426,7 @@ void FindNeighbor(int npart, FLOAT *x, FLOAT rad, int ***neighborlist,
 
   /* Clean up memory */
   free(idxlist);
-  free(root+1);
+  free(root);
 }
 
 void FindNeighborPartial(int npart, FLOAT *x, int nsearch, int
@@ -1466,6 +1468,6 @@ void FindNeighborPartial(int npart, FLOAT *x, int nsearch, int
 
   /* Clean up memory */
   free(idxlist);
-  free(root+1);
+  free(root);
 }
 #undef LEAFSIZE

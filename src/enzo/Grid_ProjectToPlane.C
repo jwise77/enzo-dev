@@ -285,7 +285,7 @@ int grid::ProjectToPlane(FLOAT ProjectedFieldLeftEdge[],
                             &start, &stop,
 			    &LeftCellFraction, &RightCellFraction);
  
-    delete temp;
+    delete [] temp;
   }
  
   /* 4) Temperature weighted by 'X-ray' luminosity */
@@ -391,7 +391,7 @@ int grid::ProjectToPlane(FLOAT ProjectedFieldLeftEdge[],
                           &start, &stop, &LeftCellFraction,&RightCellFraction);
  
  
-    delete sz;
+    delete [] sz;
  
   } // end: SZ effects
  

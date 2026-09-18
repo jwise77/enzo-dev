@@ -95,7 +95,7 @@ int ReadIntFile(char *name, int Rank, int Dim[], int StartIndex[],
  
   if (io_log) log_fptr = fopen(logname, "a");
  
-  delete logname;
+  delete [] logname;
  
   if (io_log) fprintf(log_fptr, "\n");
   if (io_log) fprintf(log_fptr, "RHDF file %s\n", name);
@@ -134,10 +134,11 @@ int ReadIntFile(char *name, int Rank, int Dim[], int StartIndex[],
   if (io_log) fprintf(log_fptr, "H5Fopen with Name = %s\n", name);
  
   file_id = H5Fopen(name, H5F_ACC_RDONLY, H5P_DEFAULT);
-  if (debug1)
+  if (debug1) {
     fprintf(stderr, "RHDF H5Fopen %s on CPU %" ISYM "\n", name, MyProcessorNumber);
-    if (io_log) fprintf(log_fptr, "H5Fopen id: %ld\n", file_id);
-    if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
+  }
+  if (io_log) fprintf(log_fptr, "H5Fopen id: %ld\n", file_id);
+  if( file_id == h5_error ){my_exit(EXIT_FAILURE);}
  
   if (io_log) fprintf(log_fptr, "H5Dopen with Name = %s\n", name);
  

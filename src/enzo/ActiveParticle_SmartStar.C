@@ -833,6 +833,7 @@ bool ActiveParticleType_SmartStar::IsARadiationSource(FLOAT Time)
     return (SmartStarBHRadiativeFeedback == TRUE) ? true : false;
   if(POPIII == ParticleClass || SMS == ParticleClass)
      return (SmartStarStellarRadiativeFeedback == TRUE) ? true : false;
+  return false;
 }
 
 

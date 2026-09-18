@@ -62,14 +62,15 @@ int grid::ComputeAccelerationFieldExternal()
  
   /* Check if acceleration field exists.  If not create it and zero it. */
  
-  if (AccelerationField[0] == NULL)
+  if (AccelerationField[0] == NULL) {
     for (dim = 0; dim < GridRank; dim++) {
       AccelerationField[dim] = new float[size];
       for (i = 0; i < size; i++)
         AccelerationField[dim][i] = 0;
 
     }
-    if( SelfGravity == 0 ){
+  }
+  if( SelfGravity == 0 ){
       for (dim = 0; dim < GridRank; dim++) {
         for (i = 0; i < size; i++){
           AccelerationField[dim][i] = 0;

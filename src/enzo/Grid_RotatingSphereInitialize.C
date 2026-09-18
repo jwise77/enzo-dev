@@ -788,7 +788,7 @@ float dTdr(float r, float T, float core_radius, float core_density, float core_e
    // Get the units
    float DensityUnits, LengthUnits, TemperatureUnits = 1, TimeUnits, VelocityUnits; 
    double MassUnits;
-   FLOAT Time;
+   FLOAT Time = 0.0;
    
    GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	    &TimeUnits, &VelocityUnits, &MassUnits, Time);
@@ -822,7 +822,7 @@ float get_grav_accel(float r) {
    // Get the units
    float DensityUnits, LengthUnits, TemperatureUnits = 1, TimeUnits, VelocityUnits; 
    double MassUnits;
-   FLOAT Time;
+   FLOAT Time = 0.0;
    
    GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	    &TimeUnits, &VelocityUnits, &MassUnits, Time);
@@ -850,7 +850,7 @@ float get_critical_density(float redshift) {
    // Get the units
    float DensityUnits, LengthUnits, TemperatureUnits = 1, TimeUnits, VelocityUnits; 
    double MassUnits;
-   FLOAT Time;
+   FLOAT Time = 0.0;
    
    GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	    &TimeUnits, &VelocityUnits, &MassUnits, Time);
@@ -1034,7 +1034,7 @@ float* mass_energy_derivs(float r,
    // Get the units
    float DensityUnits, LengthUnits, TemperatureUnits = 1, TimeUnits, VelocityUnits; 
    double MassUnits;
-   FLOAT Time;
+   FLOAT Time = 0.0;
    
    GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 	    &TimeUnits, &VelocityUnits, &MassUnits, Time);

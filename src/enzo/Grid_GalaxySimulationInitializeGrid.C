@@ -2166,6 +2166,7 @@ double halo_g_of_r(FLOAT r){
               +log(1.0+POW(r/DMRad/Mpc_cm,2))
               );
   }
+  return 0.0;
 }
 
 double halo_mod_g_of_r(FLOAT r){

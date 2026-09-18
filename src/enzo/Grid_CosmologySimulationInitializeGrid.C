@@ -1405,8 +1405,8 @@ if (PreSortedParticles == 0 && !CosmologySimulationCalculatePositions &&
  
       BitArray = new Eunsigned_int[BitsPerInt];
  
-      for (i = 0; i < BitMaskSize; i++)
-        BitMask[i] = 0;
+      for (Eunsigned_int ibm = 0; ibm < BitMaskSize; ibm++)
+        BitMask[ibm] = 0;
  
       BitArray[BitsPerInt-1] = 1;
       BitMaskTrue = 1;
@@ -1418,8 +1418,8 @@ if (PreSortedParticles == 0 && !CosmologySimulationCalculatePositions &&
  
 //    fprintf(log_fptr, "All true %16o\n", BitMaskTrue);
  
-      for (i = 0; i < BitMaskSize; i++)
-        BitMask[i] = BitMaskTrue;
+      for (Eunsigned_int ibm = 0; ibm < BitMaskSize; ibm++)
+        BitMask[ibm] = BitMaskTrue;
  
       Eunsigned_int MaskAddr;
       Eunsigned_int WordAddr;

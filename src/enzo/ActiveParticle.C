@@ -298,10 +298,11 @@ void ActiveParticleType::ConstructData(grid *_grid,
     float *electronguessptr;
     float electronguess = 0.01;
     electronguessptr = &electronguess;
-    for (i = 0; i < size; i++)
+    for (i = 0; i < size; i++) {
       cgsdensity = data.DensityUnits*_grid->BaryonField[DensNum][i];
       data.CoolingRate[i] = _grid->GadgetCoolingRate
 	(log10(data.Temperature[i]), cgsdensity, electronguessptr, zred);
+    }
 
   } // ENDIF CoolingRate
 

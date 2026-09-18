@@ -328,16 +328,16 @@ int grid::TurbulenceSimulationInitializeGrid(
    /* If they were not read in above, set the total & gas energy fields now. */
  
   if (ReadData) {
-    if (TurbulenceSimulationDensityName == NULL)
+    if (TurbulenceSimulationDensityName == NULL) {
       for (i = 0; i < size; i++){
         BaryonField[DensNum][i] = TurbulenceSimulationInitialDensity;
       }
-            
+    }
 
-      for (i = 0; i < size; i++){
-        BaryonField[DensNum][i] *= 1 + TurbulenceSimulationInitialDensityPerturbationAmplitude*
-            ( (float)rand()/(float)(RAND_MAX)   - 0.5 );
-      }
+    for (i = 0; i < size; i++){
+      BaryonField[DensNum][i] *= 1 + TurbulenceSimulationInitialDensityPerturbationAmplitude*
+          ( (float)rand()/(float)(RAND_MAX)   - 0.5 );
+    }
 
     if( UseMHD ){
         for( dim = 0; dim < 3; dim++){

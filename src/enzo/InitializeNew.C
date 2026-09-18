@@ -1036,15 +1036,16 @@ int InitializeNew(char *filename, HierarchyEntry &TopGrid,
       ENZO_FAIL("Error in ParallelFDMCollapseReInitialize.");
   }
 
-  if (ProblemType == 201)
+  if (ProblemType == 201) {
     if (MHD2DTestInitialize(fptr, Outfptr, TopGrid, MetaData, 1)
 	== FAIL) {
       ENZO_FAIL("Error in MHD2DTestReInitialize.\n");
     }
+  }
   
-  
-    if (ProblemType == 202)
+  if (ProblemType == 202) {
     CollapseMHD3DInitialize(fptr, Outfptr, TopGrid, MetaData, 1);
+  }
 
   // For ProblemType 203 (MHD Turbulence Simulation we only initialize the data
   // once the topgrid has been split.

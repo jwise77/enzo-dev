@@ -142,7 +142,7 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
     /* If any, gather all shining particles */
 
     if (TotalNumberOfStars > 0) {
-      if (recvBufferSize > 2 * ceil_log2(TotalNumberOfStars))
+      if ((size_t) recvBufferSize > 2 * ceil_log2(TotalNumberOfStars))
       {
        // Avoiding recvBuffer occurs memoeries which exceed 2 times of the powers of buffer space which has minimum space to contain TotalNumberOfStars.
         delete [] recvBuffer;
@@ -157,7 +157,7 @@ int StarParticleFindAll(LevelHierarchyEntry *LevelArray[], Star *&AllStars)
         else recvBufferSize = ceil_log2(TotalNumberOfStars);
         recvBuffer = new StarBuffer[recvBufferSize];
       }
-      if ((LocalNumberOfStars > 0) && (sendBufferSize > 2 * ceil_log2(LocalNumberOfStars)))
+      if ((LocalNumberOfStars > 0) && ((size_t) sendBufferSize > 2 * ceil_log2(LocalNumberOfStars)))
       {
        // Avoiding sendBuffer occurs memoeries which exceed 2 times of the powers of buffer space which has minimum space to contain LocalNumberOfStars.
         delete [] sendBuffer;

@@ -24,7 +24,7 @@ int WRITE_BT(boundary_type *bt_buffer,
 
   const char *Name = "BoundaryType";
 
-  hid_t file_id, dset_id;
+  hid_t file_id = 0, dset_id;
   hid_t file_dsp_id, mem_dsp_id;
   hid_t       file_type_id, mem_type_id;
 
@@ -112,6 +112,8 @@ int WRITE_BT(boundary_type *bt_buffer,
 
     } else {
 
+    file_id = H5Fopen(Name, H5F_ACC_RDWR, H5P_DEFAULT);
+    if (file_id == h5_error) { my_exit(EXIT_FAILURE); }
     if (io_log) fprintf(stderr, "Calling H5Dopen with Name = %s\n", Name);
 
     dset_id =  H5Dopen(file_id, Name);

@@ -276,7 +276,7 @@ int grid::ZeusSolver(float *gamma, int igamfield, int nhy,
   if (CRmaxSoundSpeed != 0.0){
 		  // Get system of units
     float CRsound,DensityUnits,LengthUnits,TemperatureUnits,
-          TimeUnits,VelocityUnits,Time;
+          TimeUnits,VelocityUnits;
     if (GetUnits(&DensityUnits, &LengthUnits, &TemperatureUnits,
 		 &TimeUnits, &VelocityUnits, Time) == FAIL) {
       ENZO_FAIL("Error in GetUnits.");

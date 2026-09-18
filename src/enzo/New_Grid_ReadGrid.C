@@ -74,7 +74,7 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
   hsize_t     FullOutDims[MAX_DIMENSION];
   hsize_t     TempIntArray[MAX_DIMENSION];
  
-  herr_t      h5_status;
+  herr_t      h5_status = 0;
   herr_t      h5_error = -1;
  
  
@@ -608,12 +608,12 @@ int grid::Group_ReadGrid(FILE *fptr, int GridID, HDF5_hid_t file_id,
        && ReadData ){
  
     if (ReadEverything == TRUE) this->ReadExtraFields(group_id);
-    H5Gclose(group_id);
+    h5_status = H5Gclose(group_id);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
 
 #ifndef SINGLE_HDF5_OPEN_ON_INPUT 
 
-    H5Fclose(file_id);
+    h5_status = H5Fclose(file_id);
     if( h5_status == h5_error ){ENZO_FAIL("Error in IO");}
 
 #endif
@@ -820,7 +820,7 @@ int grid::ReadExtraFields(hid_t group_id)
           acc_node, HDF5_REAL, (VOIDP) AccelerationField[dim],
           FALSE, NULL, NULL);
     }
-    delete temp;
+    delete [] temp;
     H5Gclose(acc_node);
   }
   H5E_BEGIN_TRY{

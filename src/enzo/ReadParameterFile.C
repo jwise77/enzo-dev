@@ -1606,11 +1606,12 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
       ReconstructionMethod = PLM;
   }
 
-  else if (HydroMethod == MHD_Li )
+  else if (HydroMethod == MHD_Li ) {
     if (RiemannSolver == INT_UNDEFINED)
         RiemannSolver = HLLD;
     if (ReconstructionMethod == INT_UNDEFINED)
         ReconstructionMethod = PLM;
+  }
 
   if (HydroMethod==MHD_RK) UseMHD = 1;
   if (HydroMethod==MHD_Li) {UseMHDCT = 1; UseMHD = 1;}
@@ -1851,8 +1852,8 @@ int ReadParameterFile(FILE *fptr, TopGridData &MetaData, float *Initialdt)
 
   /* Set some star feedback parameters. */
 
-  if ((STARFEED_METHOD(NORMAL_STAR) || STARFEED_METHOD(UNIGRID_STAR)) || 
-      (STARFEED_METHOD(SINGLE_SUPERNOVA) ) &&
+  if (((STARFEED_METHOD(NORMAL_STAR) || STARFEED_METHOD(UNIGRID_STAR)) || 
+       STARFEED_METHOD(SINGLE_SUPERNOVA)) &&
       (StarFeedbackDistRadius > 0)) {
 
     // Calculate number of cells in the shape over which to distribute feedback.

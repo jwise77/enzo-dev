@@ -1114,7 +1114,7 @@ void marking(FOFData &AllVars)
 	}
 	idone++;
       } // ENDIF
-      iter++;
+    iter++;
   } while (idone > 0 && iter < 10);
 
   qsort(&AllVars.P[1], AllVars.Nlocal, sizeof(FOF_particle_data), 
