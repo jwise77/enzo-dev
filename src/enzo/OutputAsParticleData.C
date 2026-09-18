@@ -57,7 +57,7 @@ int OutputAsParticleData(TopGridData &MetaData,
 			 int RegionStart[], int RegionEnd[],
 			 FLOAT RegionStartCoordinate[],
 			 FLOAT RegionEndCoordinate[], int RegionLevel,
-			 char *OutputFileName)
+			 const char *OutputFileName)
 {
  
   int i, j, k, dim, level, part, TotalRefineBy = 1;

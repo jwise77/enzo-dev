@@ -75,7 +75,7 @@ int ProjectToPlane2(char *ParameterFile, HierarchyEntry &TopGrid,
 		    int ProjectStartTemp[], int ProjectEndTemp[], 
 		    FLOAT ProjectStartCoordinate[],
 		    FLOAT ProjectEndCoordinate[], int ProjectLevel,
-		    int ProjectionDimension, char *ProjectionFileName,
+		    int ProjectionDimension, const char *ProjectionFileName,
 		    int ProjectionSmooth, 
 #ifdef TRANSFER
 		    ImplicitProblemABC *ImplicitSolver,

@@ -55,7 +55,7 @@ int ProjectToPlane(TopGridData &MetaData, LevelHierarchyEntry *LevelArray[],
 		   int ProjectStartTemp[], int ProjectEndTemp[],
 		   FLOAT ProjectStartCoordinate[],
 		   FLOAT ProjectEndCoordinate[], int ProjectLevel,
-		   int ProjectionDimension, char *ProjectionFileName,
+		   int ProjectionDimension, const char *ProjectionFileName,
 		   int ProjectionSmooth, ExternalBoundary *Exterior)
 {
  
